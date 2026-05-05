@@ -80,13 +80,15 @@ export default function MarketStatsSection() {
           </p>
         </motion.div>
 
-        {/* Stats grid */}
+        {/* Stats grid — always 2 cols on narrow, 4 cols on wide. Never 3. */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: 'clamp(12px,2vw,24px)',
           marginBottom: 'clamp(40px,6vw,72px)',
-        }}>
+        }}
+          className="stats-4col"
+        >
           {STATS.map((s, i) => (
             <motion.div
               key={s.label}

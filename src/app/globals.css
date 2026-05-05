@@ -65,6 +65,16 @@ body {
   from { width: 0; }
 }
 
+/* ── Stats grid: 2 cols on small, 4 cols on wide — never 3 ── */
+.stats-4col {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+@media (min-width: 860px) {
+  .stats-4col {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
 /* ── Mobile overrides ── */
 @media (max-width: 640px) {
   /* France section: hide desktop info card (wine list panel replaces it) */

@@ -1,19 +1,88 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
-// ── Story card content (example user data) ─────────────────────────────────
+// ── Story card content ──────────────────────────────────────────────────────
 const STORY_COUNTRIES = [
-  { flag: '🇫🇷', name: 'France',    wines: 28, pct: 92 },
-  { flag: '🇮🇹', name: 'Italy',     wines: 21, pct: 70 },
-  { flag: '🇨🇱', name: 'Chile',     wines: 18, pct: 58 },
+  { flag: '🇫🇷', name: 'France',      wines: 28, pct: 92 },
+  { flag: '🇮🇹', name: 'Italy',       wines: 21, pct: 70 },
+  { flag: '🇨🇱', name: 'Chile',       wines: 18, pct: 58 },
   { flag: '🇳🇿', name: 'New Zealand', wines: 14, pct: 44 },
-  { flag: '🇪🇸', name: 'Spain',     wines: 11, pct: 34 },
+  { flag: '🇪🇸', name: 'Spain',       wines: 11, pct: 34 },
 ];
 
-// Which cells in the 7×5 mini-map grid are "lit" (wine regions)
-const LIT_CELLS = new Set([2, 3, 8, 9, 12, 14, 18, 19, 20, 22, 24, 26, 27, 30, 32]);
+// Wine regions for mini-map (same ISO numeric codes as world-map.tsx)
+const MINI_WINE: Record<string, number> = {
+  '250': 0.95, '380': 0.80, '724': 0.65, '840': 0.72,
+  '276': 0.50, '032': 0.65, '152': 0.55, '620': 0.70,
+  '040': 0.38, '554': 0.50, '036': 0.55, '710': 0.42,
+};
+
+// ── Tiny world map inside the story card ────────────────────────────────────
+function StoryWorldMap() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    const apply = () => {
+      ref.current?.querySelectorAll('svg').forEach(svg => {
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+        svg.style.display = 'block';
+      });
+    };
+    apply();
+    const obs = new MutationObserver(apply);
+    if (ref.current) obs.observe(ref.current, { childList: true, subtree: true });
+    return () => obs.disconnect();
+  }, [mounted]);
+
+  if (!mounted) {
+    return <div style={{ width: '100%', height: '100%', background: '#0A0228' }} />;
+  }
+
+  return (
+    <div ref={ref} style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+      <ComposableMap
+        projection="geoEquirectangular"
+        projectionConfig={{ scale: 62, rotate: [-40, 0, 0] }}
+        width={420}
+        height={210}
+        style={{ width: '100%', height: '100%', display: 'block', background: '#080220' }}
+      >
+        <Geographies geography="/world-110m.json">
+          {({ geographies }) =>
+            geographies.map((geo) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const id = String((geo as any).id).padStart(3, '0');
+              const opacity = MINI_WINE[id];
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  style={{
+                    default: {
+                      fill: opacity ? '#D42040' : '#1C0840',
+                      fillOpacity: opacity ?? 1,
+                      stroke: '#2A0C58',
+                      strokeWidth: 0.3,
+                      outline: 'none',
+                    },
+                    hover:   { outline: 'none', fill: opacity ? '#D42040' : '#1C0840', fillOpacity: opacity ?? 1, stroke: '#2A0C58', strokeWidth: 0.3 },
+                    pressed: { outline: 'none', fill: opacity ? '#D42040' : '#1C0840', fillOpacity: opacity ?? 1, stroke: '#2A0C58', strokeWidth: 0.3 },
+                  }}
+                />
+              );
+            })
+          }
+        </Geographies>
+      </ComposableMap>
+    </div>
+  );
+}
 
 // ── Story Card (9:16 ratio) ────────────────────────────────────────────────
 function StoryCard({ animate }: { animate: boolean }) {
@@ -84,31 +153,21 @@ function StoryCard({ animate }: { animate: boolean }) {
         <div style={{ width: 30, height: 1, background: '#C9A84C', margin: '8px auto 0' }} />
       </div>
 
-      {/* Mini world map grid */}
-      <div style={{ marginBottom: 14 }}>
+      {/* Real mini world map */}
+      <div style={{
+        marginBottom: 14,
+        height: 90,
+        borderRadius: 8,
+        overflow: 'hidden',
+        border: '1px solid rgba(201,168,76,0.15)',
+        position: 'relative',
+      }}>
+        <StoryWorldMap />
+        {/* Vignette overlay */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: 2.5,
-          padding: '8px 4px',
-          background: 'rgba(255,255,255,0.025)',
-          borderRadius: 6,
-          border: '1px solid rgba(255,255,255,0.05)',
-        }}>
-          {Array.from({ length: 35 }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                aspectRatio: '1',
-                borderRadius: 2,
-                background: LIT_CELLS.has(i)
-                  ? `rgba(196,30,58,${0.45 + (i % 3) * 0.18})`
-                  : 'rgba(30,8,53,0.8)',
-                transition: animate ? `background 600ms ease ${i * 15}ms` : 'none',
-              }}
-            />
-          ))}
-        </div>
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, rgba(6,1,21,0.7) 100%)',
+        }} />
       </div>
 
       {/* Stats row */}

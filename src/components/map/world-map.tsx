@@ -44,7 +44,7 @@ function MapInstance() {
   return (
     <ComposableMap
       projection="geoEquirectangular"
-      projectionConfig={{ scale: 153 }}
+      projectionConfig={{ scale: 153, rotate: [-40, 0, 0] }}
       width={960}
       height={500}
       style={{ width: '100%', height: '100%', display: 'block', background: '#060112' }}

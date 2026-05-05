@@ -111,8 +111,8 @@ function ScanPanel() {
         {/* Wine bottle photo */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://images.pexels.com/photos/10858619/pexels-photo-10858619.jpeg?auto=compress&cs=tinysrgb&w=400"
-          alt="와인 라벨"
+          src="https://images.pexels.com/photos/3407777/pexels-photo-3407777.jpeg?auto=compress&cs=tinysrgb&w=400"
+          alt="와인 라벨 클로즈업"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
         {/* Dark overlay for readability */}
