@@ -65,19 +65,22 @@ body {
   from { width: 0; }
 }
 
-/* ── Mobile-first base overrides ── */
+/* ── Mobile overrides ── */
 @media (max-width: 640px) {
-  /* France section info card */
-  .france-info-card {
-    display: none;
-  }
-  /* Slow map on mobile to save battery */
-  .slide-container {
-    animation-duration: 140s;
+  /* France section: hide desktop info card (wine list panel replaces it) */
+  :root { --card-display: none; }
+
+  /* Slightly slower map on mobile to save battery */
+  [style*="mapSlideLeft"] {
+    animation-duration: 130s !important;
   }
 }
 
-/* ── Touch: disable hover side-effects on touch devices ── */
+/* ── Touch: suppress hover side-effects ── */
 @media (hover: none) {
-  button:hover { transform: none !important; }
+  button:hover { transform: none !important; box-shadow: none !important; }
 }
+
+/* ── Wine list horizontal scroll — hide scrollbar ── */
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
