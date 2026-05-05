@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --color-wine-red: #8B1A2A;
+  --color-wine-red-hover: #A02030;
+  --color-gold: #C9A84C;
+  --color-cream: #F5F0E8;
+  --color-bg-deepest: #05020A;
+  --color-bg-deep: #0A050F;
+  --color-bg-map: #1A0A1E;
+  --color-surface: #0F0718;
+  --color-border: #2D1540;
+  --color-text-primary: #F5F0E8;
+  --color-text-secondary: #D4C5B0;
+  --color-text-muted: #9B8B7A;
+  --color-text-disabled: #4A3D56;
+  --color-error: #EF4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes mapSlideLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes scanLine {
+  0%   { top: 5%;  opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { top: 92%; opacity: 0; }
+}
+
+@keyframes fadeInTag {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  50%       { box-shadow: 0 0 20px 4px rgba(201,168,76,0.25); }
+}
+
+@keyframes storyShimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
+@keyframes barFill {
+  from { width: 0; }
+}
+
+/* ── Mobile-first base overrides ── */
+@media (max-width: 640px) {
+  /* France section info card */
+  .france-info-card {
+    display: none;
+  }
+  /* Slow map on mobile to save battery */
+  .slide-container {
+    animation-duration: 140s;
+  }
+}
+
+/* ── Touch: disable hover side-effects on touch devices ── */
+@media (hover: none) {
+  button:hover { transform: none !important; }
+}
