@@ -44,7 +44,7 @@ function MapInstance() {
   return (
     <ComposableMap
       projection="geoEquirectangular"
-      projectionConfig={{ scale: 175 }}
+      projectionConfig={{ scale: 153 }}
       width={960}
       height={500}
       style={{ width: '100%', height: '100%', display: 'block', background: '#060112' }}
@@ -96,12 +96,16 @@ export default function WorldMap() {
           height: '100%',
           animation: 'mapSlideLeft 100s linear infinite',
           willChange: 'transform',
+          /* prevent any sub-pixel gap between the two copies */
+          fontSize: 0,
+          lineHeight: 0,
+          gap: 0,
         }}
       >
-        <div style={{ width: '50%', height: '100%', flexShrink: 0 }}>
+        <div style={{ width: '50%', height: '100%', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
           <MapInstance />
         </div>
-        <div style={{ width: '50%', height: '100%', flexShrink: 0 }}>
+        <div style={{ width: '50%', height: '100%', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
           <MapInstance />
         </div>
       </div>

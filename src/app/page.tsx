@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import HeroSection from '@/components/sections/hero-section';
 import FranceWineSection from '@/components/sections/france-wine-section';
+import VineyardStrip from '@/components/sections/vineyard-strip';
 import FeaturesSection from '@/components/sections/features-section';
+import MarketStatsSection from '@/components/sections/market-stats-section';
 import HowItWorksSection from '@/components/sections/how-it-works-section';
 import InstagramPreviewSection from '@/components/sections/instagram-preview-section';
 import FinalCTASection from '@/components/sections/final-cta-section';
@@ -12,32 +14,37 @@ import WaitlistModal from '@/components/waitlist/waitlist-modal';
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const openModal = () => setModalOpen(true);
+  const openModal  = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   const scrollToPreview = () => {
-    const el = document.getElementById('instagram-preview');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('instagram-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
     <main>
-      {/* 1. 전 세계 지도 슬라이딩 배경 + 히어로 */}
+      {/* 1. Hero — 전 세계 지도 슬라이딩 배경 */}
       <HeroSection onOpenModal={openModal} />
 
-      {/* 2. 프랑스 확대 드릴다운 — 스크롤 연동 */}
+      {/* 2. 프랑스 드릴다운 — 스크롤 기반 지역 등장 */}
       <FranceWineSection />
 
-      {/* 3. 인터랙티브 기능 소개 */}
+      {/* 3. 포도밭 갤러리 — 와인 산지 사진 + 대기 사진 스트립 */}
+      <VineyardStrip />
+
+      {/* 4. WineMine 핵심 기능 소개 */}
       <FeaturesSection onScrollToPreview={scrollToPreview} />
 
-      {/* 4. 사용 흐름 */}
+      {/* 5. 한국 와인 시장 통계 */}
+      <MarketStatsSection />
+
+      {/* 6. 사용 흐름 */}
       <HowItWorksSection />
 
-      {/* 5. 인스타 공유 미리보기 */}
+      {/* 7. 인스타 공유 미리보기 */}
       <InstagramPreviewSection id="instagram-preview" />
 
-      {/* 6. 최종 CTA */}
+      {/* 8. 최종 CTA */}
       <FinalCTASection onOpenModal={openModal} />
 
       <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
