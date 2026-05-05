@@ -30,8 +30,8 @@ const STEPS = [
   {
     num: '04',
     title: '한 컷에 담는다',
-    body: '내 와인 지도를 인스타그램 스토리 비율로 저장한다. 탭 한 번이면 공유 완료.',
-    detail: '9:16 Recap 생성',
+    body: '내 와인 여정을 아름다운 Recap 이미지로 저장한다. 탭 한 번이면 공유 완료.',
+    detail: 'Recap 이미지 생성',
     icon: '✦',
     color: '#E8C97A',
   },

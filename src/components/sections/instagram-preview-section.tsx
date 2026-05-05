@@ -301,12 +301,12 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(28px,4vw,40px)', fontWeight: 400, color: '#F5F0E8', lineHeight: 1.2,
           }}>
-            내 와인 지도를<br />인스타에 올리다
+            내 와인 지도를<br />공유해보세요
           </h2>
           <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 16px' }} />
           <p style={{ fontSize: 15, color: '#9B8B7A', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
             기록이 쌓이면 자동으로 만들어지는 나만의 Recap.<br />
-            스토리 비율 그대로, 탭 한 번이면 공유 끝.
+            탭 한 번이면 공유 완료.
           </p>
         </motion.div>
 
@@ -348,8 +348,8 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
                 },
                 {
                   num: '2',
-                  title: '9:16 비율 최적화',
-                  desc: '인스타그램 스토리에 딱 맞는 비율로 바로 저장된다.',
+                  title: '이미지로 저장',
+                  desc: '공유하기 좋은 비율로 바로 저장된다. 별도 편집 불필요.',
                 },
                 {
                   num: '3',

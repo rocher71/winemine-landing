@@ -28,7 +28,7 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
               lineHeight: 1.2,
             }}
           >
-            첫 번째 지도를 만들어보세요
+            Make your own Wine Map
           </h2>
           <p style={{ fontSize: 16, color: '#9B8B7A', marginTop: 16 }}>
             사전 신청하시면 출시 즉시 알려드립니다.

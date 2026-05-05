@@ -96,53 +96,48 @@ function ScanPanel() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-      {/* Real wine bottle photo + scan overlay */}
-      <div
-        style={{
-          width: 160,
-          height: 220,
-          borderRadius: 10,
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.6)',
-          flexShrink: 0,
-        }}
-      >
-        {/* Wine bottle photo */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/wine-label-example.png"
-          alt="와인 라벨 클로즈업"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-        />
-        {/* Dark overlay for readability */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(4,1,10,0.35)' }} />
-
-        {/* Camera frame corners */}
-        {['top-left','top-right','bottom-left','bottom-right'].map(pos => {
-          const isTop = pos.includes('top'), isLeft = pos.includes('left');
-          return (
-            <div key={pos} style={{
-              position: 'absolute',
-              [isTop ? 'top' : 'bottom']: 10,
-              [isLeft ? 'left' : 'right']: 10,
-              width: 20, height: 20,
-              borderTop: isTop ? '2px solid #C9A84C' : 'none',
-              borderBottom: !isTop ? '2px solid #C9A84C' : 'none',
-              borderLeft: isLeft ? '2px solid #C9A84C' : 'none',
-              borderRight: !isLeft ? '2px solid #C9A84C' : 'none',
-            }} />
-          );
-        })}
+      {/* Wine label card */}
+      <div style={{
+        width: 160, height: 220,
+        background: 'linear-gradient(160deg, #F5F0E8 0%, #E8DDD0 100%)',
+        borderRadius: 8,
+        padding: '12px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        flexShrink: 0,
+      }}>
+        {/* Label content */}
+        <div style={{ textAlign: 'center', paddingTop: 8 }}>
+          <div style={{ fontSize: 8, letterSpacing: '0.15em', color: '#6B3040', fontWeight: 700, textTransform: 'uppercase' }}>
+            Grand Cru Classé
+          </div>
+          <div style={{ fontSize: 15, fontFamily: 'Georgia, serif', color: '#1A0810', fontWeight: 700, marginTop: 6, lineHeight: 1.2 }}>
+            Château<br />Margaux
+          </div>
+          <div style={{ width: 56, height: 1, background: '#8B1A2A', margin: '8px auto' }} />
+          <div style={{ fontSize: 22, color: '#8B1A2A', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+            2019
+          </div>
+          <div style={{ fontSize: 8, color: '#6B3040', marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            Margaux · Bordeaux
+          </div>
+          <div style={{
+            width: 48, height: 56, margin: '10px auto 0',
+            background: 'linear-gradient(135deg, #8B1A2A 0%, #C41E3A 50%, #8B1A2A 100%)',
+            borderRadius: '50% 50% 40% 40%',
+            opacity: 0.13,
+          }} />
+        </div>
 
         {/* Scan line */}
         {scanning && (
           <div style={{
             position: 'absolute', left: 0, right: 0, height: 2,
-            background: 'linear-gradient(90deg, transparent, #C9A84C 25%, #FFF 50%, #C9A84C 75%, transparent)',
+            background: 'linear-gradient(90deg, transparent 0%, #C9A84C 30%, #FFF 50%, #C9A84C 70%, transparent 100%)',
             animation: 'scanLine 1.8s ease-in-out',
             animationFillMode: 'forwards',
-            boxShadow: '0 0 10px rgba(201,168,76,0.9)',
+            boxShadow: '0 0 8px rgba(201,168,76,0.8)',
           }} />
         )}
       </div>
@@ -295,7 +290,7 @@ const PANELS = [
   {
     num: '03',
     title: '나만의 지도',
-    sub: '언제든, 한 번에\n인스타 스토리로',
+    sub: '언제든, 한 번에\n손쉽게 공유해요',
     content: 'share',
   },
 ];
