@@ -186,3 +186,12 @@ public/
 | 날짜 | 변경 내용 | 대상 | 사유 |
 |------|----------|------|------|
 | 2026-05-05 | 초기 구성 | 전체 | winemine 랜딩 페이지 개발 시작 |
+| 2026-05-06 | commit-push 스킬 추가 | .claude/skills/commit-push | GitHub 연동 워크플로우 |
+
+---
+
+## 하네스: commit-push
+
+**목표:** 변경사항을 git commit하고 GitHub에 push한다.
+
+**트리거:** "커밋해줘", "푸시해줘", "commit", "push", "저장해줘", "깃에 올려줘" 등 요청 시 `commit-push` 스킬을 사용하라.
