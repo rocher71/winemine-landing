@@ -1,427 +1,433 @@
 'use client';
 
-import { useRef, useState, useLayoutEffect, useCallback } from 'react';
+import { useRef, useState, useLayoutEffect } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 
-const GEO_URL = '/world-50m.json';
+const DEPT_URL = '/france-departments.json';
 
-// ── Utility ────────────────────────────────────────────────────────────────
-const lerp = (a: number, b: number, t: number) => a + (b - a) * Math.max(0, Math.min(1, t));
-const norm = (v: number, lo: number, hi: number) => (v - lo) / (hi - lo);
-
-// ── Wine region data ────────────────────────────────────────────────────────
-interface Region {
-  name: string;
-  label: string;
-  coords: [number, number];
-  r: number;
+// ── Wine department definitions ─────────────────────────────────────────────
+// department code → wine region data
+// Ordered by reveal sequence (most famous first)
+const WINE_DEPTS: Record<string, {
+  korName: string;
+  frName: string;
+  count: number;
   opacity: number;
-  color: string;
-  textColor: string;
-  anchor: 'start' | 'end';
-  phase: 1 | 2;
+  labelCoords: [number, number];
+  showLabel: boolean;
+  featured?: boolean;
+  revealOrder: number; // 1 = first to appear
+}> = {
+  '21': { // Côte-d'Or — Meursault, Gevrey-Chambertin, etc.
+    korName: '뫼르소',
+    frName: "Côte-d'Or · Bourgogne",
+    count: 28,
+    opacity: 0.95,
+    labelCoords: [4.88, 47.20],
+    showLabel: true,
+    featured: true,
+    revealOrder: 1,
+  },
+  '33': { // Gironde — Bordeaux
+    korName: '보르도',
+    frName: 'Gironde · Bordeaux',
+    count: 19,
+    opacity: 0.68,
+    labelCoords: [-0.62, 44.82],
+    showLabel: true,
+    revealOrder: 2,
+  },
+  '51': { // Marne — Champagne
+    korName: '샹파뉴',
+    frName: 'Marne · Champagne',
+    count: 12,
+    opacity: 0.50,
+    labelCoords: [4.12, 49.00],
+    showLabel: true,
+    revealOrder: 3,
+  },
+  '67': { // Bas-Rhin — Alsace (upper)
+    korName: '알자스',
+    frName: 'Alsace',
+    count: 7,
+    opacity: 0.36,
+    labelCoords: [7.52, 48.58],
+    showLabel: true,
+    revealOrder: 4,
+  },
+  '68': { // Haut-Rhin — Alsace (lower, same region, no duplicate label)
+    korName: '',
+    frName: '',
+    count: 7,
+    opacity: 0.36,
+    labelCoords: [7.52, 48.58],
+    showLabel: false,
+    revealOrder: 4,
+  },
+  '69': { // Rhône — Côtes du Rhône
+    korName: '론 밸리',
+    frName: 'Rhône · Côtes du Rhône',
+    count: 5,
+    opacity: 0.20,
+    labelCoords: [4.68, 45.80],
+    showLabel: true,
+    revealOrder: 5,
+  },
+};
+
+// ── Meursault wines (shown in list below map) ────────────────────────────────
+const MEURSAULT_WINES = [
+  { name: 'Meursault Perrières',   grade: '1er Cru',   year: '2021', note: '헤이즐넛 · 버터 · 미네랄', producer: 'Domaine Leflaive' },
+  { name: 'Meursault Charmes',     grade: '1er Cru',   year: '2020', note: '풍성한 과일 · 오크 · 꿀',   producer: 'Comtes Lafon' },
+  { name: 'Meursault Genevrières', grade: '1er Cru',   year: '2019', note: '크리미 · 헤이즐넛 · 스모키', producer: 'Coche-Dury' },
+  { name: 'Meursault Village',     grade: 'AOC',       year: '2022', note: '레몬 · 바닐라 · 아몬드',    producer: 'Patrick Javillier' },
+  { name: 'Meursault Narvaux',     grade: 'Lieu-dit',  year: '2021', note: '미네랄 · 감귤 · 흰꽃',     producer: 'Roulot' },
+];
+
+// ── preserveAspectRatio="xMidYMid slice" hook ───────────────────────────────
+function useSliceSvg(ref: React.RefObject<HTMLDivElement | null>) {
+  useLayoutEffect(() => {
+    const apply = () => {
+      ref.current?.querySelectorAll('svg').forEach((svg) => {
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+        svg.style.display = 'block';
+      });
+    };
+    apply();
+    const obs = new MutationObserver(apply);
+    if (ref.current) obs.observe(ref.current, { childList: true, subtree: true });
+    return () => obs.disconnect();
+  }, [ref]);
 }
 
-const MAJOR: Region[] = [
-  { name: 'Bordeaux',      label: 'Bordeaux',          coords: [-0.57, 44.84], r: 26, opacity: 0.88, color: '#E8253E', textColor: '#F5F0E8', anchor: 'end',   phase: 1 },
-  { name: 'Champagne',     label: 'Champagne',          coords: [ 4.03, 49.05], r: 20, opacity: 0.72, color: '#E0203A', textColor: '#F5F0E8', anchor: 'start', phase: 1 },
-  { name: 'Bourgogne',     label: 'Bourgogne',          coords: [ 4.83, 47.15], r: 18, opacity: 0.85, color: '#E8253E', textColor: '#F5F0E8', anchor: 'start', phase: 1 },
-  { name: 'Loire',         label: 'Val. de la Loire',   coords: [-0.70, 47.40], r: 20, opacity: 0.65, color: '#D81C36', textColor: '#F5F0E8', anchor: 'end',   phase: 1 },
-  { name: 'Rhône',         label: 'Côtes du Rhône',     coords: [ 4.77, 44.95], r: 16, opacity: 0.74, color: '#D82038', textColor: '#F5F0E8', anchor: 'start', phase: 1 },
-];
-
-const SUB: Region[] = [
-  { name: 'Chablis',           label: 'Chablis',              coords: [ 3.80, 47.82], r: 8,  opacity: 0.80, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-  { name: 'Gevrey',            label: 'Gevrey-Chambertin',    coords: [ 4.955, 47.23], r: 7,  opacity: 0.92, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-  { name: 'Vosne',             label: 'Vosne-Romanée',        coords: [ 4.95, 47.16], r: 6,  opacity: 0.88, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-  { name: 'Meursault',         label: 'Meursault',            coords: [ 4.76, 47.00], r: 10, opacity: 1.00, color: '#FFD060', textColor: '#FFD060', anchor: 'end',   phase: 2 },
-  { name: 'Puligny',           label: 'Puligny-Montrachet',   coords: [ 4.75, 46.94], r: 6,  opacity: 0.86, color: '#C9A84C', textColor: '#E8C97A', anchor: 'end',   phase: 2 },
-  { name: 'Beaujolais',        label: 'Beaujolais',           coords: [ 4.55, 46.10], r: 12, opacity: 0.60, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-  { name: 'Sancerre',          label: 'Sancerre',             coords: [ 2.83, 47.33], r: 8,  opacity: 0.74, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-  { name: 'Alsace',            label: 'Alsace',               coords: [ 7.45, 48.25], r: 10, opacity: 0.68, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-  { name: 'Languedoc',         label: 'Languedoc',            coords: [ 3.10, 43.65], r: 15, opacity: 0.62, color: '#C9A84C', textColor: '#E8C97A', anchor: 'end',   phase: 2 },
-  { name: 'Provence',          label: 'Provence',             coords: [ 5.80, 43.55], r: 14, opacity: 0.64, color: '#C9A84C', textColor: '#E8C97A', anchor: 'start', phase: 2 },
-];
-
-// ── Example wine list (simulated user data) ─────────────────────────────────
-const WINES = [
-  { region: '뫼르소',       name: 'Meursault Perrières',    grade: '1er Cru',   grape: 'Chardonnay', note: '헤이즐넛 · 버터 · 미네랄', year: '2021' },
-  { region: '쥬브레-샹베르탱', name: 'Chambertin',           grade: 'Grand Cru', grape: 'Pinot Noir',  note: '파워풀 · 블랙체리 · 스파이스', year: '2019' },
-  { region: '뫼르소',       name: 'Meursault Village',      grade: 'AOC',       grape: 'Chardonnay', note: '크리미 · 레몬 · 오크', year: '2022' },
-  { region: '샹볼-뮈지니',  name: 'Chambolle-Musigny',      grade: '1er Cru',   grape: 'Pinot Noir',  note: '섬세 · 로즈페탈 · 딸기', year: '2020' },
-  { region: '퓔리니-몽라셰', name: 'Puligny-Montrachet',    grade: '1er Cru',   grape: 'Chardonnay', note: '청사과 · 시트러스 · 꽃', year: '2021' },
-  { region: '본',          name: 'Beaune Grèves',          grade: '1er Cru',   grape: 'Pinot Noir',  note: '실키 · 라즈베리 · 제비꽃', year: '2020' },
-];
-
-// ── Region marker ───────────────────────────────────────────────────────────
-function RegionDot({ r, label, anchor, color, textColor, opacity, visible, featured }: {
-  r: number; label: string; anchor: 'start' | 'end';
-  color: string; textColor: string; opacity: number;
-  visible: boolean; featured?: boolean;
+// ── Region label marker ──────────────────────────────────────────────────────
+function RegionLabel({ korName, count, featured, visible }: {
+  korName: string; count: number; featured?: boolean; visible: boolean;
 }) {
   return (
     <motion.g
-      initial={{ opacity: 0, scale: 0 }}
-      animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.6 }}
       transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+      style={{ pointerEvents: 'none' }}
     >
-      {featured && (
-        <circle r={r + 6} fill="none" stroke={color} strokeWidth={1.5} opacity={0.4} />
-      )}
-      <circle r={r} fill={color} fillOpacity={opacity} />
+      {/* Pill background */}
+      <rect
+        x={featured ? -44 : -36} y={featured ? -24 : -20}
+        width={featured ? 88 : 72} height={featured ? 38 : 32}
+        rx={6}
+        fill="rgba(4,1,10,0.75)"
+        stroke={featured ? 'rgba(255,208,96,0.5)' : 'rgba(255,255,255,0.1)'}
+        strokeWidth={featured ? 1 : 0.5}
+      />
+      {/* Region name */}
       <text
-        textAnchor={anchor}
-        x={anchor === 'end' ? -(r + 5) : r + 5}
-        y={4}
+        textAnchor="middle"
+        y={featured ? -8 : -6}
         style={{
-          fill: textColor,
+          fill: featured ? '#FFD060' : '#F5F0E8',
           fontSize: featured ? 11 : 9,
           fontFamily: 'Inter, -apple-system, sans-serif',
           fontWeight: featured ? 700 : 600,
           paintOrder: 'stroke fill',
-          stroke: '#04010A',
-          strokeWidth: 3,
-          strokeLinejoin: 'round',
         } as React.CSSProperties}
       >
-        {featured ? `✦ ${label}` : label}
+        {featured ? `✦ ${korName}` : korName}
+      </text>
+      {/* Wine count */}
+      <text
+        textAnchor="middle"
+        y={featured ? 8 : 7}
+        style={{
+          fill: featured ? '#FFD060' : '#C9A84C',
+          fontSize: featured ? 13 : 11,
+          fontFamily: 'Inter, -apple-system, sans-serif',
+          fontWeight: 700,
+        } as React.CSSProperties}
+      >
+        {count}병
       </text>
     </motion.g>
   );
 }
 
 // ── Wine card ────────────────────────────────────────────────────────────────
-function WineCard({ name, grade, grape, note, year, region }: typeof WINES[number]) {
-  const gradeColor = grade === 'Grand Cru' ? '#FFD060' : grade === '1er Cru' ? '#C9A84C' : '#9B8B7A';
+function WineCard({ name, grade, year, note, producer }: typeof MEURSAULT_WINES[number]) {
+  const gradeColor = grade === '1er Cru' ? '#C9A84C' : grade === 'Lieu-dit' ? '#B0A080' : '#9B8B7A';
   return (
     <div style={{
       flexShrink: 0,
-      width: 'clamp(160px, 44vw, 200px)',
-      background: 'rgba(255,255,255,0.04)',
-      border: '1px solid rgba(255,255,255,0.08)',
+      width: 'clamp(158px, 42vw, 195px)',
+      background: 'rgba(255,255,255,0.035)',
+      border: '1px solid rgba(255,208,96,0.12)',
       borderRadius: 12,
-      padding: '14px 16px',
+      padding: '14px 15px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 5,
     }}>
-      <div style={{ fontSize: 9, color: gradeColor, letterSpacing: '0.15em', marginBottom: 6, fontWeight: 700 }}>
-        {region} · {grade}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontSize: 9, color: gradeColor, fontWeight: 700, letterSpacing: '0.12em' }}>{grade}</span>
+        <span style={{ fontSize: 9, color: '#6A5E4A' }}>{year}</span>
       </div>
-      <div style={{ fontSize: 13, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 400, lineHeight: 1.3, marginBottom: 6 }}>
+      <div style={{
+        fontSize: 13,
+        fontFamily: 'Georgia, serif',
+        color: '#F5F0E8',
+        lineHeight: 1.3,
+        fontWeight: 400,
+      }}>
         {name}
       </div>
-      <div style={{ fontSize: 10, color: '#9B8B7A', marginBottom: 8 }}>
-        {grape} · {year}
-      </div>
-      <div style={{ fontSize: 10, color: '#C9A84C', lineHeight: 1.5 }}>
-        {note}
-      </div>
+      <div style={{ fontSize: 10, color: '#9B8B7A' }}>{producer}</div>
+      <div style={{ fontSize: 10, color: '#C9A84C', lineHeight: 1.5, marginTop: 2 }}>{note}</div>
     </div>
   );
 }
 
-// ── Main component ──────────────────────────────────────────────────────────
+// ── Main section ─────────────────────────────────────────────────────────────
 export default function FranceWineSection() {
-  const outerRef = useRef<HTMLDivElement>(null);
-  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const outerRef   = useRef<HTMLDivElement>(null);
+  const mapRef     = useRef<HTMLDivElement>(null);
 
-  const [progress, setProgress]       = useState(0);
-  const [projScale, setProjScale]     = useState(2100);
-  const [projCenter, setProjCenter]   = useState<[number, number]>([2.2, 46.4]);
-  const [majorCount, setMajorCount]   = useState(0);
-  const [subCount, setSubCount]       = useState(0);
-  const [showWines, setShowWines]     = useState(false);
+  const [mapVisible,    setMapVisible]    = useState(false);
+  const [revealedCount, setRevealedCount] = useState(0); // how many regions revealed (1-5)
+  const [wineListIn,    setWineListIn]    = useState(false);
 
-  // ── preserveAspectRatio="xMidYMid slice" on France SVG (fills viewport) ──
-  useLayoutEffect(() => {
-    const apply = () => {
-      mapContainerRef.current?.querySelectorAll('svg').forEach((svg) => {
-        svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-        svg.style.width = '100%';
-        svg.style.height = '100%';
-      });
-    };
-    apply();
-    const obs = new MutationObserver(apply);
-    if (mapContainerRef.current) obs.observe(mapContainerRef.current, { childList: true, subtree: true });
-    return () => obs.disconnect();
-  }, []);
+  useSliceSvg(mapRef);
 
-  // ── Scroll tracking ────────────────────────────────────────────────────────
-  const { scrollYProgress } = useScroll({ target: outerRef, offset: ['start start', 'end start'] });
-
-  const rafRef = useRef<number>(0);
-  const updateState = useCallback((v: number) => {
-    setProgress(v);
-
-    // Scale: 2100 → 5200 (zoom into Burgundy)
-    const newScale = Math.round(lerp(2100, 5200, norm(v, 0.12, 0.80)));
-
-    // Center pans from France center → Burgundy
-    const cx = lerp(2.2, 4.82, norm(v, 0.30, 0.70));
-    const cy = lerp(46.4, 47.05, norm(v, 0.30, 0.70));
-
-    setProjScale(newScale);
-    setProjCenter([cx, cy]);
-
-    // Sequential region reveal
-    setMajorCount(Math.max(0, Math.min(5, Math.floor(norm(v, 0.22, 0.50) * 25))));
-    setSubCount(Math.max(0, Math.min(SUB.length, Math.floor(norm(v, 0.52, 0.80) * 40))));
-    setShowWines(v > 0.62);
-  }, []);
-
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => updateState(v));
+  const { scrollYProgress } = useScroll({
+    target: outerRef,
+    offset: ['start start', 'end start'],
   });
 
-  // ── Derived display state ──────────────────────────────────────────────────
-  const stage = progress < 0.25 ? 0 : progress < 0.52 ? 1 : 2;
-  const mapHeight = showWines ? '58%' : '100%';
-  const titleVisible = progress > 0.04 && progress < 0.92;
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    setMapVisible(v > 0.06);
+    // Reveal up to 5 regions sequentially
+    setRevealedCount(
+      v < 0.18 ? 0 :
+      v < 0.32 ? 1 :
+      v < 0.44 ? 2 :
+      v < 0.56 ? 3 :
+      v < 0.66 ? 4 : 5
+    );
+    setWineListIn(v > 0.60);
+  });
+
+  // Is a specific department visible?
+  const isDeptVisible = (order: number) => revealedCount >= order;
 
   return (
-    <div ref={outerRef} style={{ height: '300vh', position: 'relative' }}>
+    <div ref={outerRef} style={{ height: '210vh', position: 'relative' }}>
 
-      {/* ── Sticky viewport ── */}
+      {/* ── Sticky viewport ──────────────────────────────────────────────── */}
       <div style={{
         position: 'sticky', top: 0, height: '100vh',
         overflow: 'hidden', background: '#04010A',
         display: 'flex', flexDirection: 'column',
       }}>
 
-        {/* ── Section title ── */}
-        <AnimatePresence>
-          {titleVisible && (
-            <motion.div
-              key="title"
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                position: 'absolute', top: 'clamp(18px,3vh,40px)',
-                left: '50%', transform: 'translateX(-50%)',
-                textAlign: 'center', zIndex: 20, pointerEvents: 'none',
-              }}
-            >
-              <div style={{ fontSize: 10, letterSpacing: '0.3em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 8 }}>
-                Zoom In · 지역 탐험
-              </div>
-              <h2 style={{
-                fontFamily: 'var(--font-playfair), Georgia, serif',
-                fontSize: 'clamp(20px,3.5vw,36px)', fontWeight: 400, color: '#F5F0E8',
-              }}>
-                프랑스 와인 산지
-              </h2>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={mapVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            position: 'absolute', top: 'clamp(14px,2.5vh,32px)',
+            left: '50%', transform: 'translateX(-50%)',
+            textAlign: 'center', zIndex: 20, pointerEvents: 'none',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>
+            지역 탐험 · Zoom In
+          </div>
+          <h2 style={{
+            fontFamily: 'var(--font-playfair), Georgia, serif',
+            fontSize: 'clamp(18px,3.2vw,34px)', fontWeight: 400, color: '#F5F0E8',
+          }}>
+            프랑스 와인 산지
+          </h2>
+        </motion.div>
 
-        {/* ── Map area ── */}
-        <div ref={mapContainerRef} style={{
-          flex: '0 0 auto',
-          height: mapHeight,
-          transition: 'height 600ms cubic-bezier(0.4,0,0.2,1)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}>
+        {/* ── Map (department outlines) ─────────────────────────────────── */}
+        <div
+          ref={mapRef}
+          style={{
+            flex: `0 0 ${wineListIn ? '56%' : '100%'}`,
+            transition: 'flex 600ms cubic-bezier(0.4,0,0.2,1)',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
           <motion.div
             style={{ width: '100%', height: '100%' }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: progress > 0.08 ? 1 : 0 }}
-            transition={{ duration: 0.6 }}
+            animate={{ opacity: mapVisible ? 1 : 0 }}
+            transition={{ duration: 0.7 }}
           >
             <ComposableMap
               projection="geoMercator"
-              projectionConfig={{ center: projCenter, scale: projScale }}
+              projectionConfig={{ center: [2.4, 46.8], scale: 1950 }}
               width={600}
-              height={700}
+              height={680}
               style={{ width: '100%', height: '100%', display: 'block' }}
             >
-              {/* France outline */}
-              <Geographies geography={GEO_URL}>
+              {/* All France departments */}
+              <Geographies geography={DEPT_URL}>
                 {({ geographies }) =>
-                  geographies
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    .filter((g) => String((g as any).id).padStart(3, '0') === '250')
-                    .map((g) => (
+                  geographies.map((geo) => {
+                    const code   = geo.properties.code as string;
+                    const wine   = WINE_DEPTS[code];
+                    const order  = wine?.revealOrder ?? 999;
+                    const shown  = wine && isDeptVisible(order);
+
+                    return (
                       <Geography
-                        key={g.rsmKey}
-                        geography={g}
+                        key={geo.rsmKey}
+                        geography={geo}
                         style={{
-                          default: { fill: '#1C0838', stroke: '#4A1A78', strokeWidth: 1.5, outline: 'none' },
-                          hover:   { fill: '#1C0838', stroke: '#4A1A78', strokeWidth: 1.5, outline: 'none' },
-                          pressed: { fill: '#1C0838', stroke: '#4A1A78', strokeWidth: 1.5, outline: 'none' },
+                          default: {
+                            fill:        shown ? '#D42040' : '#1C0838',
+                            fillOpacity: shown ? (wine?.opacity ?? 0) : 1,
+                            stroke:      shown ? '#5A1028' : '#3A1068',
+                            strokeWidth: 0.8,
+                            outline: 'none',
+                            transition: 'fill 400ms ease, fill-opacity 400ms ease',
+                          },
+                          hover: {
+                            fill:        shown ? '#D42040' : '#1C0838',
+                            fillOpacity: shown ? (wine?.opacity ?? 0) : 1,
+                            stroke:      shown ? '#5A1028' : '#3A1068',
+                            strokeWidth: 0.8,
+                            outline: 'none',
+                          },
+                          pressed: {
+                            fill: '#1C0838', fillOpacity: 1, stroke: '#3A1068',
+                            strokeWidth: 0.8, outline: 'none',
+                          },
                         }}
                       />
-                    ))
+                    );
+                  })
                 }
               </Geographies>
 
-              {/* Major regions — phase 1 */}
-              {MAJOR.map((r, i) => (
-                <Marker key={r.name} coordinates={r.coords}>
-                  <RegionDot {...r} visible={i < majorCount} />
-                </Marker>
-              ))}
-
-              {/* Sub-regions — phase 2 */}
-              {SUB.map((r, i) => (
-                <Marker key={r.name} coordinates={r.coords}>
-                  <RegionDot {...r} visible={i < subCount} featured={r.name === 'Meursault'} />
-                </Marker>
-              ))}
+              {/* Region labels with wine count */}
+              {Object.entries(WINE_DEPTS)
+                .filter(([, d]) => d.showLabel && d.korName)
+                .map(([code, d]) => (
+                  <Marker key={code} coordinates={d.labelCoords}>
+                    <RegionLabel
+                      korName={d.korName}
+                      count={d.count}
+                      featured={d.featured}
+                      visible={isDeptVisible(d.revealOrder)}
+                    />
+                  </Marker>
+                ))
+              }
             </ComposableMap>
           </motion.div>
 
-          {/* Vignette edges */}
+          {/* Vignette */}
           <div style={{
             position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: 'radial-gradient(ellipse 90% 85% at 50% 52%, transparent 50%, rgba(4,1,10,0.90) 100%)',
+            background: 'radial-gradient(ellipse 90% 85% at 50% 52%, transparent 55%, rgba(4,1,10,0.88) 100%)',
           }} />
 
-          {/* Meursault info card — desktop only (hidden on mobile via media query below) */}
-          <AnimatePresence>
-            {subCount >= 4 && (
-              <motion.div
-                key="meursault-card"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                style={{
-                  position: 'absolute', bottom: '16%', right: 'clamp(12px,5vw,56px)',
-                  width: 'clamp(150px,20vw,200px)',
-                  background: 'rgba(8,2,18,0.88)',
-                  border: '1px solid rgba(201,168,76,0.25)',
-                  borderRadius: 12,
-                  padding: '14px 18px',
-                  zIndex: 15,
-                  backdropFilter: 'blur(12px)',
-                  display: 'var(--card-display, block)',
-                }}
-              >
-                <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Côte de Beaune
-                </div>
-                <div style={{ fontFamily: 'Georgia, serif', fontSize: 16, color: '#F5F0E8', marginBottom: 8 }}>
-                  ✦ Meursault
-                </div>
-                <div style={{ fontSize: 11, color: '#9B8B7A', lineHeight: 1.65 }}>
-                  Chardonnay 100%<br />
-                  AOC Côte de Beaune<br />
-                  <span style={{ color: '#C9A84C' }}>1er Cru · Grand Cru</span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Stage dots (right side) */}
+          <div style={{
+            position: 'absolute', right: 'clamp(10px,2.5vw,20px)', top: '50%',
+            transform: 'translateY(-50%)',
+            display: 'flex', flexDirection: 'column', gap: 8, zIndex: 20,
+          }}>
+            {[1,2,3,4,5].map((i) => (
+              <div key={i} style={{
+                width: revealedCount >= i ? 16 : 5,
+                height: 5,
+                borderRadius: 3,
+                background: revealedCount >= i ? '#C41E3A' : 'rgba(255,255,255,0.12)',
+                transition: 'all 350ms ease',
+              }} />
+            ))}
+          </div>
         </div>
 
-        {/* ── Wine list panel — slides up from bottom ── */}
+        {/* ── Wine list panel ───────────────────────────────────────────── */}
         <AnimatePresence>
-          {showWines && (
+          {wineListIn && (
             <motion.div
               key="wine-panel"
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              transition={{ duration: 0.55, ease: [0.32, 0.72, 0, 1] }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
               style={{
                 flex: '1 1 0',
-                display: 'flex', flexDirection: 'column',
-                background: 'rgba(6,2,16,0.95)',
-                borderTop: '1px solid rgba(201,168,76,0.18)',
-                backdropFilter: 'blur(16px)',
-                padding: 'clamp(14px,2.5vh,24px) clamp(16px,4vw,28px)',
+                borderTop: '1px solid rgba(255,208,96,0.15)',
+                background: 'rgba(5,2,14,0.96)',
+                backdropFilter: 'blur(12px)',
+                padding: 'clamp(12px,2vh,20px) clamp(16px,4vw,28px)',
+                display: 'flex',
+                flexDirection: 'column',
                 overflow: 'hidden',
               }}
             >
-              {/* Panel header */}
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 'clamp(10px,1.8vh,18px)', flexShrink: 0 }}>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 'clamp(10px,1.8vh,16px)', flexShrink: 0 }}>
                 <div>
-                  <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 3 }}>
-                    내가 기록한 와인
+                  <div style={{ fontSize: 9, color: '#C9A84C', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 3 }}>
+                    내가 마신 와인
                   </div>
                   <h3 style={{
                     fontFamily: 'Georgia, serif',
-                    fontSize: 'clamp(14px,2.2vw,20px)',
+                    fontSize: 'clamp(13px,2vw,18px)',
                     fontWeight: 400, color: '#F5F0E8', margin: 0,
                   }}>
-                    Bourgogne · 부르고뉴
+                    프랑스 뫼르소의 와인들
                   </h3>
                 </div>
                 <div style={{
-                  marginLeft: 'auto',
-                  padding: '4px 10px',
-                  background: 'rgba(196,30,58,0.15)',
-                  border: '1px solid rgba(196,30,58,0.3)',
+                  marginLeft: 'auto', flexShrink: 0,
+                  padding: '4px 12px',
+                  background: 'rgba(255,208,96,0.1)',
+                  border: '1px solid rgba(255,208,96,0.3)',
                   borderRadius: 20,
-                  fontSize: 11, color: '#E06070', fontWeight: 600,
-                  flexShrink: 0,
+                  fontSize: 11, color: '#FFD060', fontWeight: 700,
                 }}>
-                  {WINES.length}병
+                  28병
                 </div>
               </div>
 
-              {/* Horizontally scrollable wine cards */}
+              {/* Horizontal wine cards */}
               <div style={{
-                display: 'flex',
-                gap: 12,
-                overflowX: 'auto',
-                paddingBottom: 8,
-                scrollbarWidth: 'none',
-                flex: 1,
+                display: 'flex', gap: 12,
+                overflowX: 'auto', flex: 1,
                 alignItems: 'flex-start',
+                paddingBottom: 4,
               }}>
-                {WINES.map((w) => <WineCard key={w.name} {...w} />)}
-              </div>
-
-              {/* Hint text */}
-              <div style={{ fontSize: 10, color: '#4A3D56', marginTop: 'clamp(6px,1vh,12px)', flexShrink: 0 }}>
-                실제 앱에서는 내가 기록한 와인이 표시됩니다
+                {MEURSAULT_WINES.map((w) => <WineCard key={w.name} {...w} />)}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* ── Stage indicator (bottom dots) ── */}
-        <div style={{
-          position: 'absolute',
-          bottom: showWines ? 'auto' : 'clamp(14px,3vh,28px)',
-          top: showWines ? 'clamp(14px,3vh,28px)' : 'auto',
-          right: 'clamp(12px,3vw,28px)',
-          display: 'flex', flexDirection: 'column', gap: 6, zIndex: 20,
-          transition: 'all 400ms ease',
-        }}>
-          {['국가', '산지', '아펠라시옹'].map((label, i) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6, flexDirection: 'row-reverse' }}>
-              <div style={{
-                width: stage === i ? 20 : 6,
-                height: 6,
-                borderRadius: 3,
-                background: stage === i ? '#C41E3A' : 'rgba(255,255,255,0.15)',
-                transition: 'all 350ms ease',
-              }} />
-              {stage === i && (
-                <span style={{ fontSize: 9, color: '#F5F0E8', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
-                  {label}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* ── Scroll hint ── */}
+        {/* Scroll hint */}
         <AnimatePresence>
-          {progress < 0.08 && (
+          {!mapVisible && (
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', zIndex: 20 }}
+              style={{
+                position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+                zIndex: 20,
+              }}
             >
               <motion.div
                 animate={{ y: [0, 6, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                style={{ color: '#4A3D56', fontSize: 11, letterSpacing: '0.12em' }}
+                style={{ color: '#4A3D56', fontSize: 11, letterSpacing: '0.12em', textAlign: 'center' }}
               >
                 ↓ SCROLL
               </motion.div>
