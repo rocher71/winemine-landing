@@ -30,11 +30,15 @@ html {
 body {
   background-color: var(--color-bg-deepest);
   color: var(--color-text-primary);
-  /* Noto Sans KR covers Korean glyphs; Inter covers Latin — browser picks per character */
-  font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  /*
+    var(--font-inter) = next/font Inter (Latin/English)
+    'Noto Sans KR'    = Google Fonts (Korean characters)
+    Browser picks per glyph: Inter for English, Noto for Korean
+  */
+  font-family: var(--font-inter), 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  word-break: keep-all; /* 한글 줄바꿈 단어 단위 */
+  word-break: keep-all;
 }
 
 @keyframes mapSlideLeft {

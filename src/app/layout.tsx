@@ -49,7 +49,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
         />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      {/* inter.className 제거 — globals.css의 Noto Sans KR 폰트 스택이 적용되도록 */}
+      <body suppressHydrationWarning>
         {children}
 
         {/* Google Analytics */}
