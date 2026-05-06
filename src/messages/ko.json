@@ -8,7 +8,14 @@
   "franceWine": {
     "sectionLabel": "지역 탐험",
     "heading": "프랑스 와인 산지",
-    "scrollHint": "↓ SCROLL"
+    "scrollHint": "↓ SCROLL",
+    "regions": {
+      "21": "부르고뉴",
+      "33": "보르도",
+      "51": "샹파뉴",
+      "67": "알자스",
+      "69": "론 밸리"
+    }
   },
 
   "franceWineDetail": {
@@ -36,7 +43,7 @@
     "label1": "Vineyards of the World",
     "heading": "당신이 마신 와인이 태어난 땅",
     "label2": "Korea Wine Market 2026",
-    "body": "내만의 와인을\n지도 위에 기록하다",
+    "body": "나만의 와인을\n지도 위에 기록하다",
     "countries": {
       "france": { "name": "프랑스", "stat": "금액 1위 · $173M" },
       "chile": { "name": "칠레", "stat": "수입량 1위 · 22.54%" },

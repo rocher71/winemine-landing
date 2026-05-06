@@ -138,7 +138,8 @@ export default function FranceWineSection() {
               {visibleLabels.map(([code, d]) => (
                 <Marker key={code} coordinates={d.labelCoords}>
                   <RegionLabel
-                    korName={d.korName} count={d.count} featured={d.featured}
+                    korName={(messages.franceWine.regions as Record<string, string>)[code] ?? d.korName}
+                    count={d.count} featured={d.featured}
                     visible={isDeptVisible(d.revealOrder)}
                     bottleUnit={messages.franceWineDetail.bottleUnit}
                   />

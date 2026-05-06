@@ -8,7 +8,14 @@
   "franceWine": {
     "sectionLabel": "Explore Regions",
     "heading": "Wine Regions of France",
-    "scrollHint": "↓ SCROLL"
+    "scrollHint": "↓ SCROLL",
+    "regions": {
+      "21": "Burgundy",
+      "33": "Bordeaux",
+      "51": "Champagne",
+      "67": "Alsace",
+      "69": "Rhône Valley"
+    }
   },
 
   "franceWineDetail": {

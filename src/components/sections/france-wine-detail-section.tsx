@@ -210,6 +210,7 @@ function StaticFranceMap({ selectedRegion, onRegionClick }: {
   selectedRegion: string;
   onRegionClick: (regionKey: string) => void;
 }) {
+  const { messages } = useLocale();
   const mapRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -273,10 +274,11 @@ function StaticFranceMap({ selectedRegion, onRegionClick }: {
         {/* Interactive region labels */}
         {Object.entries(LABEL_COORDS).map(([code, coords]) => {
           const meta = REGION_META[code];
+          const localizedName = (messages.franceWineDetail.regions as Record<string, string>)[code] ?? REGION_KOR[code];
           return (
             <Marker key={code} coordinates={coords}>
               <InteractiveRegionLabel
-                korName={REGION_KOR[code]}
+                korName={localizedName}
                 count={meta.count}
                 featured={LABEL_FEATURED[code]}
                 selected={selectedRegion === code}
