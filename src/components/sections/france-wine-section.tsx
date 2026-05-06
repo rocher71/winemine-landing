@@ -171,8 +171,8 @@ const primaryKey = (code: string) => (code === '68' ? '67' : code);
 const MOBILE_KEYS = ['21', '33', '51'];
 
 // ── RegionLabel (SVG) ──────────────────────────────────────────────────────
-function RegionLabel({ korName, count, featured, visible, selected, showTapHint, onClick }: {
-  korName: string; count: number; featured?: boolean; visible: boolean; selected: boolean; showTapHint: boolean; onClick: () => void;
+function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
+  korName: string; count: number; featured?: boolean; visible: boolean; selected: boolean; onClick: () => void;
 }) {
   const border = selected ? GOLD : featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
   const sw = selected ? 1.8 : featured ? 1.2 : 0.6;
@@ -185,17 +185,6 @@ function RegionLabel({ korName, count, featured, visible, selected, showTapHint,
       onClick={visible ? onClick : undefined}
       whileHover={visible ? { scale: 1.08 } : undefined}
     >
-      {showTapHint && visible && (
-        <>
-          <motion.circle cx={0} cy={featured ? -38 : -32} r={3} fill={GOLD}
-            animate={{ opacity: [0.9, 0.3, 0.9], r: [3, 4.5, 3] }}
-            transition={{ duration: 1.6, repeat: Infinity }} />
-          <text textAnchor="middle" y={featured ? -26 : -21}
-            style={{ fontSize: 7.5, fill: 'rgba(240,200,118,0.8)', fontFamily: 'Inter,sans-serif', fontWeight: 500 } as React.CSSProperties}>
-            탭해보세요
-          </text>
-        </>
-      )}
       <rect x={featured ? -44 : -36} y={featured ? -24 : -20} width={featured ? 88 : 72} height={featured ? 38 : 32} rx={6}
         fill={selected ? 'rgba(4,1,10,0.94)' : 'rgba(4,1,10,0.82)'} stroke={border} strokeWidth={sw} />
       <text textAnchor="middle" y={featured ? -8 : -6}
@@ -272,38 +261,38 @@ function MobileBottomSheet({ selectedRegion, visible, revealedCount, onSelectReg
 }) {
   const [sortBy, setSortBy] = useState<'recent' | 'rating' | 'vintage'>('recent');
   const [sheetH, setSheetH] = useState(0.55);
+  const sheetHRef = useRef(0.55); // ref로 드래그 중 최신값 추적 (stale closure 방지)
   const handleRef = useRef<HTMLDivElement>(null);
 
   const wines = sortWines(REGION_WINES[selectedRegion] ?? [], sortBy);
   const meta = REGION_META[selectedRegion];
   const korName = WINE_DEPTS[selectedRegion]?.korName ?? '';
 
-  // Draggable handle — drag below 0.18 to dismiss
+  const updateH = (h: number) => { sheetHRef.current = h; setSheetH(h); };
+
+  // Draggable handle — ref 기반, sheetH 제거로 re-register 방지
   useEffect(() => {
     const el = handleRef.current;
     if (!el) return;
     let y0 = 0, h0 = 0;
     const ph = () => el.parentElement?.offsetHeight ?? 844;
-    const move = (y: number) => {
-      const next = Math.min(0.92, Math.max(0.08, h0 + (y0 - y) / ph()));
-      setSheetH(next);
-    };
+    const move = (y: number) => updateH(Math.min(0.92, Math.max(0.08, h0 + (y0 - y) / ph())));
     const release = (y: number) => {
       const next = h0 + (y0 - y) / ph();
-      if (next < 0.18) { onClose(); setSheetH(0.55); }
-      else setSheetH(Math.min(0.92, Math.max(0.18, next)));
+      if (next < 0.18) { onClose(); updateH(0.55); }
+      else updateH(Math.min(0.92, Math.max(0.18, next)));
     };
     const onMM = (e: MouseEvent) => move(e.clientY);
-    const onTM = (e: TouchEvent) => move(e.touches[0].clientY);
+    const onTM = (e: TouchEvent) => { e.preventDefault(); move(e.touches[0].clientY); }; // preventDefault: 페이지 스크롤 차단
     const onMU = (e: MouseEvent) => { release(e.clientY); up(); };
     const onTE = (e: TouchEvent) => { release(e.changedTouches[0].clientY); up(); };
     const up = () => { window.removeEventListener('mousemove', onMM); window.removeEventListener('mouseup', onMU); window.removeEventListener('touchmove', onTM); window.removeEventListener('touchend', onTE); };
-    const md = (e: MouseEvent) => { y0 = e.clientY; h0 = sheetH; window.addEventListener('mousemove', onMM); window.addEventListener('mouseup', onMU); };
-    const ts = (e: TouchEvent) => { y0 = e.touches[0].clientY; h0 = sheetH; window.addEventListener('touchmove', onTM, { passive: false }); window.addEventListener('touchend', onTE); };
+    const md = (e: MouseEvent) => { y0 = e.clientY; h0 = sheetHRef.current; window.addEventListener('mousemove', onMM); window.addEventListener('mouseup', onMU); };
+    const ts = (e: TouchEvent) => { y0 = e.touches[0].clientY; h0 = sheetHRef.current; window.addEventListener('touchmove', onTM, { passive: false }); window.addEventListener('touchend', onTE); };
     el.addEventListener('mousedown', md);
     el.addEventListener('touchstart', ts, { passive: true });
     return () => { el.removeEventListener('mousedown', md); el.removeEventListener('touchstart', ts); up(); };
-  }, [sheetH, onClose]);
+  }, [onClose]); // sheetH 제거 — re-register 없음
 
   return (
     <AnimatePresence>
@@ -475,9 +464,7 @@ export default function FranceWineSection() {
 
   const handleClose = () => {
     setShowPanel(false);
-    blockAutoShow.current = true;
-    // 800ms 후 자동 재오픈 허용 — 이후 스크롤 또는 라벨 클릭으로 열림
-    setTimeout(() => { blockAutoShow.current = false; }, 800);
+    blockAutoShow.current = true; // 라벨 탭 전까지 자동 재오픈 차단 (타임아웃 없음)
   };
 
   const handleRegionClick = (code: string) => {
@@ -524,7 +511,6 @@ export default function FranceWineSection() {
                     korName={d.korName} count={d.count} featured={d.featured}
                     visible={isDeptVisible(d.revealOrder)}
                     selected={selectedRegion === primaryKey(code)}
-                    showTapHint={isMobile && isDeptVisible(d.revealOrder) && selectedRegion !== primaryKey(code)}
                     onClick={() => handleRegionClick(code)}
                   />
                 </Marker>
@@ -556,7 +542,62 @@ export default function FranceWineSection() {
         {!isMobile && <DesktopWinePanel regionKey={selectedRegion} visible={showPanel} />}
         {isMobile && <MobileBottomSheet selectedRegion={selectedRegion} visible={showPanel} revealedCount={revealedCount} onSelectRegion={(k) => { blockAutoShow.current = false; setSelectedRegion(k); setShowPanel(true); }} onClose={handleClose} />}
 
-        {/* Scroll hint */}
+        {/* 모바일 전용 — 지역 클릭 안내 (패널이 닫혔을 때 + 지역이 1개 이상 등장했을 때) */}
+        <AnimatePresence>
+          {isMobile && mapVisible && !showPanel && revealedCount >= 1 && (
+            <motion.div
+              key="click-hint"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              style={{
+                position: 'absolute',
+                bottom: 'clamp(32px, 6vh, 56px)',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 25,
+                pointerEvents: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <motion.div
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                  background: 'rgba(5,2,14,0.82)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(201,168,76,0.4)',
+                  borderRadius: 50,
+                  padding: '11px 28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                }}
+              >
+                <motion.span
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 1.8, repeat: Infinity }}
+                  style={{ fontSize: 16, color: GOLD }}
+                >
+                  ✦
+                </motion.span>
+                <span style={{
+                  fontSize: 15,
+                  fontWeight: 700,
+                  color: '#F5F0E8',
+                  letterSpacing: '-0.01em',
+                  fontFamily: 'Inter, sans-serif',
+                }}>
+                  지역을 클릭해 보세요
+                </span>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Scroll hint (맵 등장 전) */}
         <AnimatePresence>
           {!mapVisible && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
