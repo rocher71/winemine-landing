@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { submitWaitlist } from '@/app/actions';
+import { trackEvent } from '@/lib/analytics';
 import {
   emailContactSchema,
   phoneContactSchema,
@@ -39,12 +40,14 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
 
   const onSubmit = async (data: ContactFormData) => {
     setServerError(null);
+    trackEvent('waitlist_submit', { contact_type: contactType });
     try {
       const result = await submitWaitlist({
         contact: data.contact,
         contactType,
       });
       if (result.success) {
+        trackEvent('waitlist_success', { contact_type: contactType });
         onSuccess();
       } else {
         setServerError('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');

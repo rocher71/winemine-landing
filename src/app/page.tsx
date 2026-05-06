@@ -10,6 +10,7 @@ import HowItWorksSection from '@/components/sections/how-it-works-section';
 import InstagramPreviewSection from '@/components/sections/instagram-preview-section';
 import FinalCTASection from '@/components/sections/final-cta-section';
 import WaitlistModal from '@/components/waitlist/waitlist-modal';
+import { FloatingCTA } from '@/components/ui/floating-cta';
 
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -48,6 +49,7 @@ export default function Home() {
       <FinalCTASection onOpenModal={openModal} />
 
       <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
+      <FloatingCTA onOpenModal={openModal} />
     </main>
   );
 }

@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { StoreButtons } from '@/components/ui/store-buttons';
 
 const WorldMap = dynamic(() => import('@/components/map/world-map'), {
   ssr: false,
@@ -99,45 +100,9 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
         <motion.div
           {...fadeUp}
           transition={{ duration: 0.4, delay: 0.7 }}
-          style={{
-            marginTop: 48,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 12,
-          }}
+          style={{ marginTop: 48 }}
         >
-          <button
-            type="button"
-            onClick={onOpenModal}
-            style={{
-              background: '#8B1A2A',
-              color: '#F5F0E8',
-              border: 'none',
-              height: 56,
-              padding: '0 40px',
-              borderRadius: 4,
-              fontSize: 16,
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 200ms ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#A02030';
-              e.currentTarget.style.transform = 'scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(139,26,42,0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#8B1A2A';
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            앱 다운받기
-          </button>
-          <span style={{ fontSize: 12, color: '#9B8B7A' }}>
-            coming soon — 지금 사전 신청하세요
-          </span>
+          <StoreButtons onOpenModal={onOpenModal} location="hero" />
         </motion.div>
       </div>
 
