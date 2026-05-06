@@ -3,6 +3,7 @@
 import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { useLocale } from '@/components/providers/locale-provider';
 
 // ── Story card content ──────────────────────────────────────────────────────
 const STORY_COUNTRIES = [
@@ -86,6 +87,7 @@ function StoryWorldMap() {
 
 // ── Story Card (9:16 ratio) ────────────────────────────────────────────────
 function StoryCard({ animate }: { animate: boolean }) {
+  const { messages } = useLocale();
   return (
     <div
       style={{
@@ -132,7 +134,7 @@ function StoryCard({ animate }: { animate: boolean }) {
             flexShrink: 0,
           }}>W</div>
           <span style={{ fontSize: 11, fontWeight: 600, color: '#F5F0E8' }}>winemine</span>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>지금</span>
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>{messages.instagramPreview.timestamp}</span>
         </div>
       </div>
 
@@ -148,7 +150,7 @@ function StoryCard({ animate }: { animate: boolean }) {
           fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 400,
           color: '#F5F0E8', lineHeight: 1.1, letterSpacing: '-0.01em',
         }}>
-          2025<br />Recap
+          2026<br />Recap
         </div>
         <div style={{ width: 30, height: 1, background: '#C9A84C', margin: '8px auto 0' }} />
       </div>
@@ -177,7 +179,7 @@ function StoryCard({ animate }: { animate: boolean }) {
         border: '1px solid rgba(255,255,255,0.05)',
         borderRadius: 8, padding: '10px 8px', marginBottom: 14,
       }}>
-        {[['82', '병'], ['15', '국가'], ['7', '개월']].map(([n, l]) => (
+        {[['82', messages.instagramPreview.statsLabels.bottles], ['15', messages.instagramPreview.statsLabels.countries], ['7', messages.instagramPreview.statsLabels.months]].map(([n, l]) => (
           <div key={l} style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: '#F5F0E8', lineHeight: 1 }}>{n}</div>
             <div style={{ fontSize: 9, color: '#9B8B7A', marginTop: 3, letterSpacing: '0.05em' }}>{l}</div>
@@ -221,8 +223,8 @@ function StoryCard({ animate }: { animate: boolean }) {
         <span style={{
           fontFamily: 'Georgia, serif', fontSize: 11,
           color: '#C9A84C', letterSpacing: '0.08em',
-        }}>WineMine</span>
-        <span style={{ fontSize: 9, color: '#4A3D56', marginLeft: 4 }}>winemine.com</span>
+        }}>winemine</span>
+        <span style={{ fontSize: 9, color: '#4A3D56', marginLeft: 4 }}>winemine</span>
       </div>
     </div>
   );
@@ -269,6 +271,7 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { messages } = useLocale();
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -295,18 +298,18 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
           style={{ textAlign: 'center', marginBottom: 72 }}
         >
           <div style={{ fontSize: 11, letterSpacing: '0.25em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 16 }}>
-            Share Your Journey
+            {messages.instagramPreview.sectionLabel}
           </div>
           <h2 style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(28px,4vw,40px)', fontWeight: 400, color: '#F5F0E8', lineHeight: 1.2,
           }}>
-            내 와인 지도를<br />공유해보세요
+            {messages.instagramPreview.heading.split('\n')[0]}<br />{messages.instagramPreview.heading.split('\n')[1]}
           </h2>
           <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 16px' }} />
           <p style={{ fontSize: 15, color: '#9B8B7A', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
-            기록이 쌓이면 자동으로 만들어지는 나만의 Recap.<br />
-            탭 한 번이면 공유 완료.
+            {messages.instagramPreview.body.split('\n')[0]}<br />
+            {messages.instagramPreview.body.split('\n')[1]}
           </p>
         </motion.div>
 
@@ -341,22 +344,10 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
               {[
-                {
-                  num: '1',
-                  title: '자동 생성',
-                  desc: '와인을 기록할 때마다 Recap이 업데이트된다. 따로 편집할 필요 없다.',
-                },
-                {
-                  num: '2',
-                  title: '이미지로 저장',
-                  desc: '공유하기 좋은 비율로 바로 저장된다. 별도 편집 불필요.',
-                },
-                {
-                  num: '3',
-                  title: '지역별 시각화',
-                  desc: '내가 마신 와인의 원산지가 지도 위에 그대로 담긴다. 한눈에 내 취향이 보인다.',
-                },
-              ].map((item) => (
+                { num: '1' },
+                { num: '2' },
+                { num: '3' },
+              ].map((item, idx) => (
                 <div key={item.num} style={{ display: 'flex', gap: 20 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: '50%',
@@ -372,10 +363,10 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
                     <div style={{
                       fontSize: 16, fontWeight: 600, color: '#F5F0E8', marginBottom: 6,
                     }}>
-                      {item.title}
+                      {messages.instagramPreview.features[idx].title}
                     </div>
                     <div style={{ fontSize: 14, color: '#9B8B7A', lineHeight: 1.7 }}>
-                      {item.desc}
+                      {messages.instagramPreview.features[idx].desc}
                     </div>
                   </div>
                 </div>

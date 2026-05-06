@@ -2,12 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
+import { useLocale } from '@/components/providers/locale-provider';
 
 interface WaitlistSuccessProps {
   onClose: () => void;
 }
 
 export default function WaitlistSuccess({ onClose }: WaitlistSuccessProps) {
+  const { t } = useLocale();
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
@@ -25,12 +27,10 @@ export default function WaitlistSuccess({ onClose }: WaitlistSuccessProps) {
           marginBottom: 12,
         }}
       >
-        신청이 완료되었습니다!
+        {t('waitlistSuccess.heading')}
       </h3>
       <p style={{ fontSize: 14, color: '#9B8B7A', lineHeight: 1.6 }}>
-        출시되면 가장 먼저 알려드리겠습니다.
-        <br />
-        좋은 와인과 함께하는 날을 기대해주세요.
+        {t('waitlistSuccess.message').split('\n')[0]}<br />{t('waitlistSuccess.message').split('\n')[1]}
       </p>
       <button
         onClick={onClose}
@@ -54,7 +54,7 @@ export default function WaitlistSuccess({ onClose }: WaitlistSuccessProps) {
           e.currentTarget.style.color = '#9B8B7A';
         }}
       >
-        닫기
+        {t('waitlistSuccess.closeButton')}
       </button>
     </motion.div>
   );

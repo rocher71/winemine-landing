@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useLocale } from '@/components/providers/locale-provider';
 
 const VINEYARDS = [
   {
@@ -38,6 +39,9 @@ const VINEYARDS = [
 ];
 
 export default function VineyardStrip() {
+  const { messages } = useLocale();
+  const countryKeys = ['france', 'chile', 'italy', 'newZealand'] as const;
+
   return (
     <section style={{ background: '#05020A', padding: 'clamp(48px,7vw,80px) 0' }}>
       {/* Header */}
@@ -49,7 +53,7 @@ export default function VineyardStrip() {
         style={{ textAlign: 'center', marginBottom: 'clamp(28px,4vw,48px)', padding: '0 24px' }}
       >
         <div style={{ fontSize: 10, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 12 }}>
-          Vineyards of the World
+          {messages.vineyardStrip.label1}
         </div>
         <h2 style={{
           fontFamily: 'var(--font-playfair), Georgia, serif',
@@ -58,7 +62,7 @@ export default function VineyardStrip() {
           color: '#F5F0E8',
           lineHeight: 1.2,
         }}>
-          당신이 마신 와인이 태어난 땅
+          {messages.vineyardStrip.heading}
         </h2>
       </motion.div>
 
@@ -127,10 +131,10 @@ export default function VineyardStrip() {
                 color: '#F5F0E8',
                 marginBottom: 4,
               }}>
-                {v.korean}
+                {messages.vineyardStrip.countries[countryKeys[i]].name}
               </div>
               <div style={{ fontSize: 'clamp(9px,1vw,12px)', color: '#C9A84C', letterSpacing: '0.06em' }}>
-                {v.stat}
+                {messages.vineyardStrip.countries[countryKeys[i]].stat}
               </div>
             </div>
           </motion.div>
@@ -163,14 +167,14 @@ export default function VineyardStrip() {
           flexDirection: 'column', gap: 8,
         }}>
           <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.3em', color: '#C9A84C', textTransform: 'uppercase' }}>
-            Korea Wine Market 2025
+            {messages.vineyardStrip.label2}
           </div>
           <div style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(18px,3.5vw,36px)',
             fontWeight: 400, color: '#F5F0E8', textAlign: 'center',
           }}>
-            전문가가 선택한 와인을<br />지도 위에 기록하다
+            {messages.vineyardStrip.body.split('\n').map((line, i) => i === 0 ? <>{line}<br /></> : line)}
           </div>
         </div>
       </div>

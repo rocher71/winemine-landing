@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { StoreButtons } from '@/components/ui/store-buttons';
+import { useLocale } from '@/components/providers/locale-provider';
 
 interface FinalCTASectionProps {
   onOpenModal: () => void;
@@ -9,6 +10,7 @@ interface FinalCTASectionProps {
 
 export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { t } = useLocale();
 
   return (
     <>
@@ -32,7 +34,7 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
             Make your own Wine Map
           </h2>
           <p style={{ fontSize: 16, color: '#9B8B7A', marginTop: 16 }}>
-            사전 신청하시면 출시 즉시 알려드립니다.
+            {t('finalCta.body')}
           </p>
           <div style={{ marginTop: 40 }}>
             <StoreButtons onOpenModal={onOpenModal} location="final_cta" />
@@ -50,7 +52,7 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
         }}
       >
         <p style={{ fontSize: 13, color: '#4A3D56' }}>
-          © 2025 winemine. All rights reserved.
+          {t('finalCta.copyright')}
         </p>
       </footer>
     </>

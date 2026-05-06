@@ -11,6 +11,7 @@ import {
   phoneContactSchema,
   type ContactFormData,
 } from '@/lib/validations';
+import { useLocale } from '@/components/providers/locale-provider';
 
 interface WaitlistFormProps {
   onSuccess: () => void;
@@ -25,6 +26,7 @@ function formatPhone(raw: string): string {
 }
 
 export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
+  const { t } = useLocale();
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [marketingAgree, setMarketingAgree] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -61,10 +63,10 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         trackEvent('waitlist_success', { contact_type: contactType });
         onSuccess();
       } else {
-        setServerError('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        setServerError(t('waitlistForm.serverError'));
       }
     } catch {
-      setServerError('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      setServerError(t('waitlistForm.serverError'));
     }
   };
 
@@ -114,7 +116,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
               ...(contactType === type ? activeTabStyle : inactiveTabStyle),
             }}
           >
-            {type === 'email' ? '이메일' : '전화번호'}
+            {t(`waitlistForm.tabs.${type}`)}
           </button>
         ))}
       </div>
@@ -126,7 +128,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
             {...register('contact')}
             type="email"
             autoComplete="email"
-            placeholder="wine@example.com"
+            placeholder={t('waitlistForm.emailPlaceholder')}
             aria-invalid={errors.contact ? 'true' : 'false'}
             style={inputBaseStyle}
             onFocus={(e) => { e.currentTarget.style.borderColor = '#8B1A2A'; }}
@@ -169,8 +171,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           {marketingAgree ? '✅' : '☐'}
         </span>
         <span style={{ fontSize: 12, color: '#6A5E4A', lineHeight: 1.5 }}>
-          <span style={{ color: '#4A3D56' }}>(선택) </span>
-          마케팅 알림 받기 — 앱 출시 및 특별 혜택 소식을 받겠습니다.
+          {t('waitlistForm.marketingCheckbox')}
         </span>
       </div>
 
@@ -204,13 +205,12 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         onMouseLeave={(e) => { e.currentTarget.style.background = '#8B1A2A'; }}
       >
         {isSubmitting && <Loader2 size={20} className="animate-spin" />}
-        {isSubmitting ? '잠시만요...' : '신청하기'}
+        {isSubmitting ? t('waitlistForm.loadingButton') : t('waitlistForm.submitButton')}
       </button>
 
       {/* 개인정보 처리 안내 */}
       <p style={{ fontSize: 11, color: '#4A3D56', textAlign: 'center', marginTop: 12, lineHeight: 1.6 }}>
-        수집된 연락처는 출시 알림 목적으로만 사용되며,<br />
-        앱 출시 후 즉시 폐기됩니다.
+        {t('waitlistForm.privacyNotice').split('\n')[0]}<br />{t('waitlistForm.privacyNotice').split('\n')[1]}
       </p>
     </form>
   );

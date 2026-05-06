@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import WaitlistForm from './waitlist-form';
 import WaitlistSuccess from './waitlist-success';
+import { useLocale } from '@/components/providers/locale-provider';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface WaitlistModalProps {
 }
 
 export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
+  const { t } = useLocale();
   const [showSuccess, setShowSuccess] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -119,7 +121,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#F5F0E8'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = '#4A3D56'; }}
-              aria-label="모달 닫기"
+              aria-label={t('waitlistModal.closeAriaLabel')}
             >
               <X size={20} />
             </button>
@@ -131,11 +133,10 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                   fontSize: isMobile ? 28 : 32,
                   fontWeight: 400, color: '#F5F0E8',
                 }}>
-                  사전 신청
+                  {t('waitlistModal.title')}
                 </h2>
                 <p style={{ fontSize: 14, color: '#9B8B7A', marginTop: 12, lineHeight: 1.6 }}>
-                  이메일 또는 전화번호를 남겨주시면<br />
-                  앱 출시 시 가장 먼저 알려드립니다.
+                  {t('waitlistModal.description').split('\n')[0]}<br />{t('waitlistModal.description').split('\n')[1]}
                 </p>
                 <div style={{ width: 40, height: 2, background: '#C9A84C', margin: '16px 0 32px' }} />
               </>

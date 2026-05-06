@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { trackEvent } from '@/lib/analytics';
+import { useLocale } from '@/components/providers/locale-provider';
 
 function AppleIconSmall() {
   return (
@@ -29,6 +30,7 @@ interface FloatingCTAProps {
 }
 
 export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAProps) {
+  const { t } = useLocale();
   const [show, setShow] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -90,7 +92,7 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
             <PlayIconSmall />
           </div>
           <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
-            앱 다운받기
+            {t('floatingCta.button')}
           </span>
         </motion.button>
       )}

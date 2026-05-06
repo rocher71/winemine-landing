@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useLocale } from '@/components/providers/locale-provider';
 
 const STATS = [
   { value: 487558, suffix: '㎘', label: '2025 수입량', sub: '전년比 +5.27%', color: '#E8253E' },
@@ -47,10 +48,11 @@ const TRENDS = [
   { icon: '⚡', title: '시장 양극화', desc: '1만원대 데일리 와인과 10만원+ 프리미엄이 동반 성장. 중간 가격대는 위축.' },
   { icon: '🥂', title: '화이트 와인 부상', desc: '전체 -7.5% 축소 속에서 화이트만 +10%. 뉴질랜드 소비뇽 블랑 견인.' },
   { icon: '📱', title: 'MZ세대 일상화', desc: '홈술·혼술·SNS 페어링 콘텐츠. 와인을 특별한 날이 아닌 일상으로.' },
-  { icon: '🏪', title: '편의점 채널 폭발', desc: 'GS25·CU에서 1~2만원 데일리 와인이 주도. 두 자릿수 신장 지속.' },
+  { icon: '🏪', title: '편의점 채널 폭발', desc: '1~2만원 데일리 와인이 주도. 두 자릿수 신장 지속.' },
 ];
 
 export default function MarketStatsSection() {
+  const { messages } = useLocale();
   return (
     <section style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), #070210', padding: 'clamp(72px,9vw,120px) 24px' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -64,19 +66,19 @@ export default function MarketStatsSection() {
           style={{ textAlign: 'center', marginBottom: 'clamp(40px,6vw,72px)' }}
         >
           <div style={{ fontSize: 10, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 14 }}>
-            Korea Wine Market 2025
+            {messages.marketStats.sectionLabel}
           </div>
           <h2 style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(24px,3.8vw,40px)',
             fontWeight: 400, color: '#F5F0E8', lineHeight: 1.2,
           }}>
-            지금 한국 와인 시장은
+            {messages.marketStats.heading}
           </h2>
           <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '18px auto 0' }} />
           <p style={{ fontSize: 'clamp(13px,1.4vw,16px)', color: '#9B8B7A', marginTop: 16, maxWidth: 480, margin: '16px auto 0', lineHeight: 1.7 }}>
-            487,558㎘ — 이 수많은 와인들, 어디서 왔고 어떤 맛인지<br />
-            기억하고 있나요? WineMine이 도와드립니다.
+            {messages.marketStats.description.split('\n')[0]}<br />
+            {messages.marketStats.description.split('\n')[1]}
           </p>
         </motion.div>
 
@@ -91,7 +93,7 @@ export default function MarketStatsSection() {
         >
           {STATS.map((s, i) => (
             <motion.div
-              key={s.label}
+              key={messages.marketStats.stats[i].label}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
@@ -129,10 +131,10 @@ export default function MarketStatsSection() {
                 />
               </div>
               <div style={{ fontSize: 'clamp(12px,1.2vw,15px)', fontWeight: 600, color: '#F5F0E8', marginBottom: 4 }}>
-                {s.label}
+                {messages.marketStats.stats[i].label}
               </div>
               <div style={{ fontSize: 'clamp(10px,1vw,12px)', color: '#9B8B7A', letterSpacing: '0.04em' }}>
-                {s.sub}
+                {messages.marketStats.stats[i].sub}
               </div>
             </motion.div>
           ))}
@@ -146,7 +148,7 @@ export default function MarketStatsSection() {
         }}>
           {TRENDS.map((t, i) => (
             <motion.div
-              key={t.title}
+              key={messages.marketStats.trends[i].title}
               initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.55, delay: i * 0.08 }}
@@ -166,8 +168,8 @@ export default function MarketStatsSection() {
             >
               <div style={{ fontSize: 22, flexShrink: 0 }}>{t.icon}</div>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#F5F0E8', marginBottom: 6 }}>{t.title}</div>
-                <div style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.7 }}>{t.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#F5F0E8', marginBottom: 6 }}>{messages.marketStats.trends[i].title}</div>
+                <div style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.7 }}>{messages.marketStats.trends[i].desc}</div>
               </div>
             </motion.div>
           ))}
@@ -181,7 +183,7 @@ export default function MarketStatsSection() {
           viewport={{ once: true }}
           style={{ textAlign: 'center', fontSize: 11, color: '#4A3D56', marginTop: 'clamp(24px,3vw,40px)' }}
         >
-          출처: 관세청 무역통계 · 매체 보도 종합 (2025)
+          {messages.marketStats.source}
         </motion.p>
       </div>
     </section>

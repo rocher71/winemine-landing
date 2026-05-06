@@ -3,6 +3,7 @@
 import { useRef, useLayoutEffect, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
+import { useLocale } from '@/components/providers/locale-provider';
 
 const DEPT_URL = '/france-departments.json';
 const GOLD = '#f0c876';
@@ -125,6 +126,9 @@ function BottleSilhouette({ wine, width = 48, height = 108 }: { wine: Wine; widt
 }
 
 function WineRowA({ wine }: { wine: Wine }) {
+  const { messages } = useLocale();
+  const allWines = [...messages.wines.bordeaux, ...messages.wines.meursault, ...messages.wines.champagne];
+  const wineT = allWines.find(w => w.id === wine.id);
   return (
     <div style={{ display: 'flex', gap: 12, padding: 12, background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
       <div style={{ width: 56, height: 110, borderRadius: 8, flexShrink: 0, background: 'radial-gradient(ellipse at top, transparent 60%, rgba(0,0,0,0.4) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -133,7 +137,7 @@ function WineRowA({ wine }: { wine: Wine }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 17, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.2px' }}>{wine.name}</div>
         <div style={{ fontSize: 10, color: GOLD, letterSpacing: '0.5px', textTransform: 'uppercase' as const, fontWeight: 500 }}>{wine.appellation} · {wine.vintage > 0 ? wine.vintage : 'NV'}</div>
-        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wine.note}</div>
+        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wineT?.note ?? wine.note}</div>
         <div style={{ marginTop: 'auto', paddingTop: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <WineGlassRating value={wine.rating} size={9} color={GOLD} gap={2} />
           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{wine.drankAt}</span>
@@ -147,6 +151,7 @@ function WineRowA({ wine }: { wine: Wine }) {
 function InteractiveRegionLabel({ korName, count, featured, selected, onClick }: {
   korName: string; count: number; featured?: boolean; selected: boolean; onClick: () => void;
 }) {
+  const { messages } = useLocale();
   const border = selected ? GOLD : 'rgba(255,255,255,0.20)';
   const sw = selected ? 1.8 : 0.8;
   const bg = selected ? 'rgba(4,1,10,0.95)' : 'rgba(4,1,10,0.80)';
@@ -194,7 +199,7 @@ function InteractiveRegionLabel({ korName, count, featured, selected, onClick }:
       {/* Count */}
       <text textAnchor="middle" y={featured ? 12 : 11}
         style={{ fill: selected ? GOLD : '#C9A84C', fontSize: featured ? 14 : 12, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
-        {count}병
+        {count}{messages.franceWineDetail.bottleUnit}
       </text>
     </motion.g>
   );
@@ -291,8 +296,9 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
   sortBy: 'recent' | 'rating' | 'vintage';
   setSortBy: (v: 'recent' | 'rating' | 'vintage') => void;
 }) {
+  const { messages } = useLocale();
   const meta = REGION_META[selectedRegion];
-  const korName = REGION_KOR[selectedRegion] ?? '';
+  const korName = messages.franceWineDetail.regions[selectedRegion as keyof typeof messages.franceWineDetail.regions] ?? REGION_KOR[selectedRegion] ?? '';
   const wines = sortWines(REGION_WINES[selectedRegion] ?? [], sortBy);
 
   return (
@@ -311,11 +317,11 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
             {meta && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 {[
-                  { label: '총', value: `${meta.count}병` },
+                  { label: messages.franceWineDetail.metaLabels.total, value: `${meta.count}${messages.franceWineDetail.bottleUnit}` },
                   null,
-                  { label: '평균', value: String(meta.avg), glass: true },
+                  { label: messages.franceWineDetail.metaLabels.avg, value: String(meta.avg), glass: true },
                   null,
-                  { label: '최애', value: meta.top, serif: true },
+                  { label: messages.franceWineDetail.metaLabels.top, value: meta.top, serif: true },
                 ].map((item, i) => {
                   if (!item) return <div key={i} style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.08)' }} />;
                   return (
@@ -336,7 +342,7 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
 
       <div style={{ padding: '8px 20px 8px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
         {(['recent', 'rating', 'vintage'] as const).map(tab => {
-          const labels = { recent: '최근', rating: '평점', vintage: '빈티지' };
+          const labels = { recent: messages.franceWineDetail.sortLabels.recent, rating: messages.franceWineDetail.sortLabels.rating, vintage: messages.franceWineDetail.sortLabels.vintage };
           const active = sortBy === tab;
           return (
             <button key={tab} onClick={() => setSortBy(tab)} style={{
@@ -370,8 +376,10 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
 function RegionTab({ regionKey, selectedRegion, onSelect }: {
   regionKey: string; selectedRegion: string; onSelect: (k: string) => void;
 }) {
+  const { messages } = useLocale();
   const meta = REGION_META[regionKey];
   const active = selectedRegion === regionKey;
+  const tabName = messages.franceWineDetail.regions[regionKey as keyof typeof messages.franceWineDetail.regions] ?? REGION_KOR[regionKey];
   return (
     <button onClick={() => onSelect(regionKey)} style={{
       padding: '6px 14px', borderRadius: 9999, cursor: 'pointer',
@@ -380,7 +388,7 @@ function RegionTab({ regionKey, selectedRegion, onSelect }: {
       color: active ? GOLD : '#9B8B7A',
       fontSize: 13, fontWeight: 600, fontFamily: 'inherit', transition: 'all 200ms', whiteSpace: 'nowrap' as const,
     }}>
-      {REGION_KOR[regionKey]} <span style={{ fontSize: 11, opacity: 0.7 }}>{meta.count}</span>
+      {tabName} <span style={{ fontSize: 11, opacity: 0.7 }}>{meta.count}</span>
     </button>
   );
 }
@@ -494,6 +502,7 @@ function DesktopWinePanel({ selectedRegion, onSelectRegion, visible }: {
 
 // ── Main ──────────────────────────────────────────────────────────────────
 export default function FranceWineDetailSection() {
+  const { messages } = useLocale();
   const sectionRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState('33');
@@ -524,8 +533,8 @@ export default function FranceWineDetailSection() {
         position: 'absolute', top: 'clamp(14px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)',
         textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap',
       }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>내가 마신 와인</div>
-        <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>와인 컬렉션</h2>
+        <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>{messages.franceWineDetail.sectionLabel}</div>
+        <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>{messages.franceWineDetail.heading}</h2>
       </div>
 
       {/* Map */}

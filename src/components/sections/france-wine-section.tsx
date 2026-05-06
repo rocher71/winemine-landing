@@ -3,6 +3,7 @@
 import { useRef, useLayoutEffect, useEffect, useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
+import { useLocale } from '@/components/providers/locale-provider';
 
 const DEPT_URL = '/france-departments.json';
 
@@ -36,8 +37,8 @@ const WINE_DEPTS: Record<string, RegionData> = {
 };
 
 // ── RegionLabel (SVG) — no click, no hit area ─────────────────────────────
-function RegionLabel({ korName, count, featured, visible }: {
-  korName: string; count: number; featured?: boolean; visible: boolean;
+function RegionLabel({ korName, count, featured, visible, bottleUnit }: {
+  korName: string; count: number; featured?: boolean; visible: boolean; bottleUnit: string;
 }) {
   const border = featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
   const sw = featured ? 1.2 : 0.6;
@@ -62,7 +63,7 @@ function RegionLabel({ korName, count, featured, visible }: {
       </text>
       <text textAnchor="middle" y={featured ? 8 : 7}
         style={{ fill: '#C9A84C', fontSize: featured ? 13 : 11, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
-        {count}병
+        {count}{bottleUnit}
       </text>
     </motion.g>
   );
@@ -70,6 +71,7 @@ function RegionLabel({ korName, count, featured, visible }: {
 
 // ── Main ───────────────────────────────────────────────────────────────────
 export default function FranceWineSection() {
+  const { messages } = useLocale();
   const outerRef = useRef<HTMLDivElement>(null);
   const mapRef   = useRef<HTMLDivElement>(null);
 
@@ -138,6 +140,7 @@ export default function FranceWineSection() {
                   <RegionLabel
                     korName={d.korName} count={d.count} featured={d.featured}
                     visible={isDeptVisible(d.revealOrder)}
+                    bottleUnit={messages.franceWineDetail.bottleUnit}
                   />
                 </Marker>
               ))}
@@ -153,8 +156,8 @@ export default function FranceWineSection() {
           {mapVisible && (
             <motion.div key="ttl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}
               style={{ position: 'absolute', top: 'clamp(14px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-              <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>지역 탐험</div>
-              <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>프랑스 와인 산지</h2>
+              <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>{messages.franceWine.sectionLabel}</div>
+              <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>{messages.franceWine.heading}</h2>
             </motion.div>
           )}
         </AnimatePresence>
@@ -178,7 +181,7 @@ export default function FranceWineSection() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
               <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
-                style={{ color: '#4A3D56', fontSize: 11, letterSpacing: '0.12em', textAlign: 'center' }}>↓ SCROLL</motion.div>
+                style={{ color: '#4A3D56', fontSize: 11, letterSpacing: '0.12em', textAlign: 'center' }}>{messages.franceWine.scrollHint}</motion.div>
             </motion.div>
           )}
         </AnimatePresence>

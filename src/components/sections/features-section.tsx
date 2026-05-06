@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { useLocale } from '@/components/providers/locale-provider';
 
 // ── Panel 1: GlassCardStack — 3 stacked glass wine cards ──────────────────
 const REGIONS = [
@@ -38,6 +39,9 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 function WineCardInner({ wine }: { wine: GlassWine }) {
+  const { messages } = useLocale();
+  const wineIdx = GLASS_WINES.findIndex(w => w.id === wine.id);
+  const wineCard = messages.features?.wineCards?.[wineIdx];
   return (
     <div style={{
       background: 'rgba(12,4,24,0.88)',
@@ -96,7 +100,7 @@ function WineCardInner({ wine }: { wine: GlassWine }) {
         fontSize: 12, color: '#D4C5B0', lineHeight: 1.6,
         fontStyle: 'italic', marginBottom: 12,
       }}>
-        {wine.note}
+        {wineCard?.note ?? wine.note}
       </div>
 
       {/* Divider */}
@@ -114,7 +118,7 @@ function WineCardInner({ wine }: { wine: GlassWine }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 9 }}>✦</span>
-          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.occasion}</span>
+          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wineCard?.occasion ?? wine.occasion}</span>
         </div>
       </div>
 
@@ -130,6 +134,7 @@ const CAROUSEL = [GLASS_WINES[N - 1], ...GLASS_WINES, GLASS_WINES[0]];
 const CAROUSEL_START = 2; // wine[1] (2nd card) is at index 2
 
 function GlassCardStack() {
+  const { messages } = useLocale();
   const [isMobile, setIsMobile] = useState(false);
 
   // Mobile infinite carousel state
@@ -276,7 +281,7 @@ function GlassCardStack() {
         <Dots active={activeWineIdx} onDotClick={(i) => navigateTo(1 + i)} />
 
         <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
-          ← 스와이프 →
+          {messages.features?.mobileSwipeHint ?? '← 스와이프 →'}
         </div>
       </div>
     );
@@ -340,7 +345,7 @@ function GlassCardStack() {
       <Dots active={activeIdx} onDotClick={setActiveIdx} />
 
       <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
-        탭해서 다른 와인 보기
+        {messages.features?.mobileTapHint ?? '탭해서 다른 와인 보기'}
       </div>
     </div>
   );
@@ -426,9 +431,9 @@ function ScanPanel() {
         )}
       </div>
 
-      {/* Revealed wine info tags */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', minHeight: 80, alignItems: 'flex-start', alignContent: 'flex-start' }}>
-        {WINE_TAGS.slice(0, step).map((tag, i) => (
+      {/* Revealed wine info tags — all rendered, opacity-only reveal to prevent layout shift */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+        {WINE_TAGS.map((tag, i) => (
           <span
             key={tag}
             style={{
@@ -439,7 +444,8 @@ function ScanPanel() {
               color: i === 0 ? '#E06070' : i === 4 ? '#C9A84C' : '#D4C5B0',
               fontSize: 12,
               fontWeight: 500,
-              animation: 'fadeInTag 0.3s ease both',
+              opacity: i < step ? 1 : 0,
+              transition: 'opacity 0.3s ease',
             }}
           >
             {tag}
@@ -515,6 +521,7 @@ const STORY_COUNTRIES = [
 ];
 
 function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
+  const { messages } = useLocale();
   const [animate, setAnimate] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -568,7 +575,7 @@ function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 * scale }}>
                 <div style={{ width: 28 * scale, height: 28 * scale, borderRadius: '50%', background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 * scale, fontWeight: 700, color: '#F5F0E8', flexShrink: 0 }}>W</div>
                 <span style={{ fontSize: 11 * scale, fontWeight: 600, color: '#F5F0E8' }}>winemine</span>
-                <span style={{ fontSize: 10 * scale, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>지금</span>
+                <span style={{ fontSize: 10 * scale, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>{messages.features?.timestamp ?? '지금'}</span>
               </div>
             </div>
 
@@ -578,7 +585,7 @@ function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
                 My Wine Journey
               </div>
               <div style={{ fontFamily: 'Georgia, serif', fontSize: 22 * scale, fontWeight: 400, color: '#F5F0E8', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
-                2025<br />Recap
+                2026<br />Recap
               </div>
               <div style={{ width: 30 * scale, height: 1, background: '#C9A84C', margin: `${8 * scale}px auto 0` }} />
             </div>
@@ -603,7 +610,7 @@ function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
               border: '1px solid rgba(255,255,255,0.05)',
               borderRadius: 8 * scale, padding: `${10 * scale}px ${8 * scale}px`, marginBottom: 14 * scale,
             }}>
-              {[['82', '병'], ['15', '국가'], ['7', '개월']].map(([n, l]) => (
+              {[['82', messages.features?.statsLabels?.bottles ?? '병'], ['15', messages.features?.statsLabels?.countries ?? '국가'], ['7', messages.features?.statsLabels?.months ?? '개월']].map(([n, l]) => (
                 <div key={l} style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: 20 * scale, fontWeight: 700, color: '#F5F0E8', lineHeight: 1 }}>{n}</div>
                   <div style={{ fontSize: 9 * scale, color: '#9B8B7A', marginTop: 3 * scale, letterSpacing: '0.05em' }}>{l}</div>
@@ -636,7 +643,7 @@ function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
             <div style={{ marginTop: 14 * scale, paddingTop: 10 * scale, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 * scale }}>
               <div style={{ width: 16 * scale, height: 16 * scale, borderRadius: '50%', background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)' }} />
               <span style={{ fontFamily: 'Georgia, serif', fontSize: 11 * scale, color: '#C9A84C', letterSpacing: '0.08em' }}>winemine</span>
-              <span style={{ fontSize: 9 * scale, color: '#4A3D56', marginLeft: 4 * scale }}>winemine.com</span>
+              <span style={{ fontSize: 9 * scale, color: '#4A3D56', marginLeft: 4 * scale }}>winemine</span>
             </div>
           </div>
         </div>
@@ -648,7 +655,7 @@ function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
         onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.2)'; e.currentTarget.style.borderColor = '#C9A84C'; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.1)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'; }}
       >
-        전체 미리보기 →
+        {messages.features?.fullPreviewButton ?? '전체 미리보기 →'}
       </button>
     </div>
   );
@@ -682,6 +689,7 @@ interface FeaturesSectionProps {
 
 export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { messages } = useLocale();
   const [activePanel, setActivePanel] = useState<number | null>(null);
 
   return (
@@ -705,7 +713,7 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
               color: '#F5F0E8',
             }}
           >
-            WineMine이 특별한 이유
+            {messages.features?.sectionHeading ?? 'WineMine이 특별한 이유'}
           </h2>
           <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 0' }} />
         </motion.div>
@@ -718,7 +726,9 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
             gap: 2,
           }}
         >
-          {PANELS.map((panel, i) => (
+          {PANELS.map((panel, i) => {
+            const panelMsg = messages.features?.panels?.[i];
+            return (
             <motion.div
               key={panel.num}
               initial={shouldReduceMotion ? {} : { opacity: 0, y: 40 }}
@@ -768,7 +778,7 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
                   position: 'relative',
                 }}
               >
-                {panel.title}
+                {panelMsg?.title ?? panel.title}
               </h3>
               <p
                 style={{
@@ -780,7 +790,7 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
                   position: 'relative',
                 }}
               >
-                {panel.sub}
+                {panelMsg?.sub ?? panel.sub}
               </p>
 
               {/* Interactive content */}
@@ -792,7 +802,7 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
                 )}
               </div>
             </motion.div>
-          ))}
+          ); })}
         </div>
       </div>
     </section>

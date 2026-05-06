@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { StoreButtons } from '@/components/ui/store-buttons';
+import { useLocale } from '@/components/providers/locale-provider';
 
 const WorldMap = dynamic(() => import('@/components/map/world-map'), {
   ssr: false,
@@ -18,6 +19,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ onOpenModal }: HeroSectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { t } = useLocale();
 
   const fadeUp = shouldReduceMotion
     ? {}
@@ -94,7 +96,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
             marginBottom: 0,
           }}
         >
-          라벨을 찍으면, 세계가 물든다.
+          {t('hero.subtitle')}
         </motion.p>
 
         <motion.div

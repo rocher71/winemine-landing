@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { trackEvent } from '@/lib/analytics';
+import { useLocale } from '@/components/providers/locale-provider';
 
 // ── Apple logo (Material Icons style, 24x24 grid) ─────────────────────────
 function AppleIcon() {
@@ -32,6 +33,7 @@ interface StoreButtonsProps {
 }
 
 export function StoreButtons({ onOpenModal, location = 'unknown', size = 'default' }: StoreButtonsProps) {
+  const { messages } = useLocale();
   const [hoveredIos, setHoveredIos] = useState(false);
   const [hoveredAndroid, setHoveredAndroid] = useState(false);
 
@@ -72,10 +74,10 @@ export function StoreButtons({ onOpenModal, location = 'unknown', size = 'defaul
         <AppleIcon />
         <div style={{ textAlign: 'left' }}>
           <div style={{ fontSize: isCompact ? 8 : 9, opacity: 0.6, letterSpacing: '0.02em' }}>
-            Download on the
+            {messages.storeButtons.appStore.eyebrow}
           </div>
           <div style={{ fontSize: isCompact ? 13 : 15, fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.2 }}>
-            App Store
+            {messages.storeButtons.appStore.label}
           </div>
         </div>
       </button>
@@ -91,10 +93,10 @@ export function StoreButtons({ onOpenModal, location = 'unknown', size = 'defaul
         <PlayIcon />
         <div style={{ textAlign: 'left' }}>
           <div style={{ fontSize: isCompact ? 8 : 9, opacity: 0.6, letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>
-            Get it on
+            {messages.storeButtons.googlePlay.eyebrow}
           </div>
           <div style={{ fontSize: isCompact ? 13 : 15, fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.2 }}>
-            Google Play
+            {messages.storeButtons.googlePlay.label}
           </div>
         </div>
       </button>

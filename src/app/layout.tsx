@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import { getLocale, getMessages } from '@/lib/i18n';
+import { LocaleProvider } from '@/components/providers/locale-provider';
 
 const GA_ID = 'G-7V8ZDT0TYX';
 
@@ -39,13 +41,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages(locale);
+
   return (
-    <html lang="ko" className={`${playfairDisplay.variable} ${inter.variable}`}>
+    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -56,7 +61,9 @@ export default function RootLayout({
       </head>
       {/* inter.className 제거 — globals.css의 Noto Sans KR 폰트 스택이 적용되도록 */}
       <body suppressHydrationWarning>
-        {children}
+        <LocaleProvider locale={locale} messages={messages}>
+          {children}
+        </LocaleProvider>
 
         {/* Google Analytics */}
         <Script
