@@ -52,7 +52,7 @@ const REGION_META: Record<string, { count: number; avg: number; top: string; en:
   '21': { count: 28, avg: 4.7, top: 'Perrières', en: 'Bourgogne' },
   '51': { count: 12, avg: 4.5, top: 'Krug',      en: 'Champagne' },
 };
-const REGION_KOR: Record<string, string> = { '33': '보르도', '21': '뫼르소', '51': '샹파뉴' };
+const REGION_KOR: Record<string, string> = { '33': '보르도', '21': '부르고뉴', '51': '샹파뉴' };
 
 // 지도에서 클릭 가능한 지역 (département code → region key)
 const CLICKABLE_DEPTS: Record<string, string> = { '33': '33', '21': '21', '51': '51' };

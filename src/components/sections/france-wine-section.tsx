@@ -18,22 +18,22 @@ type RegionData = {
 };
 
 const WINE_DEPTS: Record<string, RegionData> = {
-  '21': { korName: '뫼르소',    count: 28, opacity: 0.95, labelCoords: [4.88,  47.20], showLabel: true,  featured: true, revealOrder: 1  },
+  '21': { korName: '부르고뉴',  count: 28, opacity: 0.95, labelCoords: [4.88,  47.20], showLabel: true,  featured: true, revealOrder: 1  },
   '33': { korName: '보르도',    count: 13, opacity: 0.68, labelCoords: [-0.62, 44.82], showLabel: true,                  revealOrder: 2  },
   '51': { korName: '샹파뉴',    count: 12, opacity: 0.50, labelCoords: [4.12,  49.00], showLabel: true,                  revealOrder: 3  },
   '67': { korName: '알자스',    count: 7,  opacity: 0.36, labelCoords: [7.52,  48.58], showLabel: true,                  revealOrder: 4  },
   '68': { korName: '',          count: 7,  opacity: 0.36, labelCoords: [7.52,  48.58], showLabel: false,                 revealOrder: 4  },
   '69': { korName: '론 밸리',   count: 5,  opacity: 0.20, labelCoords: [4.68,  45.80], showLabel: true,                  revealOrder: 5  },
   '34': { korName: '랑그독',    count: 0,  opacity: 0.45, labelCoords: [3.5,   43.6 ], showLabel: false,                 revealOrder: 6  },
-  '84': { korName: '샤토뇌프',  count: 0,  opacity: 0.58, labelCoords: [5.1,   44.0 ], showLabel: false,                 revealOrder: 7  },
+  '84': { korName: '론 밸리',   count: 0,  opacity: 0.58, labelCoords: [5.1,   44.0 ], showLabel: false,                 revealOrder: 7  },
   '83': { korName: '프로방스',  count: 0,  opacity: 0.42, labelCoords: [6.2,   43.4 ], showLabel: false,                 revealOrder: 8  },
-  '13': { korName: '방돌',      count: 0,  opacity: 0.35, labelCoords: [5.4,   43.3 ], showLabel: false,                 revealOrder: 9  },
-  '49': { korName: '앙주',      count: 0,  opacity: 0.40, labelCoords: [-0.7,  47.5 ], showLabel: false,                 revealOrder: 10 },
-  '37': { korName: '시농',      count: 0,  opacity: 0.35, labelCoords: [0.5,   47.2 ], showLabel: false,                 revealOrder: 11 },
-  '71': { korName: '마코네',    count: 0,  opacity: 0.48, labelCoords: [4.6,   46.5 ], showLabel: false,                 revealOrder: 12 },
-  '11': { korName: '코르비에르',count: 0,  opacity: 0.32, labelCoords: [2.4,   43.1 ], showLabel: false,                 revealOrder: 13 },
-  '18': { korName: '상세르',    count: 0,  opacity: 0.45, labelCoords: [2.8,   47.3 ], showLabel: false,                 revealOrder: 14 },
-  '44': { korName: '뮈스카데',  count: 0,  opacity: 0.30, labelCoords: [-1.6,  47.2 ], showLabel: false,                 revealOrder: 15 },
+  '13': { korName: '프로방스',  count: 0,  opacity: 0.35, labelCoords: [5.4,   43.3 ], showLabel: false,                 revealOrder: 9  },
+  '49': { korName: '루아르',    count: 0,  opacity: 0.40, labelCoords: [-0.7,  47.5 ], showLabel: false,                 revealOrder: 10 },
+  '37': { korName: '루아르',    count: 0,  opacity: 0.35, labelCoords: [0.5,   47.2 ], showLabel: false,                 revealOrder: 11 },
+  '71': { korName: '부르고뉴',  count: 0,  opacity: 0.48, labelCoords: [4.6,   46.5 ], showLabel: false,                 revealOrder: 12 },
+  '11': { korName: '랑그독',    count: 0,  opacity: 0.32, labelCoords: [2.4,   43.1 ], showLabel: false,                 revealOrder: 13 },
+  '18': { korName: '루아르',    count: 0,  opacity: 0.45, labelCoords: [2.8,   47.3 ], showLabel: false,                 revealOrder: 14 },
+  '44': { korName: '루아르',    count: 0,  opacity: 0.30, labelCoords: [-1.6,  47.2 ], showLabel: false,                 revealOrder: 15 },
 };
 
 // ── RegionLabel (SVG) — no click, no hit area ─────────────────────────────
