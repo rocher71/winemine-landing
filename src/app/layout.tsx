@@ -18,19 +18,24 @@ const inter = Inter({
   display: 'swap',
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://winemine.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'winemine — Your wine journey, mapped.',
+  metadataBase: new URL(SITE_URL),
+  title: 'WineMine — Your wine journey, mapped.',
   description: '와인 라벨을 찍으면 세계가 물든다. 마신 와인을 세계 지도 위에 기록하고 공유하세요.',
   openGraph: {
-    title: 'winemine',
-    description: '와인 라벨을 찍으면 세계가 물든다.',
+    title: 'WineMine — Your wine journey, mapped.',
+    description: '와인 라벨을 찍으면 세계가 물든다. 마신 와인을 세계 지도 위에 기록하고 공유하세요.',
     type: 'website',
     locale: 'ko_KR',
+    url: SITE_URL,
+    siteName: 'WineMine',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'winemine',
-    description: '와인 라벨을 찍으면 세계가 물든다.',
+    title: 'WineMine — Your wine journey, mapped.',
+    description: '와인 라벨을 찍으면 세계가 물든다. 마신 와인을 세계 지도 위에 기록하고 공유하세요.',
   },
 };
 
