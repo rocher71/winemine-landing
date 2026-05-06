@@ -1,0 +1,185 @@
+{
+  "hero": {
+    "appName": "WineMine",
+    "tagline": "Your wine journey, mapped.",
+    "subtitle": "Scan the label. Color the world."
+  },
+
+  "franceWine": {
+    "sectionLabel": "Explore Regions",
+    "heading": "Wine Regions of France",
+    "scrollHint": "↓ SCROLL"
+  },
+
+  "franceWineDetail": {
+    "sectionLabel": "Wines I've Tasted",
+    "heading": "Wine Collection",
+    "sortLabels": {
+      "recent": "Recent",
+      "rating": "Rating",
+      "vintage": "Vintage"
+    },
+    "metaLabels": {
+      "total": "Total",
+      "avg": "Avg",
+      "top": "Favorite"
+    },
+    "bottleUnit": "btls",
+    "regions": {
+      "33": "Bordeaux",
+      "21": "Meursault",
+      "51": "Champagne"
+    }
+  },
+
+  "vineyardStrip": {
+    "label1": "Vineyards of the World",
+    "heading": "The land where your wine was born",
+    "label2": "Korea Wine Market 2026",
+    "body": "Your wines,\nmapped to the world.",
+    "countries": {
+      "france": { "name": "France", "stat": "#1 by value · $173M" },
+      "chile": { "name": "Chile", "stat": "#1 by volume · 22.54%" },
+      "italy": { "name": "Italy", "stat": "Moscato · Chianti" },
+      "newZealand": { "name": "New Zealand", "stat": "White #1 · +10%↑" }
+    }
+  },
+
+  "features": {
+    "sectionHeading": "Why WineMine",
+    "panels": [
+      { "title": "Map your sips", "sub": "Every bottle you drink\ncolors your world map deeper" },
+      { "title": "Scan & done", "sub": "One label scan\nfills every detail automatically" },
+      { "title": "Your own map", "sub": "Save and share\nyour journey anytime" }
+    ],
+    "regions": [
+      { "country": "France" },
+      { "country": "Italy" },
+      { "country": "Chile" },
+      { "country": "New Zealand" },
+      { "country": "Spain" },
+      { "country": "Argentina" }
+    ],
+    "wineCards": [
+      { "note": "Ripe cassis, cigar box, violet. Elegant tannins with a long, lingering finish.", "occasion": "Anniversary" },
+      { "note": "Cherry, truffle, velvet. Silky texture with an endless finish.", "occasion": "Valentine's Day" },
+      { "note": "Hazelnut, butter, pure minerality. The very definition of elegance.", "occasion": "Friends gathering" }
+    ],
+    "mobileSwipeHint": "← Swipe →",
+    "mobileTapHint": "Tap to see next wine",
+    "timestamp": "Now",
+    "statsLabels": { "bottles": "btls", "countries": "countries", "months": "months" },
+    "fullPreviewButton": "Full preview →"
+  },
+
+  "marketStats": {
+    "sectionLabel": "Korea Wine Market 2026",
+    "heading": "The Korean wine market today",
+    "description": "487,558 kL — all these wines from around the world.\nDo you remember where they came from? WineMine helps.",
+    "stats": [
+      { "label": "2025 Import Volume", "sub": "YoY +5.27%" },
+      { "label": "Import Value", "sub": "$409M USD" },
+      { "label": "White Wine Growth", "sub": "Only double-digit growth" },
+      { "label": "Chile Market Share", "sub": "#1 by import volume" }
+    ],
+    "trends": [
+      { "title": "Market polarization", "desc": "Budget daily wines and premium 100k+ KRW bottles both growing. Mid-range is shrinking." },
+      { "title": "Rise of white wine", "desc": "Overall market down -7.5%, but white wine up +10%. Led by NZ Sauvignon Blanc." },
+      { "title": "MZ generation everyday wine", "desc": "Home drinking, solo drinking, SNS pairing content. Wine is becoming everyday, not occasional." },
+      { "title": "Convenience store boom", "desc": "10,000–20,000 KRW daily wines dominate. Double-digit growth continues." }
+    ],
+    "source": "Source: Korea Customs Service trade statistics · Media reports (2025)"
+  },
+
+  "howItWorks": {
+    "sectionLabel": "How It Works",
+    "heading": "Here's how it works",
+    "steps": [
+      { "title": "Shoot the label", "body": "At a restaurant, wine bar, or home. Snap the label wherever you are drinking.", "detail": "Recognized in 2 seconds" },
+      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "France → Bordeaux → Pomerol" },
+      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation you've explored at a glance.", "detail": "Drill-down map navigation" },
+      { "title": "Capture it all", "body": "Save your wine journey as a shareable image. One tap to share with the world.", "detail": "Recap image generation" }
+    ]
+  },
+
+  "instagramPreview": {
+    "sectionLabel": "Share Your Journey",
+    "heading": "Share your\nwine map",
+    "body": "Your personal Recap, built automatically as you log wines.\nOne tap to share.",
+    "timestamp": "Now",
+    "statsLabels": { "bottles": "btls", "countries": "countries", "months": "months" },
+    "features": [
+      { "title": "Auto-generated", "desc": "Your Recap updates every time you log a new wine." },
+      { "title": "Save as image", "desc": "Your whole journey in one beautiful shareable image." },
+      { "title": "Regional visualization", "desc": "See every origin of every wine you've tasted, pinned on your map. Your taste, shown at a glance." }
+    ]
+  },
+
+  "finalCta": {
+    "heading": "Make your own Wine Map",
+    "body": "Join the waitlist and be the first to know when we launch.",
+    "copyright": "© 2026 winemine. All rights reserved."
+  },
+
+  "floatingCta": {
+    "button": "Download the app"
+  },
+
+  "storeButtons": {
+    "appStore": { "eyebrow": "Download on the", "label": "App Store" },
+    "googlePlay": { "eyebrow": "Get it on", "label": "Google Play" }
+  },
+
+  "waitlistModal": {
+    "title": "Join the Waitlist",
+    "description": "Leave your email or phone number\nand we'll notify you the moment we launch.",
+    "closeAriaLabel": "Close modal"
+  },
+
+  "waitlistForm": {
+    "tabs": { "email": "Email", "phone": "Phone" },
+    "emailPlaceholder": "winemine@gmail.com",
+    "phonePlaceholder": "010-0000-0000",
+    "marketingCheckbox": "(Optional) Receive marketing updates — news about the app launch and special offers.",
+    "submitButton": "Sign up",
+    "loadingButton": "Just a moment...",
+    "privacyNotice": "Your contact will be used only to notify you of our launch\nand deleted immediately after.",
+    "serverError": "A temporary error occurred. Please try again shortly."
+  },
+
+  "waitlistSuccess": {
+    "heading": "You're on the list!",
+    "message": "We'll notify you as soon as we launch.\nWe can't wait to share WineMine with you.",
+    "closeButton": "Close"
+  },
+
+  "wines": {
+    "bordeaux": [
+      { "id": "w01", "occasion": "Anniversary",        "note": "Ripe cassis, cigar box, violet. Elegant tannins with a long, lingering finish." },
+      { "id": "w02", "occasion": "Wine club",          "note": "Pencil shavings, blackcurrant, smoky oak. The structure is overwhelming." },
+      { "id": "w03", "occasion": "Valentine's dinner", "note": "Dense dark fruit, dark chocolate, leather nuances." },
+      { "id": "w04", "occasion": "Special guests",     "note": "Silky texture, plum compote, entrancing truffle perfume." },
+      { "id": "w05", "occasion": "Christmas Eve",      "note": "Spice, dried rose, Asian aromatics. An intellectual wine." },
+      { "id": "w06", "occasion": "Wine society",       "note": "Full body, concentrated fruit, minerality. Worth waiting a little longer." },
+      { "id": "w07", "occasion": "Weekend dinner",     "note": "Well-balanced fruit, soft tannins, an easy-drinking classic." },
+      { "id": "w08", "occasion": "Farewell party",     "note": "Cherry, cedar, gentle vanilla. Textbook elegance." },
+      { "id": "w09", "occasion": "Summer vacation",    "note": "Light florals, raspberry, a smooth finish." },
+      { "id": "w10", "occasion": "Birthday",           "note": "Smoky, blueberry, mineral. A balance of modern and classic." },
+      { "id": "w11", "occasion": "Business dinner",    "note": "Delicate aromas, cassis, graphite. Structure and grace in harmony." },
+      { "id": "w12", "occasion": "Spring picnic",      "note": "Fragrant flowers, ripe plum, silky tannins." },
+      { "id": "w13", "occasion": "Casual dinner",      "note": "Fresh berries, light body. Young but charming." }
+    ],
+    "meursault": [
+      { "id": "m01", "occasion": "Birthday party",     "note": "Hazelnut, butter, pure minerality. The very definition of elegance." },
+      { "id": "m02", "occasion": "Anniversary",        "note": "Generous fruit, oak, honey. A weighty Burgundy." },
+      { "id": "m03", "occasion": "Friends gathering",  "note": "Creamy, hazelnut, smoky. A highly accomplished 1er Cru." },
+      { "id": "m04", "occasion": "Solo",               "note": "Lemon, vanilla, almond. A classic entry point." },
+      { "id": "m05", "occasion": "Dinner party",       "note": "Mineral, citrus, white flowers. Delicate with fine acidity." }
+    ],
+    "champagne": [
+      { "id": "c01", "occasion": "New Year party", "note": "Brioche, apple, hazelnut. An endless finish." },
+      { "id": "c02", "occasion": "Birthday",       "note": "Citrus, almond, minerality. Perfect balance." },
+      { "id": "c03", "occasion": "Countdown",      "note": "White flowers, lemon, creamy. Delicate and refined." }
+    ]
+  }
+}
