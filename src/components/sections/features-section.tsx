@@ -37,8 +37,182 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+function WineCardInner({ wine }: { wine: GlassWine }) {
+  return (
+    <div style={{
+      background: 'rgba(12,4,24,0.88)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      border: '1px solid rgba(255,255,255,0.09)',
+      borderRadius: 18,
+      padding: '16px 18px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+    }}>
+      {/* Top row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{
+          fontSize: 7, textTransform: 'uppercase' as const, letterSpacing: '0.12em',
+          color: '#C9A84C', border: '1px solid rgba(201,168,76,0.25)',
+          borderRadius: 4, padding: '2px 6px',
+        }}>
+          {wine.region}
+        </span>
+        <div style={{
+          width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+          background: wine.color + '26',
+          border: `1px solid ${wine.color}4D`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: wine.color }}>
+            {wine.initials}
+          </span>
+        </div>
+        <span style={{ fontSize: 11, color: '#6A5E4A', marginLeft: 'auto' }}>
+          {wine.vintage}
+        </span>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
+
+      {/* Wine name + grade */}
+      <div style={{ fontSize: 16, fontFamily: 'Georgia, serif', color: '#F5F0E8', marginBottom: 3 }}>
+        {wine.name}
+      </div>
+      <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: 12 }}>
+        {wine.appellation} · {wine.grade}
+      </div>
+
+      {/* Tasting note label */}
+      <div style={{
+        fontSize: 8, textTransform: 'uppercase' as const, letterSpacing: '0.15em',
+        color: '#C9A84C', marginBottom: 4,
+      }}>
+        Tasting Note
+      </div>
+
+      {/* Note text */}
+      <div style={{
+        fontSize: 12, color: '#D4C5B0', lineHeight: 1.6,
+        fontStyle: 'italic', marginBottom: 12,
+      }}>
+        {wine.note}
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
+
+      {/* Meta rows */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 9 }}>🍇</span>
+          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.grapes}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 9 }}>📅</span>
+          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.date}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 9 }}>✦</span>
+          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.occasion}</span>
+        </div>
+      </div>
+
+      {/* Star rating */}
+      <StarRating rating={wine.rating} />
+    </div>
+  );
+}
+
+// Infinite carousel: [last_clone, ...all, first_clone]
+const N = GLASS_WINES.length;
+const CAROUSEL = [GLASS_WINES[N - 1], ...GLASS_WINES, GLASS_WINES[0]];
+const CAROUSEL_START = 2; // wine[1] (2nd card) is at index 2
+
 function GlassCardStack() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Mobile infinite carousel state
+  const [carouselIdx, setCarouselIdx] = useState(CAROUSEL_START);
+  const [dragDx, setDragDx] = useState(0);
+  const [withAnim, setWithAnim] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerW, setContainerW] = useState(280);
+  const startXRef = useRef(0);
+  const jumpTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Desktop state
   const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const update = () => {
+      if (containerRef.current) setContainerW(containerRef.current.offsetWidth);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [isMobile]);
+
+  useEffect(() => {
+    return () => { if (jumpTimerRef.current) clearTimeout(jumpTimerRef.current); };
+  }, []);
+
+  // Carousel geometry
+  const CARD_RATIO = 0.78;
+  const GAP = 12;
+  const cardW = containerW * CARD_RATIO;
+  const STEP = cardW + GAP;
+  const centerX = (containerW - cardW) / 2;
+
+  const getX = (i: number) => centerX + (i - carouselIdx) * STEP + dragDx;
+
+  // Active wine index (0–2) derived from carousel position
+  const activeWineIdx = ((carouselIdx - 1) % N + N) % N;
+
+  const navigateTo = (nextIdx: number) => {
+    setWithAnim(true);
+    setCarouselIdx(nextIdx);
+    setDragDx(0);
+    // Silently jump away from clone positions after animation
+    if (nextIdx === 0 || nextIdx === CAROUSEL.length - 1) {
+      if (jumpTimerRef.current) clearTimeout(jumpTimerRef.current);
+      jumpTimerRef.current = setTimeout(() => {
+        setWithAnim(false);
+        // 0 → real last (index N), last → real first (index 1)
+        setCarouselIdx(nextIdx === 0 ? N : 1);
+      }, 380);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startXRef.current = e.touches[0].clientX;
+    setWithAnim(false);
+    if (jumpTimerRef.current) clearTimeout(jumpTimerRef.current);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setDragDx(e.touches[0].clientX - startXRef.current);
+  };
+
+  const handleTouchEnd = () => {
+    if (dragDx < -50) {
+      navigateTo(carouselIdx + 1);
+    } else if (dragDx > 50) {
+      navigateTo(carouselIdx - 1);
+    } else {
+      setWithAnim(true);
+      setDragDx(0);
+    }
+  };
 
   const cardOffsets = [
     { x: 14, y: -10, scale: 0.91, opacity: 0.28, zIndex: 1 },
@@ -46,9 +220,67 @@ function GlassCardStack() {
     { x: 0,  y: 0,   scale: 1,    opacity: 1,    zIndex: 3 },
   ];
 
-  const handleClick = () => {
-    setActiveIdx(prev => (prev + 1) % GLASS_WINES.length);
-  };
+  const Dots = ({ active, onDotClick }: { active: number; onDotClick: (i: number) => void }) => (
+    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+      {GLASS_WINES.map((_, i) => (
+        <div
+          key={i}
+          style={{
+            width: i === active ? 16 : 6,
+            height: 6,
+            borderRadius: 3,
+            background: i === active ? '#C9A84C' : 'rgba(255,255,255,0.15)',
+            transition: 'all 300ms ease',
+            cursor: 'pointer',
+          }}
+          onClick={() => onDotClick(i)}
+        />
+      ))}
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+        {/* Infinite peek carousel */}
+        <div
+          ref={containerRef}
+          style={{ width: '100%', overflow: 'hidden', position: 'relative', height: 330, touchAction: 'pan-y' }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {CAROUSEL.map((wine, i) => {
+            const isCenter = i === carouselIdx;
+            const x = getX(i);
+            return (
+              <div
+                key={`${wine.id}-${i}`}
+                style={{
+                  position: 'absolute', top: 0, left: 0,
+                  width: cardW,
+                  transform: `translateX(${x}px) scale(${isCenter ? 1 : 0.95})`,
+                  transition: withAnim && dragDx === 0
+                    ? 'transform 360ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 360ms'
+                    : 'none',
+                  opacity: isCenter ? 1 : 0.4,
+                  willChange: 'transform',
+                }}
+              >
+                <WineCardInner wine={wine} />
+              </div>
+            );
+          })}
+        </div>
+
+        <Dots active={activeWineIdx} onDotClick={(i) => navigateTo(1 + i)} />
+
+        <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
+          ← 스와이프 →
+        </div>
+      </div>
+    );
+  }
 
   const wine = GLASS_WINES[activeIdx];
 
@@ -89,7 +321,7 @@ function GlassCardStack() {
             transform: `translateX(${cardOffsets[2].x}px) translateY(${cardOffsets[2].y}px) scale(${cardOffsets[2].scale})`,
             cursor: 'pointer',
           }}
-          onClick={handleClick}
+          onClick={() => setActiveIdx(prev => (prev + 1) % N)}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -98,112 +330,15 @@ function GlassCardStack() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.3 }}
-              style={{
-                background: 'rgba(12,4,24,0.88)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.09)',
-                borderRadius: 18,
-                padding: '16px 18px',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-              }}
             >
-              {/* Top row */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                <span style={{
-                  fontSize: 7, textTransform: 'uppercase' as const, letterSpacing: '0.12em',
-                  color: '#C9A84C', border: '1px solid rgba(201,168,76,0.25)',
-                  borderRadius: 4, padding: '2px 6px',
-                }}>
-                  {wine.region}
-                </span>
-                <div style={{
-                  width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                  background: wine.color + '26',
-                  border: `1px solid ${wine.color}4D`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: wine.color }}>
-                    {wine.initials}
-                  </span>
-                </div>
-                <span style={{ fontSize: 11, color: '#6A5E4A', marginLeft: 'auto' }}>
-                  {wine.vintage}
-                </span>
-              </div>
-
-              {/* Divider */}
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
-
-              {/* Wine name + grade */}
-              <div style={{ fontSize: 16, fontFamily: 'Georgia, serif', color: '#F5F0E8', marginBottom: 3 }}>
-                {wine.name}
-              </div>
-              <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: 12 }}>
-                {wine.appellation} · {wine.grade}
-              </div>
-
-              {/* Tasting note label */}
-              <div style={{
-                fontSize: 8, textTransform: 'uppercase' as const, letterSpacing: '0.15em',
-                color: '#C9A84C', marginBottom: 4,
-              }}>
-                Tasting Note
-              </div>
-
-              {/* Note text */}
-              <div style={{
-                fontSize: 12, color: '#D4C5B0', lineHeight: 1.6,
-                fontStyle: 'italic', marginBottom: 12,
-              }}>
-                {wine.note}
-              </div>
-
-              {/* Divider */}
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
-
-              {/* Meta rows */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 9 }}>🍇</span>
-                  <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.grapes}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 9 }}>📅</span>
-                  <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.date}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: 9 }}>✦</span>
-                  <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.occasion}</span>
-                </div>
-              </div>
-
-              {/* Star rating */}
-              <StarRating rating={wine.rating} />
+              <WineCardInner wine={wine} />
             </motion.div>
           </AnimatePresence>
         </div>
       </div>
 
-      {/* Page indicator dots */}
-      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-        {GLASS_WINES.map((_, i) => (
-          <div
-            key={i}
-            style={{
-              width: i === activeIdx ? 16 : 6,
-              height: 6,
-              borderRadius: 3,
-              background: i === activeIdx ? '#C9A84C' : 'rgba(255,255,255,0.15)',
-              transition: 'all 300ms ease',
-              cursor: 'pointer',
-            }}
-            onClick={() => setActiveIdx(i)}
-          />
-        ))}
-      </div>
+      <Dots active={activeIdx} onDotClick={setActiveIdx} />
 
-      {/* Hint text */}
       <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
         탭해서 다른 와인 보기
       </div>
