@@ -176,6 +176,14 @@ function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
 }) {
   const border = selected ? GOLD : featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
   const sw = selected ? 1.8 : featured ? 1.2 : 0.6;
+
+  const handleTouch = (e: React.TouchEvent) => {
+    if (!visible) return;
+    e.preventDefault(); // click 이벤트 중복 방지
+    e.stopPropagation();
+    onClick();
+  };
+
   return (
     <motion.g
       initial={{ opacity: 0, scale: 0.6 }}
@@ -183,8 +191,17 @@ function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
       transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
       style={{ cursor: visible ? 'pointer' : 'default', pointerEvents: visible ? 'auto' : 'none' }}
       onClick={visible ? onClick : undefined}
+      onTouchEnd={visible ? handleTouch : undefined}
       whileHover={visible ? { scale: 1.08 } : undefined}
     >
+      {/* 투명 대형 히트 영역 — 모바일 터치 타겟 확보 (실제 레이블보다 훨씬 큰 영역) */}
+      <rect
+        x={featured ? -60 : -52} y={featured ? -44 : -40}
+        width={featured ? 120 : 104} height={featured ? 80 : 72}
+        fill="transparent"
+        stroke="none"
+      />
+      {/* 보이는 레이블 */}
       <rect x={featured ? -44 : -36} y={featured ? -24 : -20} width={featured ? 88 : 72} height={featured ? 38 : 32} rx={6}
         fill={selected ? 'rgba(4,1,10,0.94)' : 'rgba(4,1,10,0.82)'} stroke={border} strokeWidth={sw} />
       <text textAnchor="middle" y={featured ? -8 : -6}
@@ -553,9 +570,9 @@ export default function FranceWineSection() {
               transition={{ duration: 0.4, delay: 0.2 }}
               style={{
                 position: 'absolute',
-                bottom: 'clamp(32px, 6vh, 56px)',
+                top: '50%',
                 left: '50%',
-                transform: 'translateX(-50%)',
+                transform: 'translate(-50%, -50%)',
                 zIndex: 25,
                 pointerEvents: 'none',
                 whiteSpace: 'nowrap',
