@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
+
+const GA_ID = 'G-7V8ZDT0TYX';
 
 const playfairDisplay = Playfair_Display({
   subsets: ['latin'],
@@ -38,7 +41,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${playfairDisplay.variable} ${inter.variable}`}>
-      <body className={inter.className} suppressHydrationWarning>{children}</body>
+      <body className={inter.className} suppressHydrationWarning>
+        {children}
+
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
+      </body>
     </html>
   );
 }
