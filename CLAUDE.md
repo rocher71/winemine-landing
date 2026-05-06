@@ -230,9 +230,11 @@ public/
 
 ## 하네스: commit-push
 
-**목표:** 변경사항을 git commit하고 GitHub에 push한다.
+**목표:** 변경사항을 git commit하고 GitHub에 push한다. 커밋 전 i18n 동기화 체크 포함.
 
 **트리거:** "커밋해줘", "푸시해줘", "commit", "push", "저장해줘", "깃에 올려줘" 등 요청 시 `commit-push` 스킬을 사용하라.
+
+**i18n 체크:** 커밋 전 `src/messages/ko.json`과 `src/messages/en.json`의 키 구조가 일치하는지 확인. 불일치 시 양쪽 번역 파일을 먼저 최신화한 뒤 커밋.
 
 ---
 

@@ -21,7 +21,51 @@ git diff --stat HEAD
 
 변경 파일이 없으면: "커밋할 변경사항이 없습니다." 안내 후 종료.
 
-### Step 2: 변경사항 분류
+### Step 2: i18n 동기화 체크
+
+변경 파일 중 번역에 영향을 주는 파일이 있는지 확인한다.
+
+**번역 영향 파일이란:**
+- `src/messages/ko.json` 또는 `src/messages/en.json` 직접 수정
+- `src/components/**/*.tsx`, `src/app/**/*.tsx` — UI 텍스트 변경 가능성
+
+**체크 방법:**
+
+```bash
+# 번역 관련 파일이 변경됐는지 확인
+git diff --name-only HEAD | grep -E '(messages/|\.tsx$|\.ts$)'
+```
+
+변경된 파일이 있으면 다음을 수행한다:
+
+1. **`ko.json`만 변경된 경우** → `en.json`에 동일 키가 있는지 확인하고 없으면 영어 번역 추가
+2. **`en.json`만 변경된 경우** → `ko.json`에 동일 키가 있는지 확인하고 없으면 한국어 번역 추가
+3. **`.tsx` 파일에 새 하드코딩 텍스트가 생긴 경우** → 해당 텍스트를 `ko.json`과 `en.json` 양쪽에 추가하고 컴포넌트에서 `t()` 또는 `messages.*`로 교체
+
+**동기화 규칙:**
+- `ko.json`과 `en.json`의 **최상위 키 목록이 일치**해야 한다
+- 배열의 **길이와 인덱스**가 일치해야 한다
+- 새 키 추가 시 **양쪽 파일 동시에** 업데이트
+
+**체크 명령어:**
+```bash
+# 두 파일의 최상위 키 비교 (node 필요)
+node -e "
+const ko = require('./src/messages/ko.json');
+const en = require('./src/messages/en.json');
+const koKeys = Object.keys(ko).sort();
+const enKeys = Object.keys(en).sort();
+const missing = koKeys.filter(k => !enKeys.includes(k));
+if (missing.length) console.log('en.json 누락 키:', missing);
+else console.log('i18n 동기화 OK');
+"
+```
+
+동기화 문제가 발견되면 **커밋 전에 반드시 수정**한다. 수정 후 Step 3으로 이동.
+
+---
+
+### Step 3: 변경사항 분류
 
 변경 파일 목록을 보고 커밋 타입을 결정한다:
 
@@ -53,7 +97,7 @@ chore: Next.js 15.3.0 → 15.5.15 보안 업그레이드
 
 **나쁜 예:** "update", "fix stuff", "changes", "수정"
 
-### Step 4: Staging & Commit
+### Step 5: Staging & Commit
 
 ```bash
 # 모든 변경사항 스테이징 (새 파일 포함)
@@ -75,7 +119,7 @@ EOF
 
 커밋 전 `git status`로 민감한 파일이 스테이징됐는지 반드시 확인.
 
-### Step 5: Push
+### Step 6: Push
 
 ```bash
 # 첫 push (원격 저장소 등록 후)
@@ -89,7 +133,7 @@ push가 실패하면:
 - **rejected (non-fast-forward)**: `git pull --rebase` 후 재시도
 - **원격 저장소 없음**: 사용자에게 GitHub 레포 URL 요청
 
-### Step 6: 완료 보고
+### Step 7: 완료 보고
 
 ```
 ✅ 커밋 완료
