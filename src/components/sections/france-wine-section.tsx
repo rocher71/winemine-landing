@@ -570,9 +570,9 @@ export default function FranceWineSection() {
               transition={{ duration: 0.4, delay: 0.2 }}
               style={{
                 position: 'absolute',
-                top: '50%',
+                top: 'clamp(90px, 14vh, 130px)',
                 left: '50%',
-                transform: 'translate(-50%, -50%)',
+                transform: 'translateX(-50%)',
                 zIndex: 25,
                 pointerEvents: 'none',
                 whiteSpace: 'nowrap',
