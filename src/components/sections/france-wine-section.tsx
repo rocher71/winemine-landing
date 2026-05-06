@@ -443,7 +443,7 @@ export default function FranceWineSection() {
   const [revealedCount, setRevealedCount] = useState(0);
   const [selectedRegion,setSelectedRegion]= useState('33');
   const [showPanel,     setShowPanel]     = useState(false);
-  const [dismissed,     setDismissed]     = useState(false);
+  const blockAutoShow = useRef(false); // 닫기 후 즉시 재오픈 방지 (800ms)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -465,22 +465,27 @@ export default function FranceWineSection() {
     setMapVisible(v > 0.06);
     const count = v < 0.18 ? 0 : v < 0.32 ? 1 : v < 0.44 ? 2 : v < 0.56 ? 3 : v < 0.66 ? 4 : 5;
     setRevealedCount(count);
-    // 보르도 등장 시(count>=2) 자동 슬라이드업 — 단 사용자가 직접 닫은 경우엔 제외
-    if (count >= 2 && !dismissed) setShowPanel(true);
-    // 섹션 재진입 시 상태 초기화
-    if (v < 0.12) { setDismissed(false); setShowPanel(false); }
+    // 보르도 등장 시(count>=2) 자동 슬라이드업
+    if (count >= 2 && !blockAutoShow.current) setShowPanel(true);
+    // 섹션 처음으로 돌아오면 초기화
+    if (v < 0.12) { blockAutoShow.current = false; setShowPanel(false); }
   });
 
   const isDeptVisible = (o: number) => revealedCount >= o;
 
-  const handleClose = () => { setShowPanel(false); setDismissed(true); };
+  const handleClose = () => {
+    setShowPanel(false);
+    blockAutoShow.current = true;
+    // 800ms 후 자동 재오픈 허용 — 이후 스크롤 또는 라벨 클릭으로 열림
+    setTimeout(() => { blockAutoShow.current = false; }, 800);
+  };
 
   const handleRegionClick = (code: string) => {
     const key = primaryKey(code);
     if (REGION_WINES[key]) {
       setSelectedRegion(key);
+      blockAutoShow.current = false;
       setShowPanel(true);
-      setDismissed(false);
     }
   };
 
@@ -549,7 +554,7 @@ export default function FranceWineSection() {
 
         {/* Panels */}
         {!isMobile && <DesktopWinePanel regionKey={selectedRegion} visible={showPanel} />}
-        {isMobile && <MobileBottomSheet selectedRegion={selectedRegion} visible={showPanel} revealedCount={revealedCount} onSelectRegion={setSelectedRegion} onClose={handleClose} />}
+        {isMobile && <MobileBottomSheet selectedRegion={selectedRegion} visible={showPanel} revealedCount={revealedCount} onSelectRegion={(k) => { blockAutoShow.current = false; setSelectedRegion(k); setShowPanel(true); }} onClose={handleClose} />}
 
         {/* Scroll hint */}
         <AnimatePresence>
