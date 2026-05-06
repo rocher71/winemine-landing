@@ -19,6 +19,7 @@ const schema = z.discriminatedUnion('contactType', [emailSchema, phoneSchema]);
 export async function submitWaitlist(data: {
   contact: string;
   contactType: 'email' | 'phone';
+  marketingAgree?: boolean;
 }): Promise<{ success: boolean; error?: string }> {
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { success: false, error: 'validation' };
@@ -36,6 +37,7 @@ export async function submitWaitlist(data: {
     contact_type: parsed.data.contactType,
     ip_address: ip,
     user_agent: headersList.get('user-agent'),
+    marketing_agree: data.marketingAgree ?? false,
   });
 
   if (error?.code === '23505') return { success: true };
