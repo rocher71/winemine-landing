@@ -161,37 +161,18 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       </div>
 
       {/* 마케팅 알림 동의 (선택) */}
-      <label style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 10,
-        cursor: 'pointer',
-        marginTop: 16,
-        padding: '12px 14px',
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid #2D1540',
-        borderRadius: 6,
-      }}>
-        <input
-          type="checkbox"
-          checked={marketingAgree}
-          onChange={(e) => setMarketingAgree(e.target.checked)}
-          style={{
-            marginTop: 2,
-            accentColor: '#8B1A2A',
-            width: 16,
-            height: 16,
-            flexShrink: 0,
-            cursor: 'pointer',
-          }}
-        />
-        <span style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.6 }}>
-          <span style={{ color: '#4A3D56', marginRight: 4 }}>(선택)</span>
-          <strong style={{ color: '#D4C5B0', fontWeight: 600 }}>마케팅 알림 받기</strong>
-          <br />
-          앱 출시 소식 및 특별 혜택 정보를 이메일/문자로 받겠습니다.
+      <div
+        onClick={() => setMarketingAgree(!marketingAgree)}
+        style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, cursor: 'pointer', userSelect: 'none' }}
+      >
+        <span style={{ fontSize: 16, flexShrink: 0, lineHeight: 1 }}>
+          {marketingAgree ? '✅' : '☐'}
         </span>
-      </label>
+        <span style={{ fontSize: 12, color: '#6A5E4A', lineHeight: 1.5 }}>
+          <span style={{ color: '#4A3D56' }}>(선택) </span>
+          마케팅 알림 받기 — 앱 출시 및 특별 혜택 소식을 받겠습니다.
+        </span>
+      </div>
 
       {serverError && (
         <p style={{ fontSize: 13, color: '#EF4444', marginTop: 12 }}>{serverError}</p>

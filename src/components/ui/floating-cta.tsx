@@ -25,9 +25,10 @@ function PlayIconSmall() {
 
 interface FloatingCTAProps {
   onOpenModal: () => void;
+  isModalOpen?: boolean;
 }
 
-export function FloatingCTA({ onOpenModal }: FloatingCTAProps) {
+export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAProps) {
   const [show, setShow] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -50,7 +51,7 @@ export function FloatingCTA({ onOpenModal }: FloatingCTAProps) {
 
   return (
     <AnimatePresence>
-      {show && (
+      {show && !isModalOpen && (
         <motion.button
           type="button"
           initial={{ opacity: 0, y: 16, scale: 0.9 }}

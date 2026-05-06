@@ -292,7 +292,7 @@ function ScanPanel() {
       </div>
 
       {/* Revealed wine info tags */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', minHeight: 80 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', minHeight: 80, alignItems: 'flex-start', alignContent: 'flex-start' }}>
         {WINE_TAGS.slice(0, step).map((tag, i) => (
           <span
             key={tag}

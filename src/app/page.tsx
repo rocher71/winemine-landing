@@ -53,7 +53,7 @@ export default function Home() {
       <FinalCTASection onOpenModal={openModal} />
 
       <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
-      <FloatingCTA onOpenModal={openModal} />
+      <FloatingCTA onOpenModal={openModal} isModalOpen={modalOpen} />
     </main>
   );
 }
