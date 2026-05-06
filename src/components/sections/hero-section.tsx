@@ -7,7 +7,7 @@ import { ChevronDown } from 'lucide-react';
 const WorldMap = dynamic(() => import('@/components/map/world-map'), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0" style={{ background: '#1a1214' }} />
+    <div className="absolute inset-0" style={{ background: '#05020A' }} />
   ),
 });
 
@@ -26,16 +26,14 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
     <section className="relative overflow-hidden" style={{ height: '100vh' }}>
       <WorldMap />
 
-      {/* Minimal overlay — atmosphere, not decoration */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(26,18,20,0.1) 0%, rgba(26,18,20,0.5) 55%, rgba(26,18,20,0.82) 100%)',
+            'linear-gradient(to bottom, rgba(5,2,8,0.05) 0%, rgba(5,2,8,0.35) 50%, rgba(5,2,8,0.75) 100%)',
         }}
       />
 
-      {/* Content */}
       <div
         className="absolute left-1/2 text-center"
         style={{
@@ -49,28 +47,37 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           {...fadeUp}
           transition={{ duration: 0.6, delay: 0.3 }}
           style={{
-            fontFamily: '-apple-system, BlinkMacSystemFont, var(--font-inter), system-ui, sans-serif',
-            fontSize: 'clamp(40px, 7vw, 56px)',
-            fontWeight: 600,
-            color: '#f5f0e8',
-            letterSpacing: '-0.28px',
-            lineHeight: 1.07,
+            fontFamily: 'var(--font-playfair), Georgia, serif',
+            fontSize: 'clamp(48px, 8vw, 72px)',
+            fontWeight: 700,
+            color: '#F5F0E8',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
-          winemine
+          WineMine
         </motion.h1>
+
+        <motion.div
+          {...fadeUp}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          style={{
+            width: 80,
+            height: 2,
+            background: '#C9A84C',
+            margin: '16px auto',
+          }}
+        />
 
         <motion.p
           {...fadeUp}
-          transition={{ duration: 0.6, delay: 0.42 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
           style={{
-            fontSize: 'clamp(17px, 2.5vw, 21px)',
-            fontWeight: 600,
-            color: 'rgba(245,240,232,0.75)',
-            letterSpacing: '0.231px',
-            marginTop: 16,
-            marginBottom: 0,
+            fontSize: 18,
+            fontWeight: 300,
+            color: '#D4C5B0',
+            margin: 0,
           }}
         >
           Your wine journey, mapped.
@@ -80,10 +87,8 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           {...fadeUp}
           transition={{ duration: 0.6, delay: 0.5 }}
           style={{
-            fontSize: 17,
-            fontWeight: 400,
-            color: 'rgba(245,240,232,0.55)',
-            letterSpacing: '-0.374px',
+            fontSize: 14,
+            color: '#9B8B7A',
             marginTop: 8,
             marginBottom: 0,
           }}
@@ -93,47 +98,47 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
 
         <motion.div
           {...fadeUp}
-          transition={{ duration: 0.4, delay: 0.65 }}
+          transition={{ duration: 0.4, delay: 0.7 }}
           style={{
-            marginTop: 40,
+            marginTop: 48,
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
             gap: 12,
-            flexWrap: 'wrap',
           }}
         >
           <button
             type="button"
             onClick={onOpenModal}
-            className="btn-pill btn-primary-on-dark"
-            style={{ height: 44, padding: '0 22px', fontSize: 17 }}
+            style={{
+              background: '#8B1A2A',
+              color: '#F5F0E8',
+              border: 'none',
+              height: 56,
+              padding: '0 40px',
+              borderRadius: 4,
+              fontSize: 16,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 200ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#A02030';
+              e.currentTarget.style.transform = 'scale(1.02)';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(139,26,42,0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#8B1A2A';
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           >
             앱 다운받기
           </button>
-          <button
-            type="button"
-            onClick={onOpenModal}
-            className="btn-pill btn-ghost-on-dark"
-            style={{ height: 44, padding: '0 22px', fontSize: 17 }}
-          >
-            더 알아보기
-          </button>
+          <span style={{ fontSize: 12, color: '#9B8B7A' }}>
+            coming soon — 지금 사전 신청하세요
+          </span>
         </motion.div>
-
-        <motion.p
-          {...fadeUp}
-          transition={{ duration: 0.4, delay: 0.72 }}
-          style={{
-            fontSize: 12,
-            color: 'rgba(245,240,232,0.35)',
-            letterSpacing: '-0.12px',
-            marginTop: 14,
-          }}
-        >
-          coming soon — 지금 사전 신청하세요
-        </motion.p>
       </div>
 
       <motion.div
@@ -144,7 +149,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           bottom: 32,
           left: '50%',
           transform: 'translateX(-50%)',
-          color: 'rgba(245,240,232,0.4)',
+          color: '#9B8B7A',
         }}
       >
         <ChevronDown size={24} />

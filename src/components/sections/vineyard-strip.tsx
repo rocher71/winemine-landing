@@ -39,24 +39,24 @@ const VINEYARDS = [
 
 export default function VineyardStrip() {
   return (
-    <section style={{ background: 'var(--color-tile-dark-2)', padding: 'clamp(48px,7vw,80px) 0' }}>
+    <section style={{ background: '#05020A', padding: 'clamp(48px,7vw,80px) 0' }}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        style={{ marginBottom: 'clamp(28px,4vw,48px)', padding: '0 24px' }}
+        style={{ textAlign: 'center', marginBottom: 'clamp(28px,4vw,48px)', padding: '0 24px' }}
       >
-        <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 10 }}>
+        <div style={{ fontSize: 10, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 12 }}>
           Vineyards of the World
-        </p>
+        </div>
         <h2 style={{
+          fontFamily: 'var(--font-playfair), Georgia, serif',
           fontSize: 'clamp(24px,3.5vw,38px)',
-          fontWeight: 600,
-          color: 'var(--color-on-dark)',
-          letterSpacing: '-0.374px',
-          lineHeight: 1.1,
+          fontWeight: 400,
+          color: '#F5F0E8',
+          lineHeight: 1.2,
         }}>
           당신이 마신 와인이 태어난 땅
         </h2>
@@ -121,10 +121,10 @@ export default function VineyardStrip() {
             }}>
               <div style={{ fontSize: 'clamp(18px,3vw,28px)', marginBottom: 4 }}>{v.flag}</div>
               <div style={{
+                fontFamily: 'var(--font-playfair), Georgia, serif',
                 fontSize: 'clamp(13px,1.8vw,20px)',
-                fontWeight: 600,
-                color: 'var(--color-on-dark)',
-                letterSpacing: '-0.374px',
+                fontWeight: 400,
+                color: '#F5F0E8',
                 marginBottom: 4,
               }}>
                 {v.korean}
@@ -166,9 +166,9 @@ export default function VineyardStrip() {
             Korea Wine Market 2025
           </div>
           <div style={{
+            fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(18px,3.5vw,36px)',
-            fontWeight: 600, color: 'var(--color-on-dark)', textAlign: 'center',
-            letterSpacing: '-0.374px', lineHeight: 1.1,
+            fontWeight: 400, color: '#F5F0E8', textAlign: 'center',
           }}>
             전문가가 선택한 와인을<br />지도 위에 기록하다
           </div>

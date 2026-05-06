@@ -283,7 +283,7 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
     <section
       id={id}
       ref={ref}
-      style={{ background: 'var(--bg-tile-dark-glow)', padding: 'clamp(48px,8vw,80px) 24px', overflow: 'hidden' }}
+      style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), #0A050F', padding: 'clamp(80px,10vw,120px) 24px', overflow: 'hidden' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         {/* Header */}
@@ -292,18 +292,19 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          style={{ marginBottom: 56 }}
+          style={{ textAlign: 'center', marginBottom: 72 }}
         >
-          <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 12 }}>
+          <div style={{ fontSize: 11, letterSpacing: '0.25em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 16 }}>
             Share Your Journey
-          </p>
+          </div>
           <h2 style={{
-            fontSize: 'clamp(28px,4vw,40px)', fontWeight: 600, color: 'var(--color-on-dark)', lineHeight: 1.1,
-            letterSpacing: '-0.374px',
+            fontFamily: 'var(--font-playfair), Georgia, serif',
+            fontSize: 'clamp(28px,4vw,40px)', fontWeight: 400, color: '#F5F0E8', lineHeight: 1.2,
           }}>
             내 와인 지도를<br />공유해보세요
           </h2>
-          <p style={{ fontSize: 17, color: 'var(--color-on-dark-muted)', maxWidth: 480, lineHeight: 1.47, marginTop: 12, letterSpacing: '-0.374px' }}>
+          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 16px' }} />
+          <p style={{ fontSize: 15, color: '#9B8B7A', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
             기록이 쌓이면 자동으로 만들어지는 나만의 Recap.<br />
             탭 한 번이면 공유 완료.
           </p>
@@ -369,12 +370,11 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
                   </div>
                   <div>
                     <div style={{
-                      fontSize: 17, fontWeight: 600, color: 'var(--color-on-dark)', marginBottom: 6,
-                      letterSpacing: '-0.374px',
+                      fontSize: 16, fontWeight: 600, color: '#F5F0E8', marginBottom: 6,
                     }}>
                       {item.title}
                     </div>
-                    <div style={{ fontSize: 15, color: 'var(--color-on-dark-muted)', lineHeight: 1.6, letterSpacing: '-0.224px' }}>
+                    <div style={{ fontSize: 14, color: '#9B8B7A', lineHeight: 1.7 }}>
                       {item.desc}
                     </div>
                   </div>

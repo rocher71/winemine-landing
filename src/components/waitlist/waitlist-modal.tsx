@@ -53,40 +53,42 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             onClick={onClose}
             style={{
               position: 'fixed', inset: 0,
-              background: 'rgba(29,29,31,0.6)',
+              background: 'rgba(5,2,8,0.85)',
               backdropFilter: 'blur(4px)',
               zIndex: 50,
             }}
           />
 
-          {/* Modal */}
+          {/* Modal — desktop: centered, mobile: bottom sheet */}
           <motion.div
-            initial={isMobile ? { y: '100%' } : { scale: 0.96, opacity: 0 }}
+            initial={isMobile ? { y: '100%' } : { scale: 0.95, opacity: 0 }}
             animate={isMobile ? { y: 0 } : { scale: 1, opacity: 1 }}
-            exit={isMobile ? { y: '100%' } : { scale: 0.96, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+            exit={isMobile ? { y: '100%' } : { scale: 0.95, opacity: 0 }}
+            transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
             onClick={(e) => e.stopPropagation()}
             style={isMobile ? {
+              /* Mobile: bottom sheet */
               position: 'fixed',
               bottom: 0, left: 0, right: 0,
-              background: 'var(--color-canvas)',
-              borderTop: '1px solid var(--color-hairline)',
+              background: '#0F0718',
+              borderTop: '1px solid #2D1540',
               borderRadius: '20px 20px 0 0',
               padding: '28px 24px 36px',
-              boxShadow: '0 -8px 32px rgba(0,0,0,0.12)',
+              boxShadow: '0 -20px 60px rgba(0,0,0,0.7)',
               zIndex: 51,
               maxHeight: '92vh',
               overflowY: 'auto',
             } : {
+              /* Desktop: centered modal */
               position: 'fixed',
               top: '50%', left: '50%',
               transform: 'translate(-50%, -50%)',
               width: 'min(480px, calc(100vw - 32px))',
-              background: 'var(--color-canvas)',
-              border: '1px solid var(--color-hairline)',
-              borderRadius: 18,
+              background: '#0F0718',
+              border: '1px solid #2D1540',
+              borderRadius: 8,
               padding: 'clamp(32px, 5vw, 48px) clamp(24px, 5vw, 40px)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+              boxShadow: '0 25px 80px rgba(0,0,0,0.8)',
               zIndex: 51,
               maxHeight: '90vh',
               overflowY: 'auto',
@@ -95,11 +97,11 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             aria-modal="true"
             aria-labelledby="modal-title"
           >
-            {/* Mobile drag handle */}
+            {/* Mobile: drag handle pill */}
             {isMobile && (
               <div style={{
                 width: 40, height: 4, borderRadius: 2,
-                background: 'var(--color-hairline)',
+                background: '#2D1540',
                 margin: '-8px auto 20px',
               }} />
             )}
@@ -109,15 +111,14 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               style={{
                 position: 'absolute', top: 16, right: 16,
                 background: 'transparent', border: 'none',
-                color: 'var(--color-ink-disabled)', cursor: 'pointer',
+                color: '#4A3D56', cursor: 'pointer',
                 padding: 6,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'color 150ms ease',
                 minWidth: 44, minHeight: 44,
-                borderRadius: 9999,
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-ink)'; e.currentTarget.style.background = 'var(--color-parchment)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-ink-disabled)'; e.currentTarget.style.background = 'transparent'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#F5F0E8'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#4A3D56'; }}
               aria-label="모달 닫기"
             >
               <X size={20} />
@@ -126,25 +127,17 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             {!showSuccess && (
               <>
                 <h2 id="modal-title" style={{
-                  fontSize: isMobile ? 24 : 28,
-                  fontWeight: 600,
-                  color: 'var(--color-ink)',
-                  letterSpacing: '-0.374px',
-                  lineHeight: 1.1,
+                  fontFamily: 'var(--font-playfair), Georgia, serif',
+                  fontSize: isMobile ? 28 : 32,
+                  fontWeight: 400, color: '#F5F0E8',
                 }}>
                   사전 신청
                 </h2>
-                <p style={{
-                  fontSize: 17,
-                  color: 'var(--color-ink-muted)',
-                  marginTop: 10,
-                  lineHeight: 1.47,
-                  letterSpacing: '-0.374px',
-                }}>
+                <p style={{ fontSize: 14, color: '#9B8B7A', marginTop: 12, lineHeight: 1.6 }}>
                   이메일 또는 전화번호를 남겨주시면<br />
                   앱 출시 시 가장 먼저 알려드립니다.
                 </p>
-                <div style={{ height: 1, background: 'var(--color-hairline)', margin: '24px 0' }} />
+                <div style={{ width: 40, height: 2, background: '#C9A84C', margin: '16px 0 32px' }} />
               </>
             )}
 
