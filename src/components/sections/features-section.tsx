@@ -166,106 +166,121 @@ function ScanPanel() {
   );
 }
 
-// ── Panel 3: Mini story preview ────────────────────────────────────────────
+// ── Panel 3: Mini story preview — matches instagram-preview-section design ──
+const MAP_DOT_INDICES = [2, 3, 8, 9, 12, 16, 20, 24, 27, 31, 33];
+const MAP_DOT_OPACITIES: Record<number, number> = { 2: 0.95, 3: 0.85, 8: 0.75, 9: 0.65, 12: 0.80, 16: 0.60, 20: 0.55, 24: 0.70, 27: 0.50, 31: 0.65, 33: 0.45 };
+
 function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
+  const [animate, setAnimate] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setAnimate(true); },
+      { threshold: 0.3 }
+    );
+    if (ref.current) io.observe(ref.current);
+    return () => io.disconnect();
+  }, []);
+
+  const s = 0.68;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-      {/* Tiny phone + story */}
-      <div
-        style={{
-          width: 110,
-          height: 196,
-          background: '#111',
-          borderRadius: 18,
-          padding: 4,
-          boxShadow: '0 0 0 1.5px #333, 0 20px 50px rgba(0,0,0,0.6)',
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: 14,
-            overflow: 'hidden',
-            background: 'linear-gradient(170deg, #080218 0%, #150828 50%, #080218 100%)',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '8px 6px',
-          }}
-        >
-          {/* Top */}
-          <div style={{ fontSize: 7, fontFamily: 'Georgia, serif', color: '#C9A84C', letterSpacing: '0.1em', textAlign: 'center' }}>
-            WineMine
-          </div>
-          <div style={{ fontSize: 5, color: '#4A3D56', textAlign: 'center', marginBottom: 6 }}>2025 RECAP</div>
-
-          {/* Mini map dots */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 8 }}>
-            {Array.from({ length: 28 }).map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  width: '100%',
-                  aspectRatio: '1',
-                  borderRadius: 1,
-                  background: [2,3,8,9,14,18,20,22,25].includes(i) ? `rgba(196,30,58,${0.4 + Math.random() * 0.5})` : '#1E0830',
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: 8 }}>
-            {[['82', '병'], ['15', '국가']].map(([n, l]) => (
-              <div key={l} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#F5F0E8' }}>{n}</div>
-                <div style={{ fontSize: 5, color: '#9B8B7A' }}>{l}</div>
+    <div ref={ref} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+      {/* Phone frame */}
+      <div style={{
+        position: 'relative',
+        width: 240 * s, height: 520 * s,
+        background: '#0C0C0C',
+        borderRadius: 40 * s,
+        padding: 8 * s,
+        boxShadow: `0 0 0 ${2 * s}px #2A2A2A, 0 0 0 ${3 * s}px #111, 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(196,30,58,0.06)`,
+        flexShrink: 0,
+      }}>
+        {/* Notch */}
+        <div style={{
+          position: 'absolute', top: 12 * s, left: '50%',
+          transform: 'translateX(-50%)',
+          width: 80 * s, height: 22 * s,
+          background: '#0C0C0C', borderRadius: 12 * s, zIndex: 10,
+        }} />
+        {/* Screen */}
+        <div style={{ width: '100%', height: '100%', borderRadius: 32 * s, overflow: 'hidden' }}>
+          <div style={{
+            width: '100%', height: '100%',
+            background: 'linear-gradient(170deg, #060115 0%, #120828 40%, #060115 100%)',
+            display: 'flex', flexDirection: 'column',
+            padding: `${20 * s}px ${16 * s}px ${16 * s}px`,
+            fontFamily: 'Inter, sans-serif',
+          }}>
+            {/* Story header */}
+            <div style={{ marginBottom: 14 * s }}>
+              <div style={{ height: 2, background: 'rgba(255,255,255,0.15)', borderRadius: 1, marginBottom: 10 * s }}>
+                <div style={{ height: '100%', width: animate ? '65%' : '0%', background: '#F5F0E8', borderRadius: 1, transition: 'width 1.2s ease 0.4s' }} />
               </div>
-            ))}
-          </div>
-
-          {/* Mini bars */}
-          {[['🇫🇷', 28, 90], ['🇮🇹', 21, 68], ['🇨🇱', 18, 56]].map(([flag, n, w]) => (
-            <div key={String(flag)} style={{ marginBottom: 3 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
-                <span style={{ fontSize: 5, color: '#9B8B7A' }}>{flag}</span>
-                <span style={{ fontSize: 5, color: '#C9A84C' }}>{n}</span>
-              </div>
-              <div style={{ height: 2, background: '#1E0830', borderRadius: 1 }}>
-                <div style={{ height: '100%', width: `${w}%`, background: '#C41E3A', borderRadius: 1 }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 * s }}>
+                <div style={{ width: 28 * s, height: 28 * s, borderRadius: '50%', background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 * s, fontWeight: 700, color: '#F5F0E8', flexShrink: 0 }}>W</div>
+                <span style={{ fontSize: 11 * s, fontWeight: 600, color: '#F5F0E8' }}>winemine</span>
+                <span style={{ fontSize: 10 * s, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>지금</span>
               </div>
             </div>
-          ))}
 
-          {/* Footer */}
-          <div style={{ marginTop: 'auto', borderTop: '1px solid #1E0830', paddingTop: 4, textAlign: 'center' }}>
-            <div style={{ fontSize: 5, color: '#4A3D56', letterSpacing: '0.05em' }}>winemine.com</div>
+            {/* Title */}
+            <div style={{ textAlign: 'center', marginBottom: 16 * s }}>
+              <div style={{ fontSize: 9 * s, letterSpacing: '0.25em', color: '#C9A84C', textTransform: 'uppercase' as const, marginBottom: 4 * s }}>My Wine Journey</div>
+              <div style={{ fontFamily: 'Georgia, serif', fontSize: 22 * s, color: '#F5F0E8', lineHeight: 1.1 }}>2025<br />Recap</div>
+              <div style={{ width: 30 * s, height: 1, background: '#C9A84C', margin: `${8 * s}px auto 0` }} />
+            </div>
+
+            {/* Map dot grid */}
+            <div style={{ marginBottom: 14 * s, height: 90 * s, borderRadius: 8 * s, overflow: 'hidden', border: '1px solid rgba(201,168,76,0.15)', background: '#080220', position: 'relative' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(9, 1fr)', gap: 2, padding: 4, height: '100%', alignContent: 'center' }}>
+                {Array.from({ length: 36 }).map((_, i) => (
+                  <div key={i} style={{ width: '100%', aspectRatio: '1', borderRadius: 1, background: MAP_DOT_INDICES.includes(i) ? `rgba(196,30,58,${MAP_DOT_OPACITIES[i] ?? 0.6})` : '#1C0840' }} />
+                ))}
+              </div>
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, rgba(6,1,21,0.7) 100%)' }} />
+            </div>
+
+            {/* Stats */}
+            <div style={{ display: 'flex', justifyContent: 'space-around', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 8 * s, padding: `${10 * s}px ${8 * s}px`, marginBottom: 14 * s }}>
+              {[['82', '병'], ['15', '국가'], ['7', '개월']].map(([n, l]) => (
+                <div key={l} style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 20 * s, fontWeight: 700, color: '#F5F0E8', lineHeight: 1 }}>{n}</div>
+                  <div style={{ fontSize: 9 * s, color: '#9B8B7A', marginTop: 3 * s, letterSpacing: '0.05em' }}>{l}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Country bars */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 * s, flex: 1 }}>
+              {REGIONS.slice(0, 5).map((r, i) => (
+                <div key={r.country} style={{ display: 'flex', alignItems: 'center', gap: 8 * s }}>
+                  <span style={{ fontSize: 13 * s, flexShrink: 0 }}>{r.flag}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: animate ? `${r.bar}%` : '0%', background: 'linear-gradient(90deg, rgba(196,30,58,0.7), rgba(196,30,58,0.9))', borderRadius: 2, transition: `width 900ms cubic-bezier(0.4,0,0.2,1) ${300 + i * 80}ms` }} />
+                    </div>
+                  </div>
+                  <span style={{ fontSize: 10 * s, color: '#C9A84C', flexShrink: 0 }}>{r.wines}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div style={{ marginTop: 14 * s, paddingTop: 10 * s, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 * s }}>
+              <div style={{ width: 16 * s, height: 16 * s, borderRadius: '50%', background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)' }} />
+              <span style={{ fontFamily: 'Georgia, serif', fontSize: 11 * s, color: '#C9A84C', letterSpacing: '0.08em' }}>winemine</span>
+            </div>
           </div>
         </div>
       </div>
 
       <button
         onClick={onScrollToPreview}
-        style={{
-          padding: '8px 20px',
-          background: 'rgba(201,168,76,0.1)',
-          border: '1px solid rgba(201,168,76,0.3)',
-          borderRadius: 20,
-          color: '#C9A84C',
-          fontSize: 12,
-          cursor: 'pointer',
-          transition: 'all 200ms ease',
-          fontFamily: 'inherit',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(201,168,76,0.2)';
-          e.currentTarget.style.borderColor = '#C9A84C';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'rgba(201,168,76,0.1)';
-          e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)';
-        }}
+        style={{ padding: '8px 20px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 20, color: '#C9A84C', fontSize: 12, cursor: 'pointer', transition: 'all 200ms ease', fontFamily: 'inherit' }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.2)'; e.currentTarget.style.borderColor = '#C9A84C'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.1)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'; }}
       >
         전체 미리보기 →
       </button>

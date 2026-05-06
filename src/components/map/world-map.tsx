@@ -1,13 +1,11 @@
 'use client';
 
-import { useRef, useLayoutEffect } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
 const GEO_URL = '/world-110m.json';
 
-// Brighter, more visible wine country fills
 const WINE_REGIONS: Record<string, { opacity: number; fill: string }> = {
-  '250': { opacity: 1.00, fill: '#E8253E' }, // France — vivid
+  '250': { opacity: 1.00, fill: '#E8253E' }, // France
   '380': { opacity: 0.90, fill: '#D82038' }, // Italy
   '724': { opacity: 0.75, fill: '#CC1C34' }, // Spain
   '840': { opacity: 0.82, fill: '#D42040' }, // USA
@@ -21,25 +19,6 @@ const WINE_REGIONS: Record<string, { opacity: number; fill: string }> = {
   '710': { opacity: 0.50, fill: '#C41E3A' }, // South Africa
 };
 
-// Applies preserveAspectRatio="xMidYMid slice" to all SVGs in the container
-// This makes the map cover (not letterbox) on any screen size — critical for mobile
-function useSliceSvg(ref: React.RefObject<HTMLDivElement | null>) {
-  useLayoutEffect(() => {
-    const apply = () => {
-      if (!ref.current) return;
-      ref.current.querySelectorAll('svg').forEach((svg) => {
-        svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-        svg.style.width = '100%';
-        svg.style.height = '100%';
-      });
-    };
-    apply();
-    const observer = new MutationObserver(apply);
-    if (ref.current) observer.observe(ref.current, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [ref]);
-}
-
 function MapInstance() {
   return (
     <ComposableMap
@@ -47,7 +26,7 @@ function MapInstance() {
       projectionConfig={{ scale: 153, rotate: [-40, 0, 0] }}
       width={960}
       height={500}
-      style={{ width: '100%', height: '100%', display: 'block', background: '#060112' }}
+      style={{ width: '100%', height: '100%', display: 'block', background: '#080118' }}
     >
       <Geographies geography={GEO_URL}>
         {({ geographies }) =>
@@ -56,18 +35,18 @@ function MapInstance() {
             const geoId = String((geo as any).id).padStart(3, '0');
             const wine = WINE_REGIONS[geoId];
 
-            const fill   = wine ? wine.fill    : '#221040';
+            const fill   = wine ? wine.fill    : '#2A1552';
             const fillOp = wine ? wine.opacity : 1;
-            const stroke = wine ? '#5A1A50'    : '#3D1568';
+            const stroke = wine ? '#5A1A50'    : '#4A2080';
 
             return (
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
                 style={{
-                  default: { fill, fillOpacity: fillOp, stroke, strokeWidth: 0.4, outline: 'none' },
-                  hover:   { fill, fillOpacity: fillOp, stroke, strokeWidth: 0.4, outline: 'none' },
-                  pressed: { fill, fillOpacity: fillOp, stroke, strokeWidth: 0.4, outline: 'none' },
+                  default: { fill, fillOpacity: fillOp, stroke, strokeWidth: 0.5, outline: 'none' },
+                  hover:   { fill, fillOpacity: fillOp, stroke, strokeWidth: 0.5, outline: 'none' },
+                  pressed: { fill, fillOpacity: fillOp, stroke, strokeWidth: 0.5, outline: 'none' },
                 }}
               />
             );
@@ -79,33 +58,28 @@ function MapInstance() {
 }
 
 export default function WorldMap() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  useSliceSvg(containerRef);
-
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 overflow-hidden"
-      style={{ background: '#060112' }}
-    >
-      {/* Two identical maps for seamless CSS left-slide loop */}
+    <div className="absolute inset-0 overflow-hidden" style={{ background: '#080118' }}>
+      {/*
+        Width = 384vh = 2 × (100vh × 960/500).
+        Each 50%-wide child has aspect ratio 960/500 → SVG fills exactly, no cropping.
+        The right edge of copy 1 (= Pacific seam at 140°W) meets the left edge of copy 2
+        (= same 140°W), so the tiling is seamless over open ocean.
+        translateX(-50%) = exactly one copy's width per loop cycle.
+      */}
       <div
         style={{
           display: 'flex',
-          width: '200%',
           height: '100%',
+          width: '384vh',
           animation: 'mapSlideLeft 100s linear infinite',
           willChange: 'transform',
-          /* prevent any sub-pixel gap between the two copies */
-          fontSize: 0,
-          lineHeight: 0,
-          gap: 0,
         }}
       >
-        <div style={{ width: '50%', height: '100%', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
+        <div style={{ width: '50%', height: '100%', flexShrink: 0 }}>
           <MapInstance />
         </div>
-        <div style={{ width: '50%', height: '100%', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
+        <div style={{ width: '50%', height: '100%', flexShrink: 0 }}>
           <MapInstance />
         </div>
       </div>
@@ -116,7 +90,7 @@ export default function WorldMap() {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 75% 55% at 50% 58%, rgba(220,35,60,0.18) 0%, rgba(140,20,40,0.08) 45%, transparent 72%)',
+            'radial-gradient(ellipse 75% 55% at 50% 58%, rgba(220,35,60,0.28) 0%, rgba(140,20,40,0.14) 45%, transparent 72%)',
           pointerEvents: 'none',
         }}
       />

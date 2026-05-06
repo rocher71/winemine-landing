@@ -30,7 +30,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(5,2,8,0.3) 0%, rgba(5,2,8,0.6) 50%, rgba(5,2,8,0.85) 100%)',
+            'linear-gradient(to bottom, rgba(5,2,8,0.05) 0%, rgba(5,2,8,0.35) 50%, rgba(5,2,8,0.75) 100%)',
         }}
       />
 
@@ -49,7 +49,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(48px, 8vw, 72px)',
-            fontWeight: 400,
+            fontWeight: 700,
             color: '#F5F0E8',
             letterSpacing: '-0.02em',
             lineHeight: 1.1,
