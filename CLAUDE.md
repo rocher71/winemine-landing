@@ -1,4 +1,20 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # winemine — Claude Code Context
+
+## 개발 명령어
+
+```bash
+npm run dev      # Turbopack 개발 서버 (http://localhost:3000)
+npm run build    # 프로덕션 빌드
+npm run lint     # ESLint
+```
+
+테스트 프레임워크 없음. UI 변경 후에는 `npm run build`로 타입/빌드 오류 확인.
+
+---
 
 ## 서비스 개요
 
@@ -58,7 +74,7 @@
 |--------|------|
 | 프레임워크 | Next.js 15 App Router |
 | 언어 | TypeScript 5.7 (strict mode) |
-| 스타일링 | Tailwind CSS v4 + shadcn/ui |
+| 스타일링 | Tailwind CSS v4 |
 | 세계 지도 | react-simple-maps v3 + topojson-client v3 |
 | 애니메이션 | Framer Motion v12 |
 | 폼 | react-hook-form v7 + zod v3 |
@@ -139,10 +155,10 @@ NEXT_PUBLIC_SITE_URL          # 배포 URL (OG 태그용, optional)
 ## 지도 구현 주의사항
 
 - `react-simple-maps`는 브라우저 API 사용 → **SSR 불가**
-- 반드시 `dynamic(() => import('...'), { ssr: false })` 사용
-- 지도 데이터: `public/world-110m.json` (world-atlas@2 패키지에서 다운로드)
-- 국가 식별: `properties.ISO_A3` 또는 `properties.ADM0_A3` (버전에 따라 확인)
-- Demo 와인 데이터: `{ FRA: 0.85, ITA: 0.70, ESP: 0.45, USA: 0.60, DEU: 0.30, ARG: 0.50, CHL: 0.40, PRT: 0.55, AUT: 0.25, NZL: 0.35 }`
+- dynamic import는 `world-map.tsx`가 아니라 **`hero-section.tsx`에서** 처리: `dynamic(() => import('@/components/map/world-map'), { ssr: false })`
+- 지도 데이터: `public/world-110m.json`
+- 국가 식별: `geo.id`를 3자리 숫자 문자열로 패딩 (`String(geo.id).padStart(3, '0')`) — `ISO_A3`/`ADM0_A3` 아님
+- 지도는 960×500 SVG 두 장을 가로로 이어 붙여 `mapSlideLeft` 애니메이션으로 무한 스크롤 (globals.css 정의)
 
 ---
 
@@ -151,21 +167,43 @@ NEXT_PUBLIC_SITE_URL          # 배포 URL (OG 태그용, optional)
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # 폰트, 메타 태그, OG, security headers
-│   ├── page.tsx            # 랜딩 페이지 (섹션 조합 + modalOpen state)
-│   ├── globals.css
-│   └── actions.ts          # Server Action: submitWaitlist()
+│   ├── layout.tsx                      # 폰트, 메타 태그, OG, security headers
+│   ├── page.tsx                        # 'use client' — modalOpen state, 섹션 조합
+│   ├── globals.css                     # mapSlideLeft keyframe 포함
+│   └── actions.ts                      # Server Action: submitWaitlist()
 ├── components/
-│   ├── sections/           # hero, features, how-it-works, final-cta
-│   ├── map/world-map.tsx   # react-simple-maps (client only)
-│   └── waitlist/           # modal, form, success
-└── lib/
-    ├── supabase-server.ts  # service role 클라이언트
-    ├── validations.ts      # Zod 스키마
-    └── utils.ts            # cn() 헬퍼
+│   ├── sections/
+│   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
+│   │   ├── france-wine-section.tsx     # 스크롤 기반 프랑스 드릴다운
+│   │   ├── vineyard-strip.tsx          # 와인 산지 사진 스트립
+│   │   ├── features-section.tsx        # 핵심 기능 소개
+│   │   ├── market-stats-section.tsx    # 한국 와인 시장 통계
+│   │   ├── how-it-works-section.tsx    # 사용 흐름
+│   │   ├── instagram-preview-section.tsx # Recap 공유 미리보기
+│   │   └── final-cta-section.tsx       # 최종 CTA
+│   ├── map/world-map.tsx               # react-simple-maps (client only, 'use client')
+│   ├── ui/
+│   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA 버튼
+│   │   └── store-buttons.tsx           # App Store / Google Play 버튼
+│   └── waitlist/
+│       ├── waitlist-modal.tsx          # 모달 컨테이너
+│       ├── waitlist-form.tsx           # react-hook-form + zod
+│       └── waitlist-success.tsx        # 제출 완료 화면
+├── lib/
+│   ├── supabase-server.ts             # service role 클라이언트
+│   ├── validations.ts                 # Zod 스키마 (클라이언트용)
+│   ├── utils.ts                       # cn() 헬퍼
+│   └── analytics.ts                   # trackEvent() — window.gtag 래퍼
+└── types/
+    └── react-simple-maps.d.ts         # 타입 선언
 public/
 └── world-110m.json
 ```
+
+### 핵심 데이터 흐름
+1. `page.tsx` (`'use client'`) — `modalOpen` 상태 보유, 모든 섹션에 `onOpenModal` 전달
+2. `StoreButtons` / `FloatingCTA` / `FinalCTASection` → `onOpenModal()` 호출
+3. `WaitlistModal` → `WaitlistForm` → `submitWaitlist()` Server Action → Supabase insert
 
 ---
 
