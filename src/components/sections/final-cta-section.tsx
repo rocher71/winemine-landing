@@ -11,69 +11,65 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
 
   return (
     <>
-      <section style={{ background: '#05020A', padding: 'clamp(80px, 10vw, 120px) 24px' }}>
+      <section style={{ background: 'var(--bg-tile-dark-glow)', padding: 'clamp(48px,8vw,80px) 24px' }}>
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.55 }}
           viewport={{ once: true }}
-          style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto' }}
+          style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto' }}
         >
-          <h2
-            style={{
-              fontFamily: 'var(--font-playfair), Georgia, serif',
-              fontSize: 'clamp(32px, 5vw, 48px)',
-              fontWeight: 400,
-              color: '#F5F0E8',
-              lineHeight: 1.2,
-            }}
-          >
+          <h2 style={{
+            fontSize: 'clamp(28px, 5vw, 40px)',
+            fontWeight: 600,
+            color: 'var(--color-on-dark)',
+            letterSpacing: '-0.374px',
+            lineHeight: 1.1,
+          }}>
             Make your own Wine Map
           </h2>
-          <p style={{ fontSize: 16, color: '#9B8B7A', marginTop: 16 }}>
+          <p style={{
+            fontSize: 17,
+            color: 'var(--color-on-dark-muted)',
+            letterSpacing: '-0.374px',
+            lineHeight: 1.47,
+            marginTop: 16,
+          }}>
             사전 신청하시면 출시 즉시 알려드립니다.
           </p>
-          <button
-            onClick={onOpenModal}
-            style={{
-              marginTop: 40,
-              background: '#8B1A2A',
-              color: '#F5F0E8',
-              border: 'none',
-              height: 56,
-              padding: '0 40px',
-              borderRadius: 4,
-              fontSize: 16,
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 200ms ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#A02030';
-              e.currentTarget.style.transform = 'scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(139,26,42,0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#8B1A2A';
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            앱 다운받기
-          </button>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 40, flexWrap: 'wrap' }}>
+            <button
+              onClick={onOpenModal}
+              className="btn-pill btn-primary-on-dark"
+              style={{ height: 44, padding: '0 22px', fontSize: 17 }}
+            >
+              앱 다운받기
+            </button>
+            <button
+              onClick={onOpenModal}
+              className="btn-pill btn-ghost-on-dark"
+              style={{ height: 44, padding: '0 22px', fontSize: 17 }}
+            >
+              더 알아보기
+            </button>
+          </div>
         </motion.div>
       </section>
 
-      <footer
-        style={{
-          background: '#030106',
-          height: 80,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <p style={{ fontSize: 13, color: '#4A3D56' }}>
+      <footer style={{
+        background: 'var(--color-tile-dark-2)',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        padding: '28px 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <p style={{
+          fontSize: 12,
+          color: 'rgba(255,255,255,0.2)',
+          letterSpacing: '-0.12px',
+        }}>
           © 2025 winemine. All rights reserved.
         </p>
       </footer>

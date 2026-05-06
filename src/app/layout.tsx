@@ -1,13 +1,6 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
-
-const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-playfair',
-  display: 'swap',
-});
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={`${playfairDisplay.variable} ${inter.variable}`}>
+    <html lang="ko" className={inter.variable}>
       <body className={inter.className} suppressHydrationWarning>{children}</body>
     </html>
   );

@@ -40,10 +40,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   const onSubmit = async (data: ContactFormData) => {
     setServerError(null);
     try {
-      const result = await submitWaitlist({
-        contact: data.contact,
-        contactType,
-      });
+      const result = await submitWaitlist({ contact: data.contact, contactType });
       if (result.success) {
         onSuccess();
       } else {
@@ -54,19 +51,9 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
     }
   };
 
-  const activeTabStyle = {
-    borderColor: '#8B1A2A',
-    color: '#F5F0E8',
-    background: 'rgba(139,26,42,0.15)',
-  };
-  const inactiveTabStyle = {
-    borderColor: '#2D1540',
-    color: '#4A3D56',
-    background: 'transparent',
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Tab toggle */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
         {(['email', 'phone'] as const).map((type) => (
           <button
@@ -74,14 +61,17 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
             type="button"
             onClick={() => handleTabChange(type)}
             style={{
-              border: '1px solid',
               padding: '8px 20px',
-              borderRadius: 4,
+              borderRadius: 9999,
               fontSize: 14,
               fontWeight: 500,
+              letterSpacing: '-0.224px',
               cursor: 'pointer',
               transition: 'all 150ms ease',
-              ...(contactType === type ? activeTabStyle : inactiveTabStyle),
+              border: '1px solid',
+              borderColor: contactType === type ? 'var(--color-action)' : 'var(--color-hairline)',
+              background: contactType === type ? 'rgba(139,26,42,0.06)' : 'transparent',
+              color: contactType === type ? 'var(--color-action)' : 'var(--color-ink-muted)',
             }}
           >
             {type === 'email' ? '이메일' : '전화번호'}
@@ -89,6 +79,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         ))}
       </div>
 
+      {/* Input */}
       <div>
         <input
           {...register('contact')}
@@ -99,66 +90,62 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           style={{
             width: '100%',
             height: 52,
-            background: '#1A0A1E',
-            border: `1px solid ${errors.contact ? '#EF4444' : '#2D1540'}`,
-            borderRadius: 4,
+            background: 'var(--color-parchment)',
+            border: `1px solid ${errors.contact ? 'var(--color-error)' : 'var(--color-hairline)'}`,
+            borderRadius: 11,
             padding: '0 16px',
-            color: '#F5F0E8',
-            fontSize: 15,
+            color: 'var(--color-ink)',
+            fontSize: 17,
+            letterSpacing: '-0.374px',
             outline: 'none',
             boxSizing: 'border-box',
+            transition: 'border-color 150ms ease',
           }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = '#8B1A2A';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = errors.contact ? '#EF4444' : '#2D1540';
-          }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-action)'; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = errors.contact ? 'var(--color-error)' : 'var(--color-hairline)'; }}
         />
         {errors.contact && (
-          <p style={{ fontSize: 12, color: '#EF4444', marginTop: 6 }}>
+          <p style={{ fontSize: 13, color: 'var(--color-error)', marginTop: 6, letterSpacing: '-0.12px' }}>
             {errors.contact.message}
           </p>
         )}
       </div>
 
       {serverError && (
-        <p style={{ fontSize: 13, color: '#EF4444', marginTop: 12 }}>{serverError}</p>
+        <p style={{ fontSize: 14, color: 'var(--color-error)', marginTop: 12, letterSpacing: '-0.224px' }}>
+          {serverError}
+        </p>
       )}
 
       <button
         type="submit"
         disabled={isSubmitting}
+        className="btn-pill btn-primary"
         style={{
           width: '100%',
           height: 52,
-          background: '#8B1A2A',
-          color: '#F5F0E8',
-          border: 'none',
-          borderRadius: 4,
-          fontSize: 16,
-          fontWeight: 600,
-          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          opacity: isSubmitting ? 0.7 : 1,
+          fontSize: 17,
           marginTop: 16,
+          borderRadius: 11,
+          opacity: isSubmitting ? 0.7 : 1,
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 8,
-          transition: 'background 200ms ease',
-        }}
-        onMouseEnter={(e) => {
-          if (!isSubmitting) e.currentTarget.style.background = '#A02030';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = '#8B1A2A';
         }}
       >
-        {isSubmitting && <Loader2 size={20} className="animate-spin" />}
+        {isSubmitting && <Loader2 size={18} className="animate-spin" />}
         {isSubmitting ? '잠시만요...' : '신청하기'}
       </button>
 
-      <p style={{ fontSize: 11, color: '#4A3D56', textAlign: 'center', marginTop: 12 }}>
+      <p style={{
+        fontSize: 12,
+        color: 'var(--color-ink-disabled)',
+        textAlign: 'center',
+        marginTop: 12,
+        letterSpacing: '-0.12px',
+      }}>
         개인정보는 출시 알림 목적으로만 사용됩니다.
       </p>
     </form>

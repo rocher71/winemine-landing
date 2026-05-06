@@ -283,7 +283,7 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
     <section
       id={id}
       ref={ref}
-      style={{ background: '#0A050F', padding: 'clamp(80px,10vw,120px) 24px', overflow: 'hidden' }}
+      style={{ background: 'var(--bg-tile-dark-glow)', padding: 'clamp(48px,8vw,80px) 24px', overflow: 'hidden' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         {/* Header */}
@@ -292,19 +292,18 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          style={{ textAlign: 'center', marginBottom: 72 }}
+          style={{ marginBottom: 56 }}
         >
-          <div style={{ fontSize: 11, letterSpacing: '0.25em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 16 }}>
+          <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 12 }}>
             Share Your Journey
-          </div>
+          </p>
           <h2 style={{
-            fontFamily: 'var(--font-playfair), Georgia, serif',
-            fontSize: 'clamp(28px,4vw,40px)', fontWeight: 400, color: '#F5F0E8', lineHeight: 1.2,
+            fontSize: 'clamp(28px,4vw,40px)', fontWeight: 600, color: 'var(--color-on-dark)', lineHeight: 1.1,
+            letterSpacing: '-0.374px',
           }}>
             내 와인 지도를<br />공유해보세요
           </h2>
-          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 16px' }} />
-          <p style={{ fontSize: 15, color: '#9B8B7A', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
+          <p style={{ fontSize: 17, color: 'var(--color-on-dark-muted)', maxWidth: 480, lineHeight: 1.47, marginTop: 12, letterSpacing: '-0.374px' }}>
             기록이 쌓이면 자동으로 만들어지는 나만의 Recap.<br />
             탭 한 번이면 공유 완료.
           </p>
@@ -370,11 +369,12 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
                   </div>
                   <div>
                     <div style={{
-                      fontSize: 16, fontWeight: 600, color: '#F5F0E8', marginBottom: 6,
+                      fontSize: 17, fontWeight: 600, color: 'var(--color-on-dark)', marginBottom: 6,
+                      letterSpacing: '-0.374px',
                     }}>
                       {item.title}
                     </div>
-                    <div style={{ fontSize: 14, color: '#9B8B7A', lineHeight: 1.7 }}>
+                    <div style={{ fontSize: 15, color: 'var(--color-on-dark-muted)', lineHeight: 1.6, letterSpacing: '-0.224px' }}>
                       {item.desc}
                     </div>
                   </div>

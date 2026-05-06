@@ -26,7 +26,7 @@ function MapInstance() {
       projectionConfig={{ scale: 153, rotate: [-40, 0, 0] }}
       width={960}
       height={500}
-      style={{ width: '100%', height: '100%', display: 'block', background: '#080118' }}
+      style={{ width: '100%', height: '100%', display: 'block', background: '#0d0810' }}
     >
       <Geographies geography={GEO_URL}>
         {({ geographies }) =>
@@ -59,7 +59,7 @@ function MapInstance() {
 
 export default function WorldMap() {
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ background: '#080118' }}>
+    <div className="absolute inset-0 overflow-hidden" style={{ background: '#0d0810' }}>
       {/*
         Width = 384vh = 2 × (100vh × 960/500).
         Each 50%-wide child has aspect ratio 960/500 → SVG fills exactly, no cropping.

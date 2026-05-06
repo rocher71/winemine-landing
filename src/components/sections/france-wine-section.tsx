@@ -6,50 +6,104 @@ import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps
 
 const DEPT_URL = '/france-departments.json';
 
-// ── Wine department definitions ────────────────────────────────────────────
-const WINE_DEPTS: Record<string, {
+// ── Types ──────────────────────────────────────────────────────────────────
+type WineItem = { name: string; grade: string; year: string; note: string; producer: string };
+
+type RegionData = {
   korName: string; count: number; opacity: number;
   labelCoords: [number, number]; showLabel: boolean;
   featured?: boolean; revealOrder: number;
-}> = {
-  '21': { korName: '뫼르소',  count: 28, opacity: 0.95, labelCoords: [4.88, 47.20], showLabel: true, featured: true, revealOrder: 1 },
-  '33': { korName: '보르도',  count: 19, opacity: 0.68, labelCoords: [-0.62, 44.82], showLabel: true, revealOrder: 2 },
-  '51': { korName: '샹파뉴',  count: 12, opacity: 0.50, labelCoords: [4.12, 49.00], showLabel: true, revealOrder: 3 },
-  '67': { korName: '알자스',  count: 7,  opacity: 0.36, labelCoords: [7.52, 48.58], showLabel: true, revealOrder: 4 },
-  '68': { korName: '',        count: 7,  opacity: 0.36, labelCoords: [7.52, 48.58], showLabel: false, revealOrder: 4 },
-  '69': { korName: '론 밸리', count: 5,  opacity: 0.20, labelCoords: [4.68, 45.80], showLabel: true, revealOrder: 5 },
+  wines: WineItem[];
 };
 
-// ── Meursault wines ────────────────────────────────────────────────────────
-const MEURSAULT_WINES = [
-  { name: 'Meursault Perrières',   grade: '1er Cru', year: '2021', note: '헤이즐넛 · 버터 · 미네랄', producer: 'Domaine Leflaive' },
-  { name: 'Meursault Charmes',     grade: '1er Cru', year: '2020', note: '풍성한 과일 · 오크 · 꿀',   producer: 'Comtes Lafon' },
-  { name: 'Meursault Genevrières', grade: '1er Cru', year: '2019', note: '크리미 · 헤이즐넛 · 스모키', producer: 'Coche-Dury' },
-  { name: 'Meursault Village',     grade: 'AOC',     year: '2022', note: '레몬 · 바닐라 · 아몬드',    producer: 'Patrick Javillier' },
-  { name: 'Meursault Narvaux',     grade: 'Lieu-dit',year: '2021', note: '미네랄 · 감귤 · 흰꽃',     producer: 'Roulot' },
-];
+// ── Wine data by département ───────────────────────────────────────────────
+const WINE_DEPTS: Record<string, RegionData> = {
+  '21': {
+    korName: '뫼르소', count: 28, opacity: 0.95,
+    labelCoords: [4.88, 47.20], showLabel: true, featured: true, revealOrder: 1,
+    wines: [
+      { name: 'Meursault Perrières',   grade: '1er Cru',  year: '2021', note: '헤이즐넛 · 버터 · 미네랄',     producer: 'Domaine Leflaive' },
+      { name: 'Meursault Charmes',     grade: '1er Cru',  year: '2020', note: '풍성한 과일 · 오크 · 꿀',      producer: 'Comtes Lafon' },
+      { name: 'Meursault Genevrières', grade: '1er Cru',  year: '2019', note: '크리미 · 헤이즐넛 · 스모키',   producer: 'Coche-Dury' },
+      { name: 'Meursault Village',     grade: 'AOC',       year: '2022', note: '레몬 · 바닐라 · 아몬드',       producer: 'Patrick Javillier' },
+      { name: 'Meursault Narvaux',     grade: 'Lieu-dit',  year: '2021', note: '미네랄 · 감귤 · 흰꽃',        producer: 'Roulot' },
+    ],
+  },
+  '33': {
+    korName: '보르도', count: 19, opacity: 0.68,
+    labelCoords: [-0.62, 44.82], showLabel: true, revealOrder: 2,
+    wines: [
+      { name: 'Château Pétrus',    grade: 'Pomerol',         year: '2018', note: '체리 · 트러플 · 벨벳',        producer: 'Établissements Moueix' },
+      { name: 'Château Margaux',   grade: '1er Grand Cru',   year: '2016', note: '장미 · 블랙커런트 · 삼나무',   producer: 'Château Margaux' },
+      { name: 'Lynch-Bages',       grade: '5ème Cru Classé', year: '2019', note: '담배 · 블랙베리 · 가죽',       producer: 'Cazes Family' },
+      { name: 'Léoville-Barton',   grade: '2ème Cru Classé', year: '2015', note: '자두 · 삼나무 · 스파이스',    producer: 'Barton Family' },
+    ],
+  },
+  '51': {
+    korName: '샹파뉴', count: 12, opacity: 0.50,
+    labelCoords: [4.12, 49.00], showLabel: true, revealOrder: 3,
+    wines: [
+      { name: 'Krug Grande Cuvée', grade: 'Brut',            year: 'NV',   note: '브리오슈 · 사과 · 헤이즐넛',  producer: 'Krug' },
+      { name: 'Dom Pérignon',      grade: 'Blanc Vintage',   year: '2013', note: '시트러스 · 아몬드 · 미네랄',   producer: 'Moët & Chandon' },
+      { name: 'Billecart-Salmon',  grade: 'Blanc de Blancs', year: '2012', note: '흰꽃 · 레몬 · 크리미',         producer: 'Billecart-Salmon' },
+    ],
+  },
+  '67': {
+    korName: '알자스', count: 7, opacity: 0.36,
+    labelCoords: [7.52, 48.58], showLabel: true, revealOrder: 4,
+    wines: [
+      { name: 'Clos Sainte-Hune',  grade: 'Riesling GC',    year: '2017', note: '미네랄 · 복숭아 · 휘발유',    producer: 'Trimbach' },
+      { name: 'Pinot Gris Rangen', grade: 'Grand Cru',      year: '2019', note: '훈연 · 꿀 · 망고',           producer: 'Zind-Humbrecht' },
+      { name: 'Gewurztraminer',    grade: 'Furstentum GC',  year: '2018', note: '장미 · 리치 · 생강',          producer: 'Domaine Weinbach' },
+    ],
+  },
+  '68': {
+    korName: '', count: 7, opacity: 0.36,
+    labelCoords: [7.52, 48.58], showLabel: false, revealOrder: 4,
+    wines: [],
+  },
+  '69': {
+    korName: '론 밸리', count: 5, opacity: 0.20,
+    labelCoords: [4.68, 45.80], showLabel: true, revealOrder: 5,
+    wines: [
+      { name: 'Château Rayas', grade: 'Châteauneuf-du-Pape', year: '2017', note: '체리 · 라벤더 · 가죽',         producer: 'Château Rayas' },
+      { name: 'La Mouline',    grade: 'Côte-Rôtie',          year: '2016', note: '바이올렛 · 블랙베리 · 베이컨',  producer: 'E. Guigal' },
+    ],
+  },
+};
 
-// ── Region label ───────────────────────────────────────────────────────────
-function RegionLabel({ korName, count, featured, visible }: {
-  korName: string; count: number; featured?: boolean; visible: boolean;
+const primaryKey = (code: string) => (code === '68' ? '67' : code);
+
+// ── Region label (SVG inside Marker) ──────────────────────────────────────
+function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
+  korName: string; count: number; featured?: boolean;
+  visible: boolean; selected: boolean; onClick: () => void;
 }) {
+  const borderColor = selected
+    ? '#FFD060'
+    : featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
+  const strokeWidth = selected ? 1.8 : featured ? 1.2 : 0.6;
+  const bg = selected ? 'rgba(4,1,10,0.94)' : 'rgba(4,1,10,0.82)';
+
   return (
     <motion.g
       initial={{ opacity: 0, scale: 0.6 }}
       animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.6 }}
       transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-      style={{ pointerEvents: 'none' }}
+      style={{ cursor: visible ? 'pointer' : 'default', pointerEvents: visible ? 'auto' : 'none' }}
+      onClick={visible ? onClick : undefined}
+      whileHover={visible ? { scale: 1.08 } : undefined}
     >
       <rect
         x={featured ? -44 : -36} y={featured ? -24 : -20}
         width={featured ? 88 : 72} height={featured ? 38 : 32}
         rx={6}
-        fill="rgba(4,1,10,0.82)"
-        stroke={featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)'}
-        strokeWidth={featured ? 1.2 : 0.6}
+        fill={bg}
+        stroke={borderColor}
+        strokeWidth={strokeWidth}
       />
       <text textAnchor="middle" y={featured ? -8 : -6} style={{
-        fill: featured ? '#FFD060' : '#F5F0E8',
+        fill: selected ? '#FFD060' : featured ? '#FFD060' : '#F5F0E8',
         fontSize: featured ? 11 : 9,
         fontFamily: 'Inter, sans-serif',
         fontWeight: featured ? 700 : 600,
@@ -58,7 +112,7 @@ function RegionLabel({ korName, count, featured, visible }: {
         {featured ? `✦ ${korName}` : korName}
       </text>
       <text textAnchor="middle" y={featured ? 8 : 7} style={{
-        fill: featured ? '#FFD060' : '#C9A84C',
+        fill: selected ? '#FFD060' : '#C9A84C',
         fontSize: featured ? 13 : 11,
         fontFamily: 'Inter, sans-serif', fontWeight: 700,
       } as React.CSSProperties}>
@@ -68,25 +122,94 @@ function RegionLabel({ korName, count, featured, visible }: {
   );
 }
 
-// ── Wine card ──────────────────────────────────────────────────────────────
-function WineCard({ name, grade, year, note, producer }: typeof MEURSAULT_WINES[number]) {
-  const gradeColor = grade === '1er Cru' ? '#C9A84C' : grade === 'Lieu-dit' ? '#B0A080' : '#9B8B7A';
+// ── Floating wine panel ────────────────────────────────────────────────────
+function WinePanel({ regionKey, visible }: { regionKey: string; visible: boolean }) {
+  const data = WINE_DEPTS[regionKey];
+
+  const gradeColor = (g: string) => {
+    if (g.includes('1er') || g.includes('GC') || g.includes('Grand Cru')) return '#C9A84C';
+    if (g.includes('Cru')) return '#B8A060';
+    return '#9B8B7A';
+  };
+
   return (
-    <div style={{
-      flexShrink: 0, width: 'clamp(150px, 40vw, 188px)',
-      background: 'rgba(255,255,255,0.04)',
-      border: '1px solid rgba(255,208,96,0.12)',
-      borderRadius: 12, padding: '12px 14px',
-      display: 'flex', flexDirection: 'column', gap: 4,
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 9, color: gradeColor, fontWeight: 700, letterSpacing: '0.1em' }}>{grade}</span>
-        <span style={{ fontSize: 9, color: '#6A5E4A' }}>{year}</span>
-      </div>
-      <div style={{ fontSize: 12, fontFamily: 'Georgia, serif', color: '#F5F0E8', lineHeight: 1.3 }}>{name}</div>
-      <div style={{ fontSize: 10, color: '#9B8B7A' }}>{producer}</div>
-      <div style={{ fontSize: 10, color: '#C9A84C', lineHeight: 1.5, marginTop: 2 }}>{note}</div>
-    </div>
+    <AnimatePresence>
+      {visible && data && data.wines.length > 0 && (
+        <motion.div
+          key={regionKey}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 12 }}
+          transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] }}
+          style={{
+            position: 'absolute',
+            top: 'clamp(72px,10vh,100px)',
+            right: 'clamp(40px,4.5vw,60px)',
+            width: 'clamp(200px,25vw,284px)',
+            maxHeight: '70vh',
+            zIndex: 20,
+            background: 'rgba(5,2,14,0.90)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(201,168,76,0.22)',
+            borderRadius: 14,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {/* Header */}
+          <div style={{
+            padding: '12px 16px 10px',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            flexShrink: 0,
+          }}>
+            <div style={{ fontSize: 9, color: '#C9A84C', letterSpacing: '0.2em', textTransform: 'uppercase' as const, marginBottom: 5 }}>
+              내가 마신 와인
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h3 style={{
+                fontFamily: 'Georgia, serif',
+                fontSize: 'clamp(13px,1.5vw,16px)', fontWeight: 400, color: '#F5F0E8', margin: 0,
+              }}>
+                프랑스 {data.korName}
+              </h3>
+              <span style={{
+                padding: '2px 10px',
+                background: 'rgba(255,208,96,0.10)',
+                border: '1px solid rgba(255,208,96,0.28)',
+                borderRadius: 20,
+                fontSize: 11, color: '#FFD060', fontWeight: 700, flexShrink: 0, marginLeft: 8,
+              }}>
+                {data.count}병
+              </span>
+            </div>
+          </div>
+
+          {/* Wine list — vertically scrollable */}
+          <div style={{ overflowY: 'auto', flex: 1 }}>
+            {data.wines.map((w, i) => (
+              <div key={w.name} style={{
+                padding: '11px 16px',
+                borderBottom: i < data.wines.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 3 }}>
+                  <span style={{ fontSize: 9, color: gradeColor(w.grade), fontWeight: 700, letterSpacing: '0.07em' }}>
+                    {w.grade}
+                  </span>
+                  <span style={{ fontSize: 9, color: '#6A5E4A' }}>{w.year}</span>
+                </div>
+                <div style={{ fontSize: 12, fontFamily: 'Georgia, serif', color: '#F5F0E8', lineHeight: 1.3, marginBottom: 3 }}>
+                  {w.name}
+                </div>
+                <div style={{ fontSize: 10, color: '#9B8B7A', marginBottom: 2 }}>{w.producer}</div>
+                <div style={{ fontSize: 10, color: '#C9A84C', lineHeight: 1.5 }}>{w.note}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -95,11 +218,11 @@ export default function FranceWineSection() {
   const outerRef = useRef<HTMLDivElement>(null);
   const mapRef   = useRef<HTMLDivElement>(null);
 
-  const [mapVisible,    setMapVisible]    = useState(false);
-  const [revealedCount, setRevealedCount] = useState(0);
-  const [showWines,     setShowWines]     = useState(false);
+  const [mapVisible,     setMapVisible]     = useState(false);
+  const [revealedCount,  setRevealedCount]  = useState(0);
+  const [selectedRegion, setSelectedRegion] = useState<string>('21');
 
-  // Use "meet" — France always shows in full, never cropped
+  // "meet" — France always shows in full, never cropped
   useLayoutEffect(() => {
     const apply = () => {
       mapRef.current?.querySelectorAll('svg').forEach(svg => {
@@ -118,24 +241,29 @@ export default function FranceWineSection() {
   useMotionValueEvent(scrollYProgress, 'change', v => {
     setMapVisible(v > 0.06);
     setRevealedCount(v < 0.18 ? 0 : v < 0.32 ? 1 : v < 0.44 ? 2 : v < 0.56 ? 3 : v < 0.66 ? 4 : 5);
-    setShowWines(v > 0.60);
   });
 
-  const isDeptVisible = (order: number) => revealedCount >= order;
+  const isDeptVisible  = (order: number) => revealedCount >= order;
+  const showPanel      = mapVisible && revealedCount >= 1;
+
+  const handleRegionClick = (code: string) => {
+    const key = primaryKey(code);
+    if (WINE_DEPTS[key]?.wines.length > 0) setSelectedRegion(key);
+  };
 
   return (
     <div ref={outerRef} style={{ height: '210vh', position: 'relative' }}>
 
-      {/* ── Sticky full-screen viewport ───────────────────────────────── */}
+      {/* ── Sticky full-screen viewport ────────────────────────────────── */}
       <div style={{
         position: 'sticky', top: 0, height: '100vh',
-        overflow: 'hidden', background: '#04010A',
+        overflow: 'hidden',
+        background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(139,26,42,0.12) 0%, transparent 55%), #04010A',
       }}>
 
-        {/* ── France map — fills full container, "meet" keeps France visible ── */}
+        {/* ── France map ─────────────────────────────────────────────── */}
         <div ref={mapRef} style={{ width: '100%', height: '100%' }}>
-          <motion.div
-            style={{ width: '100%', height: '100%' }}
+          <motion.div style={{ width: '100%', height: '100%' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: mapVisible ? 1 : 0 }}
             transition={{ duration: 0.7 }}
@@ -145,7 +273,7 @@ export default function FranceWineSection() {
               projectionConfig={{ center: [2.4, 46.8], scale: 1950 }}
               width={600}
               height={680}
-              style={{ width: '100%', height: '100%', display: 'block', background: '#04010A' }}
+              style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }}
             >
               <Geographies geography={DEPT_URL}>
                 {({ geographies }) => geographies.map(geo => {
@@ -170,12 +298,21 @@ export default function FranceWineSection() {
                 })}
               </Geographies>
 
-              {/* Region labels with wine counts */}
-              {Object.entries(WINE_DEPTS).filter(([, d]) => d.showLabel && d.korName).map(([code, d]) => (
-                <Marker key={code} coordinates={d.labelCoords}>
-                  <RegionLabel korName={d.korName} count={d.count} featured={d.featured} visible={isDeptVisible(d.revealOrder)} />
-                </Marker>
-              ))}
+              {/* Clickable region labels */}
+              {Object.entries(WINE_DEPTS)
+                .filter(([, d]) => d.showLabel && d.korName)
+                .map(([code, d]) => (
+                  <Marker key={code} coordinates={d.labelCoords}>
+                    <RegionLabel
+                      korName={d.korName}
+                      count={d.count}
+                      featured={d.featured}
+                      visible={isDeptVisible(d.revealOrder)}
+                      selected={selectedRegion === primaryKey(code)}
+                      onClick={() => handleRegionClick(code)}
+                    />
+                  </Marker>
+                ))}
             </ComposableMap>
           </motion.div>
         </div>
@@ -213,9 +350,9 @@ export default function FranceWineSection() {
           )}
         </AnimatePresence>
 
-        {/* Right: stage dots */}
+        {/* Left: scroll progress dots */}
         <div style={{
-          position: 'absolute', right: 'clamp(12px,2.5vw,24px)',
+          position: 'absolute', left: 'clamp(12px,2.5vw,24px)',
           top: '50%', transform: 'translateY(-50%)',
           display: 'flex', flexDirection: 'column', gap: 8, zIndex: 10,
         }}>
@@ -229,60 +366,29 @@ export default function FranceWineSection() {
           ))}
         </div>
 
-        {/* Bottom: wine list overlay (slides up) */}
+        {/* Right: floating wine panel */}
+        <WinePanel regionKey={selectedRegion} visible={showPanel} />
+
+        {/* Click hint — only when first region just appeared */}
         <AnimatePresence>
-          {showWines && (
+          {mapVisible && revealedCount === 1 && (
             <motion.div
-              key="wine-panel"
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.8 }}
               style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 15,
-                background: 'rgba(5,2,14,0.94)',
-                backdropFilter: 'blur(16px)',
-                borderTop: '1px solid rgba(201,168,76,0.18)',
-                padding: 'clamp(14px,2vh,22px) clamp(16px,4vw,28px)',
-                maxHeight: '42%',
-                overflow: 'hidden',
-                display: 'flex', flexDirection: 'column', gap: 12,
+                position: 'absolute', bottom: 'clamp(24px,4vh,40px)',
+                left: '50%', transform: 'translateX(-50%)',
+                fontSize: 10, color: '#6A5E4A', letterSpacing: '0.10em',
+                textAlign: 'center', zIndex: 10, pointerEvents: 'none',
+                whiteSpace: 'nowrap',
               }}
             >
-              {/* Header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-                <div>
-                  <div style={{ fontSize: 9, color: '#C9A84C', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 3 }}>
-                    내가 마신 와인
-                  </div>
-                  <h3 style={{
-                    fontFamily: 'Georgia, serif',
-                    fontSize: 'clamp(13px,2vw,18px)', fontWeight: 400, color: '#F5F0E8', margin: 0,
-                  }}>
-                    프랑스 뫼르소의 와인들
-                  </h3>
-                </div>
-                <div style={{
-                  marginLeft: 'auto', flexShrink: 0,
-                  padding: '4px 12px',
-                  background: 'rgba(255,208,96,0.1)',
-                  border: '1px solid rgba(255,208,96,0.3)',
-                  borderRadius: 20,
-                  fontSize: 11, color: '#FFD060', fontWeight: 700,
-                }}>
-                  28병
-                </div>
-              </div>
-
-              {/* Wine cards (horizontal scroll) */}
-              <div style={{ display: 'flex', gap: 12, overflowX: 'auto', flex: 1, alignItems: 'flex-start', paddingBottom: 4 }}>
-                {MEURSAULT_WINES.map(w => <WineCard key={w.name} {...w} />)}
-              </div>
+              지역 라벨을 클릭하면 해당 와인 리스트를 볼 수 있어요
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Scroll hint */}
+        {/* Scroll hint (before map appears) */}
         <AnimatePresence>
           {!mapVisible && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
