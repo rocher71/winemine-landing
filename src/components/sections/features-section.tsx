@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 
-// ── Panel 1: Wine region data ──────────────────────────────────────────────
+// ── Panel 1: GlassCardStack — 3 stacked glass wine cards ──────────────────
 const REGIONS = [
   { flag: '🇫🇷', country: '프랑스', wines: 28, bar: 95, color: '#C41E3A' },
   { flag: '🇮🇹', country: '이탈리아', wines: 21, bar: 74, color: '#C41E3A' },
@@ -13,51 +13,199 @@ const REGIONS = [
   { flag: '🇦🇷', country: '아르헨티나', wines: 9, bar: 30, color: '#C41E3A' },
 ];
 
-function RegionPanel() {
-  const [hovered, setHovered] = useState<number | null>(null);
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+type GlassWine = {
+  id: string; initials: string; region: string; vintage: string;
+  appellation: string; grade: string; name: string; note: string;
+  grapes: string; date: string; occasion: string; rating: number; color: string;
+};
 
-  useEffect(() => {
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.3 });
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
+const GLASS_WINES: GlassWine[] = [
+  { id: 'm',  initials: 'CM', region: 'BORDEAUX', vintage: '2015', appellation: 'Médoc',         grade: 'Premier Grand Cru', name: 'Château Margaux',     note: '잘 익은 카시스, 시가박스, 제비꽃. 우아한 탄닌이 한참 머무름.',  grapes: 'Cabernet Sauvignon · Merlot', date: '2026.04.18', occasion: '결혼기념일',  rating: 4.8, color: '#C41E3A' },
+  { id: 'p',  initials: 'CP', region: 'POMEROL',  vintage: '2018', appellation: 'Pomerol',        grade: 'Grand Cru',         name: 'Château Pétrus',      note: '체리, 트러플, 벨벳. 실키한 질감과 무한한 여운.',              grapes: 'Merlot',                      date: '2026.02.14', occasion: '발렌타인데이', rating: 5.0, color: '#C41E3A' },
+  { id: 'mp', initials: 'MP', region: 'BOURGOGNE', vintage: '2021', appellation: 'Côte de Beaune', grade: '1er Cru',           name: 'Meursault Perrières', note: '헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.',               grapes: 'Chardonnay',                  date: '2026.01.12', occasion: '지인 모임', rating: 4.9, color: '#C9A84C' },
+];
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 10 }}>
+      {[1, 2, 3, 4, 5].map(n => (
+        <span key={n} style={{ fontSize: 12, color: n <= Math.round(rating) ? '#C9A84C' : '#2D1540' }}>★</span>
+      ))}
+      <span style={{ fontSize: 11, color: '#C9A84C', fontWeight: 700, marginLeft: 4 }}>{rating.toFixed(1)}</span>
+    </div>
+  );
+}
+
+function GlassCardStack() {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  const cardOffsets = [
+    { x: 14, y: -10, scale: 0.91, opacity: 0.28, zIndex: 1 },
+    { x: 7,  y: -5,  scale: 0.955, opacity: 0.55, zIndex: 2 },
+    { x: 0,  y: 0,   scale: 1,    opacity: 1,    zIndex: 3 },
+  ];
+
+  const handleClick = () => {
+    setActiveIdx(prev => (prev + 1) % GLASS_WINES.length);
+  };
+
+  const wine = GLASS_WINES[activeIdx];
 
   return (
-    <div ref={ref} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-      {REGIONS.map((r, i) => (
-        <div
-          key={r.country}
-          onMouseEnter={() => setHovered(i)}
-          onMouseLeave={() => setHovered(null)}
-          style={{
-            cursor: 'default',
-            transition: 'transform 200ms ease',
-            transform: hovered === i ? 'translateX(6px)' : 'none',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-            <span style={{ fontSize: 13, color: hovered === i ? '#F5F0E8' : '#9B8B7A', transition: 'color 200ms' }}>
-              {r.flag} {r.country}
-            </span>
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#C9A84C' }}>{r.wines}병</span>
-          </div>
-          <div style={{ height: 4, background: '#1E0835', borderRadius: 2, overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+      {/* Card stack container */}
+      <div style={{ position: 'relative', width: '100%', maxWidth: 300, height: 340 }}>
+        {/* Back 2 cards (static offset cards for depth) */}
+        {[0, 1].map(idx => {
+          const offset = cardOffsets[idx];
+          return (
             <div
+              key={idx}
               style={{
-                height: '100%',
-                width: visible ? `${r.bar}%` : '0%',
-                background: hovered === i
-                  ? 'linear-gradient(90deg, #C41E3A, #E8435A)'
-                  : 'linear-gradient(90deg, #8B1A2A, #C41E3A)',
-                borderRadius: 2,
-                transition: `width 900ms cubic-bezier(0.4,0,0.2,1) ${i * 80}ms, background 200ms`,
+                position: 'absolute',
+                top: 0, left: 0, right: 0,
+                transform: `translateX(${offset.x}px) translateY(${offset.y}px) scale(${offset.scale})`,
+                opacity: offset.opacity,
+                zIndex: offset.zIndex,
+                background: 'rgba(12,4,24,0.88)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.09)',
+                borderRadius: 18,
+                height: 310,
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
               }}
             />
-          </div>
+          );
+        })}
+
+        {/* Front card — clickable, animated */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0,
+            zIndex: cardOffsets[2].zIndex,
+            transform: `translateX(${cardOffsets[2].x}px) translateY(${cardOffsets[2].y}px) scale(${cardOffsets[2].scale})`,
+            cursor: 'pointer',
+          }}
+          onClick={handleClick}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIdx}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                background: 'rgba(12,4,24,0.88)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.09)',
+                borderRadius: 18,
+                padding: '16px 18px',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              }}
+            >
+              {/* Top row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <span style={{
+                  fontSize: 7, textTransform: 'uppercase' as const, letterSpacing: '0.12em',
+                  color: '#C9A84C', border: '1px solid rgba(201,168,76,0.25)',
+                  borderRadius: 4, padding: '2px 6px',
+                }}>
+                  {wine.region}
+                </span>
+                <div style={{
+                  width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                  background: wine.color + '26',
+                  border: `1px solid ${wine.color}4D`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: wine.color }}>
+                    {wine.initials}
+                  </span>
+                </div>
+                <span style={{ fontSize: 11, color: '#6A5E4A', marginLeft: 'auto' }}>
+                  {wine.vintage}
+                </span>
+              </div>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
+
+              {/* Wine name + grade */}
+              <div style={{ fontSize: 16, fontFamily: 'Georgia, serif', color: '#F5F0E8', marginBottom: 3 }}>
+                {wine.name}
+              </div>
+              <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: 12 }}>
+                {wine.appellation} · {wine.grade}
+              </div>
+
+              {/* Tasting note label */}
+              <div style={{
+                fontSize: 8, textTransform: 'uppercase' as const, letterSpacing: '0.15em',
+                color: '#C9A84C', marginBottom: 4,
+              }}>
+                Tasting Note
+              </div>
+
+              {/* Note text */}
+              <div style={{
+                fontSize: 12, color: '#D4C5B0', lineHeight: 1.6,
+                fontStyle: 'italic', marginBottom: 12,
+              }}>
+                {wine.note}
+              </div>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
+
+              {/* Meta rows */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 9 }}>🍇</span>
+                  <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.grapes}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 9 }}>📅</span>
+                  <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.date}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 9 }}>✦</span>
+                  <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.occasion}</span>
+                </div>
+              </div>
+
+              {/* Star rating */}
+              <StarRating rating={wine.rating} />
+            </motion.div>
+          </AnimatePresence>
         </div>
-      ))}
+      </div>
+
+      {/* Page indicator dots */}
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        {GLASS_WINES.map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: i === activeIdx ? 16 : 6,
+              height: 6,
+              borderRadius: 3,
+              background: i === activeIdx ? '#C9A84C' : 'rgba(255,255,255,0.15)',
+              transition: 'all 300ms ease',
+              cursor: 'pointer',
+            }}
+            onClick={() => setActiveIdx(i)}
+          />
+        ))}
+      </div>
+
+      {/* Hint text */}
+      <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
+        탭해서 다른 와인 보기
+      </div>
     </div>
   );
 }
@@ -419,7 +567,7 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
 
               {/* Interactive content */}
               <div style={{ position: 'relative' }}>
-                {panel.content === 'region' && <RegionPanel />}
+                {panel.content === 'region' && <GlassCardStack />}
                 {panel.content === 'scan' && <ScanPanel />}
                 {panel.content === 'share' && (
                   <SharePanel onScrollToPreview={onScrollToPreview ?? (() => {})} />

@@ -216,6 +216,44 @@ function DesktopWinePanel({ regionKey, visible }: { regionKey: string; visible: 
   );
 }
 
+// ── Mobile bottom sheet: extended wine data ────────────────────────────────
+type MobileWineItem = {
+  initials: string; name: string; appellation: string;
+  vintage: string; note: string; date: string;
+};
+
+const MOBILE_REGION_COLOR: Record<string, string> = {
+  '33': '#C41E3A',
+  '21': '#C9A84C',
+  '51': '#8BB0D4',
+};
+
+const MOBILE_WINES: Record<string, MobileWineItem[]> = {
+  '33': [
+    { initials: 'CM', name: 'Château Margaux',      appellation: 'Margaux',  vintage: '2015', note: '잘 익은 카시스, 시가박스, 제비꽃. 우아한 탄닌.', date: '2026.04.18' },
+    { initials: 'PB', name: 'Château Pichon Baron', appellation: 'Pauillac', vintage: '2016', note: '연필심, 블랙커런트, 스모키한 오크. 구조감이 압도적.', date: '2026.03.22' },
+    { initials: 'LB', name: 'Château Lynch-Bages',  appellation: 'Pauillac', vintage: '2014', note: '농밀한 검은 과실, 다크초콜릿, 가죽 뉘앙스.', date: '2026.02.14' },
+    { initials: 'EV', name: "Château L'Évangile",   appellation: 'Pomerol',  vintage: '2017', note: '실키한 텍스처, 자두 콩포트, 트러플의 매혹적인 향.', date: '2026.01.30' },
+  ],
+  '21': [
+    { initials: 'MP', name: 'Meursault Perrières',   appellation: 'Côte de Beaune', vintage: '2021', note: '헤이즐넛 · 버터 · 미네랄.', date: '2026.04.05' },
+    { initials: 'MC', name: 'Meursault Charmes',     appellation: 'Côte de Beaune', vintage: '2020', note: '풍성한 과실 · 오크 · 꿀.', date: '2026.02.28' },
+    { initials: 'MG', name: 'Meursault Genevrières', appellation: 'Côte de Beaune', vintage: '2019', note: '크리미 · 헤이즐넛 · 스모키.', date: '2026.01.14' },
+    { initials: 'MV', name: 'Meursault Village',     appellation: 'Côte de Beaune', vintage: '2022', note: '레몬 · 바닐라 · 아몬드.', date: '2025.12.20' },
+  ],
+  '51': [
+    { initials: 'KG', name: 'Krug Grande Cuvée', appellation: 'Champagne', vintage: 'NV',   note: '브리오슈 · 사과 · 헤이즐넛 · 끝없는 피니시.', date: '2026.03.15' },
+    { initials: 'DP', name: 'Dom Pérignon',      appellation: 'Épernay',   vintage: '2013', note: '시트러스 · 아몬드 · 미네랄. 완벽한 균형.', date: '2026.01.01' },
+    { initials: 'BS', name: 'Billecart-Salmon',  appellation: 'Mareuil',   vintage: '2012', note: '흰꽃 · 레몬 · 크리미. 섬세하고 우아.', date: '2025.12.31' },
+  ],
+};
+
+const MOBILE_STATS: Record<string, { count: number; avgRating: number; favorite: string }> = {
+  '33': { count: 19, avgRating: 4.4, favorite: 'Margaux' },
+  '21': { count: 28, avgRating: 4.7, favorite: 'Perrières' },
+  '51': { count: 12, avgRating: 4.5, favorite: 'Krug' },
+};
+
 // ── Mobile: bottom sheet panel ─────────────────────────────────────────────
 function MobileBottomSheet({
   selectedRegion, visible, revealedCount, onSelectRegion,
@@ -224,12 +262,12 @@ function MobileBottomSheet({
   onSelectRegion: (key: string) => void;
 }) {
   const data = WINE_DEPTS[selectedRegion];
+  const wines = MOBILE_WINES[selectedRegion] ?? [];
+  const stats = MOBILE_STATS[selectedRegion];
+  const regionColor = MOBILE_REGION_COLOR[selectedRegion] ?? '#C9A84C';
 
-  const gradeColor = (g: string) => {
-    if (g.includes('1er') || g.includes('GC') || g.includes('Grand Cru')) return '#C9A84C';
-    if (g.includes('Cru')) return '#B8A060';
-    return '#9B8B7A';
-  };
+  const truncateNote = (note: string) =>
+    note.length > 40 ? note.slice(0, 40) + '…' : note;
 
   return (
     <AnimatePresence>
@@ -243,23 +281,62 @@ function MobileBottomSheet({
             position: 'absolute',
             bottom: 0, left: 0, right: 0,
             zIndex: 20,
-            background: 'rgba(5,2,14,0.95)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            background: 'rgba(8,2,18,0.96)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
             borderTop: '1px solid rgba(201,168,76,0.20)',
-            borderRadius: '18px 18px 0 0',
-            maxHeight: '48%',
+            borderRadius: '20px 20px 0 0',
+            maxHeight: '55vh',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
           {/* Drag handle */}
-          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, flexShrink: 0 }}>
-            <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.15)' }} />
+          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 12, flexShrink: 0 }}>
+            <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.18)' }} />
           </div>
 
-          {/* Region tabs */}
-          <div style={{ display: 'flex', gap: 8, padding: '10px 16px 8px', flexShrink: 0 }}>
+          {/* Header section */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedRegion + '-header'}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2 }}
+              style={{ padding: '10px 16px 8px', flexShrink: 0 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+                <span style={{
+                  fontFamily: 'Cormorant Garamond, Georgia, serif',
+                  fontSize: 18, fontWeight: 700, color: '#F5F0E8',
+                }}>
+                  {data.korName}
+                </span>
+                <span style={{
+                  padding: '2px 8px',
+                  background: 'rgba(201,168,76,0.12)',
+                  border: '1px solid rgba(201,168,76,0.35)',
+                  borderRadius: 20,
+                  fontSize: 9, color: '#C9A84C', fontWeight: 600,
+                  letterSpacing: '0.04em',
+                }}>
+                  Ma Cave
+                </span>
+              </div>
+              {stats && (
+                <div style={{ fontSize: 11, color: '#9B8B7A', letterSpacing: '0.02em' }}>
+                  {stats.count}병 · 평균 {stats.avgRating} · 최애 {stats.favorite}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', flexShrink: 0 }} />
+
+          {/* Tab buttons */}
+          <div style={{ display: 'flex', gap: 8, padding: '8px 16px', flexShrink: 0 }}>
             {MOBILE_KEYS.map(key => {
               const d = WINE_DEPTS[key];
               const isActive = selectedRegion === key;
@@ -269,71 +346,100 @@ function MobileBottomSheet({
                   key={key}
                   onClick={() => isRevealed && onSelectRegion(key)}
                   style={{
-                    padding: '5px 12px',
+                    padding: '6px 14px',
                     borderRadius: 20,
-                    border: `1px solid ${isActive ? 'rgba(255,208,96,0.5)' : 'rgba(255,255,255,0.10)'}`,
-                    background: isActive ? 'rgba(255,208,96,0.12)' : 'rgba(255,255,255,0.04)',
-                    color: isActive ? '#FFD060' : isRevealed ? '#9B8B7A' : '#4A3D56',
-                    fontSize: 12, fontWeight: 600, cursor: isRevealed ? 'pointer' : 'default',
-                    fontFamily: 'inherit', transition: 'all 200ms ease',
-                    whiteSpace: 'nowrap',
+                    border: `1px solid ${isActive ? 'rgba(201,168,76,0.45)' : 'rgba(255,255,255,0.08)'}`,
+                    background: isActive ? 'rgba(201,168,76,0.12)' : 'rgba(255,255,255,0.04)',
+                    color: isActive ? '#FFD060' : isRevealed ? '#6A5E4A' : '#4A3D56',
+                    fontSize: 12,
+                    fontWeight: isActive ? 600 : 400,
+                    cursor: isRevealed ? 'pointer' : 'default',
+                    fontFamily: 'inherit',
+                    transition: 'all 200ms ease',
+                    whiteSpace: 'nowrap' as const,
                   }}
                 >
-                  {d.korName} <span style={{ fontSize: 10, opacity: 0.8 }}>{d.count}</span>
+                  {d.korName}
                 </button>
               );
             })}
           </div>
 
-          {/* Region header */}
-          <div style={{ padding: '4px 16px 10px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedRegion}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2 }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-              >
-                <div style={{ fontSize: 9, color: '#C9A84C', letterSpacing: '0.18em', textTransform: 'uppercase' as const }}>
-                  내가 마신 와인 · 프랑스 {data.korName}
-                </div>
-                <span style={{ padding: '1px 9px', background: 'rgba(255,208,96,0.10)', border: '1px solid rgba(255,208,96,0.25)', borderRadius: 20, fontSize: 10, color: '#FFD060', fontWeight: 700 }}>
-                  {data.count}병
-                </span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          {/* Divider */}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', flexShrink: 0 }} />
 
-          {/* Wine cards — horizontal scroll */}
-          <div style={{ overflowX: 'auto', flex: 1, display: 'flex', alignItems: 'flex-start', padding: '12px 16px 16px', gap: 10 }}>
+          {/* Wine list — vertical scroll */}
+          <div style={{ overflowY: 'auto', flex: 1, padding: '8px 16px 20px' }}>
             <AnimatePresence mode="wait">
               <motion.div
-                key={selectedRegion}
+                key={selectedRegion + '-wines'}
                 initial={{ opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -12 }}
                 transition={{ duration: 0.22 }}
-                style={{ display: 'flex', gap: 10, flexShrink: 0 }}
               >
-                {data.wines.map(w => (
-                  <div key={w.name} style={{
-                    flexShrink: 0,
-                    width: 'clamp(148px, 40vw, 180px)',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,208,96,0.10)',
-                    borderRadius: 12,
-                    padding: '10px 12px',
-                    display: 'flex', flexDirection: 'column', gap: 3,
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                      <span style={{ fontSize: 8.5, color: gradeColor(w.grade), fontWeight: 700, letterSpacing: '0.06em' }}>{w.grade}</span>
-                      <span style={{ fontSize: 8.5, color: '#6A5E4A' }}>{w.year}</span>
+                {wines.map((w, i) => (
+                  <div key={w.name}>
+                    {/* Wine item */}
+                    <div style={{ padding: '10px 0', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      {/* Circle with initials */}
+                      <div style={{
+                        width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+                        background: regionColor + '26',
+                        border: `1px solid ${regionColor}4D`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: regionColor }}>
+                          {w.initials}
+                        </span>
+                      </div>
+
+                      {/* Content */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {/* Top row: region chip + year */}
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 3 }}>
+                          <span style={{
+                            fontSize: 7, textTransform: 'uppercase' as const,
+                            letterSpacing: '0.12em', color: '#C9A84C',
+                            border: '1px solid rgba(201,168,76,0.25)',
+                            borderRadius: 3, padding: '1px 5px', marginRight: 6,
+                          }}>
+                            {data.korName}
+                          </span>
+                          <span style={{ fontSize: 9, color: '#6A5E4A', marginLeft: 'auto' }}>
+                            {w.vintage}
+                          </span>
+                        </div>
+
+                        {/* Wine name */}
+                        <div style={{
+                          fontSize: 13, fontFamily: 'Georgia, serif',
+                          color: '#F5F0E8', lineHeight: 1.3, marginBottom: 2,
+                        }}>
+                          {w.name}
+                        </div>
+
+                        {/* Appellation */}
+                        <div style={{ fontSize: 10, color: '#9B8B7A', marginBottom: 2 }}>
+                          {w.appellation}
+                        </div>
+
+                        {/* Tasting note */}
+                        <div style={{ fontSize: 10, color: '#9B8B7A', lineHeight: 1.5 }}>
+                          {truncateNote(w.note)}
+                        </div>
+
+                        {/* Date */}
+                        <div style={{ fontSize: 9, color: '#4A3D56', textAlign: 'right' as const, marginTop: 4 }}>
+                          {w.date}
+                        </div>
+                      </div>
                     </div>
-                    <div style={{ fontSize: 11.5, fontFamily: 'Georgia, serif', color: '#F5F0E8', lineHeight: 1.25 }}>{w.name}</div>
-                    <div style={{ fontSize: 9.5, color: '#9B8B7A' }}>{w.producer}</div>
-                    <div style={{ fontSize: 9.5, color: '#C9A84C', lineHeight: 1.5, marginTop: 1 }}>{w.note}</div>
+
+                    {/* Divider between items */}
+                    {i < wines.length - 1 && (
+                      <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
+                    )}
                   </div>
                 ))}
               </motion.div>
