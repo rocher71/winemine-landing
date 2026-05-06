@@ -266,33 +266,44 @@ function DesktopWinePanel({ regionKey, visible }: { regionKey: string; visible: 
 }
 
 // ── Mobile Bottom Sheet (SPEC.md Variation A) ──────────────────────────────
-function MobileBottomSheet({ selectedRegion, visible, revealedCount, onSelectRegion }: {
-  selectedRegion: string; visible: boolean; revealedCount: number; onSelectRegion: (k: string) => void;
+function MobileBottomSheet({ selectedRegion, visible, revealedCount, onSelectRegion, onClose }: {
+  selectedRegion: string; visible: boolean; revealedCount: number;
+  onSelectRegion: (k: string) => void; onClose: () => void;
 }) {
   const [sortBy, setSortBy] = useState<'recent' | 'rating' | 'vintage'>('recent');
-  const [sheetH, setSheetH] = useState(0.62);
+  const [sheetH, setSheetH] = useState(0.55);
   const handleRef = useRef<HTMLDivElement>(null);
 
   const wines = sortWines(REGION_WINES[selectedRegion] ?? [], sortBy);
   const meta = REGION_META[selectedRegion];
   const korName = WINE_DEPTS[selectedRegion]?.korName ?? '';
 
-  // Draggable handle
+  // Draggable handle — drag below 0.18 to dismiss
   useEffect(() => {
     const el = handleRef.current;
     if (!el) return;
     let y0 = 0, h0 = 0;
     const ph = () => el.parentElement?.offsetHeight ?? 844;
-    const move = (y: number) => setSheetH(Math.min(0.92, Math.max(0.18, h0 + (y0 - y) / ph())));
+    const move = (y: number) => {
+      const next = Math.min(0.92, Math.max(0.08, h0 + (y0 - y) / ph()));
+      setSheetH(next);
+    };
+    const release = (y: number) => {
+      const next = h0 + (y0 - y) / ph();
+      if (next < 0.18) { onClose(); setSheetH(0.55); }
+      else setSheetH(Math.min(0.92, Math.max(0.18, next)));
+    };
     const onMM = (e: MouseEvent) => move(e.clientY);
     const onTM = (e: TouchEvent) => move(e.touches[0].clientY);
-    const up = () => { window.removeEventListener('mousemove', onMM); window.removeEventListener('mouseup', up); window.removeEventListener('touchmove', onTM); window.removeEventListener('touchend', up); };
-    const md = (e: MouseEvent) => { y0 = e.clientY; h0 = sheetH; window.addEventListener('mousemove', onMM); window.addEventListener('mouseup', up); };
-    const ts = (e: TouchEvent) => { y0 = e.touches[0].clientY; h0 = sheetH; window.addEventListener('touchmove', onTM, { passive: false }); window.addEventListener('touchend', up); };
+    const onMU = (e: MouseEvent) => { release(e.clientY); up(); };
+    const onTE = (e: TouchEvent) => { release(e.changedTouches[0].clientY); up(); };
+    const up = () => { window.removeEventListener('mousemove', onMM); window.removeEventListener('mouseup', onMU); window.removeEventListener('touchmove', onTM); window.removeEventListener('touchend', onTE); };
+    const md = (e: MouseEvent) => { y0 = e.clientY; h0 = sheetH; window.addEventListener('mousemove', onMM); window.addEventListener('mouseup', onMU); };
+    const ts = (e: TouchEvent) => { y0 = e.touches[0].clientY; h0 = sheetH; window.addEventListener('touchmove', onTM, { passive: false }); window.addEventListener('touchend', onTE); };
     el.addEventListener('mousedown', md);
     el.addEventListener('touchstart', ts, { passive: true });
     return () => { el.removeEventListener('mousedown', md); el.removeEventListener('touchstart', ts); up(); };
-  }, [sheetH]);
+  }, [sheetH, onClose]);
 
   return (
     <AnimatePresence>
@@ -310,9 +321,20 @@ function MobileBottomSheet({ selectedRegion, visible, revealedCount, onSelectReg
             zIndex: 30, display: 'flex', flexDirection: 'column', overflow: 'hidden',
           }}
         >
-          {/* Drag handle */}
-          <div ref={handleRef} style={{ padding: '10px 0 6px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
-            <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.25)' }} />
+          {/* Drag handle + close */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <div ref={handleRef} style={{ padding: '10px 0 6px', cursor: 'grab', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.25)' }} />
+            </div>
+            <button onClick={onClose} style={{
+              position: 'absolute', top: 8, right: 16,
+              width: 28, height: 28, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              color: 'rgba(255,255,255,0.55)', fontSize: 14, lineHeight: 1,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: 'inherit',
+            }}>✕</button>
           </div>
 
           {/* Header */}
@@ -421,6 +443,7 @@ export default function FranceWineSection() {
   const [revealedCount, setRevealedCount] = useState(0);
   const [selectedRegion,setSelectedRegion]= useState('33');
   const [showPanel,     setShowPanel]     = useState(false);
+  const [dismissed,     setDismissed]     = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -440,15 +463,25 @@ export default function FranceWineSection() {
   const { scrollYProgress } = useScroll({ target: outerRef, offset: ['start start', 'end start'] });
   useMotionValueEvent(scrollYProgress, 'change', v => {
     setMapVisible(v > 0.06);
-    setRevealedCount(v < 0.18 ? 0 : v < 0.32 ? 1 : v < 0.44 ? 2 : v < 0.56 ? 3 : v < 0.66 ? 4 : 5);
-    if (v > 0.08) setShowPanel(true);
+    const count = v < 0.18 ? 0 : v < 0.32 ? 1 : v < 0.44 ? 2 : v < 0.56 ? 3 : v < 0.66 ? 4 : 5;
+    setRevealedCount(count);
+    // 보르도 등장 시(count>=2) 자동 슬라이드업 — 단 사용자가 직접 닫은 경우엔 제외
+    if (count >= 2 && !dismissed) setShowPanel(true);
+    // 섹션 재진입 시 상태 초기화
+    if (v < 0.12) { setDismissed(false); setShowPanel(false); }
   });
 
   const isDeptVisible = (o: number) => revealedCount >= o;
 
+  const handleClose = () => { setShowPanel(false); setDismissed(true); };
+
   const handleRegionClick = (code: string) => {
     const key = primaryKey(code);
-    if (REGION_WINES[key]) { setSelectedRegion(key); setShowPanel(true); }
+    if (REGION_WINES[key]) {
+      setSelectedRegion(key);
+      setShowPanel(true);
+      setDismissed(false);
+    }
   };
 
   const visibleLabels = isMobile
@@ -516,7 +549,7 @@ export default function FranceWineSection() {
 
         {/* Panels */}
         {!isMobile && <DesktopWinePanel regionKey={selectedRegion} visible={showPanel} />}
-        {isMobile && <MobileBottomSheet selectedRegion={selectedRegion} visible={showPanel} revealedCount={revealedCount} onSelectRegion={setSelectedRegion} />}
+        {isMobile && <MobileBottomSheet selectedRegion={selectedRegion} visible={showPanel} revealedCount={revealedCount} onSelectRegion={setSelectedRegion} onClose={handleClose} />}
 
         {/* Scroll hint */}
         <AnimatePresence>
