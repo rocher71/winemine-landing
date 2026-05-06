@@ -1,12 +1,11 @@
 'use client';
 
-import { useRef, useState, useLayoutEffect } from 'react';
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 
 const DEPT_URL = '/france-departments.json';
 
-// ── Types ──────────────────────────────────────────────────────────────────
 type WineItem = { name: string; grade: string; year: string; note: string; producer: string };
 
 type RegionData = {
@@ -16,7 +15,7 @@ type RegionData = {
   wines: WineItem[];
 };
 
-// ── Wine data by département ───────────────────────────────────────────────
+// ── Wine data ──────────────────────────────────────────────────────────────
 const WINE_DEPTS: Record<string, RegionData> = {
   '21': {
     korName: '뫼르소', count: 28, opacity: 0.95,
@@ -74,14 +73,15 @@ const WINE_DEPTS: Record<string, RegionData> = {
 
 const primaryKey = (code: string) => (code === '68' ? '67' : code);
 
-// ── Region label (SVG inside Marker) ──────────────────────────────────────
-function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
+// Regions shown on mobile (only 3)
+const MOBILE_KEYS = ['21', '33', '51'];
+
+// ── Region label ───────────────────────────────────────────────────────────
+function RegionLabel({ korName, count, featured, visible, selected, showTapHint, onClick }: {
   korName: string; count: number; featured?: boolean;
-  visible: boolean; selected: boolean; onClick: () => void;
+  visible: boolean; selected: boolean; showTapHint: boolean; onClick: () => void;
 }) {
-  const borderColor = selected
-    ? '#FFD060'
-    : featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
+  const borderColor = selected ? '#FFD060' : featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
   const strokeWidth = selected ? 1.8 : featured ? 1.2 : 0.6;
   const bg = selected ? 'rgba(4,1,10,0.94)' : 'rgba(4,1,10,0.82)';
 
@@ -94,6 +94,32 @@ function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
       onClick={visible ? onClick : undefined}
       whileHover={visible ? { scale: 1.08 } : undefined}
     >
+      {/* Pulsing tap hint above the label */}
+      {showTapHint && visible && (
+        <>
+          <motion.circle
+            cx={0} cy={featured ? -38 : -32}
+            r={3}
+            fill="#C9A84C"
+            animate={{ opacity: [0.9, 0.3, 0.9], r: [3, 4.5, 3] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <text
+            textAnchor="middle"
+            y={featured ? -26 : -21}
+            style={{
+              fontSize: 7.5,
+              fill: 'rgba(201,168,76,0.80)',
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 500,
+              letterSpacing: '0.03em',
+            } as React.CSSProperties}
+          >
+            탭해보세요
+          </text>
+        </>
+      )}
+
       <rect
         x={featured ? -44 : -36} y={featured ? -24 : -20}
         width={featured ? 88 : 72} height={featured ? 38 : 32}
@@ -122,8 +148,8 @@ function RegionLabel({ korName, count, featured, visible, selected, onClick }: {
   );
 }
 
-// ── Floating wine panel ────────────────────────────────────────────────────
-function WinePanel({ regionKey, visible }: { regionKey: string; visible: boolean }) {
+// ── Desktop: right-side floating panel ────────────────────────────────────
+function DesktopWinePanel({ regionKey, visible }: { regionKey: string; visible: boolean }) {
   const data = WINE_DEPTS[regionKey];
 
   const gradeColor = (g: string) => {
@@ -158,54 +184,160 @@ function WinePanel({ regionKey, visible }: { regionKey: string; visible: boolean
             flexDirection: 'column',
           }}
         >
-          {/* Header */}
-          <div style={{
-            padding: '12px 16px 10px',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-            flexShrink: 0,
-          }}>
+          <div style={{ padding: '12px 16px 10px', borderBottom: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
             <div style={{ fontSize: 9, color: '#C9A84C', letterSpacing: '0.2em', textTransform: 'uppercase' as const, marginBottom: 5 }}>
               내가 마신 와인
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{
-                fontFamily: 'Georgia, serif',
-                fontSize: 'clamp(13px,1.5vw,16px)', fontWeight: 400, color: '#F5F0E8', margin: 0,
-              }}>
+              <h3 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(13px,1.5vw,16px)', fontWeight: 400, color: '#F5F0E8', margin: 0 }}>
                 프랑스 {data.korName}
               </h3>
-              <span style={{
-                padding: '2px 10px',
-                background: 'rgba(255,208,96,0.10)',
-                border: '1px solid rgba(255,208,96,0.28)',
-                borderRadius: 20,
-                fontSize: 11, color: '#FFD060', fontWeight: 700, flexShrink: 0, marginLeft: 8,
-              }}>
+              <span style={{ padding: '2px 10px', background: 'rgba(255,208,96,0.10)', border: '1px solid rgba(255,208,96,0.28)', borderRadius: 20, fontSize: 11, color: '#FFD060', fontWeight: 700, flexShrink: 0, marginLeft: 8 }}>
                 {data.count}병
               </span>
             </div>
           </div>
-
-          {/* Wine list — vertically scrollable */}
           <div style={{ overflowY: 'auto', flex: 1 }}>
             {data.wines.map((w, i) => (
-              <div key={w.name} style={{
-                padding: '11px 16px',
-                borderBottom: i < data.wines.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-              }}>
+              <div key={w.name} style={{ padding: '11px 16px', borderBottom: i < data.wines.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 3 }}>
-                  <span style={{ fontSize: 9, color: gradeColor(w.grade), fontWeight: 700, letterSpacing: '0.07em' }}>
-                    {w.grade}
-                  </span>
+                  <span style={{ fontSize: 9, color: gradeColor(w.grade), fontWeight: 700, letterSpacing: '0.07em' }}>{w.grade}</span>
                   <span style={{ fontSize: 9, color: '#6A5E4A' }}>{w.year}</span>
                 </div>
-                <div style={{ fontSize: 12, fontFamily: 'Georgia, serif', color: '#F5F0E8', lineHeight: 1.3, marginBottom: 3 }}>
-                  {w.name}
-                </div>
+                <div style={{ fontSize: 12, fontFamily: 'Georgia, serif', color: '#F5F0E8', lineHeight: 1.3, marginBottom: 3 }}>{w.name}</div>
                 <div style={{ fontSize: 10, color: '#9B8B7A', marginBottom: 2 }}>{w.producer}</div>
                 <div style={{ fontSize: 10, color: '#C9A84C', lineHeight: 1.5 }}>{w.note}</div>
               </div>
             ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ── Mobile: bottom sheet panel ─────────────────────────────────────────────
+function MobileBottomSheet({
+  selectedRegion, visible, revealedCount, onSelectRegion,
+}: {
+  selectedRegion: string; visible: boolean; revealedCount: number;
+  onSelectRegion: (key: string) => void;
+}) {
+  const data = WINE_DEPTS[selectedRegion];
+
+  const gradeColor = (g: string) => {
+    if (g.includes('1er') || g.includes('GC') || g.includes('Grand Cru')) return '#C9A84C';
+    if (g.includes('Cru')) return '#B8A060';
+    return '#9B8B7A';
+  };
+
+  return (
+    <AnimatePresence>
+      {visible && data && (
+        <motion.div
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          exit={{ y: '100%' }}
+          transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+          style={{
+            position: 'absolute',
+            bottom: 0, left: 0, right: 0,
+            zIndex: 20,
+            background: 'rgba(5,2,14,0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderTop: '1px solid rgba(201,168,76,0.20)',
+            borderRadius: '18px 18px 0 0',
+            maxHeight: '48%',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {/* Drag handle */}
+          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, flexShrink: 0 }}>
+            <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.15)' }} />
+          </div>
+
+          {/* Region tabs */}
+          <div style={{ display: 'flex', gap: 8, padding: '10px 16px 8px', flexShrink: 0 }}>
+            {MOBILE_KEYS.map(key => {
+              const d = WINE_DEPTS[key];
+              const isActive = selectedRegion === key;
+              const isRevealed = revealedCount >= d.revealOrder;
+              return (
+                <button
+                  key={key}
+                  onClick={() => isRevealed && onSelectRegion(key)}
+                  style={{
+                    padding: '5px 12px',
+                    borderRadius: 20,
+                    border: `1px solid ${isActive ? 'rgba(255,208,96,0.5)' : 'rgba(255,255,255,0.10)'}`,
+                    background: isActive ? 'rgba(255,208,96,0.12)' : 'rgba(255,255,255,0.04)',
+                    color: isActive ? '#FFD060' : isRevealed ? '#9B8B7A' : '#4A3D56',
+                    fontSize: 12, fontWeight: 600, cursor: isRevealed ? 'pointer' : 'default',
+                    fontFamily: 'inherit', transition: 'all 200ms ease',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {d.korName} <span style={{ fontSize: 10, opacity: 0.8 }}>{d.count}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Region header */}
+          <div style={{ padding: '4px 16px 10px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedRegion}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <div style={{ fontSize: 9, color: '#C9A84C', letterSpacing: '0.18em', textTransform: 'uppercase' as const }}>
+                  내가 마신 와인 · 프랑스 {data.korName}
+                </div>
+                <span style={{ padding: '1px 9px', background: 'rgba(255,208,96,0.10)', border: '1px solid rgba(255,208,96,0.25)', borderRadius: 20, fontSize: 10, color: '#FFD060', fontWeight: 700 }}>
+                  {data.count}병
+                </span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Wine cards — horizontal scroll */}
+          <div style={{ overflowX: 'auto', flex: 1, display: 'flex', alignItems: 'flex-start', padding: '12px 16px 16px', gap: 10 }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedRegion}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -12 }}
+                transition={{ duration: 0.22 }}
+                style={{ display: 'flex', gap: 10, flexShrink: 0 }}
+              >
+                {data.wines.map(w => (
+                  <div key={w.name} style={{
+                    flexShrink: 0,
+                    width: 'clamp(148px, 40vw, 180px)',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,208,96,0.10)',
+                    borderRadius: 12,
+                    padding: '10px 12px',
+                    display: 'flex', flexDirection: 'column', gap: 3,
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <span style={{ fontSize: 8.5, color: gradeColor(w.grade), fontWeight: 700, letterSpacing: '0.06em' }}>{w.grade}</span>
+                      <span style={{ fontSize: 8.5, color: '#6A5E4A' }}>{w.year}</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, fontFamily: 'Georgia, serif', color: '#F5F0E8', lineHeight: 1.25 }}>{w.name}</div>
+                    <div style={{ fontSize: 9.5, color: '#9B8B7A' }}>{w.producer}</div>
+                    <div style={{ fontSize: 9.5, color: '#C9A84C', lineHeight: 1.5, marginTop: 1 }}>{w.note}</div>
+                  </div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </motion.div>
       )}
@@ -218,11 +350,24 @@ export default function FranceWineSection() {
   const outerRef = useRef<HTMLDivElement>(null);
   const mapRef   = useRef<HTMLDivElement>(null);
 
+  const [isMobile, setIsMobile] = useState(false);
   const [mapVisible,     setMapVisible]     = useState(false);
   const [revealedCount,  setRevealedCount]  = useState(0);
   const [selectedRegion, setSelectedRegion] = useState<string>('21');
 
-  // "meet" — France always shows in full, never cropped
+  // Detect mobile and set default region
+  useEffect(() => {
+    const check = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      setSelectedRegion(mobile ? '33' : '21');
+    };
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // "meet" — France always shows in full
   useLayoutEffect(() => {
     const apply = () => {
       mapRef.current?.querySelectorAll('svg').forEach(svg => {
@@ -251,28 +396,28 @@ export default function FranceWineSection() {
     if (WINE_DEPTS[key]?.wines.length > 0) setSelectedRegion(key);
   };
 
+  // Which labels to show: mobile = 3, desktop = all
+  const visibleLabels = isMobile
+    ? Object.entries(WINE_DEPTS).filter(([code, d]) => d.showLabel && d.korName && MOBILE_KEYS.includes(code))
+    : Object.entries(WINE_DEPTS).filter(([code, d]) => d.showLabel && d.korName);
+
   return (
     <div ref={outerRef} style={{ height: '210vh', position: 'relative' }}>
-
-      {/* ── Sticky full-screen viewport ────────────────────────────────── */}
       <div style={{
         position: 'sticky', top: 0, height: '100vh',
         overflow: 'hidden',
         background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(139,26,42,0.12) 0%, transparent 55%), #04010A',
       }}>
 
-        {/* ── France map ─────────────────────────────────────────────── */}
+        {/* France map */}
         <div ref={mapRef} style={{ width: '100%', height: '100%' }}>
           <motion.div style={{ width: '100%', height: '100%' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: mapVisible ? 1 : 0 }}
-            transition={{ duration: 0.7 }}
+            initial={{ opacity: 0 }} animate={{ opacity: mapVisible ? 1 : 0 }} transition={{ duration: 0.7 }}
           >
             <ComposableMap
               projection="geoMercator"
               projectionConfig={{ center: [2.4, 46.8], scale: 1950 }}
-              width={600}
-              height={680}
+              width={600} height={680}
               style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }}
             >
               <Geographies geography={DEPT_URL}>
@@ -283,13 +428,7 @@ export default function FranceWineSection() {
                   return (
                     <Geography key={geo.rsmKey} geography={geo}
                       style={{
-                        default: {
-                          fill:        shown ? '#D42040' : '#1C0838',
-                          fillOpacity: shown ? (wine?.opacity ?? 0) : 1,
-                          stroke:      shown ? '#5A1028' : '#3A1068',
-                          strokeWidth: 0.8, outline: 'none',
-                          transition: 'fill 400ms ease, fill-opacity 400ms ease',
-                        },
+                        default: { fill: shown ? '#D42040' : '#1C0838', fillOpacity: shown ? (wine?.opacity ?? 0) : 1, stroke: shown ? '#5A1028' : '#3A1068', strokeWidth: 0.8, outline: 'none', transition: 'fill 400ms ease, fill-opacity 400ms ease' },
                         hover:   { fill: shown ? '#D42040' : '#1C0838', fillOpacity: shown ? (wine?.opacity ?? 0) : 1, stroke: shown ? '#5A1028' : '#3A1068', strokeWidth: 0.8, outline: 'none' },
                         pressed: { fill: '#1C0838', fillOpacity: 1, stroke: '#3A1068', strokeWidth: 0.8, outline: 'none' },
                       }}
@@ -298,32 +437,26 @@ export default function FranceWineSection() {
                 })}
               </Geographies>
 
-              {/* Clickable region labels */}
-              {Object.entries(WINE_DEPTS)
-                .filter(([, d]) => d.showLabel && d.korName)
-                .map(([code, d]) => (
-                  <Marker key={code} coordinates={d.labelCoords}>
-                    <RegionLabel
-                      korName={d.korName}
-                      count={d.count}
-                      featured={d.featured}
-                      visible={isDeptVisible(d.revealOrder)}
-                      selected={selectedRegion === primaryKey(code)}
-                      onClick={() => handleRegionClick(code)}
-                    />
-                  </Marker>
-                ))}
+              {/* Region labels */}
+              {visibleLabels.map(([code, d]) => (
+                <Marker key={code} coordinates={d.labelCoords}>
+                  <RegionLabel
+                    korName={d.korName}
+                    count={d.count}
+                    featured={d.featured}
+                    visible={isDeptVisible(d.revealOrder)}
+                    selected={selectedRegion === primaryKey(code)}
+                    showTapHint={isMobile && isDeptVisible(d.revealOrder) && selectedRegion !== primaryKey(code)}
+                    onClick={() => handleRegionClick(code)}
+                  />
+                </Marker>
+              ))}
             </ComposableMap>
           </motion.div>
         </div>
 
-        {/* ── Overlays ─────────────────────────────────────────────────── */}
-
         {/* Vignette */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, rgba(4,1,10,0.88) 100%)',
-        }} />
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, rgba(4,1,10,0.88) 100%)' }} />
 
         {/* Top: section header */}
         <AnimatePresence>
@@ -331,19 +464,10 @@ export default function FranceWineSection() {
             <motion.div key="title"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              style={{
-                position: 'absolute', top: 'clamp(14px,2.5vh,28px)',
-                left: '50%', transform: 'translateX(-50%)',
-                textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap',
-              }}
+              style={{ position: 'absolute', top: 'clamp(14px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap' }}
             >
-              <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>
-                지역 탐험
-              </div>
-              <h2 style={{
-                fontFamily: 'var(--font-playfair), Georgia, serif',
-                fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8',
-              }}>
+              <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>지역 탐험</div>
+              <h2 style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>
                 프랑스 와인 산지
               </h2>
             </motion.div>
@@ -351,44 +475,26 @@ export default function FranceWineSection() {
         </AnimatePresence>
 
         {/* Left: scroll progress dots */}
-        <div style={{
-          position: 'absolute', left: 'clamp(12px,2.5vw,24px)',
-          top: '50%', transform: 'translateY(-50%)',
-          display: 'flex', flexDirection: 'column', gap: 8, zIndex: 10,
-        }}>
+        <div style={{ position: 'absolute', left: 'clamp(12px,2.5vw,24px)', top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: 8, zIndex: 10 }}>
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} style={{
-              width: 5, height: revealedCount >= i ? 20 : 5,
-              borderRadius: 3,
-              background: revealedCount >= i ? '#C41E3A' : 'rgba(255,255,255,0.12)',
-              transition: 'all 350ms ease',
-            }} />
+            <div key={i} style={{ width: 5, height: revealedCount >= i ? 20 : 5, borderRadius: 3, background: revealedCount >= i ? '#C41E3A' : 'rgba(255,255,255,0.12)', transition: 'all 350ms ease' }} />
           ))}
         </div>
 
-        {/* Right: floating wine panel */}
-        <WinePanel regionKey={selectedRegion} visible={showPanel} />
+        {/* Desktop: right-side floating panel */}
+        {!isMobile && <DesktopWinePanel regionKey={selectedRegion} visible={showPanel} />}
 
-        {/* Click hint — only when first region just appeared */}
-        <AnimatePresence>
-          {mapVisible && revealedCount === 1 && (
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, delay: 0.8 }}
-              style={{
-                position: 'absolute', bottom: 'clamp(24px,4vh,40px)',
-                left: '50%', transform: 'translateX(-50%)',
-                fontSize: 10, color: '#6A5E4A', letterSpacing: '0.10em',
-                textAlign: 'center', zIndex: 10, pointerEvents: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              지역 라벨을 클릭하면 해당 와인 리스트를 볼 수 있어요
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Mobile: bottom sheet */}
+        {isMobile && (
+          <MobileBottomSheet
+            selectedRegion={selectedRegion}
+            visible={showPanel}
+            revealedCount={revealedCount}
+            onSelectRegion={setSelectedRegion}
+          />
+        )}
 
-        {/* Scroll hint (before map appears) */}
+        {/* Scroll hint (before map) */}
         <AnimatePresence>
           {!mapVisible && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
