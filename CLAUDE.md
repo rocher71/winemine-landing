@@ -174,7 +174,8 @@ src/
 │   ├── sections/
 │   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
 │   │   ├── france-wine-section.tsx     # 스크롤 기반 프랑스 드릴다운
-│   │   ├── france-wine-detail-section.tsx # 정적 지도 + 와인 카드 컬렉션
+│   │   ├── burgundy-section.tsx        # 부르고뉴 4축 분류 (등급·클리마·도멘·빈티지) — 상세 사양은 _workspace/burgundy-section-spec.md
+│   │   ├── france-wine-detail-section.tsx # 정적 지도 + 와인 카드 컬렉션 (현재 page.tsx에서 미사용)
 │   │   ├── vineyard-strip.tsx          # 와인 산지 사진 스트립
 │   │   ├── features-section.tsx        # 핵심 기능 소개 (onScrollToPreview prop)
 │   │   ├── market-stats-section.tsx    # 한국 와인 시장 통계
@@ -217,6 +218,12 @@ public/
 
 전체 UI/UX 스펙, 컴포넌트 계층, 통합 테스트 시나리오, 구현 순서:
 → **`WINEMINE_LANDING_SPEC.md`** 참조
+
+부르고뉴 섹션(4탭 분류·인터랙션·데이터 모델·디자인 결정·변경 이력) 인수인계용 단일 문서:
+→ **`_workspace/burgundy-section-spec.md`** 참조 — 다른 머신/세션에서 컨텍스트 잡을 때 가장 먼저 읽을 것
+
+부르고뉴 분류 체계의 근거가 되는 와인 덕후 관점 리서치 + 한글-프랑스어 용어집:
+→ **`_workspace/burgundy-classification-research.md`** 참조
 
 ---
 
