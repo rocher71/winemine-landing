@@ -10,6 +10,15 @@ const DEPT_URL = '/france-departments.json';
 // ── Design tokens ──────────────────────────────────────────────────────────
 const GOLD = '#f0c876';
 
+// Sub-AOC labels that appear when Bordeaux (revealOrder 2) is active
+type SubLabel = { name: string; coords: [number, number] };
+const BORDEAUX_SUB_LABELS: SubLabel[] = [
+  { name: 'Médoc',          coords: [-0.98, 45.15] },
+  { name: 'Saint-Émilion',  coords: [-0.12, 44.89] },
+  { name: 'Pomerol',        coords: [-0.18, 44.92] },
+  { name: 'Pessac-Léognan', coords: [-0.72, 44.68] },
+];
+
 // ── Map region config ──────────────────────────────────────────────────────
 type RegionData = {
   korName: string; count: number; opacity: number;
@@ -64,6 +73,26 @@ function RegionLabel({ korName, count, featured, visible, bottleUnit }: {
       <text textAnchor="middle" y={featured ? 8 : 7}
         style={{ fill: '#C9A84C', fontSize: featured ? 13 : 11, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
         {count}{bottleUnit}
+      </text>
+    </motion.g>
+  );
+}
+
+// ── Bordeaux sub-AOC label (small dot + text) ─────────────────────────────
+function SubAOCLabel({ name, visible }: { name: string; visible: boolean }) {
+  return (
+    <motion.g
+      initial={{ opacity: 0 }}
+      animate={visible ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.45, ease: 'easeOut' }}
+      style={{ pointerEvents: 'none' }}
+    >
+      <circle cx={0} cy={0} r={2.5} fill="rgba(201,168,76,0.6)" />
+      <text
+        x={5} y={4}
+        style={{ fill: 'rgba(201,168,76,0.75)', fontSize: 7.5, fontFamily: 'Inter,sans-serif', fontWeight: 500 } as React.CSSProperties}
+      >
+        {name}
       </text>
     </motion.g>
   );
@@ -143,6 +172,12 @@ export default function FranceWineSection() {
                     visible={isDeptVisible(d.revealOrder)}
                     bottleUnit={messages.franceWineDetail.bottleUnit}
                   />
+                </Marker>
+              ))}
+              {/* Bordeaux sub-AOC labels — appear when Bordeaux region is revealed */}
+              {BORDEAUX_SUB_LABELS.map(sub => (
+                <Marker key={sub.name} coordinates={sub.coords}>
+                  <SubAOCLabel name={sub.name} visible={isDeptVisible(2)} />
                 </Marker>
               ))}
             </ComposableMap>

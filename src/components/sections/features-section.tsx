@@ -352,7 +352,7 @@ function GlassCardStack() {
 }
 
 // ── Panel 2: Label scan demo ───────────────────────────────────────────────
-const WINE_TAGS = ['Château Margaux', '2019', 'Bordeaux AOC', 'Cabernet Sauvignon', '🇫🇷 France'];
+const WINE_TAGS = ['Château Margaux', '2019', 'Médoc AOC', 'Premier Grand Cru Classé', 'Cabernet Sauvignon', '🇫🇷 France'];
 
 function ScanPanel() {
   const [step, setStep] = useState(0);
@@ -433,24 +433,30 @@ function ScanPanel() {
 
       {/* Revealed wine info tags — all rendered, opacity-only reveal to prevent layout shift */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-        {WINE_TAGS.map((tag, i) => (
+        {WINE_TAGS.map((tag, i) => {
+          const isWineName = tag === 'Château Margaux';
+          const isFlag = tag === '🇫🇷 France';
+          const isClassification = tag === 'Premier Grand Cru Classé';
+          return (
           <span
             key={tag}
             style={{
               padding: '5px 12px',
               borderRadius: 20,
-              background: i === 0 ? 'rgba(196,30,58,0.2)' : i === 4 ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.06)',
-              border: `1px solid ${i === 0 ? 'rgba(196,30,58,0.4)' : i === 4 ? 'rgba(201,168,76,0.3)' : 'rgba(255,255,255,0.1)'}`,
-              color: i === 0 ? '#E06070' : i === 4 ? '#C9A84C' : '#D4C5B0',
-              fontSize: 12,
-              fontWeight: 500,
+              background: isWineName ? 'rgba(196,30,58,0.2)' : isClassification ? 'rgba(201,168,76,0.18)' : isFlag ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.06)',
+              border: `1px solid ${isWineName ? 'rgba(196,30,58,0.4)' : isClassification ? 'rgba(201,168,76,0.5)' : isFlag ? 'rgba(201,168,76,0.3)' : 'rgba(255,255,255,0.1)'}`,
+              color: isWineName ? '#E06070' : isClassification ? '#C9A84C' : isFlag ? '#C9A84C' : '#D4C5B0',
+              fontSize: isClassification ? 11 : 12,
+              fontWeight: isClassification ? 600 : 500,
+              letterSpacing: isClassification ? '0.02em' : undefined,
               opacity: i < step ? 1 : 0,
               transition: 'opacity 0.3s ease',
             }}
           >
             {tag}
           </span>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

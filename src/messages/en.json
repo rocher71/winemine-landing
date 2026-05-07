@@ -103,8 +103,8 @@
     "heading": "Here's how it works",
     "steps": [
       { "title": "Shoot the label", "body": "At a restaurant, wine bar, or home. Snap the label wherever you are drinking.", "detail": "Recognized in 2 seconds" },
-      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "France → Bordeaux → Pomerol" },
-      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation you've explored at a glance.", "detail": "Drill-down map navigation" },
+      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "Bordeaux → Pomerol → Premier Grand Cru" },
+      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation and Grand Cru classification you've explored.", "detail": "AOC → Appellation → Classification" },
       { "title": "Capture it all", "body": "Save your wine journey as a shareable image. One tap to share with the world.", "detail": "Recap image generation" }
     ]
   },
