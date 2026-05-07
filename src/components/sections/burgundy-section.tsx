@@ -63,6 +63,27 @@ const PRODUCER_TYPE_KO: Record<ProducerType, string> = {
   'Négociant-Éleveur': '네고시앙-엘레뵈르',
 };
 
+// 지도 배경 앰비언트 라벨 (마커보다 흐림, 맥락 이해용)
+type AmbientSize = 'lg' | 'md' | 'sm';
+const AMBIENT_LABELS: { text: string; coords: [number, number]; size: AmbientSize }[] = [
+  // 광역 / 꼬뜨
+  { text: 'Côte de Nuits',     coords: [5.20, 47.18], size: 'lg' },
+  { text: 'Côte de Beaune',    coords: [5.05, 46.95], size: 'lg' },
+  { text: 'Chablis',           coords: [3.95, 47.83], size: 'md' },
+  // 주요 마을 (와인이 자주 등장)
+  { text: 'Gevrey-Chambertin', coords: [5.07, 47.23], size: 'sm' },
+  { text: 'Vosne-Romanée',     coords: [5.04, 47.17], size: 'sm' },
+  { text: 'Nuits-Saint-Georges',coords:[5.04, 47.10], size: 'sm' },
+  { text: 'Meursault',         coords: [4.88, 46.98], size: 'sm' },
+  { text: 'Puligny-Montrachet',coords: [4.86, 46.94], size: 'sm' },
+];
+
+const AMBIENT_FONT: Record<AmbientSize, { fontSize: number; letter: string; weight: number; opacity: number }> = {
+  lg: { fontSize: 7,   letter: '0.36em', weight: 600, opacity: 0.32 },
+  md: { fontSize: 5.5, letter: '0.28em', weight: 600, opacity: 0.30 },
+  sm: { fontSize: 3.6, letter: '0.18em', weight: 500, opacity: 0.40 },
+};
+
 // 빈티지 평가 차트 (보고서 §1-7: Wine Spectator / Cult Wines / Jancis Robinson 종합)
 type VintageRating = { red: number; white: number; comment: string; isLandmark?: boolean };
 const VINTAGE_RATINGS: Record<number, VintageRating> = {
@@ -166,134 +187,53 @@ function CountBadge({ n, x, y }: { n: number; x: number; y: number }) {
   if (n <= 0) return null;
   return (
     <g transform={`translate(${x},${y})`} style={{ pointerEvents: 'none' }}>
-      <circle cx={0} cy={0} r={7} fill="#D42040" stroke="#04010A" strokeWidth={1.2} />
-      <text textAnchor="middle" y={2.4}
-        style={{ fill: '#fff', fontSize: 7.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
+      <circle cx={0} cy={0} r={3.6} fill="#D42040" stroke="#04010A" strokeWidth={0.7} />
+      <text textAnchor="middle" y={1.3}
+        style={{ fill: '#fff', fontSize: 4.2, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
         {n}
       </text>
     </g>
   );
 }
 
-// Cru 탭에선 와인 단위 마커 — 등급별 색상의 작은 점
-function CruWineMarker({ wine, hovered, onHover }: { wine: Wine; hovered: boolean; onHover: (id: string | null) => void }) {
-  const meta = CRU_META[wine.cru];
+// 통일 마커 — 모든 탭에서 동일한 모양(작은 동그라미). 색만 의미 전달.
+function MapPin({ id, color, hovered, ring, count, onHover }: {
+  id: string;
+  color: string;
+  hovered: boolean;
+  ring?: boolean;          // 모노폴 / Landmark 표시
+  count?: number;          // 표시할 마신 병수 (없으면 미표시)
+  onHover: (id: string | null) => void;
+}) {
   return (
     <motion.g
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: hovered ? 1.6 : 1 }}
+      animate={{ opacity: 1, scale: hovered ? 1.7 : 1 }}
       transition={{ duration: 0.35 }}
-      style={{ cursor: 'pointer', pointerEvents: 'all' }}
-      onMouseEnter={() => onHover(wine.id)}
+      style={{ cursor: 'pointer', pointerEvents: 'all', touchAction: 'manipulation' }}
+      onMouseEnter={() => onHover(id)}
       onMouseLeave={() => onHover(null)}
+      onTouchStart={() => onHover(id)}
     >
       {hovered && (
-        <motion.circle cx={0} cy={0} r={8}
-          fill="none" stroke={meta.color} strokeWidth={1}
-          animate={{ r: [8, 18], opacity: [0.7, 0] }}
+        <motion.circle cx={0} cy={0} r={6}
+          fill="none" stroke={color} strokeWidth={0.7}
+          animate={{ r: [6, 14], opacity: [0.7, 0] }}
           transition={{ duration: 1.2, repeat: Infinity }}
         />
       )}
-      <circle cx={0} cy={0} r={5}
-        fill={meta.color} fillOpacity={hovered ? 1 : 0.85}
-        stroke="#04010A" strokeWidth={1.2}
-      />
-      <text textAnchor="middle" y={1.8}
-        style={{ fill: '#fff', fontSize: 4.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
-        {meta.chip}
-      </text>
-    </motion.g>
-  );
-}
-
-// Vintage 탭 — 와인 단위 마커. 빈티지 평가 색상의 별 모양.
-function VintageWineMarker({ wine, hovered, onHover }: { wine: Wine; hovered: boolean; onHover: (id: string | null) => void }) {
-  const color = vintageColor(wine.vintage);
-  const isLandmark = VINTAGE_RATINGS[wine.vintage]?.isLandmark;
-  return (
-    <motion.g
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: hovered ? 1.6 : 1 }}
-      transition={{ duration: 0.35 }}
-      style={{ cursor: 'pointer', pointerEvents: 'all' }}
-      onMouseEnter={() => onHover(wine.id)}
-      onMouseLeave={() => onHover(null)}
-    >
-      {hovered && (
-        <motion.circle cx={0} cy={0} r={8}
-          fill="none" stroke={color} strokeWidth={1}
-          animate={{ r: [8, 18], opacity: [0.7, 0] }}
-          transition={{ duration: 1.2, repeat: Infinity }}
+      {ring && (
+        <circle cx={0} cy={0} r={5}
+          fill="none" stroke={color} strokeOpacity={0.55} strokeWidth={0.5}
         />
       )}
-      {/* 5-pointed star (landmark은 진한 외곽선 강조) */}
-      <polygon
-        points="0,-6 1.4,-1.85 5.7,-1.85 2.15,0.7 3.55,4.85 0,2.3 -3.55,4.85 -2.15,0.7 -5.7,-1.85 -1.4,-1.85"
-        fill={color} fillOpacity={hovered ? 1 : 0.92}
-        stroke="#04010A" strokeWidth={isLandmark ? 0.9 : 0.6}
+      <circle cx={0} cy={0} r={3.2}
+        fill={color} fillOpacity={hovered ? 1 : 0.7}
+        stroke="#04010A" strokeWidth={0.6}
       />
-      <text textAnchor="middle" y={9.5}
-        style={{ fill: color, fontSize: 4.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
-        {wine.vintage}
-      </text>
-    </motion.g>
-  );
-}
-
-function ProducerMarker({ data, hovered, onHover }: { data: ProducerData; hovered: boolean; onHover: (id: string | null) => void }) {
-  const count = winesByProducer[data.id]?.length ?? 0;
-  return (
-    <motion.g
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: hovered ? 1.3 : 1 }}
-      transition={{ duration: 0.35 }}
-      style={{ cursor: 'pointer', pointerEvents: 'all' }}
-      onMouseEnter={() => onHover(data.id)}
-      onMouseLeave={() => onHover(null)}
-    >
-      {hovered && (
-        <motion.circle cx={0} cy={0} r={12}
-          fill="none" stroke={GOLD} strokeWidth={1}
-          animate={{ r: [12, 22], opacity: [0.8, 0] }}
-          transition={{ duration: 1.2, repeat: Infinity }}
-        />
+      {count !== undefined && count > 0 && (
+        <CountBadge n={count} x={4.2} y={-4.2} />
       )}
-      <circle cx={0} cy={0} r={9}
-        fill={hovered ? '#C9A84C' : 'rgba(201,168,76,0.15)'}
-        stroke={GOLD} strokeWidth={hovered ? 1.5 : 0.8}
-      />
-      <text textAnchor="middle" y={3.5}
-        style={{ fill: hovered ? '#0A0510' : GOLD, fontSize: 6.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
-        {data.initials}
-      </text>
-      <CountBadge n={count} x={8} y={-8} />
-    </motion.g>
-  );
-}
-
-function VineyardMarker({ data, hovered, onHover }: { data: VineyardData; hovered: boolean; onHover: (id: string | null) => void }) {
-  const isGC = data.classification === 'Grand Cru';
-  const color = isGC ? '#D42040' : '#C9A84C';
-  const count = winesByVineyard[data.id]?.length ?? 0;
-  return (
-    <motion.g
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: hovered ? 1.4 : 1 }}
-      transition={{ duration: 0.35 }}
-      style={{ cursor: 'pointer', pointerEvents: 'all' }}
-      onMouseEnter={() => onHover(data.id)}
-      onMouseLeave={() => onHover(null)}
-    >
-      {/* Diamond */}
-      <polygon points="0,-10 8,0 0,10 -8,0"
-        fill={hovered ? color : color + '22'}
-        stroke={color} strokeWidth={hovered ? 1.5 : 0.8}
-      />
-      <text textAnchor="middle" y={3}
-        style={{ fill: hovered ? '#fff' : color, fontSize: 5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
-        {isGC ? 'GC' : '1C'}
-      </text>
-      <CountBadge n={count} x={8} y={-8} />
     </motion.g>
   );
 }
@@ -659,24 +599,34 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
             })}
           </Geographies>
 
+          {/* 앰비언트 라벨 — 마을·꼬뜨 압인. 마커보다 흐림, 모든 탭 공통 */}
+          {AMBIENT_LABELS.map(l => {
+            const f = AMBIENT_FONT[l.size];
+            return (
+              <Marker key={l.text} coordinates={l.coords}>
+                <g transform={`scale(${cs})`} style={{ pointerEvents: 'none' }}>
+                  <text textAnchor="middle"
+                    style={{
+                      fill: '#D4C5B0', fillOpacity: f.opacity,
+                      fontSize: f.fontSize, fontFamily: 'Georgia, serif',
+                      fontWeight: f.weight, letterSpacing: f.letter,
+                      textTransform: 'uppercase' as const,
+                    } as React.CSSProperties}>
+                    {l.text}
+                  </text>
+                </g>
+              </Marker>
+            );
+          })}
+
           <AnimatePresence>
             {filter === 'cru' && (
               <motion.g key="cru-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
                 {WINES.map(w => (
                   <Marker key={w.id} coordinates={w.coords}>
                     <g transform={`scale(${cs})`}>
-                      <CruWineMarker wine={w} hovered={hoveredId === w.id} onHover={onHover} />
-                    </g>
-                  </Marker>
-                ))}
-              </motion.g>
-            )}
-            {filter === 'producer' && (
-              <motion.g key="pr-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
-                {PRODUCERS.map(d => (
-                  <Marker key={d.id} coordinates={d.coords}>
-                    <g transform={`scale(${cs})`}>
-                      <ProducerMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
+                      <MapPin id={w.id} color={CRU_META[w.cru].color}
+                        hovered={hoveredId === w.id} onHover={onHover} />
                     </g>
                   </Marker>
                 ))}
@@ -687,7 +637,25 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
                 {VINEYARDS.map(d => (
                   <Marker key={d.id} coordinates={d.coords}>
                     <g transform={`scale(${cs})`}>
-                      <VineyardMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
+                      <MapPin id={d.id}
+                        color={d.classification === 'Grand Cru' ? '#D42040' : '#C9A84C'}
+                        hovered={hoveredId === d.id} ring={d.isMonopole}
+                        count={winesByVineyard[d.id]?.length ?? 0}
+                        onHover={onHover} />
+                    </g>
+                  </Marker>
+                ))}
+              </motion.g>
+            )}
+            {filter === 'producer' && (
+              <motion.g key="pr-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+                {PRODUCERS.map(d => (
+                  <Marker key={d.id} coordinates={d.coords}>
+                    <g transform={`scale(${cs})`}>
+                      <MapPin id={d.id} color={GOLD}
+                        hovered={hoveredId === d.id}
+                        count={winesByProducer[d.id]?.length ?? 0}
+                        onHover={onHover} />
                     </g>
                   </Marker>
                 ))}
@@ -698,7 +666,10 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
                 {WINES.map(w => (
                   <Marker key={w.id} coordinates={w.coords}>
                     <g transform={`scale(${cs})`}>
-                      <VintageWineMarker wine={w} hovered={hoveredId === w.id} onHover={onHover} />
+                      <MapPin id={w.id} color={vintageColor(w.vintage)}
+                        hovered={hoveredId === w.id}
+                        ring={!!VINTAGE_RATINGS[w.vintage]?.isLandmark}
+                        onHover={onHover} />
                     </g>
                   </Marker>
                 ))}
