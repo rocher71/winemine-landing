@@ -9,7 +9,7 @@ const DEPT_URL = '/france-departments.json';
 const GOLD = '#f0c876';
 const BURGUNDY_DEPTS = new Set(['21', '71', '89', '58', '01', '70', '39']);
 
-type FilterKey = 'cru' | 'producer' | 'vineyard';
+type FilterKey = 'cru' | 'vineyard' | 'producer' | 'vintage';
 
 type Cru = 'Grand Cru' | '1er Cru' | 'Village' | 'Régional';
 type ProducerType = 'Domaine' | 'Maison' | 'Négociant-Éleveur';
@@ -62,6 +62,36 @@ const PRODUCER_TYPE_KO: Record<ProducerType, string> = {
   'Maison': '메종',
   'Négociant-Éleveur': '네고시앙-엘레뵈르',
 };
+
+// 빈티지 평가 차트 (보고서 §1-7: Wine Spectator / Cult Wines / Jancis Robinson 종합)
+type VintageRating = { red: number; white: number; comment: string; isLandmark?: boolean };
+const VINTAGE_RATINGS: Record<number, VintageRating> = {
+  2015: { red: 5, white: 4, comment: '"역사적 빈티지". 따뜻한 여름, 농축, 장기 숙성', isLandmark: true },
+  2016: { red: 4, white: 5, comment: '봄 서리로 수량 적음, 살아남은 와인은 정밀' },
+  2017: { red: 4, white: 5, comment: '화이트의 해. 신선·미네랄, "2014 이후 최고 화이트"' },
+  2018: { red: 5, white: 3, comment: '풍년·풍성한 레드' },
+  2019: { red: 5, white: 5, comment: '농축과 신선의 균형. "이 시대의 클래식"', isLandmark: true },
+  2020: { red: 5, white: 5, comment: '"2010 이후 최고", 집중·신선·구조',         isLandmark: true },
+  2021: { red: 2, white: 3, comment: '서리 피해 심각, 수량 1/3 감소' },
+  2022: { red: 4, white: 4, comment: '회복의 해, 풍성' },
+};
+
+// 종합 별점 (red+white 평균 반올림)
+function vintageScore(year: number): number {
+  const r = VINTAGE_RATINGS[year];
+  if (!r) return 3;
+  return Math.round(((r.red + r.white) / 2) * 2) / 2; // 0.5 단위 반올림
+}
+
+// 빈티지 별점 → 마커 색상
+function vintageColor(year: number): string {
+  const s = vintageScore(year);
+  if (s >= 5)   return '#E0B560'; // 5점: 진한 골드
+  if (s >= 4.5) return '#C8965C'; // 4.5: 호박
+  if (s >= 4)   return '#A57848'; // 4: 옅은 호박
+  if (s >= 3)   return '#7A6E5A'; // 3: 회색-갈색
+  return '#4A3D56';               // 2이하: 어두움
+}
 
 const PRODUCERS: ProducerData[] = [
   { id: 'drc',      name: 'Domaine de la Romanée-Conti', nameKo: '도멘 드 라 로마네-콩티 (DRC)', initials: 'DRC', coords: [4.975, 47.171], village: 'Vosne-Romanée',      blurb: '전설 중의 전설. 모노폴 1.81ha.',           type: 'Domaine' },
@@ -118,13 +148,17 @@ const WINES: Wine[] = [
 
 // 그룹별 마신 와인 카운트/리스트 헬퍼
 const winesByCru:      Record<Cru, Wine[]>     = { 'Grand Cru': [], '1er Cru': [], 'Village': [], 'Régional': [] };
-const winesByProducer: Record<string, Wine[]> = {};
-const winesByVineyard: Record<string, Wine[]> = {};
+const winesByProducer: Record<string, Wine[]>  = {};
+const winesByVineyard: Record<string, Wine[]>  = {};
+const winesByVintage:  Record<number, Wine[]>  = {};
 WINES.forEach(w => {
   winesByCru[w.cru].push(w);
   (winesByProducer[w.producerId] ||= []).push(w);
   if (w.vineyardId) (winesByVineyard[w.vineyardId] ||= []).push(w);
+  (winesByVintage[w.vintage] ||= []).push(w);
 });
+// 마신 빈티지 — 최신순 (내림차순)
+const VINTAGE_KEYS: number[] = Object.keys(winesByVintage).map(Number).sort((a, b) => b - a);
 
 // ── Map markers ─────────────────────────────────────────────────────────────
 
@@ -167,6 +201,40 @@ function CruWineMarker({ wine, hovered, onHover }: { wine: Wine; hovered: boolea
       <text textAnchor="middle" y={1.8}
         style={{ fill: '#fff', fontSize: 4.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
         {meta.chip}
+      </text>
+    </motion.g>
+  );
+}
+
+// Vintage 탭 — 와인 단위 마커. 빈티지 평가 색상의 별 모양.
+function VintageWineMarker({ wine, hovered, onHover }: { wine: Wine; hovered: boolean; onHover: (id: string | null) => void }) {
+  const color = vintageColor(wine.vintage);
+  const isLandmark = VINTAGE_RATINGS[wine.vintage]?.isLandmark;
+  return (
+    <motion.g
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: hovered ? 1.6 : 1 }}
+      transition={{ duration: 0.35 }}
+      style={{ cursor: 'pointer', pointerEvents: 'all' }}
+      onMouseEnter={() => onHover(wine.id)}
+      onMouseLeave={() => onHover(null)}
+    >
+      {hovered && (
+        <motion.circle cx={0} cy={0} r={8}
+          fill="none" stroke={color} strokeWidth={1}
+          animate={{ r: [8, 18], opacity: [0.7, 0] }}
+          transition={{ duration: 1.2, repeat: Infinity }}
+        />
+      )}
+      {/* 5-pointed star (landmark은 진한 외곽선 강조) */}
+      <polygon
+        points="0,-6 1.4,-1.85 5.7,-1.85 2.15,0.7 3.55,4.85 0,2.3 -3.55,4.85 -2.15,0.7 -5.7,-1.85 -1.4,-1.85"
+        fill={color} fillOpacity={hovered ? 1 : 0.92}
+        stroke="#04010A" strokeWidth={isLandmark ? 0.9 : 0.6}
+      />
+      <text textAnchor="middle" y={9.5}
+        style={{ fill: color, fontSize: 4.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
+        {wine.vintage}
       </text>
     </motion.g>
   );
@@ -394,6 +462,54 @@ function CruGroupCard({ cru, active }: { cru: Cru; active: boolean }) {
   );
 }
 
+function VintageGroupCard({ year, active }: { year: number; active: boolean }) {
+  const wines = winesByVintage[year] ?? [];
+  const rating = VINTAGE_RATINGS[year];
+  const score = vintageScore(year);
+  const color = vintageColor(year);
+  const isLandmark = rating?.isLandmark;
+  return (
+    <div style={{
+      padding: '14px 16px',
+      background: active ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
+      border: `1px solid ${active ? color + '70' : 'rgba(255,255,255,0.06)'}`,
+      borderRadius: 12, transition: 'all 200ms',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 22, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 700, letterSpacing: '-0.5px' }}>{year}</span>
+        {isLandmark && (
+          <span style={{ fontSize: 9, padding: '1px 6px', borderRadius: 9999, fontWeight: 700, letterSpacing: '0.06em',
+            background: 'rgba(240,200,118,0.14)', border: '1px solid rgba(240,200,118,0.55)', color: GOLD, textTransform: 'uppercase' as const }}>
+            Landmark
+          </span>
+        )}
+        <span style={{ marginLeft: 'auto' }}>
+          <CollectedBadge count={wines.length} color={color} bg={color + '22'} border={color + '70'} />
+        </span>
+      </div>
+      {rating && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, fontSize: 10.5, color: '#9B8B7A' }}>
+          <span>레드</span>
+          <WineGlassRating value={rating.red} size={7} color={color} gap={1.5} />
+          <span style={{ marginLeft: 6 }}>화이트</span>
+          <WineGlassRating value={rating.white} size={7} color={color} gap={1.5} />
+          <span style={{ marginLeft: 'auto', fontSize: 10, color: color, fontWeight: 700 }}>★ {score}</span>
+        </div>
+      )}
+      {rating && (
+        <div style={{ fontSize: 11, color: '#7A6E5A', lineHeight: 1.5, marginBottom: wines.length > 0 ? 10 : 0, fontStyle: 'italic' as const }}>
+          {rating.comment}
+        </div>
+      )}
+      {wines.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {wines.map(w => <WineRow key={w.id} wine={w} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ProducerCard({ data, active }: { data: ProducerData; active: boolean }) {
   const wines = winesByProducer[data.id] ?? [];
   return (
@@ -460,8 +576,9 @@ function VineyardCard({ data, active }: { data: VineyardData; active: boolean })
 // 필터별 카메라 — center [경도, 위도], zoom (1 = 부르고뉴 전체)
 const CAMERA: Record<FilterKey, { zoom: number; center: [number, number] }> = {
   cru:      { zoom: 1.0, center: [4.50, 47.00] },
-  producer: { zoom: 2.6, center: [4.88, 47.10] },
   vineyard: { zoom: 3.4, center: [4.92, 47.10] },
+  producer: { zoom: 2.6, center: [4.88, 47.10] },
+  vintage:  { zoom: 1.0, center: [4.50, 47.00] },
 };
 
 function BurgundyMap({ filter, hoveredId, onHover }: {
@@ -576,6 +693,17 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
                 ))}
               </motion.g>
             )}
+            {filter === 'vintage' && (
+              <motion.g key="vt-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+                {WINES.map(w => (
+                  <Marker key={w.id} coordinates={w.coords}>
+                    <g transform={`scale(${cs})`}>
+                      <VintageWineMarker wine={w} hovered={hoveredId === w.id} onHover={onHover} />
+                    </g>
+                  </Marker>
+                ))}
+              </motion.g>
+            )}
           </AnimatePresence>
         </ZoomableGroup>
       </ComposableMap>
@@ -586,10 +714,13 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
 // ── Filter tab button ─────────────────────────────────────────────────────────
 
 const FILTER_LABELS: Record<FilterKey, { ko: string; en: string }> = {
-  cru:      { ko: '등급',  en: 'Cru' },
-  producer: { ko: '도멘',  en: 'Domaine' },
+  cru:      { ko: '등급',   en: 'Cru' },
   vineyard: { ko: '클리마', en: 'Climat' },
+  producer: { ko: '도멘',   en: 'Domaine' },
+  vintage:  { ko: '빈티지', en: 'Millésime' },
 };
+
+const TAB_ORDER: FilterKey[] = ['cru', 'vineyard', 'producer', 'vintage'];
 
 function FilterTab({ fk, active, onClick }: { fk: FilterKey; active: boolean; onClick: () => void }) {
   const { ko, en } = FILTER_LABELS[fk];
@@ -642,6 +773,15 @@ function PanelContent({ filter, hoveredId, onHover }: {
             <VineyardCard data={d} active={hoveredId === d.id} />
           </div>
         ))}
+        {filter === 'vintage' && VINTAGE_KEYS.map(year => {
+          const winesOfYear = winesByVintage[year];
+          const active = winesOfYear.some(w => w.id === hoveredId);
+          return (
+            <div key={year}>
+              <VintageGroupCard year={year} active={active} />
+            </div>
+          );
+        })}
       </motion.div>
     </AnimatePresence>
   );
@@ -670,7 +810,7 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
     >
       {/* Filter tabs */}
       <div style={{ padding: '14px 12px 12px', display: 'flex', gap: 5, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)', overflowX: 'auto' }}>
-        {(['cru', 'producer', 'vineyard'] as FilterKey[]).map(fk => (
+        {TAB_ORDER.map(fk => (
           <FilterTab key={fk} fk={fk} active={filter === fk} onClick={() => setFilter(fk)} />
         ))}
       </div>
@@ -680,7 +820,10 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
         <span style={{ fontSize: 10, color: '#9B8B7A', letterSpacing: '0.06em' }}>
           내가 마신 부르고뉴 {WINES.length}병 ·{' '}
           <span style={{ color: '#4A3D56' }}>
-            {filter === 'cru' ? '4개 등급으로 분류' : filter === 'producer' ? `${PRODUCERS.length}개 도멘으로 분류` : `${VINEYARDS.length}개 클리마로 분류`}
+            {filter === 'cru'      ? '4개 등급으로 분류'
+            : filter === 'vineyard' ? `${VINEYARDS.length}개 클리마로 분류`
+            : filter === 'producer' ? `${PRODUCERS.length}개 도멘으로 분류`
+            :                         `${VINTAGE_KEYS.length}개 빈티지로 분류`}
           </span>
         </span>
       </div>
@@ -744,7 +887,7 @@ function MobileSheet({ filter, setFilter, hoveredId, onHover, visible }: {
         <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.28)' }} />
       </div>
       <div style={{ padding: '4px 16px 10px', display: 'flex', gap: 6, flexShrink: 0, overflowX: 'auto' }}>
-        {(['cru', 'producer', 'vineyard'] as FilterKey[]).map(fk => (
+        {TAB_ORDER.map(fk => (
           <FilterTab key={fk} fk={fk} active={filter === fk} onClick={() => setFilter(fk)} />
         ))}
       </div>
@@ -781,7 +924,7 @@ export default function BurgundySection() {
   }, []);
 
   const sectionLabel = t('burgundy.sectionLabel') || 'AI 자동 분류 · 부르고뉴';
-  const heading = t('burgundy.heading') || '내가 마신 와인이 등급·도멘·클리마로';
+  const heading = t('burgundy.heading') || '내가 마신 와인이 등급·클리마·도멘·빈티지로';
 
   return (
     <section ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: '#04010A' }}>
