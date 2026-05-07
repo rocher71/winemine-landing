@@ -63,6 +63,8 @@ const PRODUCER_TYPE_KO: Record<ProducerType, string> = {
   'Négociant-Éleveur': '네고시앙-엘레뵈르',
 };
 
+const MOBILE_TAB_BAR_HEIGHT = 58; // 모바일 하단 필터 탭 바 높이 (시트 bottomOffset)
+
 // 지도 배경 앰비언트 라벨 (마커보다 흐림, 맥락 이해용)
 type AmbientSize = 'lg' | 'md' | 'sm';
 const AMBIENT_LABELS: { text: string; coords: [number, number]; size: AmbientSize }[] = [
@@ -693,22 +695,6 @@ const FILTER_LABELS: Record<FilterKey, { ko: string; en: string }> = {
 
 const TAB_ORDER: FilterKey[] = ['cru', 'vineyard', 'producer', 'vintage'];
 
-function FilterTab({ fk, active, onClick }: { fk: FilterKey; active: boolean; onClick: () => void }) {
-  const { ko, en } = FILTER_LABELS[fk];
-  return (
-    <button onClick={onClick} style={{
-      padding: '6px 12px', borderRadius: 9999, border: 'none', cursor: 'pointer',
-      background: active ? 'rgba(240,200,118,0.14)' : 'rgba(255,255,255,0.04)',
-      outline: `1px solid ${active ? 'rgba(240,200,118,0.5)' : 'rgba(255,255,255,0.08)'}`,
-      color: active ? GOLD : '#9B8B7A',
-      fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit', transition: 'all 200ms',
-      whiteSpace: 'nowrap', flexShrink: 0,
-    }}>
-      {ko} <span style={{ fontSize: 9.5, opacity: 0.6, marginLeft: 2 }}>{en}</span>
-    </button>
-  );
-}
-
 // ── Item list panel content ───────────────────────────────────────────────────
 
 function PanelContent({ filter, hoveredId, onHover }: {
@@ -758,13 +744,111 @@ function PanelContent({ filter, hoveredId, onHover }: {
   );
 }
 
+// ── Desktop filter tabs (좌측 세로 스택, 지도 위) ───────────────────────────
+function DesktopFilterTabs({ filter, setFilter, visible }: {
+  filter: FilterKey; setFilter: (f: FilterKey) => void; visible: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -24 }}
+      animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -24 }}
+      transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      style={{
+        position: 'absolute', top: 'clamp(96px, 14vh, 160px)', left: 'clamp(16px, 3vw, 36px)',
+        width: 'clamp(160px, 15vw, 210px)', zIndex: 25,
+        display: 'flex', flexDirection: 'column', gap: 6,
+        pointerEvents: visible ? 'auto' : 'none',
+      }}
+    >
+      <div style={{ fontSize: 9, letterSpacing: '0.32em', color: '#9B8B7A', textTransform: 'uppercase' as const, fontWeight: 700, paddingLeft: 4, marginBottom: 6 }}>
+        분류 축 / Sort by
+      </div>
+      {TAB_ORDER.map(fk => {
+        const { ko, en } = FILTER_LABELS[fk];
+        const active = filter === fk;
+        return (
+          <button key={fk} onClick={() => setFilter(fk)} style={{
+            position: 'relative',
+            padding: '12px 14px 12px 18px', borderRadius: 12, border: 'none', cursor: 'pointer',
+            background: active ? 'rgba(240,200,118,0.14)' : 'rgba(5,2,14,0.72)',
+            outline: `1px solid ${active ? 'rgba(240,200,118,0.5)' : 'rgba(255,255,255,0.06)'}`,
+            color: active ? GOLD : '#D4C5B0',
+            display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1,
+            fontFamily: 'inherit', textAlign: 'left' as const,
+            transition: 'all 200ms',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          }}>
+            {active && (
+              <span style={{ position: 'absolute', left: 0, top: 8, bottom: 8, width: 3, borderRadius: 2, background: GOLD }} />
+            )}
+            <span style={{ fontSize: 14, fontWeight: 600 }}>{ko}</span>
+            <span style={{ fontSize: 10, opacity: 0.65, letterSpacing: '0.06em', fontStyle: 'italic' as const }}>{en}</span>
+          </button>
+        );
+      })}
+      {/* count footer */}
+      <div style={{ marginTop: 4, padding: '8px 12px', fontSize: 10, color: '#7A6E5A', letterSpacing: '0.04em', lineHeight: 1.5 }}>
+        내가 마신 부르고뉴 <span style={{ color: GOLD, fontWeight: 700 }}>{WINES.length}병</span>
+      </div>
+    </motion.div>
+  );
+}
+
+// ── Mobile filter tabs (화면 최하단 고정 — 시트 위) ─────────────────────────
+function MobileFilterTabs({ filter, setFilter, visible }: {
+  filter: FilterKey; setFilter: (f: FilterKey) => void; visible: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
+      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+      style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        background: 'rgba(5,2,14,0.96)',
+        backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+        borderTop: '1px solid rgba(240,200,118,0.18)',
+        display: 'flex', zIndex: 40,
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        pointerEvents: visible ? 'auto' : 'none',
+      }}
+    >
+      {TAB_ORDER.map(fk => {
+        const { ko, en } = FILTER_LABELS[fk];
+        const active = filter === fk;
+        return (
+          <button key={fk} onClick={() => setFilter(fk)} style={{
+            flex: 1, position: 'relative', border: 'none', background: 'transparent', cursor: 'pointer',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            gap: 2, padding: '12px 4px 10px',
+            color: active ? GOLD : '#9B8B7A',
+            transition: 'color 200ms',
+            fontFamily: 'inherit',
+          }}>
+            {active && (
+              <span style={{ position: 'absolute', top: 0, left: '22%', right: '22%', height: 2, background: GOLD, borderRadius: 1 }} />
+            )}
+            <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.02em' }}>{ko}</span>
+            <span style={{ fontSize: 9, opacity: 0.65, letterSpacing: '0.06em', fontStyle: 'italic' as const }}>{en}</span>
+          </button>
+        );
+      })}
+    </motion.div>
+  );
+}
+
 // ── Desktop panel ─────────────────────────────────────────────────────────────
 
-function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
-  filter: FilterKey; setFilter: (f: FilterKey) => void;
+function DesktopPanel({ filter, hoveredId, onHover, visible }: {
+  filter: FilterKey;
   hoveredId: string | null; onHover: (id: string | null) => void;
   visible: boolean;
 }) {
+  const groupLabel =
+    filter === 'cru'      ? '4개 등급으로 분류'
+    : filter === 'vineyard' ? `${VINEYARDS.length}개 클리마로 분류`
+    : filter === 'producer' ? `${PRODUCERS.length}개 도멘으로 분류`
+    :                         `${VINTAGE_KEYS.length}개 빈티지로 분류`;
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -779,28 +863,13 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      {/* Filter tabs */}
-      <div style={{ padding: '14px 12px 12px', display: 'flex', gap: 5, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)', overflowX: 'auto' }}>
-        {TAB_ORDER.map(fk => (
-          <FilterTab key={fk} fk={fk} active={filter === fk} onClick={() => setFilter(fk)} />
-        ))}
-      </div>
-
-      {/* Count badge */}
-      <div style={{ padding: '8px 16px 4px', flexShrink: 0 }}>
-        <span style={{ fontSize: 10, color: '#9B8B7A', letterSpacing: '0.06em' }}>
-          내가 마신 부르고뉴 {WINES.length}병 ·{' '}
-          <span style={{ color: '#4A3D56' }}>
-            {filter === 'cru'      ? '4개 등급으로 분류'
-            : filter === 'vineyard' ? `${VINEYARDS.length}개 클리마로 분류`
-            : filter === 'producer' ? `${PRODUCERS.length}개 도멘으로 분류`
-            :                         `${VINTAGE_KEYS.length}개 빈티지로 분류`}
-          </span>
-        </span>
+      {/* Header: 활성 분류 정보만 (탭은 좌측 DesktopFilterTabs로 이전) */}
+      <div style={{ padding: '14px 18px 10px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ fontSize: 10, color: '#9B8B7A', letterSpacing: '0.06em' }}>{groupLabel}</div>
       </div>
 
       {/* Scrollable list */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 12px 20px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px 20px' }}>
         <PanelContent filter={filter} hoveredId={hoveredId} onHover={onHover} />
       </div>
     </motion.div>
@@ -809,10 +878,11 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
 
 // ── Mobile sheet ──────────────────────────────────────────────────────────────
 
-function MobileSheet({ filter, setFilter, hoveredId, onHover, visible }: {
-  filter: FilterKey; setFilter: (f: FilterKey) => void;
+function MobileSheet({ filter, hoveredId, onHover, visible, bottomOffset }: {
+  filter: FilterKey;
   hoveredId: string | null; onHover: (id: string | null) => void;
   visible: boolean;
+  bottomOffset: number; // 하단 탭 바 높이 — 시트는 그 위에 위치
 }) {
   const [sheetH, setSheetH] = useState(0.52);
   const sheetHRef = useRef(0.52);
@@ -825,7 +895,7 @@ function MobileSheet({ filter, setFilter, hoveredId, onHover, visible }: {
     if (!el) return;
     let y0 = 0, h0 = 0;
     const ph = () => el.parentElement?.offsetHeight ?? 844;
-    const clamp = (v: number) => Math.min(0.90, Math.max(0.32, v));
+    const clamp = (v: number) => Math.min(0.86, Math.max(0.30, v));
     const move = (y: number) => updateH(clamp(h0 + (y0 - y) / ph()));
     const onMM = (e: MouseEvent) => move(e.clientY);
     const onTM = (e: TouchEvent) => { e.preventDefault(); move(e.touches[0].clientY); };
@@ -841,11 +911,11 @@ function MobileSheet({ filter, setFilter, hoveredId, onHover, visible }: {
 
   return (
     <motion.div
-      initial={{ y: '100%' }}
-      animate={{ y: visible ? 0 : '100%' }}
+      initial={{ y: '110%' }}
+      animate={{ y: visible ? 0 : '110%' }}
       transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
       style={{
-        position: 'absolute', left: 0, right: 0, bottom: 0,
+        position: 'absolute', left: 0, right: 0, bottom: bottomOffset,
         height: `${sheetH * 100}%`,
         background: 'linear-gradient(180deg, rgba(28,18,42,0.98) 0%, rgba(15,8,25,0.99) 100%)',
         backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
@@ -856,11 +926,6 @@ function MobileSheet({ filter, setFilter, hoveredId, onHover, visible }: {
     >
       <div ref={handleRef} style={{ padding: '12px 0 8px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0, touchAction: 'none' }}>
         <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.28)' }} />
-      </div>
-      <div style={{ padding: '4px 16px 10px', display: 'flex', gap: 6, flexShrink: 0, overflowX: 'auto' }}>
-        {TAB_ORDER.map(fk => (
-          <FilterTab key={fk} fk={fk} active={filter === fk} onClick={() => setFilter(fk)} />
-        ))}
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '4px 12px 20px' }}>
         <PanelContent filter={filter} hoveredId={hoveredId} onHover={onHover} />
@@ -920,9 +985,15 @@ export default function BurgundySection() {
         <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>{heading}</h2>
       </div>
 
+      {/* Filter tabs (탭은 패널/시트에서 분리 → 좌측 / 하단 고정) */}
+      {!isMobile && <DesktopFilterTabs filter={filter} setFilter={setFilter} visible={visible} />}
+
       {/* Panels */}
-      {isMobile && <MobileSheet filter={filter} setFilter={setFilter} hoveredId={hoveredId} onHover={setHoveredId} visible={visible} />}
-      {!isMobile && <DesktopPanel filter={filter} setFilter={setFilter} hoveredId={hoveredId} onHover={setHoveredId} visible={visible} />}
+      {isMobile && <MobileSheet filter={filter} hoveredId={hoveredId} onHover={setHoveredId} visible={visible} bottomOffset={MOBILE_TAB_BAR_HEIGHT} />}
+      {!isMobile && <DesktopPanel filter={filter} hoveredId={hoveredId} onHover={setHoveredId} visible={visible} />}
+
+      {/* Mobile filter tabs — 시트 위 z-index, 손가락 닿기 좋은 nudging zone */}
+      {isMobile && <MobileFilterTabs filter={filter} setFilter={setFilter} visible={visible} />}
     </section>
   );
 }
