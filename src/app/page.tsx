@@ -4,6 +4,7 @@ import { useState } from 'react';
 import HeroSection from '@/components/sections/hero-section';
 import FranceWineSection from '@/components/sections/france-wine-section';
 import FranceWineDetailSection from '@/components/sections/france-wine-detail-section';
+import BurgundySection from '@/components/sections/burgundy-section';
 import VineyardStrip from '@/components/sections/vineyard-strip';
 import FeaturesSection from '@/components/sections/features-section';
 import MarketStatsSection from '@/components/sections/market-stats-section';
@@ -31,7 +32,10 @@ export default function Home() {
       {/* 2. 프랑스 드릴다운 — 스크롤 기반 지역 등장 */}
       <FranceWineSection />
 
-      {/* 3. 프랑스 와인 상세 — 정적 지도 + 항상 표시되는 패널 */}
+      {/* 3. 부르고뉴 드릴다운 — 상세지역·생산자·밭 3필터 */}
+      <BurgundySection />
+
+      {/* 4. 프랑스 와인 상세 — 정적 지도 + 항상 표시되는 패널 */}
       <FranceWineDetailSection />
 
       {/* 4. 포도밭 갤러리 — 와인 산지 사진 + 대기 사진 스트립 */}

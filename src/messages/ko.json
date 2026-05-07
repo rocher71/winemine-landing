@@ -18,6 +18,11 @@
     }
   },
 
+  "burgundy": {
+    "sectionLabel": "부르고뉴 드릴다운",
+    "heading": "클리마를 탐험하다"
+  },
+
   "franceWineDetail": {
     "sectionLabel": "내가 마신 와인",
     "heading": "와인 컬렉션",

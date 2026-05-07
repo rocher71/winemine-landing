@@ -18,6 +18,11 @@
     }
   },
 
+  "burgundy": {
+    "sectionLabel": "Burgundy Drill-down",
+    "heading": "Explore the Climats"
+  },
+
   "franceWineDetail": {
     "sectionLabel": "Wines I've Tasted",
     "heading": "Wine Collection",
