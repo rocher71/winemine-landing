@@ -15,59 +15,121 @@ type FilterKey = 'subregion' | 'producer' | 'vineyard';
 
 type SubRegionData = {
   id: string; name: string; nameKo: string; coords: [number, number];
-  grapes: string; style: string; gcCount: number; pcCount: number;
-  desc: string; color: string;
+  grapes: string; blurb: string; color: string;
 };
 
 type ProducerData = {
   id: string; name: string; initials: string; coords: [number, number];
-  village: string; specialty: string; keyWines: string[]; style: string;
+  village: string; blurb: string;
 };
 
 type VineyardData = {
   id: string; name: string; coords: [number, number];
   classification: 'Grand Cru' | '1er Cru';
-  subregion: string; area: string; producer: string; grape: string;
+  subregion: string; area: string;
+};
+
+type Wine = {
+  id: string;
+  name: string;
+  vintage: number;
+  producerId: string;
+  vineyardId?: string;
+  subregionId: string;
+  village: string;
+  date: string;
+  occasion?: string;
+  note: string;
+  coords: [number, number];
+  color: string;
+  label: string;
+  rating: number;
+  appellation: string;
 };
 
 const SUB_REGIONS: SubRegionData[] = [
-  { id: 'chablis', name: 'Chablis', nameKo: '샤블리', coords: [3.80, 47.83], grapes: 'Chardonnay 100%', style: '미네랄·백악 토양·날카로운 산도', gcCount: 7, pcCount: 40, desc: '굴 껍데기 화석이 있는 킴메리지안 점토. 가장 미네랄한 샤르도네. Grand Cru 7개 — Valmur, Les Clos, Vaudésir 등.', color: '#4A7AB5' },
-  { id: 'cote-nuits', name: 'Côte de Nuits', nameKo: '코트 드 뉘', coords: [5.01, 47.21], grapes: 'Pinot Noir', style: '세계 최고급 레드, 피노 누아의 성지', gcCount: 24, pcCount: 143, desc: 'Gevrey-Chambertin ~ Nuits-Saint-Georges까지 약 20km. Chambertin, Musigny, Romanée-Conti. 부르고뉴 최고급 레드.', color: '#8B1A2A' },
-  { id: 'cote-beaune', name: 'Côte de Beaune', nameKo: '코트 드 본', coords: [4.85, 46.99], grapes: 'Chardonnay · Pinot Noir', style: '화이트의 왕국, Montrachet의 고향', gcCount: 9, pcCount: 300, desc: '세계 최고의 드라이 화이트. Meursault의 버터, Puligny의 정밀함, Chassagne의 힘. Le Montrachet 8ha.', color: '#C9A84C' },
-  { id: 'chalonnaise', name: 'Côte Chalonnaise', nameKo: '코트 샬로네즈', coords: [4.78, 46.72], grapes: 'Pinot Noir · Chardonnay', style: '가성비 부르고뉴, Mercurey 중심', gcCount: 0, pcCount: 120, desc: 'Mercurey, Givry, Rully, Montagny. 코트 드 본 바로 남쪽. 합리적 가격에 즐기는 클래식 부르고뉴.', color: '#9B7A4C' },
-  { id: 'maconnais', name: 'Mâconnais', nameKo: '마코네', coords: [4.78, 46.42], grapes: 'Chardonnay', style: 'Pouilly-Fuissé, 2020년 첫 1er Cru', gcCount: 0, pcCount: 22, desc: 'Pouilly-Fuissé가 2020년 마코네 최초로 22개 클리마를 1er Cru로 승격. 따뜻하고 풍성한 화이트.', color: '#6B8E4E' },
-  { id: 'beaujolais', name: 'Beaujolais', nameKo: '보졸레', coords: [4.45, 46.08], grapes: 'Gamay 100%', style: '10개 크뤼 마을, 화강암 토양', gcCount: 0, pcCount: 0, desc: 'Moulin-à-Vent, Morgon, Fleurie, Côte de Brouilly. 화강암 토양이 만드는 장기 숙성 가메. Nouveau와는 다른 세계.', color: '#7B2D5E' },
+  { id: 'chablis',     name: 'Chablis',          nameKo: '샤블리',         coords: [3.80, 47.83], grapes: 'Chardonnay',          blurb: '백악·미네랄의 정점',                color: '#4A7AB5' },
+  { id: 'cote-nuits',  name: 'Côte de Nuits',    nameKo: '코트 드 뉘',     coords: [5.01, 47.21], grapes: 'Pinot Noir',          blurb: '피노 누아의 성지',                  color: '#8B1A2A' },
+  { id: 'cote-beaune', name: 'Côte de Beaune',   nameKo: '코트 드 본',     coords: [4.85, 46.99], grapes: 'Chardonnay · Pinot',  blurb: 'Montrachet의 고향',                 color: '#C9A84C' },
+  { id: 'chalonnaise', name: 'Côte Chalonnaise', nameKo: '코트 샬로네즈',  coords: [4.78, 46.72], grapes: 'Pinot · Chardonnay',  blurb: 'Mercurey·Givry 가성비',             color: '#9B7A4C' },
+  { id: 'maconnais',   name: 'Mâconnais',        nameKo: '마코네',         coords: [4.78, 46.42], grapes: 'Chardonnay',          blurb: 'Pouilly-Fuissé 1er Cru',            color: '#6B8E4E' },
+  { id: 'beaujolais',  name: 'Beaujolais',       nameKo: '보졸레',         coords: [4.45, 46.08], grapes: 'Gamay',               blurb: '화강암 위 10개 크뤼',               color: '#7B2D5E' },
 ];
 
 const PRODUCERS: ProducerData[] = [
-  { id: 'drc', name: 'Domaine de la Romanée-Conti', initials: 'DRC', coords: [4.975, 47.171], village: 'Vosne-Romanée', specialty: 'Pinot Noir Grand Cru', keyWines: ['Romanée-Conti', 'La Tâche', 'Richebourg', 'Romanée-Saint-Vivant'], style: '1.81ha 모노폴. 병당 USD 25,000+. 전설 중의 전설.' },
-  { id: 'rousseau', name: 'Armand Rousseau', initials: 'AR', coords: [5.002, 47.226], village: 'Gevrey-Chambertin', specialty: 'Chambertin 전문', keyWines: ['Chambertin', 'Clos de Bèze', 'Clos Saint-Jacques 1er Cru'], style: '게브레이의 절대자. Chambertin의 기준.' },
-  { id: 'leroy', name: 'Domaine Leroy', initials: 'LR', coords: [4.970, 47.174], village: 'Vosne-Romanée', specialty: '비오디나믹 전문가', keyWines: ['Musigny', 'Chambertin', 'Richebourg'], style: '랄루 비즈-르루아. 에이커당 부르고뉴 최고가.' },
-  { id: 'coche', name: 'Coche-Dury', initials: 'CD', coords: [4.836, 46.976], village: 'Meursault', specialty: 'Chardonnay 1er Cru', keyWines: ['Meursault Perrières', 'Corton-Charlemagne', 'Meursault Les Rougeots'], style: '뫼르소 최고봉. 희소성과 정교함의 정점.' },
-  { id: 'lafon', name: 'Comtes Lafon', initials: 'CL', coords: [4.831, 46.973], village: 'Meursault', specialty: 'Meursault & Montrachet', keyWines: ['Meursault Perrières', 'Meursault Charmes', 'Montrachet'], style: '뫼르소 왕가. Perrières는 매년 완판.' },
-  { id: 'leflaive', name: 'Domaine Leflaive', initials: 'LF', coords: [4.797, 46.941], village: 'Puligny-Montrachet', specialty: 'Puligny Grand / 1er Cru', keyWines: ['Montrachet', 'Chevalier-Montrachet', 'Bâtard-Montrachet'], style: '화이트 부르고뉴의 정점. 비오디나믹.' },
-  { id: 'roulot', name: 'Domaine Roulot', initials: 'RL', coords: [4.833, 46.978], village: 'Meursault', specialty: 'Meursault', keyWines: ['Meursault Perrières', 'Meursault Tessons', 'Meursault Charmes'], style: '장-마르크 룰로. 현대 뫼르소의 기준.' },
-  { id: 'raveneau', name: 'Raveneau', initials: 'RV', coords: [3.801, 47.821], village: 'Chablis', specialty: 'Chablis Grand / 1er Cru', keyWines: ['Chablis Grand Cru Valmur', 'Montée de Tonnerre', 'Butteaux'], style: '샤블리 최고봉. 구하기 가장 어려운 와인.' },
-  { id: 'dujac', name: 'Domaine Dujac', initials: 'DJ', coords: [4.983, 47.201], village: 'Morey-Saint-Denis', specialty: 'Clos de la Roche', keyWines: ['Clos de la Roche', 'Chambolle-Musigny', 'Bonnes Mares'], style: '엘레강스와 투명함. 영국계 컬렉터 최애.' },
-  { id: 'gouges', name: 'Henri Gouges', initials: 'HG', coords: [4.959, 47.109], village: 'Nuits-Saint-Georges', specialty: '1er Cru 전문', keyWines: ['NSG Les Pruliers', 'NSG Les Vaucrains', 'NSG Clos des Porrets'], style: '뉘-생-조르주의 기준. 그랑 크뤼 없는 최고 도멘.' },
+  { id: 'drc',      name: 'Domaine de la Romanée-Conti', initials: 'DRC', coords: [4.975, 47.171], village: 'Vosne-Romanée',     blurb: '전설 중의 전설. 모노폴 1.81ha.' },
+  { id: 'rousseau', name: 'Armand Rousseau',             initials: 'AR',  coords: [5.002, 47.226], village: 'Gevrey-Chambertin', blurb: '게브레이의 절대자. Chambertin의 기준.' },
+  { id: 'leroy',    name: 'Domaine Leroy',               initials: 'LR',  coords: [4.970, 47.174], village: 'Vosne-Romanée',     blurb: '비오디나믹. 에이커당 부르고뉴 최고가.' },
+  { id: 'coche',    name: 'Coche-Dury',                  initials: 'CD',  coords: [4.836, 46.976], village: 'Meursault',         blurb: '뫼르소 최고봉. 희소성과 정교함.' },
+  { id: 'lafon',    name: 'Comtes Lafon',                initials: 'CL',  coords: [4.831, 46.973], village: 'Meursault',         blurb: '뫼르소 왕가. Perrières는 매년 완판.' },
+  { id: 'leflaive', name: 'Domaine Leflaive',            initials: 'LF',  coords: [4.797, 46.941], village: 'Puligny-Montrachet',blurb: '화이트 부르고뉴의 정점.' },
+  { id: 'roulot',   name: 'Domaine Roulot',              initials: 'RL',  coords: [4.833, 46.978], village: 'Meursault',         blurb: '장-마르크 룰로. 현대 뫼르소의 기준.' },
+  { id: 'raveneau', name: 'Raveneau',                    initials: 'RV',  coords: [3.801, 47.821], village: 'Chablis',           blurb: '샤블리 최고봉. 구하기 가장 어려운 와인.' },
+  { id: 'dujac',    name: 'Domaine Dujac',               initials: 'DJ',  coords: [4.983, 47.201], village: 'Morey-Saint-Denis', blurb: '엘레강스와 투명함의 정수.' },
+  { id: 'gouges',   name: 'Henri Gouges',                initials: 'HG',  coords: [4.959, 47.109], village: 'Nuits-Saint-Georges',blurb: '뉘-생-조르주의 기준. 그랑 크뤼 없는 최고 도멘.' },
 ];
 
 const VINEYARDS: VineyardData[] = [
-  { id: 'romanee-conti', name: 'Romanée-Conti', coords: [4.975, 47.171], classification: 'Grand Cru', subregion: 'Vosne-Romanée', area: '1.81 ha', producer: 'DRC (Monopole)', grape: 'Pinot Noir' },
-  { id: 'la-tache', name: 'La Tâche', coords: [4.974, 47.168], classification: 'Grand Cru', subregion: 'Vosne-Romanée', area: '6.06 ha', producer: 'DRC (Monopole)', grape: 'Pinot Noir' },
-  { id: 'chambertin', name: 'Chambertin', coords: [5.003, 47.223], classification: 'Grand Cru', subregion: 'Gevrey-Chambertin', area: '12.9 ha', producer: 'Rousseau, Leroy, Trapet', grape: 'Pinot Noir' },
-  { id: 'musigny', name: 'Musigny', coords: [4.972, 47.203], classification: 'Grand Cru', subregion: 'Chambolle-Musigny', area: '10.7 ha', producer: 'Leroy, Vogüé, Roumier', grape: 'Pinot Noir' },
-  { id: 'montrachet', name: 'Le Montrachet', coords: [4.800, 46.943], classification: 'Grand Cru', subregion: 'Puligny / Chassagne', area: '8 ha', producer: 'DRC, Lafon, Leflaive', grape: 'Chardonnay' },
-  { id: 'clos-de-tart', name: 'Clos de Tart', coords: [4.981, 47.199], classification: 'Grand Cru', subregion: 'Morey-Saint-Denis', area: '7.53 ha', producer: 'Clos de Tart (Monopole)', grape: 'Pinot Noir' },
-  { id: 'richebourg', name: 'Richebourg', coords: [4.974, 47.175], classification: 'Grand Cru', subregion: 'Vosne-Romanée', area: '8.03 ha', producer: 'DRC, Leroy, Gros', grape: 'Pinot Noir' },
-  { id: 'clos-vougeot', name: 'Clos de Vougeot', coords: [4.970, 47.195], classification: 'Grand Cru', subregion: 'Vougeot', area: '50.6 ha', producer: '80개 이상의 소유주', grape: 'Pinot Noir' },
-  { id: 'perrieres', name: 'Meursault Perrières', coords: [4.830, 46.978], classification: '1er Cru', subregion: 'Meursault', area: '13.7 ha', producer: 'Coche-Dury, Lafon, Roulot', grape: 'Chardonnay' },
-  { id: 'clos-saint-jacques', name: 'Clos Saint-Jacques', coords: [5.004, 47.228], classification: '1er Cru', subregion: 'Gevrey-Chambertin', area: '6.7 ha', producer: 'Rousseau, Esmonin, Fourrier', grape: 'Pinot Noir' },
+  { id: 'romanee-conti',     name: 'Romanée-Conti',           coords: [4.975, 47.171], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '1.81 ha' },
+  { id: 'la-tache',          name: 'La Tâche',                coords: [4.974, 47.168], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '6.06 ha' },
+  { id: 'richebourg',        name: 'Richebourg',              coords: [4.974, 47.175], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '8.03 ha' },
+  { id: 'chambertin',        name: 'Chambertin',              coords: [5.003, 47.223], classification: 'Grand Cru', subregion: 'Gevrey-Chambertin', area: '12.9 ha' },
+  { id: 'clos-saint-jacques',name: 'Clos Saint-Jacques',      coords: [5.004, 47.228], classification: '1er Cru',   subregion: 'Gevrey-Chambertin', area: '6.7 ha' },
+  { id: 'musigny',           name: 'Musigny',                 coords: [4.972, 47.203], classification: 'Grand Cru', subregion: 'Chambolle-Musigny', area: '10.7 ha' },
+  { id: 'clos-de-la-roche',  name: 'Clos de la Roche',        coords: [4.978, 47.205], classification: 'Grand Cru', subregion: 'Morey-Saint-Denis', area: '16.9 ha' },
+  { id: 'clos-vougeot',      name: 'Clos de Vougeot',         coords: [4.970, 47.195], classification: 'Grand Cru', subregion: 'Vougeot',           area: '50.6 ha' },
+  { id: 'les-pruliers',      name: 'NSG Les Pruliers',        coords: [4.959, 47.109], classification: '1er Cru',   subregion: 'Nuits-Saint-Georges',area: '7.1 ha' },
+  { id: 'perrieres',         name: 'Meursault Perrières',     coords: [4.830, 46.978], classification: '1er Cru',   subregion: 'Meursault',         area: '13.7 ha' },
+  { id: 'charmes',           name: 'Meursault Charmes',       coords: [4.829, 46.974], classification: '1er Cru',   subregion: 'Meursault',         area: '31.1 ha' },
+  { id: 'montrachet',        name: 'Chevalier-Montrachet',    coords: [4.797, 46.942], classification: 'Grand Cru', subregion: 'Puligny-Montrachet',area: '7.5 ha' },
+  { id: 'valmur',            name: 'Chablis GC Valmur',       coords: [3.815, 47.823], classification: 'Grand Cru', subregion: 'Chablis',           area: '11.0 ha' },
 ];
+
+// ── 내가 마신 와인 (AI 자동 분류) ────────────────────────────────────────────
+const WINES: Wine[] = [
+  { id: 'w01', name: 'Romanée-Conti',              vintage: 2018, producerId: 'drc',      vineyardId: 'romanee-conti',     subregionId: 'cote-nuits',  village: 'Vosne-Romanée',     date: '2025.11.20', occasion: '결혼 10주년', note: '장미꽃잎, 동양 향신료, 끝없는 여운.',  coords: [4.975, 47.171], color: '#5b1424', label: 'RC',  rating: 5, appellation: 'Vosne'     },
+  { id: 'w02', name: 'La Tâche',                   vintage: 2017, producerId: 'drc',      vineyardId: 'la-tache',          subregionId: 'cote-nuits',  village: 'Vosne-Romanée',     date: '2025.05.04', occasion: '와인 모임',   note: '검은 체리, 가죽, 트뤼플의 깊이.',      coords: [4.974, 47.168], color: '#4a1226', label: 'LT',  rating: 5, appellation: 'Vosne'     },
+  { id: 'w03', name: 'Richebourg',                 vintage: 2016, producerId: 'leroy',    vineyardId: 'richebourg',        subregionId: 'cote-nuits',  village: 'Vosne-Romanée',     date: '2025.09.18', occasion: '생일',        note: '벨벳 같은 질감, 짙은 베리.',           coords: [4.974, 47.175], color: '#56142b', label: 'RB',  rating: 5, appellation: 'Vosne'     },
+  { id: 'w04', name: 'Musigny',                    vintage: 2018, producerId: 'leroy',    vineyardId: 'musigny',           subregionId: 'cote-nuits',  village: 'Chambolle-Musigny', date: '2025.07.22',                          note: '제비꽃, 라즈베리, 실키한 탄닌.',       coords: [4.972, 47.203], color: '#481128', label: 'MU',  rating: 5, appellation: 'Chambolle' },
+  { id: 'w05', name: 'Chambertin',                 vintage: 2017, producerId: 'rousseau', vineyardId: 'chambertin',        subregionId: 'cote-nuits',  village: 'Gevrey-Chambertin', date: '2025.09.12', occasion: '와인 행사',   note: '구조감의 정점. 검은 과실과 감초.',     coords: [5.003, 47.223], color: '#3d0f1f', label: 'CB',  rating: 5, appellation: 'Gevrey'    },
+  { id: 'w06', name: 'Clos Saint-Jacques 1er Cru', vintage: 2019, producerId: 'rousseau', vineyardId: 'clos-saint-jacques',subregionId: 'cote-nuits',  village: 'Gevrey-Chambertin', date: '2025.04.02',                          note: '광물성과 붉은 베리의 균형.',           coords: [5.004, 47.228], color: '#4d1124', label: 'CSJ', rating: 4, appellation: 'Gevrey'    },
+  { id: 'w07', name: 'Clos de la Roche',           vintage: 2017, producerId: 'dujac',    vineyardId: 'clos-de-la-roche',  subregionId: 'cote-nuits',  village: 'Morey-Saint-Denis', date: '2025.06.14',                          note: '엘레강스, 투명한 붉은 과실.',          coords: [4.978, 47.205], color: '#52132a', label: 'CR',  rating: 5, appellation: 'Morey'     },
+  { id: 'w08', name: 'Clos de Vougeot',            vintage: 2017, producerId: 'dujac',    vineyardId: 'clos-vougeot',      subregionId: 'cote-nuits',  village: 'Vougeot',           date: '2025.03.10', occasion: '디너',        note: '흙내음, 따뜻한 베리.',                 coords: [4.970, 47.195], color: '#45112a', label: 'CV',  rating: 4, appellation: 'Vougeot'   },
+  { id: 'w09', name: 'NSG Les Pruliers 1er Cru',   vintage: 2019, producerId: 'gouges',   vineyardId: 'les-pruliers',      subregionId: 'cote-nuits',  village: 'Nuits-Saint-Georges',date:'2025.08.05',                          note: '강건함, 검은 자두, 미네랄.',           coords: [4.959, 47.109], color: '#3a0d1c', label: 'LP',  rating: 4, appellation: 'NSG'       },
+  { id: 'w10', name: 'Meursault Perrières 1er Cru',vintage: 2018, producerId: 'coche',    vineyardId: 'perrieres',         subregionId: 'cote-beaune', village: 'Meursault',         date: '2025.07.30', occasion: '여름 디너',   note: '버터, 헤이즐넛, 짭짤한 미네랄.',       coords: [4.830, 46.978], color: '#7a5c10', label: 'MP',  rating: 5, appellation: 'Meursault' },
+  { id: 'w11', name: 'Meursault Perrières 1er Cru',vintage: 2017, producerId: 'lafon',    vineyardId: 'perrieres',         subregionId: 'cote-beaune', village: 'Meursault',         date: '2025.10.05',                          note: '풍부한 과실과 정교한 산미.',           coords: [4.831, 46.973], color: '#6a4c08', label: 'MP',  rating: 5, appellation: 'Meursault' },
+  { id: 'w12', name: 'Meursault Charmes 1er Cru',  vintage: 2018, producerId: 'roulot',   vineyardId: 'charmes',           subregionId: 'cote-beaune', village: 'Meursault',         date: '2025.11.01',                          note: '흰 꽃, 시트러스, 정밀한 마무리.',      coords: [4.829, 46.974], color: '#5a3c05', label: 'MC',  rating: 4, appellation: 'Meursault' },
+  { id: 'w13', name: 'Chevalier-Montrachet',       vintage: 2019, producerId: 'leflaive', vineyardId: 'montrachet',        subregionId: 'cote-beaune', village: 'Puligny-Montrachet',date: '2025.10.15',                          note: '백악, 흰 꽃, 정교한 산미.',            coords: [4.797, 46.942], color: '#4a3003', label: 'CM',  rating: 5, appellation: 'Puligny'   },
+  { id: 'w14', name: 'Chablis GC Valmur',          vintage: 2020, producerId: 'raveneau', vineyardId: 'valmur',            subregionId: 'chablis',     village: 'Chablis',           date: '2025.06.05',                          note: '굴 껍데기, 라임, 부싯돌.',             coords: [3.815, 47.823], color: '#ab8b22', label: 'VM',  rating: 5, appellation: 'Chablis'   },
+];
+
+// 그룹별 마신 와인 카운트/리스트 헬퍼
+const winesBySubregion: Record<string, Wine[]> = {};
+const winesByProducer:  Record<string, Wine[]> = {};
+const winesByVineyard:  Record<string, Wine[]> = {};
+WINES.forEach(w => {
+  (winesBySubregion[w.subregionId] ||= []).push(w);
+  (winesByProducer[w.producerId]   ||= []).push(w);
+  if (w.vineyardId) (winesByVineyard[w.vineyardId] ||= []).push(w);
+});
 
 // ── Map markers ─────────────────────────────────────────────────────────────
 
+function CountBadge({ n, x, y }: { n: number; x: number; y: number }) {
+  if (n <= 0) return null;
+  return (
+    <g transform={`translate(${x},${y})`} style={{ pointerEvents: 'none' }}>
+      <circle cx={0} cy={0} r={7} fill="#D42040" stroke="#04010A" strokeWidth={1.2} />
+      <text textAnchor="middle" y={2.4}
+        style={{ fill: '#fff', fontSize: 7.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
+        {n}
+      </text>
+    </g>
+  );
+}
+
 function SubRegionMarker({ data, hovered, onHover }: { data: SubRegionData; hovered: boolean; onHover: (id: string | null) => void }) {
+  const count = winesBySubregion[data.id]?.length ?? 0;
   return (
     <motion.g
       initial={{ opacity: 0, scale: 0.5 }}
@@ -90,11 +152,13 @@ function SubRegionMarker({ data, hovered, onHover }: { data: SubRegionData; hove
         style={{ fill: hovered ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.45)', fontSize: 7, fontFamily: 'Inter,sans-serif' } as React.CSSProperties}>
         {data.name}
       </text>
+      <CountBadge n={count} x={36} y={-14} />
     </motion.g>
   );
 }
 
 function ProducerMarker({ data, hovered, onHover }: { data: ProducerData; hovered: boolean; onHover: (id: string | null) => void }) {
+  const count = winesByProducer[data.id]?.length ?? 0;
   return (
     <motion.g
       initial={{ opacity: 0, scale: 0 }}
@@ -119,6 +183,7 @@ function ProducerMarker({ data, hovered, onHover }: { data: ProducerData; hovere
         style={{ fill: hovered ? '#0A0510' : GOLD, fontSize: 6.5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
         {data.initials}
       </text>
+      <CountBadge n={count} x={8} y={-8} />
     </motion.g>
   );
 }
@@ -126,6 +191,7 @@ function ProducerMarker({ data, hovered, onHover }: { data: ProducerData; hovere
 function VineyardMarker({ data, hovered, onHover }: { data: VineyardData; hovered: boolean; onHover: (id: string | null) => void }) {
   const isGC = data.classification === 'Grand Cru';
   const color = isGC ? '#D42040' : '#C9A84C';
+  const count = winesByVineyard[data.id]?.length ?? 0;
   return (
     <motion.g
       initial={{ opacity: 0, scale: 0 }}
@@ -144,13 +210,95 @@ function VineyardMarker({ data, hovered, onHover }: { data: VineyardData; hovere
         style={{ fill: hovered ? '#fff' : color, fontSize: 5, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
         {isGC ? 'GC' : '1C'}
       </text>
+      <CountBadge n={count} x={8} y={-8} />
     </motion.g>
   );
 }
 
 // ── Right-panel item cards ──────────────────────────────────────────────────
 
+function WineGlassIcon({ filled, size = 9, color = GOLD, dim = 'rgba(255,255,255,0.18)' }: {
+  filled: boolean; size?: number; color?: string; dim?: string;
+}) {
+  const c = filled ? color : dim;
+  return (
+    <svg width={size} height={Math.round(size * 1.3)} viewBox="0 0 12 16" style={{ flexShrink: 0 }}>
+      <path d="M2.5 1 Q2.5 6 6 7 Q9.5 6 9.5 1 Z" fill={filled ? color : 'transparent'} stroke={c} strokeWidth="0.8" strokeLinejoin="round" />
+      <line x1="6" y1="7" x2="6" y2="13" stroke={c} strokeWidth="0.8" />
+      <line x1="3.5" y1="13.5" x2="8.5" y2="13.5" stroke={c} strokeWidth="0.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function WineGlassRating({ value, size = 9, color = GOLD, gap = 2 }: { value: number; size?: number; color?: string; gap?: number }) {
+  return (
+    <div style={{ display: 'flex', gap, alignItems: 'center' }}>
+      {[1, 2, 3, 4, 5].map(i => <WineGlassIcon key={i} filled={i <= value} size={size} color={color} />)}
+    </div>
+  );
+}
+
+function BottleSilhouette({ wine, width = 44, height = 105 }: { wine: Wine; width?: number; height?: number }) {
+  const uid = `bb-${wine.id}`;
+  const c = wine.color;
+  const lbl = wine.vintage > 0 ? String(wine.vintage) : 'NV';
+  const app = (wine.appellation || '').slice(0, 8).toUpperCase();
+  return (
+    <svg width={width} height={height} viewBox="0 0 48 108" style={{ flexShrink: 0 }}>
+      <defs>
+        <linearGradient id={uid} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stopColor={c} stopOpacity="1"    />
+          <stop offset="75%" stopColor={c} stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.6" />
+        </linearGradient>
+      </defs>
+      <path d="M15 30 L15 90 Q15 98 24 98 Q33 98 33 90 L33 30 Q31 28 29 26 L29 18 Q29 14 25 14 L23 14 Q19 14 19 18 L19 26 Q17 28 15 30 Z" fill={`url(#${uid})`} />
+      <rect x="20" y="9"  width="8"  height="9"  rx="2" fill="#0a0612" fillOpacity="0.85" />
+      <rect x="19" y="15" width="10" height="2"        fill={GOLD}     fillOpacity="0.8"  />
+      <rect x="17" y="50" width="14" height="24" rx="1" fill="#f5ecd6" stroke={GOLD} strokeWidth="0.5" strokeOpacity="0.6" />
+      <text x="24" y="57"   textAnchor="middle" fontFamily="Georgia,serif"  fontSize="3.5" fontStyle="italic" fill="#3d1a26">Domaine</text>
+      <text x="24" y="63"   textAnchor="middle" fontFamily="Georgia,serif"  fontSize="5"   fontWeight="bold" fill="#3d1a26">{wine.label}</text>
+      <line x1="19" y1="65" x2="29" y2="65" stroke="#3d1a26" strokeWidth="0.4" strokeOpacity="0.5" />
+      <text x="24" y="68.5" textAnchor="middle" fontFamily="Inter,sans-serif" fontSize="2.5" letterSpacing="0.8" fill="#3d1a26">{app}</text>
+      <text x="24" y="72.5" textAnchor="middle" fontFamily="Georgia,serif"   fontSize="4"   fontWeight="600" fill="#3d1a26">{lbl}</text>
+    </svg>
+  );
+}
+
+function WineRow({ wine }: { wine: Wine }) {
+  return (
+    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ width: 56, height: 110, borderRadius: 8, flexShrink: 0, background: 'radial-gradient(ellipse at top, transparent 60%, rgba(0,0,0,0.4) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <BottleSilhouette wine={wine} width={44} height={105} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 16, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.2px' }}>{wine.name}</div>
+        <div style={{ fontSize: 9.5, color: GOLD, letterSpacing: '0.5px', textTransform: 'uppercase' as const, fontWeight: 500 }}>{wine.village} · {wine.vintage > 0 ? wine.vintage : 'NV'}</div>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wine.note}</div>
+        <div style={{ marginTop: 'auto', paddingTop: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6 }}>
+          <WineGlassRating value={wine.rating} size={8} color={GOLD} gap={2} />
+          <span style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.4)' }}>{wine.date}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CollectedBadge({ count }: { count: number }) {
+  return (
+    <span style={{
+      fontSize: 10, padding: '2px 8px', borderRadius: 9999,
+      background: 'rgba(212,32,64,0.16)', border: '1px solid rgba(212,32,64,0.4)',
+      color: '#E06070', letterSpacing: '0.02em', fontWeight: 700,
+      whiteSpace: 'nowrap',
+    }}>
+      AI 분류 · {count}병
+    </span>
+  );
+}
+
 function SubRegionCard({ data, active }: { data: SubRegionData; active: boolean }) {
+  const wines = winesBySubregion[data.id] ?? [];
   return (
     <div style={{
       padding: '14px 16px',
@@ -158,30 +306,25 @@ function SubRegionCard({ data, active }: { data: SubRegionData; active: boolean 
       border: `1px solid ${active ? data.color + '60' : 'rgba(255,255,255,0.06)'}`,
       borderRadius: 12, transition: 'all 200ms',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
         <span style={{ width: 8, height: 8, borderRadius: '50%', background: data.color, flexShrink: 0, display: 'inline-block' }} />
         <span style={{ fontSize: 15, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{data.nameKo}</span>
         <span style={{ fontSize: 11, color: '#9B8B7A', marginLeft: 2 }}>{data.name}</span>
+        <span style={{ marginLeft: 'auto' }}>{wines.length > 0 && <CollectedBadge count={wines.length} />}</span>
       </div>
-      <div style={{ fontSize: 11, color: GOLD, marginBottom: 4, letterSpacing: '0.02em' }}>{data.grapes}</div>
-      <div style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.55, marginBottom: 8 }}>{data.desc}</div>
-      <div style={{ display: 'flex', gap: 8 }}>
-        {data.gcCount > 0 && (
-          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 9999, background: 'rgba(212,32,64,0.15)', border: '1px solid rgba(212,32,64,0.35)', color: '#E06070' }}>
-            Grand Cru {data.gcCount}개
-          </span>
-        )}
-        {data.pcCount > 0 && (
-          <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 9999, background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)', color: GOLD }}>
-            1er Cru ~{data.pcCount}개
-          </span>
-        )}
-      </div>
+      <div style={{ fontSize: 11, color: GOLD, marginBottom: 2, letterSpacing: '0.02em' }}>{data.grapes}</div>
+      <div style={{ fontSize: 11, color: '#7A6E5A', marginBottom: wines.length > 0 ? 10 : 0 }}>{data.blurb}</div>
+      {wines.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {wines.map(w => <WineRow key={w.id} wine={w} />)}
+        </div>
+      )}
     </div>
   );
 }
 
 function ProducerCard({ data, active }: { data: ProducerData; active: boolean }) {
+  const wines = winesByProducer[data.id] ?? [];
   return (
     <div style={{
       padding: '14px 16px',
@@ -193,23 +336,25 @@ function ProducerCard({ data, active }: { data: ProducerData; active: boolean })
         <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <span style={{ fontSize: 9, fontWeight: 800, color: GOLD }}>{data.initials}</span>
         </div>
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 13, color: '#F5F0E8', fontWeight: 600, lineHeight: 1.2 }}>{data.name}</div>
-          <div style={{ fontSize: 10, color: '#9B8B7A' }}>{data.village} · {data.specialty}</div>
+          <div style={{ fontSize: 10, color: '#9B8B7A' }}>{data.village}</div>
         </div>
+        {wines.length > 0 && <CollectedBadge count={wines.length} />}
       </div>
-      <div style={{ fontSize: 11, color: '#6A5E4A', lineHeight: 1.5, marginBottom: 8 }}>{data.style}</div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-        {data.keyWines.map(w => (
-          <span key={w} style={{ fontSize: 10, padding: '2px 7px', borderRadius: 9999, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#D4C5B0' }}>{w}</span>
-        ))}
-      </div>
+      <div style={{ fontSize: 11, color: '#6A5E4A', lineHeight: 1.5, marginBottom: wines.length > 0 ? 10 : 0 }}>{data.blurb}</div>
+      {wines.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {wines.map(w => <WineRow key={w.id} wine={w} />)}
+        </div>
+      )}
     </div>
   );
 }
 
 function VineyardCard({ data, active }: { data: VineyardData; active: boolean }) {
   const isGC = data.classification === 'Grand Cru';
+  const wines = winesByVineyard[data.id] ?? [];
   return (
     <div style={{
       padding: '14px 16px',
@@ -217,7 +362,7 @@ function VineyardCard({ data, active }: { data: VineyardData; active: boolean })
       border: `1px solid ${active ? (isGC ? 'rgba(212,32,64,0.5)' : 'rgba(201,168,76,0.4)') : 'rgba(255,255,255,0.06)'}`,
       borderRadius: 12, transition: 'all 200ms',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, flexWrap: 'wrap' }}>
         <span style={{
           fontSize: 9, padding: '2px 7px', borderRadius: 9999, fontWeight: 700, letterSpacing: '0.04em',
           background: isGC ? 'rgba(212,32,64,0.2)' : 'rgba(201,168,76,0.15)',
@@ -225,11 +370,16 @@ function VineyardCard({ data, active }: { data: VineyardData; active: boolean })
           color: isGC ? '#E06070' : GOLD,
         }}>{data.classification}</span>
         <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{data.name}</span>
+        <span style={{ marginLeft: 'auto' }}>{wines.length > 0 && <CollectedBadge count={wines.length} />}</span>
       </div>
-      <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: 6 }}>
-        {data.subregion} · {data.area} · {data.grape}
+      <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: wines.length > 0 ? 10 : 0 }}>
+        {data.subregion} · {data.area}
       </div>
-      <div style={{ fontSize: 11, color: '#6A5E4A' }}>{data.producer}</div>
+      {wines.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {wines.map(w => <WineRow key={w.id} wine={w} />)}
+        </div>
+      )}
     </div>
   );
 }
@@ -398,8 +548,11 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
 
       {/* Count badge */}
       <div style={{ padding: '8px 16px 4px', flexShrink: 0 }}>
-        <span style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.06em' }}>
-          {filter === 'subregion' ? `${SUB_REGIONS.length}개 세부지역` : filter === 'producer' ? `${PRODUCERS.length}개 도멘` : `${VINEYARDS.length}개 클리마`}
+        <span style={{ fontSize: 10, color: '#9B8B7A', letterSpacing: '0.06em' }}>
+          내가 마신 부르고뉴 {WINES.length}병 ·{' '}
+          <span style={{ color: '#4A3D56' }}>
+            {filter === 'subregion' ? `${SUB_REGIONS.length}개 지역으로 분류` : filter === 'producer' ? `${PRODUCERS.length}개 도멘으로 분류` : `${VINEYARDS.length}개 밭으로 분류`}
+          </span>
         </span>
       </div>
 
@@ -498,8 +651,8 @@ export default function BurgundySection() {
     return () => obs.disconnect();
   }, []);
 
-  const sectionLabel = t('burgundy.sectionLabel') || '부르고뉴 드릴다운';
-  const heading = t('burgundy.heading') || '클리마를 탐험하다';
+  const sectionLabel = t('burgundy.sectionLabel') || 'AI 자동 분류 · 부르고뉴';
+  const heading = t('burgundy.heading') || '내가 마신 와인이 지역·생산자·밭으로';
 
   return (
     <section ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: '#04010A' }}>
