@@ -24,7 +24,7 @@ model: opus
 
 ### 부르고뉴 (Bourgogne)
 - 샤블리 (Chablis)
-- 코트 드 뉘 (Côte de Nuits): 주제브레-샹베르탱, 본 로마네, 뉘-생-조르주
+- 코트 드 뉘 (Côte de Nuits): 주브레-샹베르탱, 본-로마네, 뉘-생-조르주
 - 코트 드 본 (Côte de Beaune): 알록스-코르통, 뫼르소, 몽라셰, 볼네
 - 코트 샬로네즈 (Côte Chalonnaise)
 - 마코네 (Mâconnais)
