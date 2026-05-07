@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev      # Turbopack 개발 서버 (http://localhost:3000)
-npm run build    # 프로덕션 빌드
+npm run build    # 프로덕션 빌드 (타입/빌드 오류 확인)
 npm run lint     # ESLint
 ```
 
@@ -21,54 +21,13 @@ npm run lint     # ESLint
 **winemine**은 와인 라벨을 촬영하면 AI가 와인을 인식하고, 마신 와인을 세계 지도 위에 지역별로 시각화해 기록하는 앱이다.
 
 - 서비스명: **winemine** (소문자, 붙여쓰기 고정)
-- 타겟: 와인을 즐기는 사람 — 기록하고, 탐험하고, 공유하고 싶은 사람
 - 핵심 감성: 프리미엄 와인 라벨의 무게감. 어두운 밤, 와인 한 잔.
+- 현재 단계: **Phase 1 — 랜딩 페이지 + Waiting List** (이 레포 전용)
+- Phase 2 이후 iOS/Android 앱은 별도 레포로 생성 예정
 
 ---
 
-## 핵심 기능 (풀 앱 비전)
-
-### 1. 와인 라벨 스캔 & 인식
-- 카메라로 와인 라벨 촬영 → AI가 품종, 빈티지, 생산자, 원산지 자동 인식
-- 인식 후 지역 확인 → 저장
-
-### 2. 세계 지도 기반 기록
-- 마신 와인을 세계 지도 위에 지역별 opacity로 시각화
-- 많이 마신 지역일수록 색이 진해짐 (투명도 누적)
-- 지역 드릴다운: 국가 탭 → 세부 지역 확대
-  - 예: 프랑스 → 보르도 / 뫼르소 / 샹파뉴 등
-  - 세부 지역이 있는 와인은 해당 지역도 opacity 차등 표시
-
-### 3. Recap 공유 (핵심 차별점)
-- Flighty / YouTube Music Recap 스타일
-- 언제든 내 와인 여정을 인스타그램 스토리 비율(9:16)로 이미지 생성
-- 공유하기 좋은 시각적 요약 — 지도 + 통계 + 하이라이트
-
-### 4. 와인 상세 정보
-- 라벨 인식 후 와인 상세 정보 제공 (생산자, 품종, 테이스팅 노트 등)
-- 타인 리뷰 표시 여부는 미결 (검토 중)
-
----
-
-## 현재 개발 단계
-
-**Phase 1 (현재): 랜딩 페이지 + Waiting List**
-
-앱 출시 전 사전 신청자를 모으기 위한 랜딩 페이지. 풀 스펙: `WINEMINE_LANDING_SPEC.md`
-
-- Next.js 15 App Router + TypeScript
-- 인터랙티브 세계 지도 배경 (react-simple-maps, demo 데이터)
-- "앱 다운받기" CTA → 팝업 → 이메일/전화번호 수집
-- Supabase PostgreSQL (`waitlist` 테이블)에 연락처 저장
-- Vercel 배포
-
-**Phase 2 이후: 풀 앱 개발**
-- iOS/Android 앱은 **별도 레포**로 생성 예정
-- 이 레포는 랜딩 페이지 전용 (향후 Turborepo 모노레포 통합 가능)
-
----
-
-## 기술 스택 (랜딩 페이지)
+## 기술 스택
 
 | 레이어 | 선택 |
 |--------|------|
@@ -107,6 +66,7 @@ Error:             #EF4444
 ### 타이포그래피
 - **Playfair Display** (serif) — 로고, 섹션 제목, 모달 제목
 - **Inter** (sans-serif) — 본문, 버튼, 입력 필드, 캡션
+- **Noto Sans KR** — 한국어 본문 fallback (globals.css 폰트 스택)
 
 ### 로고 규칙
 - 항상 **소문자 `winemine`** 으로 표기 (대문자/분리 금지)
@@ -119,15 +79,18 @@ Error:             #EF4444
 ### `waitlist` 테이블 (Supabase)
 ```sql
 CREATE TABLE waitlist (
-  id           UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
-  contact      VARCHAR(255) NOT NULL,
-  contact_type VARCHAR(10)  NOT NULL CHECK (contact_type IN ('email', 'phone')),
-  created_at   TIMESTAMPTZ  DEFAULT now() NOT NULL,
-  ip_address   VARCHAR(50),
-  user_agent   TEXT,
+  id              UUID         DEFAULT gen_random_uuid() PRIMARY KEY,
+  contact         VARCHAR(255) NOT NULL,
+  contact_type    VARCHAR(10)  NOT NULL CHECK (contact_type IN ('email', 'phone')),
+  created_at      TIMESTAMPTZ  DEFAULT now() NOT NULL,
+  ip_address      VARCHAR(50),
+  user_agent      TEXT,
+  marketing_agree BOOLEAN      DEFAULT false,
   CONSTRAINT waitlist_contact_unique UNIQUE (contact)
 );
 ```
+
+RLS 활성화, public SELECT 정책 없음. 중복 insert 시 `23505` 에러를 success로 처리 (actions.ts).
 
 ---
 
@@ -143,6 +106,36 @@ NEXT_PUBLIC_SITE_URL          # 배포 URL (OG 태그용, optional)
 
 ---
 
+## i18n 시스템
+
+`Accept-Language` 헤더를 파싱해 `NEXT_LOCALE` 쿠키(1년)로 언어를 결정한다. 지원 언어: `ko` (기본), `en`.
+
+### 동작 흐름
+1. **`middleware.ts`** — 모든 요청에서 쿠키 확인 → 없으면 헤더 파싱 → 쿠키 세팅
+2. **`lib/i18n.ts`** — `getLocale()` / `getMessages()` — layout에서 서버 사이드 호출
+3. **`LocaleProvider`** — locale + messages를 Context로 클라이언트에 공급
+4. **`useLocale()`** — 클라이언트 컴포넌트에서 `t('key.path')` 로 번역 문자열 접근
+
+### 컴포넌트에서 번역 사용법
+```tsx
+import { useLocale } from '@/components/providers/locale-provider';
+
+const { t, messages } = useLocale();
+
+// 문자열 키 접근
+t('hero.tagline')                    // → "Your wine journey, mapped."
+
+// 배열/객체가 필요하면 messages 직접 사용
+messages.howItWorks.steps.map(...)
+```
+
+### 번역 파일 규칙
+- `src/messages/ko.json` — 기준 파일, 타입 소스 (`typeof koJson`)
+- `src/messages/en.json` — 키 구조를 ko.json과 **반드시 동기화**
+- 커밋 전 양쪽 파일의 키 구조 일치 여부 확인
+
+---
+
 ## 보안 규칙
 
 - Supabase 접근은 **Server Action만** 사용 (클라이언트 직접 접근 없음)
@@ -155,10 +148,13 @@ NEXT_PUBLIC_SITE_URL          # 배포 URL (OG 태그용, optional)
 ## 지도 구현 주의사항
 
 - `react-simple-maps`는 브라우저 API 사용 → **SSR 불가**
-- dynamic import는 `world-map.tsx`가 아니라 **`hero-section.tsx`에서** 처리: `dynamic(() => import('@/components/map/world-map'), { ssr: false })`
-- 지도 데이터: `public/world-110m.json`
+- dynamic import는 `world-map.tsx`가 아니라 **`hero-section.tsx`에서** 처리:
+  ```ts
+  dynamic(() => import('@/components/map/world-map'), { ssr: false })
+  ```
 - 국가 식별: `geo.id`를 3자리 숫자 문자열로 패딩 (`String(geo.id).padStart(3, '0')`) — `ISO_A3`/`ADM0_A3` 아님
-- 지도는 960×500 SVG 두 장을 가로로 이어 붙여 `mapSlideLeft` 애니메이션으로 무한 스크롤 (globals.css 정의)
+- 지도는 960×500 SVG 두 장을 가로로 이어 붙여 `mapSlideLeft` 애니메이션으로 무한 스크롤 (`globals.css` 정의)
+- 지도 데이터: `public/world-110m.json` (기본), `world-50m.json`, `france-departments.json`
 
 ---
 
@@ -167,37 +163,47 @@ NEXT_PUBLIC_SITE_URL          # 배포 URL (OG 태그용, optional)
 ```
 src/
 ├── app/
-│   ├── layout.tsx                      # 폰트, 메타 태그, OG, security headers
+│   ├── layout.tsx                      # 폰트, OG 메타, Google Analytics (G-7V8ZDT0TYX), LocaleProvider
 │   ├── page.tsx                        # 'use client' — modalOpen state, 섹션 조합
-│   ├── globals.css                     # mapSlideLeft keyframe 포함
-│   └── actions.ts                      # Server Action: submitWaitlist()
+│   ├── globals.css                     # mapSlideLeft keyframe, Noto Sans KR 폰트 스택
+│   ├── actions.ts                      # Server Action: submitWaitlist()
+│   └── opengraph-image.tsx             # 동적 OG 이미지 생성
 ├── components/
+│   ├── map/world-map.tsx               # react-simple-maps ('use client', SSR 불가)
+│   ├── providers/locale-provider.tsx   # LocaleProvider + useLocale() 훅
 │   ├── sections/
 │   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
 │   │   ├── france-wine-section.tsx     # 스크롤 기반 프랑스 드릴다운
+│   │   ├── france-wine-detail-section.tsx # 정적 지도 + 와인 카드 컬렉션
 │   │   ├── vineyard-strip.tsx          # 와인 산지 사진 스트립
-│   │   ├── features-section.tsx        # 핵심 기능 소개
+│   │   ├── features-section.tsx        # 핵심 기능 소개 (onScrollToPreview prop)
 │   │   ├── market-stats-section.tsx    # 한국 와인 시장 통계
-│   │   ├── how-it-works-section.tsx    # 사용 흐름
-│   │   ├── instagram-preview-section.tsx # Recap 공유 미리보기
+│   │   ├── how-it-works-section.tsx    # 사용 흐름 4단계
+│   │   ├── instagram-preview-section.tsx # Recap 공유 미리보기 (id="instagram-preview")
 │   │   └── final-cta-section.tsx       # 최종 CTA
-│   ├── map/world-map.tsx               # react-simple-maps (client only, 'use client')
 │   ├── ui/
 │   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA 버튼
 │   │   └── store-buttons.tsx           # App Store / Google Play 버튼
 │   └── waitlist/
 │       ├── waitlist-modal.tsx          # 모달 컨테이너
-│       ├── waitlist-form.tsx           # react-hook-form + zod
+│       ├── waitlist-form.tsx           # react-hook-form + zod + marketing_agree
 │       └── waitlist-success.tsx        # 제출 완료 화면
 ├── lib/
-│   ├── supabase-server.ts             # service role 클라이언트
-│   ├── validations.ts                 # Zod 스키마 (클라이언트용)
+│   ├── i18n.ts                         # getLocale(), getMessages(), Locale/Messages 타입
+│   ├── supabase-server.ts             # service role 클라이언트 (서버 전용)
+│   ├── validations.ts                 # Zod 스키마 (클라이언트 재사용)
 │   ├── utils.ts                       # cn() 헬퍼
 │   └── analytics.ts                   # trackEvent() — window.gtag 래퍼
+├── messages/
+│   ├── ko.json                         # 기준 번역 파일 (타입 소스)
+│   └── en.json                         # 영어 번역 (ko.json과 키 구조 동기화)
+├── middleware.ts                       # Accept-Language → NEXT_LOCALE 쿠키 설정
 └── types/
     └── react-simple-maps.d.ts         # 타입 선언
 public/
-└── world-110m.json
+├── world-110m.json                     # 세계 지도 기본 데이터
+├── world-50m.json                      # 세계 지도 고해상도 데이터
+└── france-departments.json            # 프랑스 데파르트망 데이터
 ```
 
 ### 핵심 데이터 흐름
