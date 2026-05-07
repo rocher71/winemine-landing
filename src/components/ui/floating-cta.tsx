@@ -33,6 +33,7 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
   const { t } = useLocale();
   const [show, setShow] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [hideOnSection, setHideOnSection] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -46,6 +47,19 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // 부르고뉴 섹션이 화면에 보이는 동안에는 숨김
+  // (모바일 하단 탭 바와 플로팅 CTA가 겹치는 문제 방지)
+  useEffect(() => {
+    const el = document.getElementById('burgundy');
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setHideOnSection(entry.isIntersecting),
+      { threshold: 0.25 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const handleClick = () => {
     trackEvent('floating_cta_click', { location: 'floating' });
     onOpenModal();
@@ -53,7 +67,7 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
 
   return (
     <AnimatePresence>
-      {show && !isModalOpen && (
+      {show && !isModalOpen && !hideOnSection && (
         <motion.button
           type="button"
           initial={{ opacity: 0, y: 16, scale: 0.9 }}

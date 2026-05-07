@@ -963,7 +963,7 @@ export default function BurgundySection() {
   const heading = t('burgundy.heading') || '내가 마신 와인이 등급·클리마·도멘·빈티지로';
 
   return (
-    <section ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: '#04010A' }}>
+    <section id="burgundy" ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: '#04010A' }}>
       {/* Map */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: isMobile ? '46%' : '100%' }}>
         <motion.div
