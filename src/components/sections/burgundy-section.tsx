@@ -2,7 +2,7 @@
 
 import { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
 
 const DEPT_URL = '/france-departments.json';
@@ -386,10 +386,43 @@ function VineyardCard({ data, active }: { data: VineyardData; active: boolean })
 
 // ── Burgundy map ─────────────────────────────────────────────────────────────
 
+// 필터별 카메라 — center [경도, 위도], zoom (1 = 부르고뉴 전체)
+const CAMERA: Record<FilterKey, { zoom: number; center: [number, number] }> = {
+  subregion: { zoom: 1.0, center: [4.50, 47.00] },
+  producer:  { zoom: 2.6, center: [4.88, 47.10] },
+  vineyard:  { zoom: 3.4, center: [4.92, 47.10] },
+};
+
 function BurgundyMap({ filter, hoveredId, onHover }: {
   filter: FilterKey; hoveredId: string | null; onHover: (id: string | null) => void;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [view, setView] = useState(CAMERA.subregion);
+
+  // RAF easing zoom·center transition (700ms easeOutCubic)
+  useEffect(() => {
+    const target = CAMERA[filter];
+    const start = { zoom: view.zoom, center: [...view.center] as [number, number] };
+    const dur = 700;
+    let raf = 0;
+    const t0 = performance.now();
+    const tick = (t: number) => {
+      const k = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - k, 3);
+      setView({
+        zoom: start.zoom + (target.zoom - start.zoom) * e,
+        center: [
+          start.center[0] + (target.center[0] - start.center[0]) * e,
+          start.center[1] + (target.center[1] - start.center[1]) * e,
+        ],
+      });
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+    // intentionally only depend on filter; we read view as initial snapshot
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   useLayoutEffect(() => {
     const apply = () => mapRef.current?.querySelectorAll('svg').forEach(s => {
@@ -402,6 +435,10 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
     return () => obs.disconnect();
   }, []);
 
+  // Counter-scale to keep marker sizes roughly stable as we zoom in
+  // (full inverse 1/z would shrink them too much; 0.65 power is a soft compromise)
+  const cs = 1 / Math.pow(view.zoom, 0.65);
+
   return (
     <div ref={mapRef} style={{ width: '100%', height: '100%' }}>
       <ComposableMap
@@ -410,43 +447,66 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
         width={600} height={700}
         style={{ width: '100%', height: '100%', display: 'block', background: 'transparent' }}
       >
-        <Geographies geography={DEPT_URL}>
-          {({ geographies }) => geographies.map(geo => {
-            const code = geo.properties.code as string;
-            const isBurgundy = BURGUNDY_DEPTS.has(code);
-            const isBeaujolais = code === '69';
-            const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : '#180830';
-            const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
-            return (
-              <Geography key={geo.rsmKey} geography={geo} style={{
-                default: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#5A1028' : '#28085A', strokeWidth: isBurgundy ? 0.8 : 0.4, outline: 'none', transition: 'fill-opacity 300ms' },
-                hover: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#8B1A2A' : '#28085A', strokeWidth: isBurgundy ? 1.0 : 0.4, outline: 'none' },
-                pressed: { fill: fillColor, fillOpacity, stroke: '#28085A', strokeWidth: 0.4, outline: 'none' },
-              }} />
-            );
-          })}
-        </Geographies>
+        <ZoomableGroup
+          zoom={view.zoom}
+          center={view.center}
+          minZoom={1}
+          maxZoom={6}
+          filterZoomEvent={() => false}
+        >
+          <Geographies geography={DEPT_URL}>
+            {({ geographies }) => geographies.map(geo => {
+              const code = geo.properties.code as string;
+              const isBurgundy = BURGUNDY_DEPTS.has(code);
+              const isBeaujolais = code === '69';
+              const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : '#180830';
+              const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
+              return (
+                <Geography key={geo.rsmKey} geography={geo} style={{
+                  default: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#5A1028' : '#28085A', strokeWidth: (isBurgundy ? 0.8 : 0.4) * cs, outline: 'none', transition: 'fill-opacity 300ms' },
+                  hover:   { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#8B1A2A' : '#28085A', strokeWidth: (isBurgundy ? 1.0 : 0.4) * cs, outline: 'none' },
+                  pressed: { fill: fillColor, fillOpacity, stroke: '#28085A',                          strokeWidth: 0.4 * cs,                       outline: 'none' },
+                }} />
+              );
+            })}
+          </Geographies>
 
-        {/* Sub-region markers */}
-        {filter === 'subregion' && SUB_REGIONS.map(d => (
-          <Marker key={d.id} coordinates={d.coords}>
-            <SubRegionMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
-          </Marker>
-        ))}
-
-        {/* Producer markers */}
-        {filter === 'producer' && PRODUCERS.map(d => (
-          <Marker key={d.id} coordinates={d.coords}>
-            <ProducerMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
-          </Marker>
-        ))}
-
-        {/* Vineyard markers */}
-        {filter === 'vineyard' && VINEYARDS.map(d => (
-          <Marker key={d.id} coordinates={d.coords}>
-            <VineyardMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
-          </Marker>
-        ))}
+          <AnimatePresence>
+            {filter === 'subregion' && (
+              <motion.g key="sr-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+                {SUB_REGIONS.map(d => (
+                  <Marker key={d.id} coordinates={d.coords}>
+                    <g transform={`scale(${cs})`}>
+                      <SubRegionMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
+                    </g>
+                  </Marker>
+                ))}
+              </motion.g>
+            )}
+            {filter === 'producer' && (
+              <motion.g key="pr-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+                {PRODUCERS.map(d => (
+                  <Marker key={d.id} coordinates={d.coords}>
+                    <g transform={`scale(${cs})`}>
+                      <ProducerMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
+                    </g>
+                  </Marker>
+                ))}
+              </motion.g>
+            )}
+            {filter === 'vineyard' && (
+              <motion.g key="vy-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+                {VINEYARDS.map(d => (
+                  <Marker key={d.id} coordinates={d.coords}>
+                    <g transform={`scale(${cs})`}>
+                      <VineyardMarker data={d} hovered={hoveredId === d.id} onHover={onHover} />
+                    </g>
+                  </Marker>
+                ))}
+              </motion.g>
+            )}
+          </AnimatePresence>
+        </ZoomableGroup>
       </ComposableMap>
     </div>
   );
@@ -464,14 +524,14 @@ function FilterTab({ fk, active, onClick }: { fk: FilterKey; active: boolean; on
   const { ko, en } = FILTER_LABELS[fk];
   return (
     <button onClick={onClick} style={{
-      padding: '6px 16px', borderRadius: 9999, border: 'none', cursor: 'pointer',
+      padding: '6px 12px', borderRadius: 9999, border: 'none', cursor: 'pointer',
       background: active ? 'rgba(240,200,118,0.14)' : 'rgba(255,255,255,0.04)',
       outline: `1px solid ${active ? 'rgba(240,200,118,0.5)' : 'rgba(255,255,255,0.08)'}`,
       color: active ? GOLD : '#9B8B7A',
-      fontSize: 13, fontWeight: 600, fontFamily: 'inherit', transition: 'all 200ms',
-      whiteSpace: 'nowrap',
+      fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit', transition: 'all 200ms',
+      whiteSpace: 'nowrap', flexShrink: 0,
     }}>
-      {ko} <span style={{ fontSize: 10, opacity: 0.65, marginLeft: 2 }}>{en}</span>
+      {ko} <span style={{ fontSize: 9.5, opacity: 0.6, marginLeft: 2 }}>{en}</span>
     </button>
   );
 }
@@ -532,7 +592,7 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
       transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
       style={{
         position: 'absolute', top: '8%', right: '3vw',
-        width: 'clamp(260px,30vw,360px)', maxHeight: '84vh', zIndex: 20,
+        width: 'clamp(300px,30vw,380px)', maxHeight: '84vh', zIndex: 20,
         background: 'rgba(5,2,14,0.94)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
         border: '1px solid rgba(240,200,118,0.18)', borderRadius: 18,
         overflow: 'hidden', display: 'flex', flexDirection: 'column',
@@ -540,7 +600,7 @@ function DesktopPanel({ filter, setFilter, hoveredId, onHover, visible }: {
       }}
     >
       {/* Filter tabs */}
-      <div style={{ padding: '14px 16px 12px', display: 'flex', gap: 6, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ padding: '14px 12px 12px', display: 'flex', gap: 5, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)', overflowX: 'auto' }}>
         {(['subregion', 'producer', 'vineyard'] as FilterKey[]).map(fk => (
           <FilterTab key={fk} fk={fk} active={filter === fk} onClick={() => setFilter(fk)} />
         ))}
