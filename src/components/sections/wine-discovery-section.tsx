@@ -401,6 +401,7 @@ function StartHintPill({ progress, text }: { progress: MotionValue<number>; text
 }
 
 function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
+  const { locale } = useLocale();
   const opacity = useTransform(progress, [0.78, 0.92], [0, 1]);
   const y = useTransform(progress, [0.78, 0.96], [28, 0]);
   const wine = RECOMMENDED_WINES[0]; // Chianti Classico — Italy entry-level
@@ -450,7 +451,7 @@ function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
           textTransform: 'uppercase',
           marginBottom: 3,
         }}>
-          {wine.country} · {wine.region}
+          {wine.country[locale]} · {wine.region}
         </div>
         <div style={{
           fontFamily: 'Georgia, serif',
@@ -464,7 +465,7 @@ function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
           fontSize: 11,
           color: '#9B8B7A',
         }}>
-          {wine.styleHint} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
+          {wine.styleHint[locale]} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
         </div>
       </div>
     </motion.div>
@@ -657,7 +658,7 @@ export default function WineDiscoverySection() {
                 fontSize: 11, color: 'rgba(255,255,255,0.55)',
                 letterSpacing: '0.06em', whiteSpace: 'nowrap',
               }}>
-                스크롤 해보세요
+                {t.scrollHint}
               </span>
               <span style={{
                 fontSize: 9, color: 'rgba(255,255,255,0.28)',

@@ -38,7 +38,8 @@
       "footnote": "1~6만원대 입문용으로 큐레이션"
     },
     "tapHint": "탭해서 다음으로",
-    "tapHintCaption": "tap to continue"
+    "tapHintCaption": "tap to continue",
+    "scrollHint": "스크롤 해보세요"
   },
 
   "burgundy": {
