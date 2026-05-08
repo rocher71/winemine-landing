@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, 
 import { ComposableMap, Geographies, Geography, Line, Marker, ZoomableGroup } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
 import { ScanPanel } from './features-section';
-import { RECOMMENDED_WINES, STARTING_WINE, ALL_WINES, formatKrw, type RecommendedWine } from '@/lib/recommended-wines';
+import { STARTING_WINE, ALL_WINES, formatKrw, type RecommendedWine } from '@/lib/recommended-wines';
 
 const TOTAL_STEPS = 3; // 0 intro, 1 scan, 2 recommend
 
@@ -98,12 +98,12 @@ function WineBottleSilhouette({
   );
 }
 
-// ── Wave model ────────────────────────────────────────────────────────────
+// ── Wave model — all reveal fast at the start ────────────────────────────
 type ConnectionLine = { from: [number, number]; to: [number, number] };
 type Wave = {
   isos: string[];
-  pinIds: string[];           // wines (by id) revealed at this wave
-  newLines: ConnectionLine[]; // hub-spoke neural-link lines spawned this wave
+  pinIds: string[];
+  newLines: ConnectionLine[];
 };
 
 const FRANCE: [number, number] = STARTING_WINE.coords;
@@ -136,18 +136,18 @@ const WAVES: Wave[] = [
   },
 ];
 
-const WAVE_THRESHOLDS = [0.10, 0.40, 0.70];
+// All waves trigger within the first 8% so neural-link extends quickly,
+// then the camera tour runs from 0.10 onward.
+const WAVE_THRESHOLDS = [0.0, 0.03, 0.06];
 
 const COUNTRY_FILL_ACTIVE = '#8B1A2A';
 const COUNTRY_FILL_HIGHLIGHT = '#C41E3A';
 const COUNTRY_FILL_INACTIVE = '#1A0A2E';
 const COUNTRY_STROKE = '#2A0C58';
 
-// Connection line draw timing — all lines start drawing simultaneously
-const LINE_DRAW_DURATION = 1.6;
+const LINE_DRAW_DURATION = 0.55; // fast simultaneous draw
 const LINE_DRAW_STAGGER = 0;
 
-// ── Connection line with stroke-dashoffset draw effect ────────────────────
 function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: number }) {
   const [drawn, setDrawn] = useState(false);
   useEffect(() => {
@@ -165,7 +165,7 @@ function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: n
         strokeDasharray: 800,
         strokeDashoffset: drawn ? 0 : 800,
         opacity: drawn ? 0.95 : 0,
-        transition: `stroke-dashoffset ${LINE_DRAW_DURATION}s ease-out, opacity 0.4s ease-out`,
+        transition: `stroke-dashoffset ${LINE_DRAW_DURATION}s ease-out, opacity 0.3s ease-out`,
         filter: 'drop-shadow(0 0 5px rgba(201,168,76,0.85)) drop-shadow(0 0 12px rgba(201,168,76,0.45))',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         vectorEffect: 'non-scaling-stroke' as any,
@@ -174,7 +174,74 @@ function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: n
   );
 }
 
-// ── Map content — single ComposableMap, user-pannable via ZoomableGroup ───
+// ── Cinematic tour stops ─────────────────────────────────────────────────
+type TourStop = { wine: RecommendedWine; coord: [number, number] };
+
+const wineById = (id: string): RecommendedWine =>
+  ALL_WINES.find(w => w.id === id) as RecommendedWine;
+
+// Order: Western Europe cluster → Americas → Oceania.
+const TOUR_STOPS: TourStop[] = [
+  { wine: STARTING_WINE,       coord: STARTING_WINE.coords },
+  { wine: wineById('chianti'),   coord: [11.376, 43.469] },
+  { wine: wineById('rioja'),     coord: [-2.45, 42.46] },
+  { wine: wineById('napa-cab'),  coord: [-122.27, 38.30] },
+  { wine: wineById('casillero'), coord: [-70.66, -33.45] },
+  { wine: wineById('mendoza'),   coord: [-68.85, -32.89] },
+  { wine: wineById('jacobs'),    coord: [138.6, -34.93] },
+  { wine: wineById('nz-pinot'),  coord: [173.95, -41.52] },
+];
+
+const TOUR_START = 0.10; // before this, France close-up + lines drawing
+const TOUR_END   = 0.95; // after this, hold final stop
+const PEAK_ZOOM  = 3.4;
+const DIP_ZOOM   = 1.25;
+
+// Build keyframe arrays for useTransform.
+function buildTour() {
+  const stops = TOUR_STOPS;
+  const inputs: number[] = [0];
+  const lons: number[]   = [stops[0].coord[0]];
+  const lats: number[]   = [stops[0].coord[1]];
+  const zooms: number[]  = [PEAK_ZOOM];
+
+  inputs.push(TOUR_START);
+  lons.push(stops[0].coord[0]);
+  lats.push(stops[0].coord[1]);
+  zooms.push(PEAK_ZOOM);
+
+  const span = TOUR_END - TOUR_START;
+  const segCount = stops.length - 1;
+  const segLen = span / segCount;
+
+  for (let i = 1; i < stops.length; i++) {
+    const prev = stops[i - 1];
+    const curr = stops[i];
+    const transitT = TOUR_START + (i - 0.5) * segLen;
+    const arriveT  = TOUR_START + i * segLen;
+
+    inputs.push(transitT);
+    lons.push((prev.coord[0] + curr.coord[0]) / 2);
+    lats.push((prev.coord[1] + curr.coord[1]) / 2);
+    zooms.push(DIP_ZOOM);
+
+    inputs.push(arriveT);
+    lons.push(curr.coord[0]);
+    lats.push(curr.coord[1]);
+    zooms.push(PEAK_ZOOM);
+  }
+
+  inputs.push(1.0);
+  lons.push(stops[stops.length - 1].coord[0]);
+  lats.push(stops[stops.length - 1].coord[1]);
+  zooms.push(PEAK_ZOOM);
+
+  return { inputs, lons, lats, zooms };
+}
+
+const TOUR_KF = buildTour();
+
+// ── Map content — controlled ZoomableGroup, no user input ─────────────────
 type MapContentProps = {
   activeIsos: Set<string>;
   visibleLineKeys: { key: string; line: ConnectionLine; waveSpawned: number }[];
@@ -183,6 +250,8 @@ type MapContentProps = {
   pinW: number;
   pinH: number;
   startingIso: string;
+  zoom: number;
+  center: [number, number];
 };
 
 function MapContent({
@@ -193,6 +262,8 @@ function MapContent({
   pinW,
   pinH,
   startingIso,
+  zoom,
+  center,
 }: MapContentProps) {
   return (
     <ComposableMap
@@ -203,11 +274,14 @@ function MapContent({
       style={{ width: '100%', height: '100%', display: 'block' }}
     >
       <ZoomableGroup
-        zoom={1}
-        minZoom={0.8}
-        maxZoom={2}
-        center={[10, 22]}
-        translateExtent={[[-400, -200], [2000, 1100]]}
+        zoom={zoom}
+        center={center}
+        minZoom={0.5}
+        maxZoom={10}
+        // Disable all user input — camera is fully scroll-driven.
+        filterZoomEvent={() => false}
+        disablePanning
+        disableZooming
       >
         <Geographies geography="/world-110m.json">
           {({ geographies }) =>
@@ -244,38 +318,38 @@ function MapContent({
           }
         </Geographies>
 
-        {/* Neural-link connection lines — all draw simultaneously */}
         {visibleLineKeys.map(({ key, line, waveSpawned }, idx) => {
           const delay = waveSpawned === waveIdx ? idx * LINE_DRAW_STAGGER : 0;
           return <ConnectionLineDrawing key={key} line={line} delay={delay} />;
         })}
 
-        {/* Wine bottle pins on activated countries */}
         {visiblePins.map(({ wine, waveSpawned, orderInWave }) => {
-          const delay = waveSpawned === waveIdx ? 0.25 + orderInWave * 0.14 : 0;
+          const delay = waveSpawned === waveIdx ? 0.05 + orderInWave * 0.05 : 0;
           const isStart = wine.id === STARTING_WINE.id;
+          // Pin sizes scale inversely with zoom so they stay visually consistent.
+          const pinScale = Math.max(0.45, 1 / Math.max(zoom, 1));
           return (
             <Marker key={wine.id} coordinates={wine.coords}>
               <motion.g
                 initial={{ opacity: 0, y: -10, scale: 0.6 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.55, delay, ease: 'easeOut' }}
+                transition={{ duration: 0.45, delay, ease: 'easeOut' }}
                 style={{ transformBox: 'fill-box', transformOrigin: 'center bottom' }}
               >
                 {isStart && (
                   <circle
                     cx={0}
-                    cy={-pinH / 2}
-                    r={pinW * 1.2}
+                    cy={(-pinH * pinScale) / 2}
+                    r={pinW * pinScale * 1.2}
                     fill="rgba(212,32,64,0.30)"
                     style={{ filter: 'blur(3px)' }}
                   />
                 )}
-                <g transform={`translate(${-pinW / 2}, ${-pinH})`}>
+                <g transform={`translate(${(-pinW * pinScale) / 2}, ${-pinH * pinScale})`}>
                   <WineBottleSilhouette
                     wine={wine}
-                    width={pinW}
-                    height={pinH}
+                    width={pinW * pinScale}
+                    height={pinH * pinScale}
                     uidSuffix={`pin-${wine.id}`}
                   />
                 </g>
@@ -294,6 +368,13 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   const [isMobile, setIsMobile] = useState(false);
   const [waveIdx, setWaveIdx] = useState(-1);
 
+  // Camera state driven by scroll progress.
+  const lonMV  = useTransform(progress, TOUR_KF.inputs, TOUR_KF.lons);
+  const latMV  = useTransform(progress, TOUR_KF.inputs, TOUR_KF.lats);
+  const zoomMV = useTransform(progress, TOUR_KF.inputs, TOUR_KF.zooms);
+  const [center, setCenter] = useState<[number, number]>([TOUR_KF.lons[0], TOUR_KF.lats[0]]);
+  const [zoom, setZoom] = useState<number>(PEAK_ZOOM);
+
   useEffect(() => {
     setMounted(true);
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -309,6 +390,10 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     }
     setWaveIdx(next);
   });
+
+  useMotionValueEvent(lonMV, 'change', v => setCenter(c => (c[0] === v ? c : [v, c[1]])));
+  useMotionValueEvent(latMV, 'change', v => setCenter(c => (c[1] === v ? c : [c[0], v])));
+  useMotionValueEvent(zoomMV, 'change', v => setZoom(prev => (prev === v ? prev : v)));
 
   const activeIsos = useMemo(() => {
     const set = new Set<string>();
@@ -337,7 +422,6 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     return items;
   }, [waveIdx]);
 
-  // Make ComposableMap fill the wrapper (preserveAspectRatio slice)
   useLayoutEffect(() => {
     if (!ref.current) return;
     const apply = () => {
@@ -357,8 +441,8 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   if (!mounted) return null;
 
   const startingIso = STARTING_WINE.isoNumeric;
-  const pinW = isMobile ? 18 : 22;
-  const pinH = isMobile ? 40 : 50;
+  const pinW = isMobile ? 26 : 30;
+  const pinH = isMobile ? 60 : 72;
 
   const mapProps: MapContentProps = {
     activeIsos,
@@ -368,6 +452,8 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     pinW,
     pinH,
     startingIso,
+    zoom,
+    center,
   };
 
   return (
@@ -380,17 +466,15 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
         inset: 0,
         zIndex: 1,
         background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.10) 0%, transparent 65%), #08051A',
-        // User can drag/pinch the map only when this step is active.
-        pointerEvents: visible ? 'auto' : 'none',
+        // Map is a passive backdrop — page scroll passes through unimpeded.
+        pointerEvents: 'none',
         overflow: 'hidden',
-        cursor: visible ? 'grab' : 'default',
       }}
     >
       <div ref={ref} style={{ width: '100%', height: '100%' }}>
         <MapContent {...mapProps} />
       </div>
 
-      {/* Bottom darken gradient — pointer-events:none lets drags pass through */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: 'linear-gradient(180deg, rgba(4,1,10,0.55) 0%, rgba(4,1,10,0.10) 28%, rgba(4,1,10,0.10) 60%, rgba(4,1,10,0.85) 100%)',
@@ -400,7 +484,8 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
 }
 
 function StartHintPill({ progress, text }: { progress: MotionValue<number>; text: string }) {
-  const opacity = useTransform(progress, [0, 0.10, 0.36, 0.50], [0, 1, 1, 0]);
+  // Pill shows during initial France close-up, fades as tour starts moving.
+  const opacity = useTransform(progress, [0, 0.04, 0.10, 0.16], [0, 1, 1, 0]);
   return (
     <motion.div
       style={{
@@ -428,16 +513,42 @@ function StartHintPill({ progress, text }: { progress: MotionValue<number>; text
   );
 }
 
-function RecommendationCard({ progress, cardLabel }: { progress: MotionValue<number>; cardLabel: string }) {
+// Cards crossfade as the tour moves between stops.
+function RecommendationCard({
+  progress,
+  cardLabel,
+}: {
+  progress: MotionValue<number>;
+  cardLabel: string;
+}) {
   const { locale } = useLocale();
-  const opacity = useTransform(progress, [0.55, 0.70], [0, 1]);
-  const y = useTransform(progress, [0.55, 0.74], [28, 0]);
-  const wine = RECOMMENDED_WINES[0]; // Chianti Classico — Italy entry-level
+
+  // Card appears once we leave the starting France stop and tour begins moving.
+  const cardOpacity = useTransform(progress, [0.13, 0.18], [0, 1]);
+  const cardY = useTransform(progress, [0.13, 0.20], [28, 0]);
+
+  // Pick current stop based on progress; index 1..N-1 since 0 is the starting wine.
+  const span = TOUR_END - TOUR_START;
+  const segLen = span / (TOUR_STOPS.length - 1);
+
+  const [stopIdx, setStopIdx] = useState(1);
+  useMotionValueEvent(progress, 'change', v => {
+    if (v < TOUR_START + segLen * 0.5) {
+      setStopIdx(1);
+      return;
+    }
+    const raw = (v - TOUR_START) / segLen;
+    const idx = Math.min(TOUR_STOPS.length - 1, Math.max(1, Math.round(raw)));
+    setStopIdx(idx);
+  });
+
+  const wine = TOUR_STOPS[stopIdx].wine;
+
   return (
     <motion.div
       style={{
-        opacity,
-        y,
+        opacity: cardOpacity,
+        y: cardY,
         position: 'absolute',
         bottom: 'clamp(56px, 10vh, 96px)',
         left: '50%',
@@ -454,50 +565,62 @@ function RecommendationCard({ progress, cardLabel }: { progress: MotionValue<num
         boxShadow: '0 14px 50px rgba(0,0,0,0.65), 0 0 30px rgba(201,168,76,0.12)',
         pointerEvents: 'none',
         zIndex: 7,
+        minWidth: 280,
       }}
     >
-      <div
-        style={{
-          width: 72,
-          height: 72,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle at 30% 25%, rgba(245,240,232,0.10), rgba(0,0,0,0.55))',
-          border: '1px solid rgba(201,168,76,0.32)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}
-      >
-        <WineBottleSilhouette wine={wine} width={32} height={70} uidSuffix="card" />
-      </div>
-      <div>
-        <div style={{
-          fontSize: 10,
-          letterSpacing: '0.18em',
-          color: '#C9A84C',
-          textTransform: 'uppercase',
-          fontWeight: 600,
-          marginBottom: 6,
-        }}>
-          {cardLabel}
-        </div>
-        <div style={{
-          fontFamily: 'Georgia, serif',
-          fontSize: 18,
-          color: '#F5F0E8',
-          marginBottom: 4,
-          lineHeight: 1.2,
-        }}>
-          {wine.name}
-        </div>
-        <div style={{
-          fontSize: 13,
-          color: '#D4C5B0',
-        }}>
-          {wine.country[locale]} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
-        </div>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={wine.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 16 }}
+        >
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle at 30% 25%, rgba(245,240,232,0.10), rgba(0,0,0,0.55))',
+              border: '1px solid rgba(201,168,76,0.32)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <WineBottleSilhouette wine={wine} width={32} height={70} uidSuffix={`card-${wine.id}`} />
+          </div>
+          <div>
+            <div style={{
+              fontSize: 10,
+              letterSpacing: '0.18em',
+              color: '#C9A84C',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+              marginBottom: 6,
+            }}>
+              {cardLabel}
+            </div>
+            <div style={{
+              fontFamily: 'Georgia, serif',
+              fontSize: 18,
+              color: '#F5F0E8',
+              marginBottom: 4,
+              lineHeight: 1.2,
+            }}>
+              {wine.name}
+            </div>
+            <div style={{
+              fontSize: 13,
+              color: '#D4C5B0',
+            }}>
+              {wine.country[locale]} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -520,10 +643,11 @@ export default function WineDiscoverySection() {
 
   const recProgress = useTransform(scrollYProgress, [0.30, 0.95], [0, 1], { clamp: true });
 
-  // Late in step 2: top header fades out and the step 2 heading rises
-  const topHeaderOpacity = useTransform(recProgress, [0.55, 0.75], [1, 0]);
-  const step2HeaderY = useTransform(recProgress, [0.55, 0.80], [0, -260]);
-  const step2HeaderScale = useTransform(recProgress, [0.55, 0.80], [1, 0.78]);
+  // Late in step 2: top header fades and the step 2 heading rises early
+  // so the cinematic tour gets full visual focus.
+  const topHeaderOpacity = useTransform(recProgress, [0.04, 0.14], [1, 0]);
+  const step2HeaderY = useTransform(recProgress, [0.04, 0.14], [0, -260]);
+  const step2HeaderScale = useTransform(recProgress, [0.04, 0.14], [1, 0.78]);
 
   return (
     <section
@@ -541,7 +665,6 @@ export default function WineDiscoverySection() {
       }}>
         <FullScreenMap progress={recProgress} visible={step === 2} />
 
-        {/* Top header — fades out late in step 2 */}
         <motion.div
           style={{
             opacity: topHeaderOpacity,
