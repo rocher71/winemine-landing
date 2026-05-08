@@ -35,12 +35,12 @@
       "title": "기록이 쌓일수록\n취향에 딱 맞는 한 병",
       "body": "당신이 마신 산지에서 시작해\n비슷한 입문 와인을 지도 위에 추천해드립니다",
       "startHint": "당신이 마신 보르도 레드와 비슷한…",
-      "footnote": "1~6만원대 입문용으로 큐레이션"
+      "footnote": "1~6만원대 입문용으로 큐레이션",
+      "cardLabel": "당신의 다음 한 병"
     },
-    "outro": {
-      "title": "이미 깊게 빠지셨나요?",
-      "subtitle": "부르고뉴까지 한 발짝 더 ↓"
-    }
+    "tapHint": "탭해서 다음으로",
+    "tapHintCaption": "tap to continue",
+    "scrollHint": "스크롤 해보세요"
   },
 
   "burgundy": {
