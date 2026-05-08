@@ -18,9 +18,45 @@
     }
   },
 
+  "wineDiscovery": {
+    "sectionLabel": "Discover your taste",
+    "topQuestion": "와인을 가볍게 즐기고 싶으신가요?",
+    "step0": {
+      "title": "와인 한 병이,",
+      "subtitle": "처음에는 그냥 라벨일 뿐"
+    },
+    "step1": {
+      "label": "01 · 라벨 촬영",
+      "title": "찍기만 하면\n나머지는 우리가",
+      "body": "Château·빈티지·등급·국가까지 자동 추출"
+    },
+    "step2": {
+      "label": "02 · 입맛 분석",
+      "title": "당신의 취향이\n보이기 시작합니다",
+      "body": "마실수록 어떤 색·어느 산지를 좋아하는지 자동으로 정리돼요",
+      "tasteBars": {
+        "red": "레드",
+        "white": "화이트",
+        "rose": "로제",
+        "sparkling": "스파클링",
+        "champagne": "샴페인"
+      },
+      "insight": "프랑스 부르고뉴 레드를 가장 자주 즐기시네요"
+    },
+    "step3": {
+      "label": "03 · Recap 공유",
+      "title": "한 장의 카드로\n친구에게",
+      "body": "월별·연간 자동 생성, 탭 한 번으로 공유"
+    },
+    "outro": {
+      "title": "이미 깊게 빠지셨나요?",
+      "subtitle": "부르고뉴까지 한 발짝 더 ↓"
+    }
+  },
+
   "burgundy": {
     "sectionLabel": "AI 자동 분류 · 부르고뉴",
-    "heading": "내가 마신 와인이 등급·클리마·도멘·빈티지로"
+    "heading": "와인을 깊게 파고드시나요?"
   },
 
   "franceWineDetail": {
@@ -60,17 +96,7 @@
   "features": {
     "sectionHeading": "WineMine이 특별한 이유",
     "panels": [
-      { "title": "지도에 새긴다", "sub": "마신 와인이 쌓일수록\n세계 지도가 물들어간다" },
-      { "title": "찍으면 바로", "sub": "라벨 하나로\n모든 정보가 채워진다" },
-      { "title": "나만의 지도", "sub": "언제든, 한 번에\n손쉽게 공유해요" }
-    ],
-    "regions": [
-      { "country": "프랑스" },
-      { "country": "이탈리아" },
-      { "country": "칠레" },
-      { "country": "뉴질랜드" },
-      { "country": "스페인" },
-      { "country": "아르헨티나" }
+      { "title": "한 잔 한 잔, 다 다르게", "sub": "와인 한 병의 디테일까지\n오롯이 기억됩니다" }
     ],
     "wineCards": [
       { "note": "잘 익은 카시스, 시가박스, 제비꽃. 우아한 탄닌이 한참 머무름.", "occasion": "결혼기념일" },
@@ -78,10 +104,7 @@
       { "note": "헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.", "occasion": "지인 모임" }
     ],
     "mobileSwipeHint": "← 스와이프 →",
-    "mobileTapHint": "탭해서 다른 와인 보기",
-    "timestamp": "지금",
-    "statsLabels": { "bottles": "병", "countries": "국가", "months": "개월" },
-    "fullPreviewButton": "전체 미리보기 →"
+    "mobileTapHint": "탭해서 다른 와인 보기"
   },
 
   "marketStats": {

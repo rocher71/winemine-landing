@@ -174,7 +174,9 @@ export default function VineyardStrip() {
             fontSize: 'clamp(18px,3.5vw,36px)',
             fontWeight: 400, color: '#F5F0E8', textAlign: 'center',
           }}>
-            {messages.vineyardStrip.body.split('\n').map((line, i) => i === 0 ? <>{line}<br /></> : line)}
+            {messages.vineyardStrip.body.split('\n').map((line, i) => (
+              <span key={i}>{line}{i === 0 ? <br /> : null}</span>
+            ))}
           </div>
         </div>
       </div>

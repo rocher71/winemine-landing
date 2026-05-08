@@ -173,15 +173,16 @@ src/
 │   ├── providers/locale-provider.tsx   # LocaleProvider + useLocale() 훅
 │   ├── sections/
 │   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
-│   │   ├── france-wine-section.tsx     # 스크롤 기반 프랑스 드릴다운
+│   │   ├── wine-discovery-section.tsx  # 초보자 친화 5단계 스크롤 스토리텔링 — 상세 사양은 _workspace/wine-discovery-section-spec.md
 │   │   ├── burgundy-section.tsx        # 부르고뉴 4축 분류 (등급·클리마·도멘·빈티지) — 상세 사양은 _workspace/burgundy-section-spec.md
-│   │   ├── france-wine-detail-section.tsx # 정적 지도 + 와인 카드 컬렉션 (현재 page.tsx에서 미사용)
 │   │   ├── vineyard-strip.tsx          # 와인 산지 사진 스트립
-│   │   ├── features-section.tsx        # 핵심 기능 소개 (onScrollToPreview prop)
-│   │   ├── market-stats-section.tsx    # 한국 와인 시장 통계
+│   │   ├── features-section.tsx        # 와인 카드 쇼케이스 (단일 GlassCardStack 패널) + ScanPanel named export (wine-discovery에서 사용)
 │   │   ├── how-it-works-section.tsx    # 사용 흐름 4단계
-│   │   ├── instagram-preview-section.tsx # Recap 공유 미리보기 (id="instagram-preview")
-│   │   └── final-cta-section.tsx       # 최종 CTA
+│   │   ├── final-cta-section.tsx       # 최종 CTA
+│   │   ├── instagram-preview-section.tsx # 미마운트 — StoryCard·PhoneMockup·StoryWorldMap named export가 wine-discovery에서 사용 중. 파일 삭제 금지
+│   │   ├── france-wine-section.tsx     # 미마운트 (롤백 대비 보존)
+│   │   ├── market-stats-section.tsx    # 미마운트 (롤백 대비 보존)
+│   │   └── france-wine-detail-section.tsx # 미마운트 (이전부터)
 │   ├── ui/
 │   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA 버튼
 │   │   └── store-buttons.tsx           # App Store / Google Play 버튼
@@ -212,12 +213,29 @@ public/
 2. `StoreButtons` / `FloatingCTA` / `FinalCTASection` → `onOpenModal()` 호출
 3. `WaitlistModal` → `WaitlistForm` → `submitWaitlist()` Server Action → Supabase insert
 
+### 페이지 마운트 순서 (현재 7 섹션)
+1. `HeroSection` — 세계 지도 슬라이딩 배경
+2. `WineDiscoverySection` — 초보자 친화 스크롤 스토리텔링 (라벨→입맛→Recap→부르고뉴 전환)
+3. `BurgundySection` — 부르고뉴 4축 분류 (전문가)
+4. `VineyardStrip` — 포도밭 갤러리 + 시장 통계
+5. `FeaturesSection` — 와인 카드 쇼케이스 (단일 패널)
+6. `HowItWorksSection` — 사용 흐름 4단계
+7. `FinalCTASection` — 최종 CTA
+
+### 초보자/전문가 페어링 카피 (v9008a15)
+- Wine Discovery 헤더: `wineDiscovery.topQuestion` = "와인을 가볍게 즐기고 싶으신가요?"
+- Burgundy 헤더: `burgundy.heading` = "와인을 깊게 파고드시나요?"
+- 동일 의문문 형식으로 두 섹션이 짝을 이룸 (가볍게 ↔ 깊게)
+
 ---
 
 ## 상세 스펙
 
 전체 UI/UX 스펙, 컴포넌트 계층, 통합 테스트 시나리오, 구현 순서:
 → **`WINEMINE_LANDING_SPEC.md`** 참조
+
+Wine Discovery 섹션(초보자 5단계 스크롤 스토리텔링·재사용 컴포넌트 계보·분기 헤더 페어링·미마운트 파일 의존 관계) 인수인계용 단일 문서:
+→ **`_workspace/wine-discovery-section-spec.md`** 참조 — `feat/wine-discovery-section` 브랜치 작업 컨텍스트 (main 미반영)
 
 부르고뉴 섹션(4탭 분류·인터랙션·데이터 모델·디자인 결정·변경 이력) 인수인계용 단일 문서:
 → **`_workspace/burgundy-section-spec.md`** 참조 — 다른 머신/세션에서 컨텍스트 잡을 때 가장 먼저 읽을 것
@@ -238,6 +256,7 @@ public/
 |------|----------|------|------|
 | 2026-05-05 | 초기 구성 | 전체 | winemine 랜딩 페이지 개발 시작 |
 | 2026-05-06 | commit-push 스킬 추가 | .claude/skills/commit-push | GitHub 연동 워크플로우 |
+| 2026-05-08 | Wine Discovery 섹션 + 페이지 슬림화 | feat/wine-discovery-section 브랜치 | 초보자/전문가 페어링, France·MarketStats·InstagramPreview 마운트 제거 (main 미반영) |
 
 ---
 

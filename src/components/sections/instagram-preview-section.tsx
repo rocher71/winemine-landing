@@ -22,7 +22,7 @@ const MINI_WINE: Record<string, number> = {
 };
 
 // ── Tiny world map inside the story card ────────────────────────────────────
-function StoryWorldMap() {
+export function StoryWorldMap() {
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -86,7 +86,7 @@ function StoryWorldMap() {
 }
 
 // ── Story Card (9:16 ratio) ────────────────────────────────────────────────
-function StoryCard({ animate }: { animate: boolean }) {
+export function StoryCard({ animate }: { animate: boolean }) {
   const { messages } = useLocale();
   return (
     <div
@@ -231,7 +231,7 @@ function StoryCard({ animate }: { animate: boolean }) {
 }
 
 // ── Phone frame wrapper ────────────────────────────────────────────────────
-function PhoneMockup({ children, scale = 1 }: { children: React.ReactNode; scale?: number }) {
+export function PhoneMockup({ children, scale = 1 }: { children: React.ReactNode; scale?: number }) {
   return (
     <div style={{
       width: 240 * scale,
