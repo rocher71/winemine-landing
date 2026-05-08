@@ -6,7 +6,6 @@ import WineDiscoverySection from '@/components/sections/wine-discovery-section';
 import BurgundySection from '@/components/sections/burgundy-section';
 import VineyardStrip from '@/components/sections/vineyard-strip';
 import FeaturesSection from '@/components/sections/features-section';
-import MarketStatsSection from '@/components/sections/market-stats-section';
 import HowItWorksSection from '@/components/sections/how-it-works-section';
 import FinalCTASection from '@/components/sections/final-cta-section';
 import WaitlistModal from '@/components/waitlist/waitlist-modal';
@@ -35,13 +34,10 @@ export default function Home() {
       {/* 5. WineMine 와인 카드 쇼케이스 (단일 패널) */}
       <FeaturesSection />
 
-      {/* 6. 한국 와인 시장 통계 */}
-      <MarketStatsSection />
-
-      {/* 7. 사용 흐름 */}
+      {/* 6. 사용 흐름 */}
       <HowItWorksSection />
 
-      {/* 8. 최종 CTA */}
+      {/* 7. 최종 CTA */}
       <FinalCTASection onOpenModal={openModal} />
 
       <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
