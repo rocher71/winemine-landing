@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef, useState, useEffect, useMemo, useLayoutEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, animate, AnimatePresence, MotionValue, type AnimationPlaybackControls } from 'framer-motion';
-import { ComposableMap, Geographies, Geography, Line, Marker } from 'react-simple-maps';
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, MotionValue } from 'framer-motion';
+import { ComposableMap, Geographies, Geography, Line, Marker, ZoomableGroup } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
 import { ScanPanel } from './features-section';
 import { RECOMMENDED_WINES, STARTING_WINE, ALL_WINES, formatKrw, type RecommendedWine } from '@/lib/recommended-wines';
@@ -147,9 +147,6 @@ const COUNTRY_STROKE = '#2A0C58';
 const LINE_DRAW_DURATION = 1.6;
 const LINE_DRAW_STAGGER = 0;
 
-// Auto-pan starts shortly after Wave 2 lines finish drawing
-const AUTO_PAN_DELAY_MS = (LINE_DRAW_DURATION + 0.4) * 1000;
-
 // ── Connection line with stroke-dashoffset draw effect ────────────────────
 function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: number }) {
   const [drawn, setDrawn] = useState(false);
@@ -177,7 +174,7 @@ function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: n
   );
 }
 
-// ── Map content (rendered twice for the seamless left-pan loop) ────────────
+// ── Map content — single ComposableMap, user-pannable via ZoomableGroup ───
 type MapContentProps = {
   activeIsos: Set<string>;
   visibleLineKeys: { key: string; line: ConnectionLine; waveSpawned: number }[];
@@ -186,7 +183,6 @@ type MapContentProps = {
   pinW: number;
   pinH: number;
   startingIso: string;
-  instanceKey: string;
 };
 
 function MapContent({
@@ -197,7 +193,6 @@ function MapContent({
   pinW,
   pinH,
   startingIso,
-  instanceKey,
 }: MapContentProps) {
   return (
     <ComposableMap
@@ -207,83 +202,88 @@ function MapContent({
       height={900}
       style={{ width: '100%', height: '100%', display: 'block' }}
     >
-      <Geographies geography="/world-110m.json">
-        {({ geographies }) =>
-          geographies.map(geo => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const id = String((geo as any).id).padStart(3, '0');
-            const isStart = id === startingIso;
-            const isActive = activeIsos.has(id);
-            const fill = isStart && isActive
-              ? COUNTRY_FILL_HIGHLIGHT
-              : isActive
-                ? COUNTRY_FILL_ACTIVE
-                : COUNTRY_FILL_INACTIVE;
-            return (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                style={{
-                  default: {
-                    fill,
-                    stroke: COUNTRY_STROKE,
-                    strokeWidth: 0.4,
-                    outline: 'none',
-                    transition: 'fill 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    vectorEffect: 'non-scaling-stroke' as any,
-                  },
-                  hover: { fill, stroke: COUNTRY_STROKE, strokeWidth: 0.4, outline: 'none' },
-                  pressed: { fill, stroke: COUNTRY_STROKE, strokeWidth: 0.4, outline: 'none' },
-                }}
-              />
-            );
-          })
-        }
-      </Geographies>
-
-      {/* Neural-link connection lines with stroke-dashoffset draw */}
-      {visibleLineKeys.map(({ key, line, waveSpawned }, idx) => {
-        // Lines spawned in the current wave stagger; older waves render fully drawn
-        const delay = waveSpawned === waveIdx ? idx * LINE_DRAW_STAGGER : 0;
-        return (
-          <ConnectionLineDrawing key={`${instanceKey}-${key}`} line={line} delay={delay} />
-        );
-      })}
-
-      {/* Wine bottle pins on activated countries */}
-      {visiblePins.map(({ wine, waveSpawned, orderInWave }) => {
-        const delay = waveSpawned === waveIdx ? 0.25 + orderInWave * 0.14 : 0;
-        const isStart = wine.id === STARTING_WINE.id;
-        return (
-          <Marker key={`${instanceKey}-${wine.id}`} coordinates={wine.coords}>
-            <motion.g
-              initial={{ opacity: 0, y: -10, scale: 0.6 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.55, delay, ease: 'easeOut' }}
-              style={{ transformBox: 'fill-box', transformOrigin: 'center bottom' }}
-            >
-              {isStart && (
-                <circle
-                  cx={0}
-                  cy={-pinH / 2}
-                  r={pinW * 1.2}
-                  fill="rgba(212,32,64,0.30)"
-                  style={{ filter: 'blur(3px)' }}
+      <ZoomableGroup
+        zoom={1}
+        minZoom={0.8}
+        maxZoom={2}
+        center={[10, 22]}
+        translateExtent={[[-400, -200], [2000, 1100]]}
+      >
+        <Geographies geography="/world-110m.json">
+          {({ geographies }) =>
+            geographies.map(geo => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const id = String((geo as any).id).padStart(3, '0');
+              const isStart = id === startingIso;
+              const isActive = activeIsos.has(id);
+              const fill = isStart && isActive
+                ? COUNTRY_FILL_HIGHLIGHT
+                : isActive
+                  ? COUNTRY_FILL_ACTIVE
+                  : COUNTRY_FILL_INACTIVE;
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  style={{
+                    default: {
+                      fill,
+                      stroke: COUNTRY_STROKE,
+                      strokeWidth: 0.4,
+                      outline: 'none',
+                      transition: 'fill 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      vectorEffect: 'non-scaling-stroke' as any,
+                    },
+                    hover: { fill, stroke: COUNTRY_STROKE, strokeWidth: 0.4, outline: 'none' },
+                    pressed: { fill, stroke: COUNTRY_STROKE, strokeWidth: 0.4, outline: 'none' },
+                  }}
                 />
-              )}
-              <g transform={`translate(${-pinW / 2}, ${-pinH})`}>
-                <WineBottleSilhouette
-                  wine={wine}
-                  width={pinW}
-                  height={pinH}
-                  uidSuffix={`pin-${instanceKey}-${wine.id}`}
-                />
-              </g>
-            </motion.g>
-          </Marker>
-        );
-      })}
+              );
+            })
+          }
+        </Geographies>
+
+        {/* Neural-link connection lines — all draw simultaneously */}
+        {visibleLineKeys.map(({ key, line, waveSpawned }, idx) => {
+          const delay = waveSpawned === waveIdx ? idx * LINE_DRAW_STAGGER : 0;
+          return <ConnectionLineDrawing key={key} line={line} delay={delay} />;
+        })}
+
+        {/* Wine bottle pins on activated countries */}
+        {visiblePins.map(({ wine, waveSpawned, orderInWave }) => {
+          const delay = waveSpawned === waveIdx ? 0.25 + orderInWave * 0.14 : 0;
+          const isStart = wine.id === STARTING_WINE.id;
+          return (
+            <Marker key={wine.id} coordinates={wine.coords}>
+              <motion.g
+                initial={{ opacity: 0, y: -10, scale: 0.6 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.55, delay, ease: 'easeOut' }}
+                style={{ transformBox: 'fill-box', transformOrigin: 'center bottom' }}
+              >
+                {isStart && (
+                  <circle
+                    cx={0}
+                    cy={-pinH / 2}
+                    r={pinW * 1.2}
+                    fill="rgba(212,32,64,0.30)"
+                    style={{ filter: 'blur(3px)' }}
+                  />
+                )}
+                <g transform={`translate(${-pinW / 2}, ${-pinH})`}>
+                  <WineBottleSilhouette
+                    wine={wine}
+                    width={pinW}
+                    height={pinH}
+                    uidSuffix={`pin-${wine.id}`}
+                  />
+                </g>
+              </motion.g>
+            </Marker>
+          );
+        })}
+      </ZoomableGroup>
     </ComposableMap>
   );
 }
@@ -293,10 +293,6 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [waveIdx, setWaveIdx] = useState(-1);
-
-  // Auto-pan motion value (in % of the doubled wrapper)
-  const xPan = useMotionValue(0);
-  const panAnimRef = useRef<AnimationPlaybackControls | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -313,34 +309,6 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     }
     setWaveIdx(next);
   });
-
-  // Start the seamless left-pan once Wave 2 reaches the screen and lines are drawn.
-  // Triggered by waveIdx (not scroll progress) so the animation plays even if the
-  // user keeps scrolling past the end of the section.
-  useEffect(() => {
-    if (waveIdx === WAVES.length - 1 && !panAnimRef.current) {
-      const timer = setTimeout(() => {
-        panAnimRef.current = animate(xPan, -100, {
-          duration: 60,
-          ease: 'linear',
-          repeat: Infinity,
-          repeatType: 'loop',
-        });
-      }, AUTO_PAN_DELAY_MS);
-      return () => clearTimeout(timer);
-    }
-    if (waveIdx < WAVES.length - 1 && panAnimRef.current) {
-      panAnimRef.current.stop();
-      panAnimRef.current = null;
-      xPan.set(0);
-    }
-  }, [waveIdx, xPan]);
-
-  useEffect(() => {
-    return () => {
-      panAnimRef.current?.stop();
-    };
-  }, []);
 
   const activeIsos = useMemo(() => {
     const set = new Set<string>();
@@ -369,10 +337,6 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     return items;
   }, [waveIdx]);
 
-  // xPan is expressed in vw so the slide is calibrated to the actual viewport
-  // width (one full viewport per wrap, regardless of device).
-  const xPanStr = useTransform(xPan, v => `${v}vw`);
-
   // Make ComposableMap fill the wrapper (preserveAspectRatio slice)
   useLayoutEffect(() => {
     if (!ref.current) return;
@@ -396,7 +360,7 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   const pinW = isMobile ? 18 : 22;
   const pinH = isMobile ? 40 : 50;
 
-  const mapProps: Omit<MapContentProps, 'instanceKey'> = {
+  const mapProps: MapContentProps = {
     activeIsos,
     visibleLineKeys,
     visiblePins,
@@ -416,30 +380,17 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
         inset: 0,
         zIndex: 1,
         background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.10) 0%, transparent 65%), #08051A',
-        pointerEvents: 'none',
+        // User can drag/pinch the map only when this step is active.
+        pointerEvents: visible ? 'auto' : 'none',
         overflow: 'hidden',
+        cursor: visible ? 'grab' : 'default',
       }}
     >
-      {/* Two ComposableMap instances side-by-side for seamless left-pan loop.
-          Each child is exactly one viewport wide, the wrapper is two. */}
-      <motion.div
-        ref={ref}
-        style={{
-          width: '200vw',
-          height: '100%',
-          display: 'flex',
-          x: xPanStr,
-        }}
-      >
-        <div style={{ width: '100vw', height: '100%', flexShrink: 0 }}>
-          <MapContent {...mapProps} instanceKey="a" />
-        </div>
-        <div style={{ width: '100vw', height: '100%', flexShrink: 0 }}>
-          <MapContent {...mapProps} instanceKey="b" />
-        </div>
-      </motion.div>
+      <div ref={ref} style={{ width: '100%', height: '100%' }}>
+        <MapContent {...mapProps} />
+      </div>
 
-      {/* Bottom darken gradient so the recommendation card pops */}
+      {/* Bottom darken gradient — pointer-events:none lets drags pass through */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: 'linear-gradient(180deg, rgba(4,1,10,0.55) 0%, rgba(4,1,10,0.10) 28%, rgba(4,1,10,0.10) 60%, rgba(4,1,10,0.85) 100%)',
