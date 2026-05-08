@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
 
 // ── Panel 1: GlassCardStack — 3 stacked glass wine cards ──────────────────
@@ -462,238 +461,17 @@ export function ScanPanel() {
   );
 }
 
-// ── Mini world map (same as instagram-preview-section) ────────────────────
-const MINI_WINE: Record<string, number> = {
-  '250': 0.95, '380': 0.80, '724': 0.65, '840': 0.72,
-  '276': 0.50, '032': 0.65, '152': 0.55, '620': 0.70,
-  '040': 0.38, '554': 0.50, '036': 0.55, '710': 0.42,
-};
-
-function MiniWorldMap() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  useLayoutEffect(() => {
-    if (!ref.current) return;
-    const apply = () => {
-      ref.current?.querySelectorAll('svg').forEach(svg => {
-        svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-        svg.style.display = 'block';
-      });
-    };
-    apply();
-    const obs = new MutationObserver(apply);
-    if (ref.current) obs.observe(ref.current, { childList: true, subtree: true });
-    return () => obs.disconnect();
-  }, [mounted]);
-
-  if (!mounted) return <div style={{ width: '100%', height: '100%', background: '#0A0228' }} />;
-
-  return (
-    <div ref={ref} style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-      <ComposableMap
-        projection="geoEquirectangular"
-        projectionConfig={{ scale: 62, rotate: [-40, 0, 0] }}
-        width={420} height={210}
-        style={{ width: '100%', height: '100%', display: 'block', background: '#080220' }}
-      >
-        <Geographies geography="/world-110m.json">
-          {({ geographies }) => geographies.map(geo => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const id = String((geo as any).id).padStart(3, '0');
-            const opacity = MINI_WINE[id];
-            return (
-              <Geography key={geo.rsmKey} geography={geo} style={{
-                default: { fill: opacity ? '#D42040' : '#1C0840', fillOpacity: opacity ?? 1, stroke: '#2A0C58', strokeWidth: 0.3, outline: 'none' },
-                hover:   { outline: 'none', fill: opacity ? '#D42040' : '#1C0840', fillOpacity: opacity ?? 1, stroke: '#2A0C58', strokeWidth: 0.3 },
-                pressed: { outline: 'none', fill: opacity ? '#D42040' : '#1C0840', fillOpacity: opacity ?? 1, stroke: '#2A0C58', strokeWidth: 0.3 },
-              }} />
-            );
-          })}
-        </Geographies>
-      </ComposableMap>
-    </div>
-  );
-}
-
-// ── Panel 3: StoryCard (instagram-preview-section 동일 디자인) ────────────
-const STORY_COUNTRIES = [
-  { flag: '🇫🇷', name: 'France',      wines: 28, pct: 92 },
-  { flag: '🇮🇹', name: 'Italy',       wines: 21, pct: 70 },
-  { flag: '🇨🇱', name: 'Chile',       wines: 18, pct: 58 },
-  { flag: '🇳🇿', name: 'New Zealand', wines: 14, pct: 44 },
-  { flag: '🇪🇸', name: 'Spain',       wines: 11, pct: 34 },
-];
-
-export function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
-  const { messages } = useLocale();
-  const [animate, setAnimate] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) setAnimate(true); },
-      { threshold: 0.3 }
-    );
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
-
-  const scale = 0.72;
-
-  return (
-    <div ref={ref} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-      {/* Phone frame — matches PhoneMockup from instagram-preview */}
-      <div style={{
-        width: 240 * scale,
-        height: 520 * scale,
-        background: '#0C0C0C',
-        borderRadius: 40 * scale,
-        padding: 8 * scale,
-        boxShadow: `0 0 0 ${2 * scale}px #2A2A2A, 0 0 0 ${3 * scale}px #111, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(196,30,58,0.06)`,
-        position: 'relative',
-        flexShrink: 0,
-      }}>
-        {/* Notch */}
-        <div style={{
-          position: 'absolute', top: 12 * scale, left: '50%',
-          transform: 'translateX(-50%)',
-          width: 80 * scale, height: 22 * scale,
-          background: '#0C0C0C', borderRadius: 12 * scale, zIndex: 10,
-        }} />
-        {/* Screen */}
-        <div style={{ width: '100%', height: '100%', borderRadius: 32 * scale, overflow: 'hidden', position: 'relative' }}>
-          {/* StoryCard — same design as instagram-preview-section */}
-          <div style={{
-            width: '100%', height: '100%',
-            background: 'linear-gradient(170deg, #060115 0%, #120828 40%, #060115 100%)',
-            display: 'flex', flexDirection: 'column',
-            padding: `${20 * scale}px ${16 * scale}px ${16 * scale}px`,
-            fontFamily: 'Inter, sans-serif',
-            position: 'relative', overflow: 'hidden',
-          }}>
-            {/* Progress bar + header */}
-            <div style={{ marginBottom: 14 * scale }}>
-              <div style={{ height: 2, background: 'rgba(255,255,255,0.15)', borderRadius: 1, marginBottom: 10 * scale }}>
-                <div style={{ height: '100%', width: animate ? '65%' : '0%', background: '#F5F0E8', borderRadius: 1, transition: 'width 1.2s ease 0.4s' }} />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 * scale }}>
-                <div style={{ width: 28 * scale, height: 28 * scale, borderRadius: '50%', background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 * scale, fontWeight: 700, color: '#F5F0E8', flexShrink: 0 }}>W</div>
-                <span style={{ fontSize: 11 * scale, fontWeight: 600, color: '#F5F0E8' }}>winemine</span>
-                <span style={{ fontSize: 10 * scale, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>{messages.features?.timestamp ?? '지금'}</span>
-              </div>
-            </div>
-
-            {/* Title */}
-            <div style={{ textAlign: 'center', marginBottom: 16 * scale }}>
-              <div style={{ fontSize: 9 * scale, letterSpacing: '0.25em', color: '#C9A84C', textTransform: 'uppercase' as const, marginBottom: 4 * scale }}>
-                My Wine Journey
-              </div>
-              <div style={{ fontFamily: 'Georgia, serif', fontSize: 22 * scale, fontWeight: 400, color: '#F5F0E8', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
-                2026<br />Recap
-              </div>
-              <div style={{ width: 30 * scale, height: 1, background: '#C9A84C', margin: `${8 * scale}px auto 0` }} />
-            </div>
-
-            {/* Real mini world map */}
-            <div style={{
-              marginBottom: 14 * scale,
-              height: 90 * scale,
-              borderRadius: 8 * scale,
-              overflow: 'hidden',
-              border: '1px solid rgba(201,168,76,0.15)',
-              position: 'relative',
-            }}>
-              <MiniWorldMap />
-              <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, rgba(6,1,21,0.7) 100%)' }} />
-            </div>
-
-            {/* Stats */}
-            <div style={{
-              display: 'flex', justifyContent: 'space-around',
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.05)',
-              borderRadius: 8 * scale, padding: `${10 * scale}px ${8 * scale}px`, marginBottom: 14 * scale,
-            }}>
-              {[['82', messages.features?.statsLabels?.bottles ?? '병'], ['15', messages.features?.statsLabels?.countries ?? '국가'], ['7', messages.features?.statsLabels?.months ?? '개월']].map(([n, l]) => (
-                <div key={l} style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 20 * scale, fontWeight: 700, color: '#F5F0E8', lineHeight: 1 }}>{n}</div>
-                  <div style={{ fontSize: 9 * scale, color: '#9B8B7A', marginTop: 3 * scale, letterSpacing: '0.05em' }}>{l}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Country bars */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 * scale, flex: 1 }}>
-              {STORY_COUNTRIES.map((c, i) => (
-                <div key={c.name} style={{ display: 'flex', alignItems: 'center', gap: 8 * scale }}>
-                  <span style={{ fontSize: 13 * scale, flexShrink: 0 }}>{c.flag}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%',
-                        width: animate ? `${c.pct}%` : '0%',
-                        background: 'linear-gradient(90deg, rgba(196,30,58,0.7), rgba(196,30,58,0.9))',
-                        borderRadius: 2,
-                        transition: `width 900ms cubic-bezier(0.4,0,0.2,1) ${300 + i * 80}ms`,
-                      }} />
-                    </div>
-                  </div>
-                  <span style={{ fontSize: 10 * scale, color: '#C9A84C', flexShrink: 0, minWidth: 18, textAlign: 'right' }}>{c.wines}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Footer */}
-            <div style={{ marginTop: 14 * scale, paddingTop: 10 * scale, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 * scale }}>
-              <div style={{ width: 16 * scale, height: 16 * scale, borderRadius: '50%', background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)' }} />
-              <span style={{ fontFamily: 'Georgia, serif', fontSize: 11 * scale, color: '#C9A84C', letterSpacing: '0.08em' }}>winemine</span>
-              <span style={{ fontSize: 9 * scale, color: '#4A3D56', marginLeft: 4 * scale }}>winemine</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button
-        onClick={onScrollToPreview}
-        style={{ padding: '7px 18px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)', borderRadius: 20, color: '#C9A84C', fontSize: 12, cursor: 'pointer', transition: 'all 200ms ease', fontFamily: 'inherit' }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.2)'; e.currentTarget.style.borderColor = '#C9A84C'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.1)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'; }}
-      >
-        {messages.features?.fullPreviewButton ?? '전체 미리보기 →'}
-      </button>
-    </div>
-  );
-}
-
 // ── Main component ─────────────────────────────────────────────────────────
 const PANELS = [
   {
     num: '01',
-    title: '지도에 새긴다',
-    sub: '마신 와인이 쌓일수록\n세계 지도가 물들어간다',
+    title: '한 잔 한 잔, 다 다르게',
+    sub: '와인 한 병의 디테일까지\n오롯이 기억됩니다',
     content: 'region',
-  },
-  {
-    num: '02',
-    title: '찍으면 바로',
-    sub: '라벨 하나로\n모든 정보가 채워진다',
-    content: 'scan',
-  },
-  {
-    num: '03',
-    title: '나만의 지도',
-    sub: '언제든, 한 번에\n손쉽게 공유해요',
-    content: 'share',
   },
 ];
 
-interface FeaturesSectionProps {
-  onScrollToPreview?: () => void;
-}
-
-export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionProps) {
+export default function FeaturesSection() {
   const shouldReduceMotion = useReducedMotion();
   const { messages } = useLocale();
   const [activePanel, setActivePanel] = useState<number | null>(null);
@@ -801,11 +579,7 @@ export default function FeaturesSection({ onScrollToPreview }: FeaturesSectionPr
 
               {/* Interactive content */}
               <div style={{ position: 'relative' }}>
-                {panel.content === 'region' && <GlassCardStack />}
-                {panel.content === 'scan' && <ScanPanel />}
-                {panel.content === 'share' && (
-                  <SharePanel onScrollToPreview={onScrollToPreview ?? (() => {})} />
-                )}
+                <GlassCardStack />
               </div>
             </motion.div>
           ); })}

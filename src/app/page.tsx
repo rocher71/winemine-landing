@@ -8,7 +8,6 @@ import VineyardStrip from '@/components/sections/vineyard-strip';
 import FeaturesSection from '@/components/sections/features-section';
 import MarketStatsSection from '@/components/sections/market-stats-section';
 import HowItWorksSection from '@/components/sections/how-it-works-section';
-import InstagramPreviewSection from '@/components/sections/instagram-preview-section';
 import FinalCTASection from '@/components/sections/final-cta-section';
 import WaitlistModal from '@/components/waitlist/waitlist-modal';
 import { FloatingCTA } from '@/components/ui/floating-cta';
@@ -18,10 +17,6 @@ export default function Home() {
 
   const openModal  = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-
-  const scrollToPreview = () => {
-    document.getElementById('instagram-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   return (
     <main>
@@ -37,17 +32,14 @@ export default function Home() {
       {/* 4. 포도밭 갤러리 — 와인 산지 사진 + 대기 사진 스트립 */}
       <VineyardStrip />
 
-      {/* 4. WineMine 핵심 기능 소개 */}
-      <FeaturesSection onScrollToPreview={scrollToPreview} />
+      {/* 5. WineMine 와인 카드 쇼케이스 (단일 패널) */}
+      <FeaturesSection />
 
-      {/* 5. 한국 와인 시장 통계 */}
+      {/* 6. 한국 와인 시장 통계 */}
       <MarketStatsSection />
 
-      {/* 6. 사용 흐름 */}
+      {/* 7. 사용 흐름 */}
       <HowItWorksSection />
-
-      {/* 7. 인스타 공유 미리보기 */}
-      <InstagramPreviewSection id="instagram-preview" />
 
       {/* 8. 최종 CTA */}
       <FinalCTASection onOpenModal={openModal} />

@@ -95,17 +95,7 @@
   "features": {
     "sectionHeading": "Why WineMine",
     "panels": [
-      { "title": "Map your sips", "sub": "Every bottle you drink\ncolors your world map deeper" },
-      { "title": "Scan & done", "sub": "One label scan\nfills every detail automatically" },
-      { "title": "Your own map", "sub": "Save and share\nyour journey anytime" }
-    ],
-    "regions": [
-      { "country": "France" },
-      { "country": "Italy" },
-      { "country": "Chile" },
-      { "country": "New Zealand" },
-      { "country": "Spain" },
-      { "country": "Argentina" }
+      { "title": "Every glass, distinct", "sub": "Every bottle's detail\nremembered, faithfully" }
     ],
     "wineCards": [
       { "note": "Ripe cassis, cigar box, violet. Elegant tannins with a long, lingering finish.", "occasion": "Anniversary" },
@@ -113,10 +103,7 @@
       { "note": "Hazelnut, butter, pure minerality. The very definition of elegance.", "occasion": "Friends gathering" }
     ],
     "mobileSwipeHint": "← Swipe →",
-    "mobileTapHint": "Tap to see next wine",
-    "timestamp": "Now",
-    "statsLabels": { "bottles": "btls", "countries": "countries", "months": "months" },
-    "fullPreviewButton": "Full preview →"
+    "mobileTapHint": "Tap to see next wine"
   },
 
   "marketStats": {

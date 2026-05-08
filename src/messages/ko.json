@@ -95,17 +95,7 @@
   "features": {
     "sectionHeading": "WineMine이 특별한 이유",
     "panels": [
-      { "title": "지도에 새긴다", "sub": "마신 와인이 쌓일수록\n세계 지도가 물들어간다" },
-      { "title": "찍으면 바로", "sub": "라벨 하나로\n모든 정보가 채워진다" },
-      { "title": "나만의 지도", "sub": "언제든, 한 번에\n손쉽게 공유해요" }
-    ],
-    "regions": [
-      { "country": "프랑스" },
-      { "country": "이탈리아" },
-      { "country": "칠레" },
-      { "country": "뉴질랜드" },
-      { "country": "스페인" },
-      { "country": "아르헨티나" }
+      { "title": "한 잔 한 잔, 다 다르게", "sub": "와인 한 병의 디테일까지\n오롯이 기억됩니다" }
     ],
     "wineCards": [
       { "note": "잘 익은 카시스, 시가박스, 제비꽃. 우아한 탄닌이 한참 머무름.", "occasion": "결혼기념일" },
@@ -113,10 +103,7 @@
       { "note": "헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.", "occasion": "지인 모임" }
     ],
     "mobileSwipeHint": "← 스와이프 →",
-    "mobileTapHint": "탭해서 다른 와인 보기",
-    "timestamp": "지금",
-    "statsLabels": { "bottles": "병", "countries": "국가", "months": "개월" },
-    "fullPreviewButton": "전체 미리보기 →"
+    "mobileTapHint": "탭해서 다른 와인 보기"
   },
 
   "marketStats": {
