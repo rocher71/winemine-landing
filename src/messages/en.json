@@ -35,7 +35,8 @@
       "title": "The more you log,\nthe better the next bottle",
       "body": "Starting from the region you tasted,\nwe pin similar starter wines on the map",
       "startHint": "Similar to the Bordeaux red you had…",
-      "footnote": "Curated picks under ₩60,000"
+      "footnote": "Curated picks under ₩60,000",
+      "cardLabel": "Your next bottle"
     },
     "tapHint": "Tap to continue",
     "tapHintCaption": "tap anywhere",

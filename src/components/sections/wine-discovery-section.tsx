@@ -400,10 +400,11 @@ function StartHintPill({ progress, text }: { progress: MotionValue<number>; text
   );
 }
 
-function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
+function RecommendationCard({ progress, cardLabel }: { progress: MotionValue<number>; cardLabel: string }) {
   const { locale } = useLocale();
-  const opacity = useTransform(progress, [0.78, 0.92], [0, 1]);
-  const y = useTransform(progress, [0.78, 0.96], [28, 0]);
+  // Show the card earlier so users actually see it before the next section
+  const opacity = useTransform(progress, [0.55, 0.70], [0, 1]);
+  const y = useTransform(progress, [0.55, 0.74], [28, 0]);
   const wine = RECOMMENDED_WINES[0]; // Chianti Classico — Italy entry-level
   return (
     <motion.div
@@ -417,13 +418,13 @@ function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
         display: 'flex',
         alignItems: 'center',
         gap: 16,
-        background: 'rgba(12,4,24,0.92)',
+        background: 'rgba(12,4,24,0.94)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(201,168,76,0.35)',
+        border: '1px solid rgba(201,168,76,0.40)',
         borderRadius: 16,
-        padding: '14px 22px 14px 16px',
-        boxShadow: '0 14px 50px rgba(0,0,0,0.65)',
+        padding: '16px 24px 16px 18px',
+        boxShadow: '0 14px 50px rgba(0,0,0,0.65), 0 0 30px rgba(201,168,76,0.12)',
         pointerEvents: 'none',
         zIndex: 7,
       }}
@@ -445,27 +446,29 @@ function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
       </div>
       <div>
         <div style={{
-          fontSize: 9,
-          letterSpacing: '0.14em',
+          fontSize: 10,
+          letterSpacing: '0.18em',
           color: '#C9A84C',
           textTransform: 'uppercase',
-          marginBottom: 3,
+          fontWeight: 600,
+          marginBottom: 6,
         }}>
-          {wine.country[locale]} · {wine.region}
+          {cardLabel}
         </div>
         <div style={{
           fontFamily: 'Georgia, serif',
-          fontSize: 16,
+          fontSize: 18,
           color: '#F5F0E8',
           marginBottom: 4,
+          lineHeight: 1.2,
         }}>
           {wine.name}
         </div>
         <div style={{
-          fontSize: 11,
-          color: '#9B8B7A',
+          fontSize: 13,
+          color: '#D4C5B0',
         }}>
-          {wine.styleHint[locale]} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
+          {wine.country[locale]} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
         </div>
       </div>
     </motion.div>
@@ -631,7 +634,7 @@ export default function WineDiscoverySection() {
         {step === 2 && (
           <>
             <StartHintPill progress={recProgress} text={t.step2.startHint} />
-            <RecommendationCard progress={recProgress} />
+            <RecommendationCard progress={recProgress} cardLabel={t.step2.cardLabel} />
           </>
         )}
 
