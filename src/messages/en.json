@@ -37,10 +37,8 @@
       "startHint": "Similar to the Bordeaux red you had…",
       "footnote": "Curated picks under ₩60,000"
     },
-    "outro": {
-      "title": "Already going deep?",
-      "subtitle": "One step further into Burgundy ↓"
-    }
+    "tapHint": "Tap to continue",
+    "tapHintCaption": "tap anywhere"
   },
 
   "burgundy": {

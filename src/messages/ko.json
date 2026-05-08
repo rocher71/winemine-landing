@@ -37,10 +37,8 @@
       "startHint": "당신이 마신 보르도 레드와 비슷한…",
       "footnote": "1~6만원대 입문용으로 큐레이션"
     },
-    "outro": {
-      "title": "이미 깊게 빠지셨나요?",
-      "subtitle": "부르고뉴까지 한 발짝 더 ↓"
-    }
+    "tapHint": "탭해서 다음으로",
+    "tapHintCaption": "tap to continue"
   },
 
   "burgundy": {
