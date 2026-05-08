@@ -124,12 +124,12 @@ const WAVES: Wave[] = [
     ],
   },
   {
-    isos: ['250', '380', '724', '152', '032', '554', '036', '840'],
-    pinIds: ['casillero', 'mendoza', 'nz-pinot', 'jacobs', 'napa-cab'],
+    // NZ removed entirely — no pin, no line, no active fill.
+    isos: ['250', '380', '724', '152', '032', '036', '840'],
+    pinIds: ['casillero', 'mendoza', 'jacobs', 'napa-cab'],
     newLines: [
       { from: ITALY_HUB, to: [-70.66, -33.45] },
       { from: ITALY_HUB, to: [-68.85, -32.89] },
-      { from: ITALY_HUB, to: [173.95, -41.52] },
       { from: ITALY_HUB, to: [138.6, -34.93] },
       { from: ITALY_HUB, to: [-122.27, 38.30] },
     ],
@@ -175,26 +175,27 @@ function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: n
 }
 
 // ── Cinematic tour stops ─────────────────────────────────────────────────
-type TourStop = { wine: RecommendedWine; coord: [number, number] };
+// One stop per geographic region. Pins for every wine still appear on the
+// map during the initial neural-link phase; the camera just doesn't redundantly
+// zoom into adjacent wines that share a single visual frame.
+type TourStop = { wine: RecommendedWine; coord: [number, number]; zoom: number };
 
 const wineById = (id: string): RecommendedWine =>
   ALL_WINES.find(w => w.id === id) as RecommendedWine;
 
-// Order: Western Europe cluster → Americas → Oceania.
 const TOUR_STOPS: TourStop[] = [
-  { wine: STARTING_WINE,       coord: STARTING_WINE.coords },
-  { wine: wineById('chianti'),   coord: [11.376, 43.469] },
-  { wine: wineById('rioja'),     coord: [-2.45, 42.46] },
-  { wine: wineById('napa-cab'),  coord: [-122.27, 38.30] },
-  { wine: wineById('casillero'), coord: [-70.66, -33.45] },
-  { wine: wineById('mendoza'),   coord: [-68.85, -32.89] },
-  { wine: wineById('jacobs'),    coord: [138.6, -34.93] },
-  { wine: wineById('nz-pinot'),  coord: [173.95, -41.52] },
+  // Europe — frames France · Italy · Spain in one wide view.
+  { wine: wineById('chianti'),   coord: [4.0, 43.5],       zoom: 1.7 },
+  // USA — Napa.
+  { wine: wineById('napa-cab'),  coord: [-122.27, 38.30],  zoom: 3.4 },
+  // South America — Chile + Argentina (~3° apart, fit in one frame).
+  { wine: wineById('mendoza'),   coord: [-69.75, -33.17],  zoom: 3.0 },
+  // Australia — South Australia / Barossa.
+  { wine: wineById('jacobs'),    coord: [138.6, -34.93],   zoom: 3.4 },
 ];
 
-const TOUR_START = 0.10; // before this, France close-up + lines drawing
+const TOUR_START = 0.10; // before this, hold on stop 0 + lines drawing
 const TOUR_END   = 0.95; // after this, hold final stop
-const PEAK_ZOOM  = 3.4;
 const DIP_ZOOM   = 1.25;
 
 // Build keyframe arrays for useTransform.
@@ -203,12 +204,12 @@ function buildTour() {
   const inputs: number[] = [0];
   const lons: number[]   = [stops[0].coord[0]];
   const lats: number[]   = [stops[0].coord[1]];
-  const zooms: number[]  = [PEAK_ZOOM];
+  const zooms: number[]  = [stops[0].zoom];
 
   inputs.push(TOUR_START);
   lons.push(stops[0].coord[0]);
   lats.push(stops[0].coord[1]);
-  zooms.push(PEAK_ZOOM);
+  zooms.push(stops[0].zoom);
 
   const span = TOUR_END - TOUR_START;
   const segCount = stops.length - 1;
@@ -228,13 +229,14 @@ function buildTour() {
     inputs.push(arriveT);
     lons.push(curr.coord[0]);
     lats.push(curr.coord[1]);
-    zooms.push(PEAK_ZOOM);
+    zooms.push(curr.zoom);
   }
 
+  const last = stops[stops.length - 1];
   inputs.push(1.0);
-  lons.push(stops[stops.length - 1].coord[0]);
-  lats.push(stops[stops.length - 1].coord[1]);
-  zooms.push(PEAK_ZOOM);
+  lons.push(last.coord[0]);
+  lats.push(last.coord[1]);
+  zooms.push(last.zoom);
 
   return { inputs, lons, lats, zooms };
 }
@@ -373,7 +375,7 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   const latMV  = useTransform(progress, TOUR_KF.inputs, TOUR_KF.lats);
   const zoomMV = useTransform(progress, TOUR_KF.inputs, TOUR_KF.zooms);
   const [center, setCenter] = useState<[number, number]>([TOUR_KF.lons[0], TOUR_KF.lats[0]]);
-  const [zoom, setZoom] = useState<number>(PEAK_ZOOM);
+  const [zoom, setZoom] = useState<number>(TOUR_STOPS[0].zoom);
 
   useEffect(() => {
     setMounted(true);
@@ -523,22 +525,18 @@ function RecommendationCard({
 }) {
   const { locale } = useLocale();
 
-  // Card appears once we leave the starting France stop and tour begins moving.
+  // Card appears once the StartHintPill has faded (around 0.13).
   const cardOpacity = useTransform(progress, [0.13, 0.18], [0, 1]);
   const cardY = useTransform(progress, [0.13, 0.20], [28, 0]);
 
-  // Pick current stop based on progress; index 1..N-1 since 0 is the starting wine.
+  // Each tour stop owns one card slot; pick whichever stop the camera is closest to.
   const span = TOUR_END - TOUR_START;
-  const segLen = span / (TOUR_STOPS.length - 1);
+  const segLen = span / Math.max(1, TOUR_STOPS.length - 1);
 
-  const [stopIdx, setStopIdx] = useState(1);
+  const [stopIdx, setStopIdx] = useState(0);
   useMotionValueEvent(progress, 'change', v => {
-    if (v < TOUR_START + segLen * 0.5) {
-      setStopIdx(1);
-      return;
-    }
     const raw = (v - TOUR_START) / segLen;
-    const idx = Math.min(TOUR_STOPS.length - 1, Math.max(1, Math.round(raw)));
+    const idx = Math.min(TOUR_STOPS.length - 1, Math.max(0, Math.round(raw)));
     setStopIdx(idx);
   });
 
