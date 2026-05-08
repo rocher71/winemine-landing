@@ -377,7 +377,7 @@ function GlassCardStack() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Tap ripple indicator */}
+          {/* Tap ripple + 탭 해보세요 — ripple 바로 위에 텍스트 */}
           <AnimatePresence>
             {!hasClicked && (
               <motion.div
@@ -386,16 +386,21 @@ function GlassCardStack() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3, delay: 0.8 }}
-                style={{ position: 'absolute', bottom: 20, right: 20, pointerEvents: 'none' }}
+                style={{
+                  position: 'absolute', bottom: 16, right: 16,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  pointerEvents: 'none',
+                }}
               >
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                  탭 해보세요
+                </span>
                 <div style={{ position: 'relative', width: 38, height: 38 }}>
-                  {/* Outer pulse ring */}
                   <motion.div
                     animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
                     transition={{ duration: 1.3, repeat: Infinity, ease: 'easeOut' }}
                     style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }}
                   />
-                  {/* Inner circle */}
                   <div style={{
                     position: 'absolute', inset: 0, borderRadius: '50%',
                     background: 'rgba(255,255,255,0.12)',
@@ -410,25 +415,6 @@ function GlassCardStack() {
 
       <Dots active={activeIdx} onDotClick={setActiveIdx} />
 
-      <AnimatePresence>
-        {!hasClicked && (
-          <motion.div
-            key="tap-hint"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, delay: 0.8 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, pointerEvents: 'none' }}
-          >
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em' }}>
-              탭 해보세요
-            </span>
-            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
-              tap the card
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
