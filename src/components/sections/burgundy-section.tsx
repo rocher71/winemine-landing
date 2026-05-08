@@ -97,27 +97,41 @@ const COTES: CoteData[] = [
   { id: 'Côte de Nuits',    nameKo: '꼬뜨 드 뉘',    zoom: 4.8, center: [4.97, 47.18], character: '피노 누아의 본거지. 부르고뉴 최고급 레드 거의 전부.' },
   { id: 'Côte de Beaune',   nameKo: '꼬뜨 드 본',    zoom: 4.5, center: [4.80, 46.95], character: '화이트 왕국 + 우아한 레드. 몽라셰·뫼르소·볼네.' },
   { id: 'Chablis',          nameKo: '샤블리',        zoom: 5.0, center: [3.81, 47.82], character: '100% 샤르도네. 키메리지안 토양, 가장 미네랄.' },
-  { id: 'Côte Chalonnaise', nameKo: '코트 샬로네즈', zoom: 4.5, center: [4.72, 46.65], character: '가성비 부르고뉴. Mercurey·Givry·Rully·Montagny.' },
-  { id: 'Mâconnais',        nameKo: '마코네',        zoom: 4.5, center: [4.78, 46.35], character: '따뜻한 화이트. Pouilly-Fuissé·Saint-Véran.' },
+  { id: 'Côte Chalonnaise', nameKo: '코트 샬로네즈', zoom: 4.5, center: [4.75, 46.83], character: '가성비 부르고뉴. Bouzeron·Rully·Mercurey·Givry. 알리고테 단일 AOC도 여기.' },
+  { id: 'Mâconnais',        nameKo: '마코네',        zoom: 4.8, center: [4.73, 46.30], character: '따뜻한 화이트. Pouilly-Fuissé(2020년 1er Cru 승격)·Saint-Véran.' },
 ];
 
 // 마을(코뮌) 메타 — 드릴다운 Level 1 → 2. id는 Wine.village와 일치시킴
 const COMMUNES: CommuneData[] = [
   // Côte de Nuits (북→남)
   { id: 'Marsannay',           name: 'Marsannay',           nameKo: '막사네',         cote: 'Côte de Nuits',  coords: [4.972, 47.310], character: '꼬뜨 드 뉘 최북단. 가벼운 피노 + 부르고뉴 유일 빌라주급 로제 AOC.', hasGrandCru: false, notableNote: '부르고뉴 유일 마을명 로제 AOC (1987)' },
+  { id: 'Fixin',               name: 'Fixin',               nameKo: '픽생',           cote: 'Côte de Nuits',  coords: [4.987, 47.265], character: '막사네 바로 남쪽. 견고하고 흙내음 강한 레드, 잘 알려지지 않아 가성비.', hasGrandCru: false },
   { id: 'Gevrey-Chambertin',   name: 'Gevrey-Chambertin',   nameKo: '주브레-샹베르탱', cote: 'Côte de Nuits',  coords: [5.003, 47.226], character: '묵직, 남성적, 검은 과실. 샹베르탱·클로 드 베즈.', hasGrandCru: true },
   { id: 'Morey-Saint-Denis',   name: 'Morey-Saint-Denis',   nameKo: '모레-생-드니',   cote: 'Côte de Nuits',  coords: [4.983, 47.211], character: '체리, 견고함. 클로 드 라 로슈·클로 드 타르.',                hasGrandCru: true },
   { id: 'Chambolle-Musigny',   name: 'Chambolle-Musigny',   nameKo: '샹볼-뮈지니',    cote: 'Côte de Nuits',  coords: [4.972, 47.203], character: '가볍고 향기로움, 꽃. 뮈지니·본 마르.',                          hasGrandCru: true },
   { id: 'Vougeot',             name: 'Vougeot',             nameKo: '부조',           cote: 'Côte de Nuits',  coords: [4.970, 47.196], character: '클로 드 부조 50ha를 80여 명이 공유.',                            hasGrandCru: true },
   { id: 'Vosne-Romanée',       name: 'Vosne-Romanée',       nameKo: '본-로마네',      cote: 'Côte de Nuits',  coords: [4.975, 47.171], character: '이국적, 향신료, 깊이. 로마네-콩티·라 타슈·리슈부르.',          hasGrandCru: true },
   { id: 'Nuits-Saint-Georges', name: 'Nuits-Saint-Georges', nameKo: '뉘-생-조르주',   cote: 'Côte de Nuits',  coords: [4.959, 47.109], character: '견고, 광물성. 그랑 크뤼는 없지만 1er Cru 절대 강자.',           hasGrandCru: false },
-  // Côte de Beaune
+  // Côte de Beaune (북→남)
+  { id: 'Aloxe-Corton',        name: 'Aloxe-Corton',        nameKo: '알록스-코르통',  cote: 'Côte de Beaune', coords: [4.857, 47.062], character: '코트 드 본 최북단. Corton(레드)·Corton-Charlemagne(화이트) — 코트 드 본 유일 GC.', hasGrandCru: true },
+  { id: 'Beaune',              name: 'Beaune',              nameKo: '본',             cote: 'Côte de Beaune', coords: [4.840, 47.024], character: '부르고뉴 와인 무역의 수도. 그랑 크뤼는 없으나 1er Cru가 다수.',  hasGrandCru: false },
+  { id: 'Pommard',             name: 'Pommard',             nameKo: '포마르',         cote: 'Côte de Beaune', coords: [4.785, 46.934], character: '강건, 흙내음, 검은 과실. 코트 드 본의 가장 남성적 레드. 레 뤼지엥·레 제프노.', hasGrandCru: false, notableNote: '레 뤼지엥은 GC급 1er Cru로 자주 회자' },
   { id: 'Volnay',              name: 'Volnay',              nameKo: '볼네',           cote: 'Côte de Beaune', coords: [4.778, 46.892], character: '우아, 실키. 코트 드 본의 가장 섬세한 레드.',                    hasGrandCru: false },
   { id: 'Meursault',           name: 'Meursault',           nameKo: '뫼르소',         cote: 'Côte de Beaune', coords: [4.831, 46.976], character: '풍성, 버터, 헤이즐넛. 화이트 강자, 그랑 크뤼는 없음.',          hasGrandCru: false },
   { id: 'Puligny-Montrachet',  name: 'Puligny-Montrachet',  nameKo: '퓔리니-몽라셰',  cote: 'Côte de Beaune', coords: [4.797, 46.941], character: '정밀, 미네랄, 시트러스. 몽라셰·슈발리에-몽라셰.',                hasGrandCru: true },
+  { id: 'Chassagne-Montrachet',name: 'Chassagne-Montrachet',nameKo: '샤사뉴-몽라셰',  cote: 'Côte de Beaune', coords: [4.737, 46.918], character: '풍성한 화이트 + 견과류 + 레드도 우수. 몽라셰·바타르-몽라셰.',    hasGrandCru: true },
+  { id: 'Saint-Aubin',         name: 'Saint-Aubin',         nameKo: '생-토뱅',        cote: 'Côte de Beaune', coords: [4.722, 46.918], character: '몽라셰 마을 뒤편 언덕. 화이트 가성비의 정점. 앙 르미이.',         hasGrandCru: false, notableNote: '앙 르미이는 슈발리에-몽라셰 바로 옆' },
   { id: 'Bourgogne',           name: 'Bourgogne',           nameKo: '부르고뉴 광역',  cote: 'Côte de Beaune', coords: [4.840, 47.024], character: 'Régional AOC. 좋은 도멘의 부르고뉴는 가성비 보석.',              hasGrandCru: false },
   // Chablis
   { id: 'Chablis',             name: 'Chablis',             nameKo: '샤블리',         cote: 'Chablis',        coords: [3.801, 47.821], character: '굴껍데기·라임·부싯돌. 100% 샤르도네 미네랄의 정점.',             hasGrandCru: true },
+  // Côte Chalonnaise (북→남)
+  { id: 'Bouzeron',            name: 'Bouzeron',            nameKo: '부즈롱',         cote: 'Côte Chalonnaise', coords: [4.738, 46.882], character: '알리고테 단일 품종 AOC — 부르고뉴 유일.',                       hasGrandCru: false, notableNote: '부르고뉴 유일 알리고테 마을 AOC' },
+  { id: 'Rully',               name: 'Rully',               nameKo: '륄리',           cote: 'Côte Chalonnaise', coords: [4.755, 46.864], character: '화이트 중심 + 크레망 베이스. 23개 1er Cru 클리마.',                hasGrandCru: false },
+  { id: 'Mercurey',            name: 'Mercurey',            nameKo: '메르퀴레',       cote: 'Côte Chalonnaise', coords: [4.718, 46.829], character: '코트 샬로네즈 최대 마을, 레드 중심. 32개 1er Cru.',                hasGrandCru: false },
+  { id: 'Givry',               name: 'Givry',               nameKo: '지브리',         cote: 'Côte Chalonnaise', coords: [4.745, 46.776], character: '레드 중심. 헨리 4세가 즐긴 마을로 전해짐.',                       hasGrandCru: false, notableNote: '헨리 4세의 와인' },
+  // Mâconnais (북→남)
+  { id: 'Saint-Véran',         name: 'Saint-Véran',         nameKo: '생-베랑',        cote: 'Mâconnais',       coords: [4.732, 46.275], character: 'Pouilly-Fuissé 인근. 따뜻하고 풍성한 샤르도네, 가성비.',           hasGrandCru: false },
+  { id: 'Pouilly-Fuissé',      name: 'Pouilly-Fuissé',      nameKo: '푸이-퓌세',      cote: 'Mâconnais',       coords: [4.737, 46.286], character: '마코네 최상급 화이트. 2020년 22개 클리마가 1er Cru 승격(마코네 최초).', hasGrandCru: false, notableNote: '2020년 마코네 최초 1er Cru 승격' },
 ];
 
 // Wine.subregionId → Cote 매핑 (드릴다운 그룹핑용)
@@ -138,12 +152,18 @@ const AMBIENT_LABELS: { text: string; coords: [number, number]; size: AmbientSiz
   { text: 'Côte de Nuits',     coords: [5.20, 47.18], size: 'lg' },
   { text: 'Côte de Beaune',    coords: [5.05, 46.95], size: 'lg' },
   { text: 'Chablis',           coords: [3.95, 47.83], size: 'md' },
+  { text: 'Côte Chalonnaise',  coords: [4.95, 46.83], size: 'md' },
+  { text: 'Mâconnais',         coords: [4.95, 46.30], size: 'md' },
   // 주요 마을 (와인이 자주 등장)
   { text: 'Gevrey-Chambertin', coords: [5.07, 47.23], size: 'sm' },
   { text: 'Vosne-Romanée',     coords: [5.04, 47.17], size: 'sm' },
   { text: 'Nuits-Saint-Georges',coords:[5.04, 47.10], size: 'sm' },
+  { text: 'Aloxe-Corton',      coords: [4.93, 47.06], size: 'sm' },
+  { text: 'Pommard',           coords: [4.86, 46.93], size: 'sm' },
   { text: 'Meursault',         coords: [4.88, 46.98], size: 'sm' },
   { text: 'Puligny-Montrachet',coords: [4.86, 46.94], size: 'sm' },
+  { text: 'Mercurey',          coords: [4.79, 46.83], size: 'sm' },
+  { text: 'Pouilly-Fuissé',    coords: [4.80, 46.29], size: 'sm' },
 ];
 
 const AMBIENT_FONT: Record<AmbientSize, { fontSize: number; letter: string; weight: number; opacity: number }> = {
@@ -168,6 +188,18 @@ const PRODUCERS: ProducerData[] = [
   { id: 'mugnier',  name: 'J.-F. Mugnier',               nameKo: '도멘 J.-F. 뮈니에',           initials: 'JM',  coords: [4.972, 47.202], village: 'Chambolle-Musigny',  blurb: '레 자무뢰즈·뮈지니 최고봉. 섬세함과 투명함의 정수.', type: 'Domaine' },
   { id: 'meocamuzet', name: 'Méo-Camuzet',              nameKo: '메오-카뮈제',                  initials: 'MC',  coords: [4.975, 47.173], village: 'Vosne-Romanée',      blurb: '크로 파랑투의 전설. 앙리 자이에에게 물려받은 밭.', type: 'Domaine' },
   { id: 'bart',     name: 'Domaine Bart',                nameKo: '도멘 바르',                   initials: 'B',   coords: [4.972, 47.310], village: 'Marsannay',          blurb: '막사네 4세대 가족 도멘. 마을명 로제로 유명.',     type: 'Domaine' },
+  { id: 'pierregelin',name: 'Domaine Pierre Gelin',      nameKo: '도멘 피에르 즐랭',            initials: 'PG',  coords: [4.987, 47.265], village: 'Fixin',              blurb: '픽생의 대표 도멘. 클로 뒤 샤피트르 모노폴 보유.', type: 'Domaine' },
+  { id: 'bonneau',  name: 'Bonneau du Martray',          nameKo: '보노 뒤 마르트레',            initials: 'BM',  coords: [4.853, 47.064], village: 'Aloxe-Corton',       blurb: '코르통-샤를마뉴·코르통만 만드는 단일 GC 도멘.',    type: 'Domaine' },
+  { id: 'bouchard', name: 'Maison Bouchard Père & Fils', nameKo: '메종 부샤르 페르 에 피스',    initials: 'BF',  coords: [4.840, 47.025], village: 'Beaune',             blurb: '본 성 안의 1731년 메종. 코르통·뫼르소까지 폭넓게.', type: 'Négociant-Éleveur' },
+  { id: 'comtearmand',name: 'Domaine Comte Armand',      nameKo: '도멘 콩트 아르망',            initials: 'CA',  coords: [4.789, 46.945], village: 'Pommard',            blurb: '클로 데 제프노 모노폴 5.2ha. 포마르의 강건함의 정점.', type: 'Domaine' },
+  { id: 'ramonet',  name: 'Domaine Ramonet',             nameKo: '도멘 라모네',                 initials: 'RM',  coords: [4.738, 46.918], village: 'Chassagne-Montrachet', blurb: '샤사뉴 백포도주 왕가. 몽라셰·바타르의 표준.',    type: 'Domaine' },
+  { id: 'huberlamy',name: 'Domaine Hubert Lamy',         nameKo: '도멘 위베르 라미',            initials: 'HL',  coords: [4.722, 46.918], village: 'Saint-Aubin',        blurb: '생-토뱅 정밀파. 앙 르미이 1er Cru로 슈발리에-몽라셰 옆 떼루아.', type: 'Domaine' },
+  { id: 'faiveley', name: 'Domaine Faiveley',            nameKo: '도멘 페블레',                 initials: 'FV',  coords: [4.718, 46.829], village: 'Mercurey',           blurb: '메르퀴레 최대 도멘. 클로 데 미글랑 모노폴.',      type: 'Négociant-Éleveur' },
+  { id: 'dureuil',  name: 'Vincent Dureuil-Janthial',    nameKo: '뱅상 뒤뢰이-장시알',          initials: 'VD',  coords: [4.755, 46.864], village: 'Rully',              blurb: '륄리 비오디나믹 선두주자. 르 메 카도 1er Cru.',   type: 'Domaine' },
+  { id: 'lumpp',    name: 'Domaine François Lumpp',      nameKo: '도멘 프랑수아 룸프',          initials: 'FL',  coords: [4.745, 46.776], village: 'Givry',              blurb: '지브리 1er Cru 전문가. 크라우조·프티 마롤이 시그니처.', type: 'Domaine' },
+  { id: 'devillaine',name: 'A. & P. de Villaine',        nameKo: 'A. & P. 드 빌렌',             initials: 'DV',  coords: [4.738, 46.882], village: 'Bouzeron',           blurb: 'DRC 공동 디렉터 오베르 드 빌렌의 도멘. 알리고테 부즈롱 표준.', type: 'Domaine' },
+  { id: 'ferret',   name: 'Domaine J.A. Ferret',         nameKo: '도멘 J.A. 페레',              initials: 'JF',  coords: [4.732, 46.286], village: 'Pouilly-Fuissé',     blurb: '푸이-퓌세 명문, 4대째 가족 운영. 레 페리에르 1er Cru.', type: 'Domaine' },
+  { id: 'merlin',   name: 'Domaine Olivier Merlin',      nameKo: '도멘 올리비에 메를랭',        initials: 'OM',  coords: [4.730, 46.290], village: 'Saint-Véran',        blurb: '마코네 자연주의 선두. 비에이 비뉴(올드 바인) 정통파.', type: 'Domaine' },
 ];
 
 const VINEYARDS: VineyardData[] = [
@@ -190,6 +222,13 @@ const VINEYARDS: VineyardData[] = [
   { id: 'les-pucelles',      name: 'Les Pucelles',            nameKo: '레 퓌셀',               coords: [4.796, 46.940], classification: '1er Cru',   subregion: 'Puligny-Montrachet', area: '6.77 ha', isGrandCruLevel1er: true },
   { id: 'montrachet',        name: 'Chevalier-Montrachet',    nameKo: '슈발리에-몽라셰',       coords: [4.797, 46.942], classification: 'Grand Cru', subregion: 'Puligny-Montrachet',area: '7.47 ha'  },
   { id: 'valmur',            name: 'Chablis GC Valmur',       nameKo: '샤블리 그랑 크뤼 발뮈르', coords: [3.815, 47.823], classification: 'Grand Cru', subregion: 'Chablis',           area: '11.04 ha' },
+  { id: 'corton',            name: 'Corton',                  nameKo: '코르통',                coords: [4.857, 47.066], classification: 'Grand Cru', subregion: 'Aloxe-Corton',      area: '160.19 ha' },
+  { id: 'corton-charlemagne',name: 'Corton-Charlemagne',      nameKo: '코르통-샤를마뉴',       coords: [4.853, 47.064], classification: 'Grand Cru', subregion: 'Aloxe-Corton',      area: '52.23 ha' },
+  { id: 'batard-montrachet', name: 'Bâtard-Montrachet',       nameKo: '바타르-몽라셰',         coords: [4.741, 46.918], classification: 'Grand Cru', subregion: 'Chassagne-Montrachet', area: '11.86 ha' },
+  { id: 'clos-mouches',      name: 'Beaune Clos des Mouches', nameKo: '본 클로 데 무슈',        coords: [4.815, 46.998], classification: '1er Cru',   subregion: 'Beaune',            area: '25.18 ha' },
+  { id: 'en-remilly',        name: 'Saint-Aubin En Remilly',  nameKo: '생-토뱅 앙 르미이',      coords: [4.724, 46.928], classification: '1er Cru',   subregion: 'Saint-Aubin',       area: '13.75 ha', isGrandCruLevel1er: true },
+  { id: 'clos-chapitre',     name: 'Fixin Clos du Chapitre',  nameKo: '픽생 클로 뒤 샤피트르',  coords: [4.987, 47.265], classification: '1er Cru',   subregion: 'Fixin',             area: '4.79 ha',  isMonopole: true },
+  { id: 'clos-myglands',     name: 'Mercurey Clos des Myglands', nameKo: '메르퀴레 클로 데 미글랑', coords: [4.720, 46.829], classification: '1er Cru', subregion: 'Mercurey',         area: '7.31 ha',  isMonopole: true },
 ];
 
 // ── 내가 마신 와인 (AI 자동 분류) ────────────────────────────────────────────
@@ -217,6 +256,31 @@ const WINES: Wine[] = [
   { id: 'w20', name: 'Marsannay Rosé',             nameKo: '막사네 로제',                vintage: 2022, producerId: 'bart',                                      subregionId: 'cote-nuits',  village: 'Marsannay',          villageKo: '막사네',           cru: 'Village',   wineType: 'rosé',  date: '2025.07.04', occasion: '여름 피크닉', note: '부르고뉴 유일 마을명 로제 AOC. 살구·산딸기·미네랄.', coords: [4.972, 47.310], color: '#d97a8a', label: 'MR',  rating: 4, appellation: 'Marsannay' },
   // Régional
   { id: 'w16', name: 'Bourgogne Pinot Noir',       nameKo: '부르고뉴 피노 누아',         vintage: 2020, producerId: 'drouhin',                                   subregionId: 'cote-beaune', village: 'Bourgogne',          villageKo: '부르고뉴 광역',     cru: 'Régional',  wineType: 'red',   date: '2025.04.20', occasion: '데일리',     note: '신선한 붉은 과실, 부드러운 가성비.',   coords: [4.840, 47.024], color: '#7c1c33', label: 'BP',  rating: 4, appellation: 'Bourgogne' },
+  // Côte de Nuits — Fixin (저평가 가성비)
+  { id: 'w21', name: 'Fixin Clos du Chapitre 1er Cru', nameKo: '픽생 클로 뒤 샤피트르 1er Cru', vintage: 2019, producerId: 'pierregelin', vineyardId: 'clos-chapitre', subregionId: 'cote-nuits',  village: 'Fixin',              villageKo: '픽생',             cru: '1er Cru',   wineType: 'red',   date: '2025.05.18',                          note: '주브레 바로 북쪽. 흙내음과 검은 자두, 4ha 모노폴.',  coords: [4.987, 47.265], color: '#5c1429', label: 'CCH', rating: 4, appellation: 'Fixin'     },
+  // Côte de Beaune — Aloxe-Corton (코트 드 본 유일 GC)
+  { id: 'w22', name: 'Corton-Charlemagne',         nameKo: '코르통-샤를마뉴',            vintage: 2019, producerId: 'bonneau',     vineyardId: 'corton-charlemagne',subregionId: 'cote-beaune', village: 'Aloxe-Corton',       villageKo: '알록스-코르통',    cru: 'Grand Cru', wineType: 'white', date: '2025.11.12', occasion: '와인 모임',   note: '강건한 미네랄, 헤이즐넛, 장기 숙성형 GC 화이트.', coords: [4.853, 47.064], color: '#8a6c12', label: 'CC',  rating: 5, appellation: 'Corton'    },
+  { id: 'w23', name: 'Corton Le Clos du Roi',      nameKo: '코르통 르 클로 뒤 루아',     vintage: 2017, producerId: 'bouchard',    vineyardId: 'corton',            subregionId: 'cote-beaune', village: 'Aloxe-Corton',       villageKo: '알록스-코르통',    cru: 'Grand Cru', wineType: 'red',   date: '2025.09.28',                          note: '코트 드 본 유일 레드 GC. 검은 베리와 향신료, 견고한 구조.', coords: [4.857, 47.066], color: '#3e0d1e', label: 'CR',  rating: 4, appellation: 'Corton'    },
+  // Côte de Beaune — Beaune
+  { id: 'w24', name: 'Beaune Clos des Mouches 1er Cru', nameKo: '본 클로 데 무슈 1er Cru', vintage: 2018, producerId: 'drouhin',    vineyardId: 'clos-mouches',      subregionId: 'cote-beaune', village: 'Beaune',             villageKo: '본',               cru: '1er Cru',   wineType: 'red',   date: '2025.06.22',                          note: '드루앵 시그니처 클리마. 우아한 붉은 베리와 향신료.', coords: [4.815, 46.998], color: '#591530', label: 'CM',  rating: 4, appellation: 'Beaune'    },
+  // Côte de Beaune — Pommard (강건함의 정점)
+  { id: 'w25', name: 'Pommard Les Rugiens 1er Cru', nameKo: '포마르 레 뤼지엥 1er Cru',  vintage: 2018, producerId: 'comtearmand', vineyardId: 'les-rugiens',       subregionId: 'cote-beaune', village: 'Pommard',            villageKo: '포마르',           cru: '1er Cru',   wineType: 'red',   date: '2025.10.20', occasion: '가을 디너',   note: 'GC급 1er Cru. 강건함과 흙내음, 검은 자두의 깊이.', coords: [4.793, 46.986], color: '#3a0d20', label: 'PR',  rating: 5, appellation: 'Pommard'   },
+  // Côte de Beaune — Chassagne-Montrachet
+  { id: 'w26', name: 'Bâtard-Montrachet',          nameKo: '바타르-몽라셰',              vintage: 2019, producerId: 'ramonet',     vineyardId: 'batard-montrachet', subregionId: 'cote-beaune', village: 'Chassagne-Montrachet', villageKo: '샤사뉴-몽라셰',  cru: 'Grand Cru', wineType: 'white', date: '2025.12.20', occasion: '연말 디너',   note: '풍성한 헤이즐넛, 꿀, 미네랄 산미. 몽라셰 GC 패밀리.', coords: [4.741, 46.918], color: '#6f5208', label: 'BM',  rating: 5, appellation: 'Chassagne' },
+  // Côte de Beaune — Saint-Aubin (가성비 화이트)
+  { id: 'w27', name: 'Saint-Aubin En Remilly 1er Cru', nameKo: '생-토뱅 앙 르미이 1er Cru', vintage: 2020, producerId: 'huberlamy', vineyardId: 'en-remilly',       subregionId: 'cote-beaune', village: 'Saint-Aubin',        villageKo: '생-토뱅',          cru: '1er Cru',   wineType: 'white', date: '2025.07.15', occasion: '여름 점심',   note: '슈발리에-몽라셰 옆 떼루아. 정밀한 미네랄, 흰 꽃, 시트러스.', coords: [4.724, 46.928], color: '#7a5e10', label: 'ER',  rating: 4, appellation: 'St-Aubin'  },
+  // Côte Chalonnaise — Bouzeron (알리고테 단일 AOC)
+  { id: 'w28', name: 'Bouzeron Aligoté',           nameKo: '부즈롱 알리고테',            vintage: 2021, producerId: 'devillaine',                                   subregionId: 'cote-chalonnaise', village: 'Bouzeron',         villageKo: '부즈롱',           cru: 'Village',   wineType: 'white', date: '2025.05.10', occasion: '굴 페어링',   note: '부르고뉴 유일 알리고테 마을 AOC. 짭짤한 미네랄과 청사과.', coords: [4.738, 46.882], color: '#a8841a', label: 'BZ',  rating: 4, appellation: 'Bouzeron'  },
+  // Côte Chalonnaise — Rully
+  { id: 'w29', name: 'Rully Le Meix Cadot 1er Cru', nameKo: '륄리 르 메 카도 1er Cru',   vintage: 2020, producerId: 'dureuil',                                       subregionId: 'cote-chalonnaise', village: 'Rully',            villageKo: '륄리',             cru: '1er Cru',   wineType: 'white', date: '2025.04.15',                          note: '비오디나믹 비에이 비뉴. 정교한 산미와 흰 꽃향.',     coords: [4.755, 46.864], color: '#8a6c10', label: 'MC',  rating: 4, appellation: 'Rully'     },
+  // Côte Chalonnaise — Mercurey (메르퀴레 최대 1er Cru 모노폴)
+  { id: 'w30', name: 'Mercurey Clos des Myglands 1er Cru', nameKo: '메르퀴레 클로 데 미글랑 1er Cru', vintage: 2019, producerId: 'faiveley', vineyardId: 'clos-myglands', subregionId: 'cote-chalonnaise', village: 'Mercurey',     villageKo: '메르퀴레',         cru: '1er Cru',   wineType: 'red',   date: '2025.08.30',                          note: '페블레 모노폴 7.3ha. 다크 체리, 가죽, 견고한 탄닌.', coords: [4.720, 46.829], color: '#4a1224', label: 'MY',  rating: 4, appellation: 'Mercurey'  },
+  // Côte Chalonnaise — Givry (헨리 4세의 와인)
+  { id: 'w31', name: 'Givry Crausot 1er Cru',      nameKo: '지브리 크라우조 1er Cru',    vintage: 2020, producerId: 'lumpp',                                         subregionId: 'cote-chalonnaise', village: 'Givry',            villageKo: '지브리',           cru: '1er Cru',   wineType: 'red',   date: '2025.03.25',                          note: '붉은 베리, 가벼운 가죽, 가성비 좋은 1er Cru.',         coords: [4.745, 46.776], color: '#601628', label: 'CT',  rating: 4, appellation: 'Givry'     },
+  // Mâconnais — Pouilly-Fuissé (2020년 1er Cru 승격)
+  { id: 'w32', name: 'Pouilly-Fuissé Les Perrières 1er Cru', nameKo: '푸이-퓌세 레 페리에르 1er Cru', vintage: 2020, producerId: 'ferret',                          subregionId: 'maconnais',     village: 'Pouilly-Fuissé',     villageKo: '푸이-퓌세',        cru: '1er Cru',   wineType: 'white', date: '2025.06.30', occasion: '여름 디너',   note: '2020년 마코네 최초 승격 1er Cru. 풍성한 백복숭아, 견과류, 따뜻한 미네랄.', coords: [4.737, 46.286], color: '#9a781e', label: 'PF',  rating: 4, appellation: 'Pouilly'   },
+  // Mâconnais — Saint-Véran (가성비)
+  { id: 'w33', name: 'Saint-Véran Vieilles Vignes', nameKo: '생-베랑 비에이 비뉴',       vintage: 2021, producerId: 'merlin',                                       subregionId: 'maconnais',     village: 'Saint-Véran',        villageKo: '생-베랑',          cru: 'Village',   wineType: 'white', date: '2025.04.05', occasion: '데일리',     note: '올드 바인의 농축. 시트러스, 부드러운 산미, 가성비 정점.', coords: [4.732, 46.275], color: '#b8941e', label: 'SV',  rating: 4, appellation: 'St-Véran'  },
 ];
 
 // 그룹별 마신 와인 카운트/리스트 헬퍼 (드릴다운에서 사용)
