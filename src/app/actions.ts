@@ -3,6 +3,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { headers } from 'next/headers';
+import { notifyNewSignup } from '@/lib/slack';
 
 const emailSchema = z.object({
   contactType: z.literal('email'),
@@ -40,7 +41,22 @@ export async function submitWaitlist(data: {
     marketing_agree: data.marketingAgree ?? false,
   });
 
-  if (error?.code === '23505') return { success: true };
+  if (error?.code === '23505') {
+    await notifyNewSignup({
+      contact: parsed.data.contact.trim(),
+      contactType: parsed.data.contactType,
+      marketingAgree: data.marketingAgree ?? false,
+      isDuplicate: true,
+    });
+    return { success: true };
+  }
   if (error) return { success: false, error: 'server' };
+
+  await notifyNewSignup({
+    contact: parsed.data.contact.trim(),
+    contactType: parsed.data.contactType,
+    marketingAgree: data.marketingAgree ?? false,
+    isDuplicate: false,
+  });
   return { success: true };
 }
