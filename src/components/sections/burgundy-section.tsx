@@ -458,14 +458,13 @@ function CruChip({ cru, size = 'sm' }: { cru: Cru; size?: 'sm' | 'xs' }) {
 }
 
 // ── 가이드 힌트 (드릴다운 위계 첫 인지) ──────────────────────────────────────
-// 카드 우측 가운데에 떠 있도록 배치. 라벨 → 펄스 동그라미 순으로 우측 정렬.
+// 카드 우하단(내부)에 배치. 라벨 → 펄스 동그라미 순. 카드 경계 밖으로 넘어가지 않도록 bottom·right 양수.
 function GuideHint({ label }: { label: string }) {
   return (
     <div
       aria-hidden
       style={{
-        position: 'absolute', top: '50%', right: 10,
-        transform: 'translateY(-50%)',
+        position: 'absolute', bottom: 8, right: 10,
         display: 'flex', alignItems: 'center', gap: 7,
         pointerEvents: 'none', zIndex: 5,
       }}
