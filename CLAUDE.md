@@ -100,9 +100,10 @@ RLS 활성화, public SELECT 정책 없음. 중복 insert 시 `23505` 에러를 
 NEXT_PUBLIC_SUPABASE_URL      # Supabase 프로젝트 URL
 SUPABASE_SERVICE_ROLE_KEY     # 서버 전용 (절대 NEXT_PUBLIC_ 접두사 금지)
 NEXT_PUBLIC_SITE_URL          # 배포 URL (OG 태그용, optional)
+SLACK_WEBHOOK_URL             # 서버 전용. waitlist 신규/중복 등록 시 Slack 채널 알림 (optional, 미설정 시 silent skip)
 ```
 
-**CRITICAL:** `SUPABASE_SERVICE_ROLE_KEY`는 Server Action에서만 사용. 클라이언트 번들에 절대 포함 금지.
+**CRITICAL:** `SUPABASE_SERVICE_ROLE_KEY`, `SLACK_WEBHOOK_URL`은 Server Action에서만 사용. 클라이언트 번들에 절대 포함 금지.
 
 ---
 
