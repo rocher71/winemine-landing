@@ -273,23 +273,65 @@ export default function WineDiscoverySection() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Step indicator dots — bottom */}
+        {/* Step indicator dots — left center, vertical */}
         <div style={{
           position: 'absolute',
-          bottom: 'clamp(28px, 4.5vh, 48px)',
-          left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', alignItems: 'center', gap: 7,
+          left: 'clamp(16px, 3vw, 32px)',
+          top: '50%', transform: 'translateY(-50%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7,
         }}>
           {[0, 1, 2, 3, 4].map(i => (
             <div key={i} style={{
-              width: i === step ? 20 : 5,
-              height: 5,
+              width: 5,
+              height: i === step ? 20 : 5,
               borderRadius: 3,
               background: i === step ? '#C9A84C' : 'rgba(255,255,255,0.18)',
               transition: 'all 320ms cubic-bezier(0.4,0,0.2,1)',
             }} />
           ))}
         </div>
+
+        {/* Scroll hint — bottom center, step 0만 표시 */}
+        <AnimatePresence>
+          {step === 0 && (
+            <motion.div
+              key="scroll-hint"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
+              style={{
+                position: 'absolute',
+                bottom: 'clamp(28px, 4.5vh, 48px)',
+                left: '50%', transform: 'translateX(-50%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                pointerEvents: 'none',
+              }}
+            >
+              <span style={{
+                fontSize: 11, color: 'rgba(255,255,255,0.55)',
+                letterSpacing: '0.06em', whiteSpace: 'nowrap',
+              }}>
+                스크롤 해보세요
+              </span>
+              <span style={{
+                fontSize: 9, color: 'rgba(255,255,255,0.28)',
+                letterSpacing: '0.14em', textTransform: 'uppercase' as const,
+              }}>
+                scroll down
+              </span>
+              <motion.div
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ marginTop: 4 }}
+              >
+                <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                  <path d="M1 1.5L8 8.5L15 1.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
