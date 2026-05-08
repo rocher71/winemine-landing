@@ -492,6 +492,12 @@ export default function WineDiscoverySection() {
   // Sub-progress 0..1 across step 2 region
   const recProgress = useTransform(scrollYProgress, [0.30, 0.95], [0, 1], { clamp: true });
 
+  // Late in step 2: top header fades out and the step 2 heading rises toward the top
+  // so the world map gets the full vertical canvas. Both kick in around progress 0.55.
+  const topHeaderOpacity = useTransform(recProgress, [0.55, 0.75], [1, 0]);
+  const step2HeaderY = useTransform(recProgress, [0.55, 0.80], [0, -260]);
+  const step2HeaderScale = useTransform(recProgress, [0.55, 0.80], [1, 0.78]);
+
   return (
     <section
       ref={outerRef}
@@ -509,14 +515,17 @@ export default function WineDiscoverySection() {
         {/* Full-screen wine country map (visible from step 2) */}
         <FullScreenMap progress={recProgress} visible={step === 2} />
 
-        {/* Top header — section label + framing question */}
-        <div style={{
-          position: 'absolute',
-          top: 'clamp(28px, 4vh, 52px)',
-          left: '50%', transform: 'translateX(-50%)',
-          textAlign: 'center', whiteSpace: 'nowrap',
-          zIndex: 9,
-        }}>
+        {/* Top header — section label + framing question (fades out late in step 2) */}
+        <motion.div
+          style={{
+            opacity: topHeaderOpacity,
+            position: 'absolute',
+            top: 'clamp(28px, 4vh, 52px)',
+            left: '50%', transform: 'translateX(-50%)',
+            textAlign: 'center', whiteSpace: 'nowrap',
+            zIndex: 9,
+          }}
+        >
           <div style={{
             fontSize: 10, letterSpacing: '0.32em',
             color: '#C9A84C', textTransform: 'uppercase',
@@ -534,7 +543,7 @@ export default function WineDiscoverySection() {
           }}>
             {t.topQuestion}
           </h3>
-        </div>
+        </motion.div>
 
         {/* Step content (centered, swap on step change) */}
         <div style={{
@@ -599,11 +608,20 @@ export default function WineDiscoverySection() {
               )}
 
               {step === 2 && (
-                <StepHeader
-                  label={t.step2.label}
-                  title={t.step2.title}
-                  body={t.step2.body}
-                />
+                <motion.div
+                  style={{
+                    y: step2HeaderY,
+                    scale: step2HeaderScale,
+                    transformOrigin: 'center top',
+                    width: '100%',
+                  }}
+                >
+                  <StepHeader
+                    label={t.step2.label}
+                    title={t.step2.title}
+                    body={t.step2.body}
+                  />
+                </motion.div>
               )}
             </motion.div>
           </AnimatePresence>
