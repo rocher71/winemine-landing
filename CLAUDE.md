@@ -173,13 +173,13 @@ src/
 │   ├── providers/locale-provider.tsx   # LocaleProvider + useLocale() 훅
 │   ├── sections/
 │   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
-│   │   ├── wine-discovery-section.tsx  # 초보자 친화 5단계 스크롤 스토리텔링 — 상세 사양은 _workspace/wine-discovery-section-spec.md
-│   │   ├── burgundy-section.tsx        # 부르고뉴 4축 분류 (등급·클리마·도멘·빈티지) — 상세 사양은 _workspace/burgundy-section-spec.md
+│   │   ├── wine-discovery-section.tsx  # 초보자 친화 3단계 + outro 스크롤 스토리텔링, RecommendationMap 포함 — 상세 사양은 _workspace/wine-discovery-section-spec.md
+│   │   ├── burgundy-section.tsx        # 부르고뉴 위계 드릴다운 (꼬뜨→마을→등급→와인) + 색 토글(Red/White/Rosé) — 상세 사양은 _workspace/burgundy-section-spec.md
 │   │   ├── vineyard-strip.tsx          # 와인 산지 사진 스트립
 │   │   ├── features-section.tsx        # 와인 카드 쇼케이스 (단일 GlassCardStack 패널) + ScanPanel named export (wine-discovery에서 사용)
 │   │   ├── how-it-works-section.tsx    # 사용 흐름 4단계
 │   │   ├── final-cta-section.tsx       # 최종 CTA
-│   │   ├── instagram-preview-section.tsx # 미마운트 — StoryCard·PhoneMockup·StoryWorldMap named export가 wine-discovery에서 사용 중. 파일 삭제 금지
+│   │   ├── instagram-preview-section.tsx # Features 직후 마운트 — Recap 공유. PhoneMockup·StoryCard·StoryWorldMap 정의처
 │   │   ├── france-wine-section.tsx     # 미마운트 (롤백 대비 보존)
 │   │   ├── market-stats-section.tsx    # 미마운트 (롤백 대비 보존)
 │   │   └── france-wine-detail-section.tsx # 미마운트 (이전부터)
@@ -195,7 +195,8 @@ src/
 │   ├── supabase-server.ts             # service role 클라이언트 (서버 전용)
 │   ├── validations.ts                 # Zod 스키마 (클라이언트 재사용)
 │   ├── utils.ts                       # cn() 헬퍼
-│   └── analytics.ts                   # trackEvent() — window.gtag 래퍼
+│   ├── analytics.ts                   # trackEvent() — window.gtag 래퍼
+│   └── recommended-wines.ts           # Wine Discovery Step 2 입문용 추천 와인 mock + STARTING_WINE
 ├── messages/
 │   ├── ko.json                         # 기준 번역 파일 (타입 소스)
 │   └── en.json                         # 영어 번역 (ko.json과 키 구조 동기화)
@@ -213,14 +214,15 @@ public/
 2. `StoreButtons` / `FloatingCTA` / `FinalCTASection` → `onOpenModal()` 호출
 3. `WaitlistModal` → `WaitlistForm` → `submitWaitlist()` Server Action → Supabase insert
 
-### 페이지 마운트 순서 (현재 7 섹션)
+### 페이지 마운트 순서 (현재 8 섹션)
 1. `HeroSection` — 세계 지도 슬라이딩 배경
-2. `WineDiscoverySection` — 초보자 친화 스크롤 스토리텔링 (라벨→입맛→Recap→부르고뉴 전환)
-3. `BurgundySection` — 부르고뉴 4축 분류 (전문가)
+2. `WineDiscoverySection` — 초보자 친화 3단계 스크롤 (도입 → 스캔 → 추천 지도) + outro
+3. `BurgundySection` — 부르고뉴 위계 드릴다운 (꼬뜨→마을→등급→와인) + 색 토글 (전문가)
 4. `VineyardStrip` — 포도밭 갤러리 + 시장 통계
 5. `FeaturesSection` — 와인 카드 쇼케이스 (단일 패널)
-6. `HowItWorksSection` — 사용 흐름 4단계
-7. `FinalCTASection` — 최종 CTA
+6. `InstagramPreviewSection` — Recap 공유 (PhoneMockup + StoryCard)
+7. `HowItWorksSection` — 사용 흐름 4단계
+8. `FinalCTASection` — 최종 CTA
 
 ### 초보자/전문가 페어링 카피 (v9008a15)
 - Wine Discovery 헤더: `wineDiscovery.topQuestion` = "와인을 가볍게 즐기고 싶으신가요?"
@@ -237,7 +239,7 @@ public/
 Wine Discovery 섹션(초보자 5단계 스크롤 스토리텔링·재사용 컴포넌트 계보·분기 헤더 페어링·미마운트 파일 의존 관계) 인수인계용 단일 문서:
 → **`_workspace/wine-discovery-section-spec.md`** 참조 — `feat/wine-discovery-section` 브랜치 작업 컨텍스트 (main 미반영)
 
-부르고뉴 섹션(4탭 분류·인터랙션·데이터 모델·디자인 결정·변경 이력) 인수인계용 단일 문서:
+부르고뉴 섹션(위계 드릴다운·색 토글·인터랙션·데이터 모델·디자인 결정·변경 이력) 인수인계용 단일 문서:
 → **`_workspace/burgundy-section-spec.md`** 참조 — 다른 머신/세션에서 컨텍스트 잡을 때 가장 먼저 읽을 것
 
 부르고뉴 분류 체계의 근거가 되는 와인 덕후 관점 리서치 + 한글-프랑스어 용어집:

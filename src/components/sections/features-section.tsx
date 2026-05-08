@@ -147,6 +147,10 @@ function GlassCardStack() {
 
   // Desktop state
   const [activeIdx, setActiveIdx] = useState(0);
+  const [hasClicked, setHasClicked] = useState(false);
+
+  // Mobile: swipe hint 숨김 여부
+  const [hasSwiped, setHasSwiped] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -210,8 +214,10 @@ function GlassCardStack() {
   const handleTouchEnd = () => {
     if (dragDx < -50) {
       navigateTo(carouselIdx + 1);
+      setHasSwiped(true);
     } else if (dragDx > 50) {
       navigateTo(carouselIdx - 1);
+      setHasSwiped(true);
     } else {
       setWithAnim(true);
       setDragDx(0);
@@ -279,9 +285,41 @@ function GlassCardStack() {
 
         <Dots active={activeWineIdx} onDotClick={(i) => navigateTo(1 + i)} />
 
-        <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
-          {messages.features?.mobileSwipeHint ?? '← 스와이프 →'}
-        </div>
+        <AnimatePresence>
+          {!hasSwiped && (
+            <motion.div
+              key="swipe-hint"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.8 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, pointerEvents: 'none' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <motion.span
+                  animate={{ x: [-4, 0, -4] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}
+                >
+                  ←
+                </motion.span>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.80)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                  좌우로 스와이프 해보세요
+                </span>
+                <motion.span
+                  animate={{ x: [4, 0, 4] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}
+                >
+                  →
+                </motion.span>
+              </div>
+              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
+                swipe left / right
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -325,7 +363,7 @@ function GlassCardStack() {
             transform: `translateX(${cardOffsets[2].x}px) translateY(${cardOffsets[2].y}px) scale(${cardOffsets[2].scale})`,
             cursor: 'pointer',
           }}
-          onClick={() => setActiveIdx(prev => (prev + 1) % N)}
+          onClick={() => { setActiveIdx(prev => (prev + 1) % N); setHasClicked(true); }}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -338,14 +376,45 @@ function GlassCardStack() {
               <WineCardInner wine={wine} />
             </motion.div>
           </AnimatePresence>
+
+          {/* Tap ripple + 탭 해보세요 — ripple 바로 위에 텍스트 */}
+          <AnimatePresence>
+            {!hasClicked && (
+              <motion.div
+                key="tap-ripple"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, delay: 0.8 }}
+                style={{
+                  position: 'absolute', bottom: 16, right: 16,
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                  pointerEvents: 'none',
+                }}
+              >
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                  탭 해보세요
+                </span>
+                <div style={{ position: 'relative', width: 38, height: 38 }}>
+                  <motion.div
+                    animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
+                    transition={{ duration: 1.3, repeat: Infinity, ease: 'easeOut' }}
+                    style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }}
+                  />
+                  <div style={{
+                    position: 'absolute', inset: 0, borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.12)',
+                    border: '1.5px solid rgba(255,255,255,0.55)',
+                  }} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       <Dots active={activeIdx} onDotClick={setActiveIdx} />
 
-      <div style={{ fontSize: 10, color: '#4A3D56', letterSpacing: '0.02em' }}>
-        {messages.features?.mobileTapHint ?? '탭해서 다른 와인 보기'}
-      </div>
     </div>
   );
 }

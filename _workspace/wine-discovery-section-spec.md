@@ -10,9 +10,11 @@
 
 ## 1. TL;DR
 
-- **컨셉.** "와인이 처음인 사람도 한 페이지 안에서 부드럽게 이해할 수 있도록" 정보 밀도 낮은 France 드릴다운 자리를 5단계 스크롤 스토리텔링으로 교체. 마지막 단계가 자연스럽게 다음 부르고뉴 섹션(전문가 측)으로 시선을 넘긴다.
+- **컨셉.** "와인이 처음인 사람도 한 페이지 안에서 부드럽게 이해할 수 있도록" 정보 밀도 낮은 France 드릴다운 자리를 **3단계 스크롤 스토리텔링 + outro**로 교체. 마지막 단계가 자연스럽게 다음 부르고뉴 섹션(전문가 측)으로 시선을 넘긴다.
 - **페어링.** 두 섹션 헤더를 의문문 형식으로 짝지음 — Wine Discovery "와인을 가볍게 즐기고 싶으신가요?" ↔ Burgundy "와인을 깊게 파고드시나요?". 사용자에게 명시 토글을 강요하지 않으면서 톤만 분리.
-- **재사용 우선.** ScanPanel·StoryCard·PhoneMockup·StoryWorldMap을 named export로 노출해서 가져다 씀. 신규 작성은 TasteBars 1개 + outro 라인 정도.
+- **핵심 플로우.** Step 0(라벨 도입) → Step 1(스캔) → **Step 2(스캔한 산지에서 비슷한 입문 와인이 지도 위로 sequential 등장 + 줌아웃)** → outro(부르고뉴 전환).
+- **재사용 우선.** ScanPanel은 named export로 가져다 씀. Step 2의 RecommendationMap은 react-simple-maps + Framer motion useTransform으로 새로 작성 (Burgundy 핀 디자인 차용, 단 골드 색상).
+- **Recap 분리.** 이전 step 3(PhoneMockup Recap 공유)는 별도 섹션으로 옮겨 `InstagramPreviewSection`을 Features 직후에 다시 마운트.
 - **부르고뉴와의 연결.** 마지막 step의 outro 카피("이미 깊게 빠지셨나요?") + 빨간 점이 다음 섹션 톤을 미리 노출하는 시각적 hint.
 
 ---
@@ -40,22 +42,23 @@ dc4accf feat: 초보자 친화 Wine Discovery 섹션 추가 — France 자리 �
 
 **Before (main):** 9 섹션 — Hero → France → Burgundy → VineyardStrip → Features(3 패널) → MarketStats → HowItWorks → InstagramPreview → FinalCTA
 
-**After (this branch):** 7 섹션
+**After (this branch, 추천 플로우 도입):** 8 섹션
 ```
 1. Hero
-2. WineDiscoverySection  ← 신규 (France 자리)
+2. WineDiscoverySection  ← 3 step + outro (도입 → 스캔 → 추천 지도 → outro)
 3. BurgundySection
 4. VineyardStrip
 5. FeaturesSection (단일 패널 GlassCardStack)
-6. HowItWorksSection
-7. FinalCTASection
+6. InstagramPreviewSection ← Recap 공유 (다시 마운트)
+7. HowItWorksSection
+8. FinalCTASection
 ```
 
-**파일은 보존, 마운트만 제거:**
+**파일 상태:**
 | 파일 | 상태 |
 |---|---|
 | `france-wine-section.tsx` | 미마운트 (롤백 대비 보존) |
-| `instagram-preview-section.tsx` | 미마운트 — 단, **`StoryCard`·`PhoneMockup`·`StoryWorldMap` named export가 wine-discovery에서 import 중**. 파일 삭제 금지 |
+| `instagram-preview-section.tsx` | **Features 직후 재마운트**. PhoneMockup·StoryCard 그대로 사용 |
 | `market-stats-section.tsx` | 미마운트 (롤백 대비 보존) |
 | `france-wine-detail-section.tsx` | 미마운트 (이전부터) |
 
@@ -97,47 +100,47 @@ src/
 ## 6. 단계 구조 (`wine-discovery-section.tsx`)
 
 ```ts
+// 3 step + outro
 useMotionValueEvent(scrollYProgress, 'change', v => {
-  setStep(v < 0.10 ? 0 : v < 0.32 ? 1 : v < 0.58 ? 2 : v < 0.85 ? 3 : 4);
+  setStep(v < 0.10 ? 0 : v < 0.28 ? 1 : v < 0.85 ? 2 : 3);
 });
+
+// Step 2 sub-progress (0..1) — RecommendationMap 핀 sequential 등장 + 줌아웃
+const recProgress = useTransform(scrollYProgress, [0.28, 0.85], [0, 1], { clamp: true });
 ```
 
 | Step | 헤드라인 (ko) | 시각 자료 | 출처 |
 |---|---|---|---|
 | 0 intro | "와인 한 병이, / 처음에는 그냥 라벨일 뿐" | 정적 블러 라벨 카드 (rotate -3deg) | 인라인 |
-| 1 촬영 | "찍기만 하면 / 나머지는 우리가" | 라벨 + 스캔 라인 + 6 태그 reveal | **`ScanPanel`** (`features-section.tsx`) |
-| 2 분석 | "당신의 취향이 / 보이기 시작합니다" | 5색 horizontal bars (stagger 80ms) + insight 카피 | **신규 `TasteBars`** (이 파일 안) |
-| 3 Recap | "한 장의 카드로 / 친구에게" | PhoneMockup(scale 0.62) + StoryCard | **`PhoneMockup` + `StoryCard`** (`instagram-preview-section.tsx`) |
-| 4 outro | "이미 깊게 빠지셨나요?" + 빨간 점 + 화살표 | 인라인 | 인라인 |
+| 1 스캔 | "찍기만 하면 / 나머지는 우리가" | 라벨 + 스캔 라인 + 6 태그 reveal | **`ScanPanel`** (`features-section.tsx`) |
+| 2 추천 | "기록이 쌓일수록 / 취향에 딱 맞는 한 병" | RecommendationMap (시작 핀 + 추천 핀 sequential 등장 + 지도 줌아웃 1.05→1.18) + 추천 카드 슬라이드 인 + StartHintPill | **신규 `RecommendationMap`·`RecommendationCard`·`StartHintPill`** (이 파일 안) |
+| 3 outro | "이미 깊게 빠지셨나요?" + 빨간 점 + 화살표 | 인라인 | 인라인 |
 
-**TasteBars 데이터 (`wine-discovery-section.tsx`):**
-```ts
-const TASTE_BARS = [
-  { key: 'red',       pct: 62, color: '#8B1A2A' },
-  { key: 'white',     pct: 18, color: '#C9A84C' },
-  { key: 'rose',      pct: 12, color: '#D4859A' },
-  { key: 'sparkling', pct:  6, color: '#E8DDB5' },
-  { key: 'champagne', pct:  2, color: '#F0C876' },
-] as const;
-```
+**Step 2 데이터 (`src/lib/recommended-wines.ts`):**
+- `STARTING_WINE` — 시작 와인(Margaux, 보르도). 큰 와인레드 핀, 강조 halo
+- `RECOMMENDED_WINES[]` — 9개 입문용 mock (Bordeaux Sup·Chianti·Valpolicella·Rioja·Casillero·Mendoza·Cloudy Bay·Jacob's Creek·Oregon Pinot)
+- 가격대: 18,000~65,000원 (톡방 발화 "10만원 언더 부르고뉴 입문" 기조)
+- `coords`: `[lon, lat]` for `react-simple-maps`
 
 ---
 
 ## 7. i18n 키 구조 (변경 사항)
 
-**`wineDiscovery.*` 신설** (양쪽 동일 구조):
+**`wineDiscovery.*` (3 step + outro 구조, 양쪽 동일):**
 ```jsonc
 "wineDiscovery": {
-  "sectionLabel": "Discover your taste",          // 작은 영문 eyebrow
-  "topQuestion":  "와인을 가볍게 즐기고 싶으신가요?", // 페어링 질문
+  "sectionLabel": "Beginner's first map",        // eyebrow (이전 "Discover your taste"에서 변경)
+  "topQuestion":  "와인을 가볍게 즐기고 싶으신가요?",
   "step0":  { "title", "subtitle" },
   "step1":  { "label", "title", "body" },
-  "step2":  { "label", "title", "body", "insight",
-              "tasteBars": { "red", "white", "rose", "sparkling", "champagne" } },
-  "step3":  { "label", "title", "body" },
+  "step2":  { "label", "title", "body", "startHint", "footnote" },
   "outro":  { "title", "subtitle" }
 }
 ```
+
+**제거된 키 (이전 5단계 잔재):**
+- `step2.insight`, `step2.tasteBars` — TasteBars 컴포넌트 제거에 따른 정리
+- `step3` 전체 — Recap 섹션은 별도 `instagramPreview.*`로 이동
 
 **`burgundy.heading` 교체:**
 - Before: "내가 마신 와인이 등급·클리마·도멘·빈티지로"
