@@ -20,6 +20,7 @@
 
   "wineDiscovery": {
     "sectionLabel": "Discover your taste",
+    "topQuestion": "Curious about wine?",
     "step0": {
       "title": "A bottle of wine",
       "subtitle": "begins as just a label"
@@ -55,7 +56,7 @@
 
   "burgundy": {
     "sectionLabel": "AI Auto-sort · Burgundy",
-    "heading": "Your wines, sorted by Cru · Climat · Domaine · Millésime"
+    "heading": "Going deep into wine?"
   },
 
   "franceWineDetail": {

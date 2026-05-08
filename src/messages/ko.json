@@ -20,6 +20,7 @@
 
   "wineDiscovery": {
     "sectionLabel": "Discover your taste",
+    "topQuestion": "와인을 가볍게 즐기고 싶으신가요?",
     "step0": {
       "title": "와인 한 병이,",
       "subtitle": "처음에는 그냥 라벨일 뿐"
@@ -55,7 +56,7 @@
 
   "burgundy": {
     "sectionLabel": "AI 자동 분류 · 부르고뉴",
-    "heading": "내가 마신 와인이 등급·클리마·도멘·빈티지로"
+    "heading": "와인을 깊게 파고드시나요?"
   },
 
   "franceWineDetail": {

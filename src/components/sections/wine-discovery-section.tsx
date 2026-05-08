@@ -132,16 +132,31 @@ export default function WineDiscoverySection() {
         padding: 'clamp(80px, 12vh, 120px) 24px',
         background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.05) 0%, transparent 60%), #04010A',
       }}>
-        {/* Top eyebrow — section label, fixed */}
+        {/* Top header — section label + framing question, fixed */}
         <div style={{
           position: 'absolute',
-          top: 'clamp(40px, 6vh, 64px)',
+          top: 'clamp(28px, 4vh, 52px)',
           left: '50%', transform: 'translateX(-50%)',
-          fontSize: 10, letterSpacing: '0.32em',
-          color: '#C9A84C', textTransform: 'uppercase',
-          opacity: 0.85, whiteSpace: 'nowrap',
+          textAlign: 'center', whiteSpace: 'nowrap',
+          zIndex: 5,
         }}>
-          {t.sectionLabel}
+          <div style={{
+            fontSize: 10, letterSpacing: '0.32em',
+            color: '#C9A84C', textTransform: 'uppercase',
+            opacity: 0.8, marginBottom: 8,
+          }}>
+            {t.sectionLabel}
+          </div>
+          <h3 style={{
+            fontFamily: 'var(--font-playfair), Georgia, serif',
+            fontSize: 'clamp(15px, 2.2vw, 20px)',
+            fontWeight: 400,
+            color: '#F5F0E8',
+            lineHeight: 1.3,
+            margin: 0,
+          }}>
+            {t.topQuestion}
+          </h3>
         </div>
 
         {/* Step content (swap on step change) */}
