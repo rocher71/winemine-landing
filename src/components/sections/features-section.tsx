@@ -299,22 +299,22 @@ function GlassCardStack() {
                 <motion.span
                   animate={{ x: [-4, 0, -4] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}
+                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}
                 >
                   ←
                 </motion.span>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
-                  좌우로 스크롤해보세요
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.80)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                  좌우로 스와이프 해보세요
                 </span>
                 <motion.span
                   animate={{ x: [4, 0, 4] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}
+                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}
                 >
                   →
                 </motion.span>
               </div>
-              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
+              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
                 swipe left / right
               </span>
             </motion.div>
@@ -400,10 +400,7 @@ function GlassCardStack() {
                     position: 'absolute', inset: 0, borderRadius: '50%',
                     background: 'rgba(255,255,255,0.12)',
                     border: '1.5px solid rgba(255,255,255,0.55)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <span style={{ fontSize: 14 }}>👆</span>
-                  </div>
+                  }} />
                 </div>
               </motion.div>
             )}
