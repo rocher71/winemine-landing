@@ -354,7 +354,7 @@ function GlassCardStack() {
 // ── Panel 2: Label scan demo ───────────────────────────────────────────────
 const WINE_TAGS = ['Château Margaux', '2019', 'Médoc AOC', 'Premier Grand Cru Classé', 'Cabernet Sauvignon', '🇫🇷 France'];
 
-function ScanPanel() {
+export function ScanPanel() {
   const [step, setStep] = useState(0);
   const [scanning, setScanning] = useState(false);
 
@@ -526,7 +526,7 @@ const STORY_COUNTRIES = [
   { flag: '🇪🇸', name: 'Spain',       wines: 11, pct: 34 },
 ];
 
-function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
+export function SharePanel({ onScrollToPreview }: { onScrollToPreview: () => void }) {
   const { messages } = useLocale();
   const [animate, setAnimate] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

@@ -18,6 +18,41 @@
     }
   },
 
+  "wineDiscovery": {
+    "sectionLabel": "Discover your taste",
+    "step0": {
+      "title": "와인 한 병이,",
+      "subtitle": "처음에는 그냥 라벨일 뿐"
+    },
+    "step1": {
+      "label": "01 · 라벨 촬영",
+      "title": "찍기만 하면\n나머지는 우리가",
+      "body": "Château·빈티지·등급·국가까지 자동 추출"
+    },
+    "step2": {
+      "label": "02 · 입맛 분석",
+      "title": "당신의 취향이\n보이기 시작합니다",
+      "body": "마실수록 어떤 색·어느 산지를 좋아하는지 자동으로 정리돼요",
+      "tasteBars": {
+        "red": "레드",
+        "white": "화이트",
+        "rose": "로제",
+        "sparkling": "스파클링",
+        "champagne": "샴페인"
+      },
+      "insight": "프랑스 부르고뉴 레드를 가장 자주 즐기시네요"
+    },
+    "step3": {
+      "label": "03 · Recap 공유",
+      "title": "한 장의 카드로\n친구에게",
+      "body": "월별·연간 자동 생성, 탭 한 번으로 공유"
+    },
+    "outro": {
+      "title": "이미 깊게 빠지셨나요?",
+      "subtitle": "부르고뉴까지 한 발짝 더 ↓"
+    }
+  },
+
   "burgundy": {
     "sectionLabel": "AI 자동 분류 · 부르고뉴",
     "heading": "내가 마신 와인이 등급·클리마·도멘·빈티지로"

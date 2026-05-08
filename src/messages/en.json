@@ -18,6 +18,41 @@
     }
   },
 
+  "wineDiscovery": {
+    "sectionLabel": "Discover your taste",
+    "step0": {
+      "title": "A bottle of wine",
+      "subtitle": "begins as just a label"
+    },
+    "step1": {
+      "label": "01 · Snap",
+      "title": "Snap once,\nwe handle the rest",
+      "body": "Château, vintage, grade, country — auto-extracted"
+    },
+    "step2": {
+      "label": "02 · Taste profile",
+      "title": "Your taste\nbecomes visible",
+      "body": "Which color and which region you love — surfaces as you drink",
+      "tasteBars": {
+        "red": "Red",
+        "white": "White",
+        "rose": "Rosé",
+        "sparkling": "Sparkling",
+        "champagne": "Champagne"
+      },
+      "insight": "You drink Burgundy reds most often"
+    },
+    "step3": {
+      "label": "03 · Recap",
+      "title": "One card,\nshare to friends",
+      "body": "Auto-generated monthly · share with one tap"
+    },
+    "outro": {
+      "title": "Already going deep?",
+      "subtitle": "One step further into Burgundy ↓"
+    }
+  },
+
   "burgundy": {
     "sectionLabel": "AI Auto-sort · Burgundy",
     "heading": "Your wines, sorted by Cru · Climat · Domaine · Millésime"

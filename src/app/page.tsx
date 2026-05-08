@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import HeroSection from '@/components/sections/hero-section';
-import FranceWineSection from '@/components/sections/france-wine-section';
+import WineDiscoverySection from '@/components/sections/wine-discovery-section';
 import BurgundySection from '@/components/sections/burgundy-section';
 import VineyardStrip from '@/components/sections/vineyard-strip';
 import FeaturesSection from '@/components/sections/features-section';
@@ -28,8 +28,8 @@ export default function Home() {
       {/* 1. Hero — 전 세계 지도 슬라이딩 배경 */}
       <HeroSection onOpenModal={openModal} />
 
-      {/* 2. 프랑스 드릴다운 — 스크롤 기반 지역 등장 */}
-      <FranceWineSection />
+      {/* 2. Wine Discovery — 초보자 친화 스크롤 스토리텔링 (라벨 → 입맛 → Recap → 부르고뉴 전환) */}
+      <WineDiscoverySection />
 
       {/* 3. 부르고뉴 드릴다운 — AI가 자동 분류한 내 와인 컬렉션 */}
       <BurgundySection />
