@@ -41,22 +41,21 @@ export async function submitWaitlist(data: {
     marketing_agree: data.marketingAgree ?? false,
   });
 
-  if (error?.code === '23505') {
-    await notifyNewSignup({
-      contact: parsed.data.contact.trim(),
-      contactType: parsed.data.contactType,
-      marketingAgree: data.marketingAgree ?? false,
-      isDuplicate: true,
-    });
-    return { success: true };
+  if (error && error.code !== '23505') {
+    return { success: false, error: 'server' };
   }
-  if (error) return { success: false, error: 'server' };
+
+  const { count: rawCount } = await supabase
+    .from('waitlist')
+    .select('*', { count: 'exact', head: true });
+  const totalCount = typeof rawCount === 'number' ? rawCount : null;
 
   await notifyNewSignup({
     contact: parsed.data.contact.trim(),
     contactType: parsed.data.contactType,
     marketingAgree: data.marketingAgree ?? false,
-    isDuplicate: false,
+    isDuplicate: error?.code === '23505',
+    totalCount,
   });
   return { success: true };
 }
