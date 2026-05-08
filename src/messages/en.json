@@ -19,34 +19,23 @@
   },
 
   "wineDiscovery": {
-    "sectionLabel": "Discover your taste",
+    "sectionLabel": "Beginner's first map",
     "topQuestion": "Curious about wine?",
     "step0": {
       "title": "A bottle of wine",
       "subtitle": "begins as just a label"
     },
     "step1": {
-      "label": "01 · Snap",
+      "label": "01 · Scan what you drank",
       "title": "Snap once,\nwe handle the rest",
-      "body": "Château, vintage, grade, country — auto-extracted"
+      "body": "Château, vintage, grade, region — auto-extracted"
     },
     "step2": {
-      "label": "02 · Taste profile",
-      "title": "Your taste\nbecomes visible",
-      "body": "Which color and which region you love — surfaces as you drink",
-      "tasteBars": {
-        "red": "Red",
-        "white": "White",
-        "rose": "Rosé",
-        "sparkling": "Sparkling",
-        "champagne": "Champagne"
-      },
-      "insight": "You drink Burgundy reds most often"
-    },
-    "step3": {
-      "label": "03 · Recap",
-      "title": "One card,\nshare to friends",
-      "body": "Auto-generated monthly · share with one tap"
+      "label": "02 · A similar first bottle",
+      "title": "The more you log,\nthe better the next bottle",
+      "body": "Starting from the region you tasted,\nwe pin similar starter wines on the map",
+      "startHint": "Similar to the Bordeaux red you had…",
+      "footnote": "Curated picks under ₩60,000"
     },
     "outro": {
       "title": "Already going deep?",
