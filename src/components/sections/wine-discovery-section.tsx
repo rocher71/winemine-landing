@@ -112,14 +112,14 @@ export default function WineDiscoverySection() {
   });
 
   useMotionValueEvent(scrollYProgress, 'change', v => {
-    setStep(v < 0.10 ? 0 : v < 0.32 ? 1 : v < 0.58 ? 2 : v < 0.85 ? 3 : 4);
+    setStep(v < 0.08 ? 0 : v < 0.28 ? 1 : v < 0.50 ? 2 : v < 0.72 ? 3 : 4);
   });
 
   return (
     <section
       ref={outerRef}
       style={{
-        height: '320vh',
+        height: '380vh',
         position: 'relative',
         background: '#04010A',
       }}
@@ -291,15 +291,15 @@ export default function WineDiscoverySection() {
           ))}
         </div>
 
-        {/* Scroll hint — bottom center, step 0만 표시 */}
+        {/* Scroll hint — bottom center, 아웃트로 전까지 표시 */}
         <AnimatePresence>
-          {step === 0 && (
+          {step < 4 && (
             <motion.div
               key="scroll-hint"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, delay: 0.6 }}
+              transition={{ duration: 0.4, delay: step === 0 ? 0.6 : 0 }}
               style={{
                 position: 'absolute',
                 bottom: 'clamp(28px, 4.5vh, 48px)',
