@@ -458,36 +458,22 @@ function CruChip({ cru, size = 'sm' }: { cru: Cru; size?: 'sm' | 'xs' }) {
 }
 
 // ── 가이드 힌트 (드릴다운 위계 첫 인지) ──────────────────────────────────────
-function GuideHint({ label = '탭해보세요' }: { label?: string }) {
+// 카드 우측 가운데에 떠 있도록 배치. 라벨 → 펄스 동그라미 순으로 우측 정렬.
+function GuideHint({ label }: { label: string }) {
   return (
     <div
       aria-hidden
       style={{
-        position: 'absolute', top: -12, right: 14,
-        display: 'flex', alignItems: 'center', gap: 8,
+        position: 'absolute', top: '50%', right: 10,
+        transform: 'translateY(-50%)',
+        display: 'flex', alignItems: 'center', gap: 7,
         pointerEvents: 'none', zIndex: 5,
       }}
     >
-      {/* 펄스 동그라미 — ripple + core */}
-      <div style={{ position: 'relative', width: 22, height: 22 }}>
-        <motion.div
-          style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: GOLD }}
-          animate={{ scale: [1, 2.2], opacity: [0.55, 0] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut' }}
-        />
-        <motion.div
-          style={{
-            position: 'absolute', inset: 5, borderRadius: '50%',
-            background: GOLD, boxShadow: '0 0 10px rgba(240,200,118,0.85)',
-          }}
-          animate={{ scale: [1, 1.18, 1] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
       {/* 라벨 */}
       <motion.span
         style={{
-          padding: '3px 10px',
+          padding: '3px 9px',
           background: 'rgba(5,2,14,0.94)',
           border: `1px solid ${GOLD}`,
           color: GOLD,
@@ -502,16 +488,32 @@ function GuideHint({ label = '탭해보세요' }: { label?: string }) {
       >
         {label}
       </motion.span>
+      {/* 펄스 동그라미 — ripple + core */}
+      <div style={{ position: 'relative', width: 20, height: 20, flexShrink: 0 }}>
+        <motion.div
+          style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: GOLD }}
+          animate={{ scale: [1, 2.2], opacity: [0.55, 0] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut' }}
+        />
+        <motion.div
+          style={{
+            position: 'absolute', inset: 5, borderRadius: '50%',
+            background: GOLD, boxShadow: '0 0 10px rgba(240,200,118,0.85)',
+          }}
+          animate={{ scale: [1, 1.18, 1] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
     </div>
   );
 }
 
-function WithGuide({ active, children }: { active: boolean; children: React.ReactNode }) {
+function WithGuide({ active, label, children }: { active: boolean; label: string; children: React.ReactNode }) {
   if (!active) return <>{children}</>;
   return (
     <div style={{ position: 'relative' }}>
       {children}
-      <GuideHint />
+      <GuideHint label={label} />
     </div>
   );
 }
@@ -867,6 +869,8 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDo
   hoveredId: string | null; onHover: (id: string | null) => void;
   guideDone: boolean;
 }) {
+  const { t } = useLocale();
+  const tapHint = t('burgundy.tapHint') || '탭해보세요';
   const motionKey =
     drill.kind === 'overview' ? 'overview'
     : drill.kind === 'cote'    ? `cote-${drill.coteId}`
@@ -886,7 +890,7 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDo
         {drill.kind === 'overview' && COTES.map(c => {
           const showGuide = !guideDone && c.id === 'Côte de Nuits';
           return (
-            <WithGuide key={c.id} active={showGuide}>
+            <WithGuide key={c.id} active={showGuide} label={tapHint}>
               <CoteCard data={c} colorFilter={colorFilter}
                 onClick={() => onDrill({ kind: 'cote', coteId: c.id })} />
             </WithGuide>
@@ -896,7 +900,7 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDo
         {drill.kind === 'cote' && communesAtCote(drill.coteId).map(c => {
           const showGuide = !guideDone && drill.coteId === 'Côte de Nuits' && c.id === 'Gevrey-Chambertin';
           return (
-            <WithGuide key={c.id} active={showGuide}>
+            <WithGuide key={c.id} active={showGuide} label={tapHint}>
               <div onMouseEnter={() => onHover(c.id)} onMouseLeave={() => onHover(null)}>
                 <CommuneCard data={c} colorFilter={colorFilter}
                   active={hoveredId === c.id}
@@ -932,7 +936,7 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDo
                 if (n === 0) return null;
                 const showGuide = !guideDone && drill.kind === 'commune' && drill.communeId === 'Gevrey-Chambertin' && cru === '1er Cru';
                 return (
-                  <WithGuide key={cru} active={showGuide}>
+                  <WithGuide key={cru} active={showGuide} label={tapHint}>
                     <button
                       onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
                       style={{

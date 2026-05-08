@@ -45,7 +45,8 @@
 
   "burgundy": {
     "sectionLabel": "AI Auto-sort · Burgundy",
-    "heading": "Going deep into wine?"
+    "heading": "Going deep into wine?",
+    "tapHint": "Tap to explore"
   },
 
   "franceWineDetail": {
