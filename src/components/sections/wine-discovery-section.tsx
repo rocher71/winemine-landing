@@ -2,10 +2,10 @@
 
 import { useRef, useState, useEffect, useMemo, useLayoutEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, MotionValue } from 'framer-motion';
-import { ComposableMap, Geographies, Geography, Line } from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography, Line, Marker } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
 import { ScanPanel } from './features-section';
-import { RECOMMENDED_WINES, STARTING_WINE, formatKrw, type RecommendedWine } from '@/lib/recommended-wines';
+import { RECOMMENDED_WINES, STARTING_WINE, ALL_WINES, formatKrw, type RecommendedWine } from '@/lib/recommended-wines';
 
 const TOTAL_STEPS = 3; // 0 intro, 1 scan, 2 recommend
 
@@ -102,32 +102,39 @@ function WineBottleSilhouette({
 type ConnectionLine = { from: [number, number]; to: [number, number] };
 type Wave = {
   isos: string[];
-  newLines: ConnectionLine[];
+  pinIds: string[];           // wines (by id) revealed at this wave
+  newLines: ConnectionLine[]; // hub-spoke neural-link lines spawned this wave
 };
 
 const FRANCE: [number, number] = STARTING_WINE.coords;
 const ITALY_HUB: [number, number] = [12.5, 41.9];
 
 const WAVES: Wave[] = [
-  // Wave 0 — your origin
-  { isos: ['250'], newLines: [] },
-  // Wave 1 — adjacent Europe (Italy, Spain)
+  // Wave 0 — your origin: France colored, your wine pinned
+  {
+    isos: ['250'],
+    pinIds: ['bdx-margaux'],
+    newLines: [],
+  },
+  // Wave 1 — adjacent Europe (Italy, Spain) — same medium-to-full-body red profile
   {
     isos: ['250', '380', '724'],
+    pinIds: ['chianti', 'rioja'],
     newLines: [
       { from: FRANCE, to: [12.5, 41.9] },   // → Italy
       { from: FRANCE, to: [-3.7, 40.4] },   // → Spain
     ],
   },
-  // Wave 2 — new world (Chile, Argentina, NZ, Australia, US)
+  // Wave 2 — new world (Chile, Argentina, NZ, Australia, US) — full-body reds
   {
     isos: ['250', '380', '724', '152', '032', '554', '036', '840'],
+    pinIds: ['casillero', 'mendoza', 'nz-pinot', 'jacobs', 'napa-cab'],
     newLines: [
-      { from: ITALY_HUB, to: [-70.66, -33.45] }, // → Chile
-      { from: ITALY_HUB, to: [-68.85, -32.89] }, // → Argentina
-      { from: ITALY_HUB, to: [173.95, -41.52] }, // → New Zealand
-      { from: ITALY_HUB, to: [138.6, -34.93] },  // → Australia
-      { from: ITALY_HUB, to: [-100, 40] },       // → USA
+      { from: ITALY_HUB, to: [-70.66, -33.45] },  // → Chile
+      { from: ITALY_HUB, to: [-68.85, -32.89] },  // → Argentina
+      { from: ITALY_HUB, to: [173.95, -41.52] },  // → New Zealand
+      { from: ITALY_HUB, to: [138.6, -34.93] },   // → Australia
+      { from: ITALY_HUB, to: [-122.27, 38.30] },  // → USA (Napa)
     ],
   },
 ];
@@ -140,19 +147,19 @@ const COUNTRY_FILL_HIGHLIGHT = '#C41E3A';
 const COUNTRY_FILL_INACTIVE = '#1A0A2E';
 const COUNTRY_STROKE = '#2A0C58';
 
-// France projected pixel position for transform-origin (projection scale 220, center [10,22], viewBox 1600×900):
-//   x = (-0.578 - 10) * 220 * π/180 + 800 ≈ 759
-//   y = -(44.838 - 22) * 220 * π/180 + 450 ≈ 362
-// → roughly 47.5% × 40%
-const ORIGIN_X_PCT = 47.5;
-const ORIGIN_Y_PCT = 40;
-
 function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; visible: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [waveIdx, setWaveIdx] = useState(-1);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useMotionValueEvent(progress, 'change', v => {
     let next = -1;
@@ -179,8 +186,25 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     return items;
   }, [waveIdx]);
 
-  // Map zoom: stays close on France early, gradually pulls back to whole world.
-  const mapScale = useTransform(progress, [0, 0.10, 0.40, 0.70, 1.0], [2.0, 2.0, 1.5, 1.15, 1.0]);
+  // Pins: accumulate wine pins from wave 0..waveIdx
+  const visiblePins = useMemo(() => {
+    const items: { wine: RecommendedWine; waveSpawned: number; orderInWave: number }[] = [];
+    for (let w = 0; w <= waveIdx; w++) {
+      WAVES[w].pinIds.forEach((id, i) => {
+        const wine = ALL_WINES.find(x => x.id === id);
+        if (wine) items.push({ wine, waveSpawned: w, orderInWave: i });
+      });
+    }
+    return items;
+  }, [waveIdx]);
+
+  // Mobile gets a wider projection (smaller scale = more land in the same viewBox)
+  // and a gentler zoom so all continents fit at the final wave.
+  const projectionScale = isMobile ? 130 : 220;
+  const transformOriginPct = isMobile ? '50% 50%' : '47.5% 40%';
+  const desktopRange = [2.0, 2.0, 1.5, 1.15, 1.0];
+  const mobileRange  = [1.4, 1.4, 1.1, 0.95, 0.85];
+  const mapScale = useTransform(progress, [0, 0.10, 0.40, 0.70, 1.0], isMobile ? mobileRange : desktopRange);
 
   // Make ComposableMap fill the wrapper (preserveAspectRatio slice)
   useLayoutEffect(() => {
@@ -203,6 +227,10 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
 
   const startingIso = STARTING_WINE.isoNumeric;
 
+  // Pin sizing — slightly smaller on mobile so labels don't overlap.
+  const pinW = isMobile ? 18 : 22;
+  const pinH = isMobile ? 40 : 50;
+
   return (
     <motion.div
       initial={false}
@@ -223,12 +251,12 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
           width: '100%',
           height: '100%',
           scale: mapScale,
-          transformOrigin: `${ORIGIN_X_PCT}% ${ORIGIN_Y_PCT}%`,
+          transformOrigin: transformOriginPct,
         }}
       >
         <ComposableMap
           projection="geoEquirectangular"
-          projectionConfig={{ scale: 220, center: [10, 22] }}
+          projectionConfig={{ scale: projectionScale, center: [10, 22] }}
           width={1600}
           height={900}
           style={{ width: '100%', height: '100%', display: 'block' }}
@@ -268,10 +296,9 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
             }
           </Geographies>
 
-          {/* Neural-link connection lines */}
+          {/* Neural-link connection lines (drawn under the pins) */}
           <AnimatePresence>
             {visibleLineKeys.map(({ key, line, waveSpawned }, idx) => {
-              // Lines spawned in this wave have a draw-in delay; older lines render fully drawn.
               const delay = waveSpawned === waveIdx ? idx * 0.18 : 0;
               return (
                 <motion.g
@@ -298,6 +325,40 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
               );
             })}
           </AnimatePresence>
+
+          {/* Wine bottle pins on activated countries */}
+          {visiblePins.map(({ wine, waveSpawned, orderInWave }) => {
+            const delay = waveSpawned === waveIdx ? 0.25 + orderInWave * 0.14 : 0;
+            const isStart = wine.id === STARTING_WINE.id;
+            return (
+              <Marker key={wine.id} coordinates={wine.coords}>
+                <motion.g
+                  initial={{ opacity: 0, y: -10, scale: 0.6 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.55, delay, ease: 'easeOut' }}
+                  style={{ transformBox: 'fill-box', transformOrigin: 'center bottom' }}
+                >
+                  {isStart && (
+                    <circle
+                      cx={0}
+                      cy={-pinH / 2}
+                      r={pinW * 1.2}
+                      fill="rgba(212,32,64,0.30)"
+                      style={{ filter: 'blur(3px)' }}
+                    />
+                  )}
+                  <g transform={`translate(${-pinW / 2}, ${-pinH})`}>
+                    <WineBottleSilhouette
+                      wine={wine}
+                      width={pinW}
+                      height={pinH}
+                      uidSuffix={`pin-${wine.id}`}
+                    />
+                  </g>
+                </motion.g>
+              </Marker>
+            );
+          })}
         </ComposableMap>
       </motion.div>
 
@@ -342,7 +403,7 @@ function StartHintPill({ progress, text }: { progress: MotionValue<number>; text
 function RecommendationCard({ progress }: { progress: MotionValue<number> }) {
   const opacity = useTransform(progress, [0.78, 0.92], [0, 1]);
   const y = useTransform(progress, [0.78, 0.96], [28, 0]);
-  const wine = RECOMMENDED_WINES[1]; // Chianti Classico
+  const wine = RECOMMENDED_WINES[0]; // Chianti Classico — Italy entry-level
   return (
     <motion.div
       style={{
