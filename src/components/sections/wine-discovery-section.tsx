@@ -143,12 +143,12 @@ const COUNTRY_FILL_HIGHLIGHT = '#C41E3A';
 const COUNTRY_FILL_INACTIVE = '#1A0A2E';
 const COUNTRY_STROKE = '#2A0C58';
 
-// Connection line draw timing
-const LINE_DRAW_DURATION = 1.4;
-const LINE_DRAW_STAGGER = 0.4;
+// Connection line draw timing — all lines start drawing simultaneously
+const LINE_DRAW_DURATION = 1.6;
+const LINE_DRAW_STAGGER = 0;
 
-// Auto-pan trigger threshold (after lines + card complete)
-const AUTO_PAN_THRESHOLD = 0.92;
+// Auto-pan starts shortly after Wave 2 lines finish drawing
+const AUTO_PAN_DELAY_MS = (LINE_DRAW_DURATION + 0.4) * 1000;
 
 // ── Connection line with stroke-dashoffset draw effect ────────────────────
 function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: number }) {
@@ -307,27 +307,34 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   }, []);
 
   useMotionValueEvent(progress, 'change', v => {
-    // Wave detection
     let next = -1;
     for (let i = 0; i < WAVES.length; i++) {
       if (v >= WAVE_THRESHOLDS[i]) next = i;
     }
     setWaveIdx(next);
+  });
 
-    // Auto left-pan once Wave 2's lines have all drawn + card landed
-    if (v >= AUTO_PAN_THRESHOLD && !panAnimRef.current) {
-      panAnimRef.current = animate(xPan, -50, {
-        duration: 60,
-        ease: 'linear',
-        repeat: Infinity,
-        repeatType: 'loop',
-      });
-    } else if (v < AUTO_PAN_THRESHOLD && panAnimRef.current) {
+  // Start the seamless left-pan once Wave 2 reaches the screen and lines are drawn.
+  // Triggered by waveIdx (not scroll progress) so the animation plays even if the
+  // user keeps scrolling past the end of the section.
+  useEffect(() => {
+    if (waveIdx === WAVES.length - 1 && !panAnimRef.current) {
+      const timer = setTimeout(() => {
+        panAnimRef.current = animate(xPan, -100, {
+          duration: 60,
+          ease: 'linear',
+          repeat: Infinity,
+          repeatType: 'loop',
+        });
+      }, AUTO_PAN_DELAY_MS);
+      return () => clearTimeout(timer);
+    }
+    if (waveIdx < WAVES.length - 1 && panAnimRef.current) {
       panAnimRef.current.stop();
       panAnimRef.current = null;
       xPan.set(0);
     }
-  });
+  }, [waveIdx, xPan]);
 
   useEffect(() => {
     return () => {
@@ -362,8 +369,9 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
     return items;
   }, [waveIdx]);
 
-  // Convert xPan number → "%" string for transform
-  const xPanStr = useTransform(xPan, v => `${v}%`);
+  // xPan is expressed in vw so the slide is calibrated to the actual viewport
+  // width (one full viewport per wrap, regardless of device).
+  const xPanStr = useTransform(xPan, v => `${v}vw`);
 
   // Make ComposableMap fill the wrapper (preserveAspectRatio slice)
   useLayoutEffect(() => {
@@ -412,20 +420,21 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
         overflow: 'hidden',
       }}
     >
-      {/* Two ComposableMap instances side-by-side for seamless left-pan loop */}
+      {/* Two ComposableMap instances side-by-side for seamless left-pan loop.
+          Each child is exactly one viewport wide, the wrapper is two. */}
       <motion.div
         ref={ref}
         style={{
-          width: '200%',
+          width: '200vw',
           height: '100%',
           display: 'flex',
           x: xPanStr,
         }}
       >
-        <div style={{ width: '50%', height: '100%', flexShrink: 0 }}>
+        <div style={{ width: '100vw', height: '100%', flexShrink: 0 }}>
           <MapContent {...mapProps} instanceKey="a" />
         </div>
-        <div style={{ width: '50%', height: '100%', flexShrink: 0 }}>
+        <div style={{ width: '100vw', height: '100%', flexShrink: 0 }}>
           <MapContent {...mapProps} instanceKey="b" />
         </div>
       </motion.div>
