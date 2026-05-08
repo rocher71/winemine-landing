@@ -457,6 +457,48 @@ function CruChip({ cru, size = 'sm' }: { cru: Cru; size?: 'sm' | 'xs' }) {
   );
 }
 
+// ── 가이드 글로우 (Plan B) ────────────────────────────────────────────────────
+// 카드 border를 펄스 글로우로 강조해 인터랙티브함을 알림. 텍스트 없음 — 우하단에
+// 저투명 동그라미만 추가해 카드 내 텍스트 가독성을 유지. localStorage 미사용.
+function GuideGlow({ active, children }: { active: boolean; children: React.ReactNode }) {
+  if (!active) return <>{children}</>;
+  return (
+    <motion.div
+      style={{ position: 'relative', borderRadius: 12 }}
+      animate={{
+        boxShadow: [
+          '0 0 0 1px rgba(240,200,118,0.30), 0 0 12px 0 rgba(240,200,118,0.16)',
+          '0 0 0 1.5px rgba(240,200,118,0.70), 0 0 22px 4px rgba(240,200,118,0.42)',
+          '0 0 0 1px rgba(240,200,118,0.30), 0 0 12px 0 rgba(240,200,118,0.16)',
+        ],
+      }}
+      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      {children}
+      {/* 작은 펄스 동그라미 — 텍스트 가독성 유지 위해 낮은 opacity */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute', bottom: 8, right: 10,
+          width: 12, height: 12,
+          pointerEvents: 'none', zIndex: 5,
+        }}
+      >
+        <motion.div
+          style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: GOLD, opacity: 0.32 }}
+          animate={{ scale: [1, 1.9], opacity: [0.32, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut' }}
+        />
+        <motion.div
+          style={{ position: 'absolute', inset: 3, borderRadius: '50%', background: GOLD, opacity: 0.45 }}
+          animate={{ opacity: [0.45, 0.72, 0.45] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
 // ── Burgundy map ─────────────────────────────────────────────────────────────
 
 function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
@@ -824,16 +866,20 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
         style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
       >
         {drill.kind === 'overview' && COTES.map(c => (
-          <CoteCard key={c.id} data={c} colorFilter={colorFilter}
-            onClick={() => onDrill({ kind: 'cote', coteId: c.id })} />
+          <GuideGlow key={c.id} active={c.id === 'Côte de Nuits'}>
+            <CoteCard data={c} colorFilter={colorFilter}
+              onClick={() => onDrill({ kind: 'cote', coteId: c.id })} />
+          </GuideGlow>
         ))}
 
         {drill.kind === 'cote' && communesAtCote(drill.coteId).map(c => (
-          <div key={c.id} onMouseEnter={() => onHover(c.id)} onMouseLeave={() => onHover(null)}>
-            <CommuneCard data={c} colorFilter={colorFilter}
-              active={hoveredId === c.id}
-              onClick={() => onDrill({ kind: 'commune', coteId: drill.coteId, communeId: c.id })} />
-          </div>
+          <GuideGlow key={c.id} active={drill.coteId === 'Côte de Nuits' && c.id === 'Gevrey-Chambertin'}>
+            <div onMouseEnter={() => onHover(c.id)} onMouseLeave={() => onHover(null)}>
+              <CommuneCard data={c} colorFilter={colorFilter}
+                active={hoveredId === c.id}
+                onClick={() => onDrill({ kind: 'commune', coteId: drill.coteId, communeId: c.id })} />
+            </div>
+          </GuideGlow>
         ))}
 
         {drill.kind === 'commune' && (() => {
@@ -860,23 +906,25 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
               {CRU_ORDER.map(cru => {
                 const n = allWines.filter(w => w.cru === cru).length;
                 if (n === 0) return null;
+                const showGuide = drill.kind === 'commune' && drill.communeId === 'Gevrey-Chambertin' && cru === '1er Cru';
                 return (
-                  <button
-                    key={cru}
-                    onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
-                    style={{
-                      padding: '12px 14px', textAlign: 'left' as const, cursor: 'pointer',
-                      background: 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${CRU_META[cru].border}`,
-                      borderRadius: 12, color: '#F5F0E8',
-                      transition: 'all 200ms', fontFamily: 'inherit',
-                      display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                    }}
-                  >
-                    <CruChip cru={cru} />
-                    <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{CRU_META[cru].ko}</span>
-                    <span style={{ marginLeft: 'auto', fontSize: 11, color: CRU_META[cru].color, fontWeight: 700 }}>{n}병 ›</span>
-                  </button>
+                  <GuideGlow key={cru} active={showGuide}>
+                    <button
+                      onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
+                      style={{
+                        padding: '12px 14px', textAlign: 'left' as const, cursor: 'pointer',
+                        background: 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${CRU_META[cru].border}`,
+                        borderRadius: 12, color: '#F5F0E8',
+                        transition: 'all 200ms', fontFamily: 'inherit',
+                        display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                      }}
+                    >
+                      <CruChip cru={cru} />
+                      <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{CRU_META[cru].ko}</span>
+                      <span style={{ marginLeft: 'auto', fontSize: 11, color: CRU_META[cru].color, fontWeight: 700 }}>{n}병 ›</span>
+                    </button>
+                  </GuideGlow>
                 );
               })}
             </>
