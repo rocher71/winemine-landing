@@ -26,6 +26,7 @@ type VineyardData = {
   classification: 'Grand Cru' | '1er Cru';
   subregion: string; area: string;
   isMonopole?: boolean;
+  isGrandCruLevel1er?: boolean;
 };
 
 type Wine = {
@@ -52,10 +53,10 @@ type Wine = {
 // ── 등급 시각 토큰 ───────────────────────────────────────────────────────────
 const CRU_ORDER: Cru[] = ['Grand Cru', '1er Cru', 'Village', 'Régional'];
 const CRU_META: Record<Cru, { ko: string; chip: string; color: string; bg: string; border: string }> = {
-  'Grand Cru': { ko: '그랑 크뤼',    chip: 'GC',  color: '#E06070', bg: 'rgba(212,32,64,0.20)',  border: 'rgba(212,32,64,0.55)'  },
-  '1er Cru':   { ko: '프르미에 크뤼', chip: '1er', color: '#E0B560', bg: 'rgba(201,168,76,0.18)', border: 'rgba(201,168,76,0.55)' },
-  'Village':   { ko: '빌라주',       chip: 'V',   color: '#9B8B7A', bg: 'rgba(155,139,122,0.14)',border: 'rgba(155,139,122,0.45)' },
-  'Régional':  { ko: '레지오날',     chip: 'R',   color: '#7A6E5A', bg: 'rgba(122,110,90,0.12)', border: 'rgba(122,110,90,0.40)'  },
+  'Grand Cru': { ko: '그랑 크뤼',    chip: 'GC',  color: '#A8233A', bg: 'rgba(123,31,43,0.22)',  border: 'rgba(168,35,58,0.60)'  },
+  '1er Cru':   { ko: '프르미에 크뤼', chip: '1er', color: '#C9A227', bg: 'rgba(201,162,39,0.18)', border: 'rgba(201,162,39,0.55)' },
+  'Village':   { ko: '빌라주',       chip: 'V',   color: '#9098A8', bg: 'rgba(107,114,128,0.16)',border: 'rgba(107,114,128,0.45)' },
+  'Régional':  { ko: '레지오날',     chip: 'R',   color: '#B8A07A', bg: 'rgba(168,149,111,0.14)', border: 'rgba(168,149,111,0.42)'  },
 };
 const PRODUCER_TYPE_KO: Record<ProducerType, string> = {
   'Domaine': '도멘',
@@ -117,7 +118,7 @@ function vintageColor(year: number): string {
 }
 
 const PRODUCERS: ProducerData[] = [
-  { id: 'drc',      name: 'Domaine de la Romanée-Conti', nameKo: '도멘 드 라 로마네-콩티 (DRC)', initials: 'DRC', coords: [4.975, 47.171], village: 'Vosne-Romanée',      blurb: '전설 중의 전설. 모노폴 1.81ha.',           type: 'Domaine' },
+  { id: 'drc',      name: 'Domaine de la Romanée-Conti', nameKo: '도멘 드 라 로마네-콩티 (DRC)', initials: 'DRC', coords: [4.975, 47.171], village: 'Vosne-Romanée',      blurb: '전설 중의 전설. 모노폴 1.76ha.',           type: 'Domaine' },
   { id: 'rousseau', name: 'Armand Rousseau',             nameKo: '도멘 아르망 루소',             initials: 'AR',  coords: [5.002, 47.226], village: 'Gevrey-Chambertin',  blurb: '주브레-샹베르탱의 절대자. 샹베르탱의 기준.', type: 'Domaine' },
   { id: 'leroy',    name: 'Domaine Leroy',               nameKo: '도멘 르루아',                 initials: 'LR',  coords: [4.970, 47.174], village: 'Vosne-Romanée',      blurb: '비오디나믹. 에이커당 부르고뉴 최고가.',     type: 'Domaine' },
   { id: 'coche',    name: 'Coche-Dury',                  nameKo: '코슈-뒤리',                   initials: 'CD',  coords: [4.836, 46.976], village: 'Meursault',          blurb: '뫼르소 최고봉. 희소성과 정교함.',           type: 'Domaine' },
@@ -129,22 +130,30 @@ const PRODUCERS: ProducerData[] = [
   { id: 'gouges',   name: 'Henri Gouges',                nameKo: '앙리 구즈',                   initials: 'HG',  coords: [4.959, 47.109], village: 'Nuits-Saint-Georges',blurb: '뉘-생-조르주의 기준. 그랑 크뤼 없는 최고 도멘.', type: 'Domaine' },
   { id: 'montille', name: 'Domaine de Montille',         nameKo: '도멘 드 몽티유',              initials: 'DM',  coords: [4.778, 46.892], village: 'Volnay',             blurb: '볼네의 정밀파. 빌라주에서도 떼루아 표현.',  type: 'Domaine' },
   { id: 'drouhin',  name: 'Maison Joseph Drouhin',       nameKo: '메종 조제프 드루앵',          initials: 'JD',  coords: [4.840, 47.024], village: 'Beaune',             blurb: '본의 명문 메종. 부르고뉴 광역까지 폭넓게.', type: 'Négociant-Éleveur' },
+  { id: 'mugnier',  name: 'J.-F. Mugnier',               nameKo: '도멘 J.-F. 뮈니에',           initials: 'JM',  coords: [4.972, 47.202], village: 'Chambolle-Musigny',  blurb: '레 자무뢰즈·뮈지니 최고봉. 섬세함과 투명함의 정수.', type: 'Domaine' },
+  { id: 'meocamuzet', name: 'Méo-Camuzet',              nameKo: '메오-카뮈제',                  initials: 'MC',  coords: [4.975, 47.173], village: 'Vosne-Romanée',      blurb: '크로 파랑투의 전설. 앙리 자이에에게 물려받은 밭.', type: 'Domaine' },
 ];
 
 const VINEYARDS: VineyardData[] = [
-  { id: 'romanee-conti',     name: 'Romanée-Conti',           nameKo: '로마네-콩티',           coords: [4.975, 47.171], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '1.81 ha',  isMonopole: true },
-  { id: 'la-tache',          name: 'La Tâche',                nameKo: '라 타슈',               coords: [4.974, 47.168], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '6.06 ha',  isMonopole: true },
-  { id: 'richebourg',        name: 'Richebourg',              nameKo: '리슈부르',              coords: [4.974, 47.175], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '8.03 ha' },
-  { id: 'chambertin',        name: 'Chambertin',              nameKo: '샹베르탱',              coords: [5.003, 47.223], classification: 'Grand Cru', subregion: 'Gevrey-Chambertin', area: '12.9 ha' },
-  { id: 'clos-saint-jacques',name: 'Clos Saint-Jacques',      nameKo: '클로 생-자크',          coords: [5.004, 47.228], classification: '1er Cru',   subregion: 'Gevrey-Chambertin', area: '6.7 ha'  },
-  { id: 'musigny',           name: 'Musigny',                 nameKo: '뮈지니',                coords: [4.972, 47.203], classification: 'Grand Cru', subregion: 'Chambolle-Musigny', area: '10.7 ha' },
-  { id: 'clos-de-la-roche',  name: 'Clos de la Roche',        nameKo: '클로 드 라 로슈',       coords: [4.978, 47.205], classification: 'Grand Cru', subregion: 'Morey-Saint-Denis', area: '16.9 ha' },
-  { id: 'clos-vougeot',      name: 'Clos de Vougeot',         nameKo: '클로 드 부조',          coords: [4.970, 47.195], classification: 'Grand Cru', subregion: 'Vougeot',           area: '50.6 ha' },
-  { id: 'les-pruliers',      name: 'NSG Les Pruliers',        nameKo: '뉘-생-조르주 레 프뤼리에', coords: [4.959, 47.109], classification: '1er Cru',   subregion: 'Nuits-Saint-Georges',area: '7.1 ha'  },
-  { id: 'perrieres',         name: 'Meursault Perrières',     nameKo: '뫼르소 레 페리에르',    coords: [4.830, 46.978], classification: '1er Cru',   subregion: 'Meursault',         area: '13.7 ha' },
+  { id: 'romanee-conti',     name: 'Romanée-Conti',           nameKo: '로마네-콩티',           coords: [4.975, 47.171], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '1.76 ha',  isMonopole: true },
+  { id: 'la-tache',          name: 'La Tâche',                nameKo: '라 타슈',               coords: [4.974, 47.168], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '5.08 ha',  isMonopole: true },
+  { id: 'richebourg',        name: 'Richebourg',              nameKo: '리슈부르',              coords: [4.974, 47.175], classification: 'Grand Cru', subregion: 'Vosne-Romanée',     area: '7.89 ha' },
+  { id: 'chambertin',        name: 'Chambertin',              nameKo: '샹베르탱',              coords: [5.003, 47.223], classification: 'Grand Cru', subregion: 'Gevrey-Chambertin', area: '13.57 ha' },
+  { id: 'chambertin-beze',   name: 'Chambertin-Clos de Bèze', nameKo: '샹베르탱-클로 드 베즈', coords: [5.002, 47.221], classification: 'Grand Cru', subregion: 'Gevrey-Chambertin', area: '15.78 ha' },
+  { id: 'clos-saint-jacques',name: 'Clos Saint-Jacques',      nameKo: '클로 생-자크',          coords: [5.004, 47.228], classification: '1er Cru',   subregion: 'Gevrey-Chambertin', area: '6.7 ha',   isGrandCruLevel1er: true },
+  { id: 'musigny',           name: 'Musigny',                 nameKo: '뮈지니',                coords: [4.972, 47.203], classification: 'Grand Cru', subregion: 'Chambolle-Musigny', area: '10.67 ha' },
+  { id: 'les-amoureuses',    name: 'Les Amoureuses',          nameKo: '레 자무뢰즈',           coords: [4.971, 47.200], classification: '1er Cru',   subregion: 'Chambolle-Musigny', area: '5.23 ha',  isGrandCruLevel1er: true },
+  { id: 'clos-de-la-roche',  name: 'Clos de la Roche',        nameKo: '클로 드 라 로슈',       coords: [4.978, 47.205], classification: 'Grand Cru', subregion: 'Morey-Saint-Denis', area: '16.52 ha' },
+  { id: 'clos-vougeot',      name: 'Clos de Vougeot',         nameKo: '클로 드 부조',          coords: [4.970, 47.195], classification: 'Grand Cru', subregion: 'Vougeot',           area: '49.43 ha' },
+  { id: 'cros-parantoux',    name: 'Cros Parantoux',          nameKo: '크로 파랑투',           coords: [4.976, 47.174], classification: '1er Cru',   subregion: 'Vosne-Romanée',     area: '1.01 ha',  isGrandCruLevel1er: true },
+  { id: 'les-saint-georges', name: 'Les Saint-Georges',       nameKo: '레 생-조르주',          coords: [4.958, 47.108], classification: '1er Cru',   subregion: 'Nuits-Saint-Georges',area: '9.53 ha',  isGrandCruLevel1er: true },
+  { id: 'les-pruliers',      name: 'NSG Les Pruliers',        nameKo: '뉘-생-조르주 레 프뤼리에', coords: [4.960, 47.110], classification: '1er Cru',   subregion: 'Nuits-Saint-Georges',area: '7.1 ha'  },
+  { id: 'perrieres',         name: 'Meursault Perrières',     nameKo: '뫼르소 레 페리에르',    coords: [4.830, 46.978], classification: '1er Cru',   subregion: 'Meursault',         area: '13.72 ha', isGrandCruLevel1er: true },
   { id: 'charmes',           name: 'Meursault Charmes',       nameKo: '뫼르소 레 샤름',        coords: [4.829, 46.974], classification: '1er Cru',   subregion: 'Meursault',         area: '31.1 ha' },
-  { id: 'montrachet',        name: 'Chevalier-Montrachet',    nameKo: '슈발리에-몽라셰',       coords: [4.797, 46.942], classification: 'Grand Cru', subregion: 'Puligny-Montrachet',area: '7.5 ha'  },
-  { id: 'valmur',            name: 'Chablis GC Valmur',       nameKo: '샤블리 그랑 크뤼 발뮈르', coords: [3.815, 47.823], classification: 'Grand Cru', subregion: 'Chablis',           area: '11.0 ha' },
+  { id: 'les-rugiens',       name: 'Les Rugiens (Bas)',        nameKo: '레 뤼지엥 바',          coords: [4.793, 46.986], classification: '1er Cru',   subregion: 'Pommard',           area: '5.84 ha',  isGrandCruLevel1er: true },
+  { id: 'les-pucelles',      name: 'Les Pucelles',            nameKo: '레 퓌셀',               coords: [4.796, 46.940], classification: '1er Cru',   subregion: 'Puligny-Montrachet', area: '6.77 ha', isGrandCruLevel1er: true },
+  { id: 'montrachet',        name: 'Chevalier-Montrachet',    nameKo: '슈발리에-몽라셰',       coords: [4.797, 46.942], classification: 'Grand Cru', subregion: 'Puligny-Montrachet',area: '7.47 ha'  },
+  { id: 'valmur',            name: 'Chablis GC Valmur',       nameKo: '샤블리 그랑 크뤼 발뮈르', coords: [3.815, 47.823], classification: 'Grand Cru', subregion: 'Chablis',           area: '11.04 ha' },
 ];
 
 // ── 내가 마신 와인 (AI 자동 분류) ────────────────────────────────────────────
@@ -163,6 +172,10 @@ const WINES: Wine[] = [
   { id: 'w12', name: 'Meursault Charmes 1er Cru',  nameKo: '뫼르소 레 샤름 1er Cru',     vintage: 2018, producerId: 'roulot',   vineyardId: 'charmes',           subregionId: 'cote-beaune', village: 'Meursault',          villageKo: '뫼르소',           cru: '1er Cru',   date: '2025.11.01',                          note: '흰 꽃, 시트러스, 정밀한 마무리.',      coords: [4.829, 46.974], color: '#5a3c05', label: 'MC',  rating: 4, appellation: 'Meursault' },
   { id: 'w13', name: 'Chevalier-Montrachet',       nameKo: '슈발리에-몽라셰',            vintage: 2019, producerId: 'leflaive', vineyardId: 'montrachet',        subregionId: 'cote-beaune', village: 'Puligny-Montrachet', villageKo: '퓔리니-몽라셰',    cru: 'Grand Cru', date: '2025.10.15',                          note: '백악, 흰 꽃, 정교한 산미.',            coords: [4.797, 46.942], color: '#4a3003', label: 'CM',  rating: 5, appellation: 'Puligny'   },
   { id: 'w14', name: 'Chablis GC Valmur',          nameKo: '샤블리 GC 발뮈르',           vintage: 2020, producerId: 'raveneau', vineyardId: 'valmur',            subregionId: 'chablis',     village: 'Chablis',            villageKo: '샤블리',           cru: 'Grand Cru', date: '2025.06.05',                          note: '굴 껍데기, 라임, 부싯돌.',             coords: [3.815, 47.823], color: '#ab8b22', label: 'VM',  rating: 5, appellation: 'Chablis'   },
+  // GC급 1er Cru
+  { id: 'w17', name: 'Les Amoureuses 1er Cru',   nameKo: '레 자무뢰즈 1er Cru',         vintage: 2019, producerId: 'mugnier',     vineyardId: 'les-amoureuses',    subregionId: 'cote-nuits',  village: 'Chambolle-Musigny',  villageKo: '샹볼-뮈지니',       cru: '1er Cru',   date: '2025.12.05', occasion: '연말 디너',   note: '뮈지니 바로 아래. 꽃향기와 실크 같은 질감.',  coords: [4.971, 47.200], color: '#3e0e24', label: 'AM',  rating: 5, appellation: 'Chambolle' },
+  { id: 'w18', name: 'Cros Parantoux 1er Cru',   nameKo: '크로 파랑투 1er Cru',         vintage: 2018, producerId: 'meocamuzet',  vineyardId: 'cros-parantoux',    subregionId: 'cote-nuits',  village: 'Vosne-Romanée',      villageKo: '본-로마네',         cru: '1er Cru',   date: '2025.10.28',                          note: '앙리 자이에의 전설. 검은 과실, 야생화, 광물성.',  coords: [4.976, 47.174], color: '#4a1122', label: 'CP',  rating: 5, appellation: 'Vosne'     },
+  { id: 'w19', name: 'Les Pucelles 1er Cru',     nameKo: '레 퓌셀 1er Cru',             vintage: 2020, producerId: 'leflaive',    vineyardId: 'les-pucelles',      subregionId: 'cote-beaune', village: 'Puligny-Montrachet', villageKo: '퓔리니-몽라셰',    cru: '1er Cru',   date: '2025.08.22', occasion: '여름 저녁',   note: '몽라셰 인접. 순수한 미네랄, 레몬, 흰 꽃.',    coords: [4.796, 46.940], color: '#6a5010', label: 'PU',  rating: 5, appellation: 'Puligny'   },
   // Village
   { id: 'w15', name: 'Volnay',                     nameKo: '볼네',                       vintage: 2018, producerId: 'montille',                                  subregionId: 'cote-beaune', village: 'Volnay',             villageKo: '볼네',             cru: 'Village',   date: '2025.08.18', occasion: '평일 저녁',   note: '실키한 탄닌, 붉은 베리, 우아함.',      coords: [4.778, 46.892], color: '#621631', label: 'V',   rating: 4, appellation: 'Volnay'    },
   // Régional
@@ -354,6 +367,18 @@ function MonopoleBadge() {
   );
 }
 
+function GrandCruLevelBadge() {
+  return (
+    <span style={{
+      fontSize: 9, padding: '1px 6px', borderRadius: 9999, fontWeight: 700, letterSpacing: '0.04em',
+      background: 'rgba(201,162,39,0.16)', border: '1px solid rgba(201,162,39,0.60)',
+      color: '#C9A227',
+    }}>
+      ★ GC급
+    </span>
+  );
+}
+
 function ProducerTypeBadge({ type }: { type: ProducerType }) {
   const isMaison = type !== 'Domaine';
   return (
@@ -487,22 +512,34 @@ function ProducerCard({ data, active }: { data: ProducerData; active: boolean })
 
 function VineyardCard({ data, active }: { data: VineyardData; active: boolean }) {
   const isGC = data.classification === 'Grand Cru';
+  const activeBorder = isGC ? CRU_META['Grand Cru'].border : CRU_META['1er Cru'].border;
   const wines = winesByVineyard[data.id] ?? [];
   return (
     <div style={{
       padding: '14px 16px',
       background: active ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
-      border: `1px solid ${active ? (isGC ? 'rgba(212,32,64,0.5)' : 'rgba(201,168,76,0.4)') : 'rgba(255,255,255,0.06)'}`,
+      border: `1px solid ${active ? activeBorder : 'rgba(255,255,255,0.06)'}`,
       borderRadius: 12, transition: 'all 200ms',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, flexWrap: 'wrap' }}>
         <CruChip cru={isGC ? 'Grand Cru' : '1er Cru'} />
-        <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{data.nameKo}</span>
+        {/* GC: 클리마명 단독 강조. 1er Cru: 마을명+클리마명 3단 구조 */}
+        {isGC ? (
+          <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 700 }}>{data.nameKo}</span>
+        ) : (
+          <span style={{ fontSize: 13, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>
+            <span style={{ color: '#9B8B7A', fontWeight: 400, fontSize: 11 }}>{data.subregion} · </span>
+            {data.nameKo}
+          </span>
+        )}
         {data.isMonopole && <MonopoleBadge />}
-        <span style={{ marginLeft: 'auto' }}>{wines.length > 0 && <CollectedBadge count={wines.length} />}</span>
+        {data.isGrandCruLevel1er && <GrandCruLevelBadge />}
+        <span style={{ marginLeft: 'auto' }}>{wines.length > 0 && <CollectedBadge count={wines.length} color={isGC ? CRU_META['Grand Cru'].color : CRU_META['1er Cru'].color} bg={isGC ? CRU_META['Grand Cru'].bg : CRU_META['1er Cru'].bg} border={isGC ? CRU_META['Grand Cru'].border : CRU_META['1er Cru'].border} />}</span>
       </div>
       <div style={{ fontSize: 10.5, color: '#9B8B7A', marginBottom: wines.length > 0 ? 10 : 0 }}>
-        <span style={{ color: '#D4C5B0' }}>{data.name}</span> · {data.subregion} · {data.area}
+        <span style={{ color: isGC ? '#D4C5B0' : '#B8A888', fontStyle: isGC ? 'normal' : 'italic' as const }}>{data.name}</span>
+        {isGC && <span> · {data.subregion}</span>}
+        <span> · {data.area}</span>
       </div>
       {wines.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -640,8 +677,8 @@ function BurgundyMap({ filter, hoveredId, onHover }: {
                   <Marker key={d.id} coordinates={d.coords}>
                     <g transform={`scale(${cs})`}>
                       <MapPin id={d.id}
-                        color={d.classification === 'Grand Cru' ? '#D42040' : '#C9A84C'}
-                        hovered={hoveredId === d.id} ring={d.isMonopole}
+                        color={d.classification === 'Grand Cru' ? CRU_META['Grand Cru'].color : CRU_META['1er Cru'].color}
+                        hovered={hoveredId === d.id} ring={d.isMonopole || d.isGrandCruLevel1er}
                         count={winesByVineyard[d.id]?.length ?? 0}
                         onHover={onHover} />
                     </g>
