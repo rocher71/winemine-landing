@@ -66,7 +66,10 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
         });
         setHideOnSection(visible.size > 0);
       },
-      { threshold: 0.25 },
+      // threshold 0 fires whenever any pixel intersects — works for sections
+      // taller than the viewport (wine-discovery is 600vh, so the visible
+      // ratio never reaches 0.25 even when fully on-screen).
+      { threshold: 0 },
     );
     elements.forEach(el => obs.observe(el));
     return () => obs.disconnect();
