@@ -457,66 +457,6 @@ function CruChip({ cru, size = 'sm' }: { cru: Cru; size?: 'sm' | 'xs' }) {
   );
 }
 
-// ── 가이드 힌트 (드릴다운 위계 첫 인지) ──────────────────────────────────────
-// 카드 우하단(내부)에 배치. 라벨 → 펄스 동그라미 순. 카드 경계 밖으로 넘어가지 않도록 bottom·right 양수.
-function GuideHint({ label }: { label: string }) {
-  return (
-    <div
-      aria-hidden
-      style={{
-        position: 'absolute', bottom: 8, right: 10,
-        display: 'flex', alignItems: 'center', gap: 7,
-        pointerEvents: 'none', zIndex: 5,
-      }}
-    >
-      {/* 라벨 */}
-      <motion.span
-        style={{
-          padding: '3px 9px',
-          background: 'rgba(5,2,14,0.94)',
-          border: `1px solid ${GOLD}`,
-          color: GOLD,
-          fontSize: 10.5, fontWeight: 800,
-          letterSpacing: '0.04em',
-          borderRadius: 9999,
-          whiteSpace: 'nowrap' as const,
-          boxShadow: '0 4px 14px rgba(240,200,118,0.25)',
-        }}
-        animate={{ opacity: [1, 0.7, 1] }}
-        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        {label}
-      </motion.span>
-      {/* 펄스 동그라미 — ripple + core */}
-      <div style={{ position: 'relative', width: 20, height: 20, flexShrink: 0 }}>
-        <motion.div
-          style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: GOLD }}
-          animate={{ scale: [1, 2.2], opacity: [0.55, 0] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut' }}
-        />
-        <motion.div
-          style={{
-            position: 'absolute', inset: 5, borderRadius: '50%',
-            background: GOLD, boxShadow: '0 0 10px rgba(240,200,118,0.85)',
-          }}
-          animate={{ scale: [1, 1.18, 1] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function WithGuide({ active, label, children }: { active: boolean; label: string; children: React.ReactNode }) {
-  if (!active) return <>{children}</>;
-  return (
-    <div style={{ position: 'relative' }}>
-      {children}
-      <GuideHint label={label} />
-    </div>
-  );
-}
-
 // ── Burgundy map ─────────────────────────────────────────────────────────────
 
 function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
@@ -862,14 +802,11 @@ function ColorToggle({ value, onChange, mobile }: {
 
 // ── Item list panel content ───────────────────────────────────────────────────
 
-function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDone }: {
+function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
   drill: DrillLevel; colorFilter: ColorFilter;
   onDrill: (d: DrillLevel) => void;
   hoveredId: string | null; onHover: (id: string | null) => void;
-  guideDone: boolean;
 }) {
-  const { t } = useLocale();
-  const tapHint = t('burgundy.tapHint') || '탭해보세요';
   const motionKey =
     drill.kind === 'overview' ? 'overview'
     : drill.kind === 'cote'    ? `cote-${drill.coteId}`
@@ -886,28 +823,18 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDo
         transition={{ duration: 0.22 }}
         style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
       >
-        {drill.kind === 'overview' && COTES.map(c => {
-          const showGuide = !guideDone && c.id === 'Côte de Nuits';
-          return (
-            <WithGuide key={c.id} active={showGuide} label={tapHint}>
-              <CoteCard data={c} colorFilter={colorFilter}
-                onClick={() => onDrill({ kind: 'cote', coteId: c.id })} />
-            </WithGuide>
-          );
-        })}
+        {drill.kind === 'overview' && COTES.map(c => (
+          <CoteCard key={c.id} data={c} colorFilter={colorFilter}
+            onClick={() => onDrill({ kind: 'cote', coteId: c.id })} />
+        ))}
 
-        {drill.kind === 'cote' && communesAtCote(drill.coteId).map(c => {
-          const showGuide = !guideDone && drill.coteId === 'Côte de Nuits' && c.id === 'Gevrey-Chambertin';
-          return (
-            <WithGuide key={c.id} active={showGuide} label={tapHint}>
-              <div onMouseEnter={() => onHover(c.id)} onMouseLeave={() => onHover(null)}>
-                <CommuneCard data={c} colorFilter={colorFilter}
-                  active={hoveredId === c.id}
-                  onClick={() => onDrill({ kind: 'commune', coteId: drill.coteId, communeId: c.id })} />
-              </div>
-            </WithGuide>
-          );
-        })}
+        {drill.kind === 'cote' && communesAtCote(drill.coteId).map(c => (
+          <div key={c.id} onMouseEnter={() => onHover(c.id)} onMouseLeave={() => onHover(null)}>
+            <CommuneCard data={c} colorFilter={colorFilter}
+              active={hoveredId === c.id}
+              onClick={() => onDrill({ kind: 'commune', coteId: drill.coteId, communeId: c.id })} />
+          </div>
+        ))}
 
         {drill.kind === 'commune' && (() => {
           const allWines = applyColor(winesByCommune[drill.communeId] ?? [], colorFilter);
@@ -933,25 +860,23 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover, guideDo
               {CRU_ORDER.map(cru => {
                 const n = allWines.filter(w => w.cru === cru).length;
                 if (n === 0) return null;
-                const showGuide = !guideDone && drill.kind === 'commune' && drill.communeId === 'Gevrey-Chambertin' && cru === '1er Cru';
                 return (
-                  <WithGuide key={cru} active={showGuide} label={tapHint}>
-                    <button
-                      onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
-                      style={{
-                        padding: '12px 14px', textAlign: 'left' as const, cursor: 'pointer',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: `1px solid ${CRU_META[cru].border}`,
-                        borderRadius: 12, color: '#F5F0E8',
-                        transition: 'all 200ms', fontFamily: 'inherit',
-                        display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                      }}
-                    >
-                      <CruChip cru={cru} />
-                      <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{CRU_META[cru].ko}</span>
-                      <span style={{ marginLeft: 'auto', fontSize: 11, color: CRU_META[cru].color, fontWeight: 700 }}>{n}병 ›</span>
-                    </button>
-                  </WithGuide>
+                  <button
+                    key={cru}
+                    onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
+                    style={{
+                      padding: '12px 14px', textAlign: 'left' as const, cursor: 'pointer',
+                      background: 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${CRU_META[cru].border}`,
+                      borderRadius: 12, color: '#F5F0E8',
+                      transition: 'all 200ms', fontFamily: 'inherit',
+                      display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                    }}
+                  >
+                    <CruChip cru={cru} />
+                    <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{CRU_META[cru].ko}</span>
+                    <span style={{ marginLeft: 'auto', fontSize: 11, color: CRU_META[cru].color, fontWeight: 700 }}>{n}병 ›</span>
+                  </button>
                 );
               })}
             </>
@@ -1055,10 +980,10 @@ function MobileBottomBar({ drill, onDrill, colorFilter, onColor, visible }: {
 
 // ── Desktop panel ─────────────────────────────────────────────────────────────
 
-function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible, guideDone }: {
+function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible }: {
   drill: DrillLevel; onDrill: (d: DrillLevel) => void; colorFilter: ColorFilter;
   hoveredId: string | null; onHover: (id: string | null) => void;
-  visible: boolean; guideDone: boolean;
+  visible: boolean;
 }) {
   const groupLabel =
     drill.kind === 'overview' ? '꼬뜨를 선택하세요'
@@ -1084,7 +1009,7 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px 20px' }}>
         <PanelContent drill={drill} colorFilter={colorFilter}
-          onDrill={onDrill} hoveredId={hoveredId} onHover={onHover} guideDone={guideDone} />
+          onDrill={onDrill} hoveredId={hoveredId} onHover={onHover} />
       </div>
     </motion.div>
   );
@@ -1092,12 +1017,11 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
 
 // ── Mobile sheet ──────────────────────────────────────────────────────────────
 
-function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible, bottomOffset, guideDone }: {
+function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible, bottomOffset }: {
   drill: DrillLevel; onDrill: (d: DrillLevel) => void; colorFilter: ColorFilter;
   hoveredId: string | null; onHover: (id: string | null) => void;
   visible: boolean;
   bottomOffset: number; // 하단 바 높이 — 시트는 그 위에 위치
-  guideDone: boolean;
 }) {
   const [sheetH, setSheetH] = useState(0.52);
   const sheetHRef = useRef(0.52);
@@ -1144,7 +1068,7 @@ function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible,
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '4px 12px 20px' }}>
         <PanelContent drill={drill} colorFilter={colorFilter}
-          onDrill={onDrill} hoveredId={hoveredId} onHover={onHover} guideDone={guideDone} />
+          onDrill={onDrill} hoveredId={hoveredId} onHover={onHover} />
       </div>
     </motion.div>
   );
@@ -1160,7 +1084,6 @@ export default function BurgundySection() {
   const [colorFilter, setColorFilter] = useState<ColorFilter>('all');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
-  const [guideDone, setGuideDone] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -1168,20 +1091,6 @@ export default function BurgundySection() {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
-
-  // 가이드: 한 번 위계 끝까지 드릴다운하면(또는 이전에 본 적 있으면) 더 띄우지 않음
-  useEffect(() => {
-    try {
-      if (localStorage.getItem('winemine.burgundyGuideDone') === '1') setGuideDone(true);
-    } catch {}
-  }, []);
-  useEffect(() => {
-    if (guideDone) return;
-    if (drill.kind === 'cru') {
-      setGuideDone(true);
-      try { localStorage.setItem('winemine.burgundyGuideDone', '1'); } catch {}
-    }
-  }, [drill, guideDone]);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -1224,9 +1133,9 @@ export default function BurgundySection() {
 
       {/* Panels */}
       {isMobile && <MobileSheet drill={drill} onDrill={setDrill} colorFilter={colorFilter}
-        hoveredId={hoveredId} onHover={setHoveredId} visible={visible} bottomOffset={MOBILE_TAB_BAR_HEIGHT} guideDone={guideDone} />}
+        hoveredId={hoveredId} onHover={setHoveredId} visible={visible} bottomOffset={MOBILE_TAB_BAR_HEIGHT} />}
       {!isMobile && <DesktopPanel drill={drill} onDrill={setDrill} colorFilter={colorFilter}
-        hoveredId={hoveredId} onHover={setHoveredId} visible={visible} guideDone={guideDone} />}
+        hoveredId={hoveredId} onHover={setHoveredId} visible={visible} />}
 
       {/* Mobile bottom bar (breadcrumb + 색 토글) */}
       {isMobile && <MobileBottomBar drill={drill} onDrill={setDrill}
