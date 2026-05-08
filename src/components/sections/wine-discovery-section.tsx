@@ -195,7 +195,7 @@ const TOUR_STOPS: TourStop[] = [
 ];
 
 const TOUR_START = 0.10; // before this, hold on stop 0 + lines drawing
-const TOUR_END   = 0.95; // after this, hold final stop
+const TOUR_END   = 0.85; // last stop reached here, then hold until 1.0 (dwell time)
 const DIP_ZOOM   = 1.25;
 
 // Build keyframe arrays for useTransform.
@@ -485,6 +485,46 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   );
 }
 
+// Bottom-center scroll hint shown throughout the cinematic tour, fading out near the end.
+function Step2ScrollHint({ progress, text }: { progress: MotionValue<number>; text: string }) {
+  const opacity = useTransform(progress, [0, 0.04, 0.78, 0.90], [0, 1, 1, 0]);
+  return (
+    <motion.div
+      style={{
+        opacity,
+        position: 'absolute',
+        bottom: 'clamp(14px, 2.5vh, 24px)',
+        left: '50%', transform: 'translateX(-50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+        pointerEvents: 'none',
+        zIndex: 8,
+      }}
+    >
+      <span style={{
+        fontSize: 11, color: 'rgba(255,255,255,0.55)',
+        letterSpacing: '0.06em', whiteSpace: 'nowrap',
+      }}>
+        {text}
+      </span>
+      <span style={{
+        fontSize: 9, color: 'rgba(255,255,255,0.28)',
+        letterSpacing: '0.14em', textTransform: 'uppercase' as const,
+      }}>
+        scroll down
+      </span>
+      <motion.div
+        animate={{ y: [0, 5, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ marginTop: 4 }}
+      >
+        <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+          <path d="M1 1.5L8 8.5L15 1.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function StartHintPill({ progress, text }: { progress: MotionValue<number>; text: string }) {
   // Pill shows during initial France close-up, fades as tour starts moving.
   const opacity = useTransform(progress, [0, 0.04, 0.10, 0.16], [0, 1, 1, 0]);
@@ -548,7 +588,7 @@ function RecommendationCard({
         opacity: cardOpacity,
         y: cardY,
         position: 'absolute',
-        bottom: 'clamp(56px, 10vh, 96px)',
+        bottom: 'clamp(80px, 13vh, 124px)',
         left: '50%',
         x: '-50%',
         display: 'flex',
@@ -636,10 +676,10 @@ export default function WineDiscoverySection() {
   });
 
   useMotionValueEvent(scrollYProgress, 'change', v => {
-    setStep(v < 0.12 ? 0 : v < 0.30 ? 1 : 2);
+    setStep(v < 0.08 ? 0 : v < 0.20 ? 1 : 2);
   });
 
-  const recProgress = useTransform(scrollYProgress, [0.30, 0.95], [0, 1], { clamp: true });
+  const recProgress = useTransform(scrollYProgress, [0.20, 0.92], [0, 1], { clamp: true });
 
   // Late in step 2: top header fades and the step 2 heading rises early
   // so the cinematic tour gets full visual focus.
@@ -650,8 +690,9 @@ export default function WineDiscoverySection() {
   return (
     <section
       ref={outerRef}
+      id="wine-discovery"
       style={{
-        height: '380vh',
+        height: '600vh',
         position: 'relative',
         background: '#04010A',
       }}
@@ -777,6 +818,7 @@ export default function WineDiscoverySection() {
           <>
             <StartHintPill progress={recProgress} text={t.step2.startHint} />
             <RecommendationCard progress={recProgress} cardLabel={t.step2.cardLabel} />
+            <Step2ScrollHint progress={recProgress} text={t.scrollHint} />
           </>
         )}
 

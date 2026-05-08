@@ -47,16 +47,28 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // 부르고뉴 섹션이 화면에 보이는 동안에는 숨김
-  // (모바일 하단 탭 바와 플로팅 CTA가 겹치는 문제 방지)
+  // Hide the floating CTA while sections that need uncluttered visuals are in view
+  // (Wine Discovery's cinematic map, Burgundy drilldown).
   useEffect(() => {
-    const el = document.getElementById('burgundy');
-    if (!el) return;
+    const ids = ['wine-discovery', 'burgundy'];
+    const elements = ids
+      .map(id => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (elements.length === 0) return;
+
+    const visible = new Set<string>();
     const obs = new IntersectionObserver(
-      ([entry]) => setHideOnSection(entry.isIntersecting),
+      entries => {
+        entries.forEach(entry => {
+          const id = (entry.target as HTMLElement).id;
+          if (entry.isIntersecting) visible.add(id);
+          else visible.delete(id);
+        });
+        setHideOnSection(visible.size > 0);
+      },
       { threshold: 0.25 },
     );
-    obs.observe(el);
+    elements.forEach(el => obs.observe(el));
     return () => obs.disconnect();
   }, []);
 
