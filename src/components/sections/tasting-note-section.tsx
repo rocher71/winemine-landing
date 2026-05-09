@@ -9,6 +9,7 @@
 // spec: _workspace/tasting-note-section-spec.md
 
 import { useState, type ReactNode } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
 import {
@@ -50,13 +51,20 @@ const PHONE_BEZEL = 12;
 const PHONE_INNER_RADIUS = 44;
 const STATUS_BAR_HEIGHT = 48;
 
+type Mode = 'beginner' | 'expert';
+
 interface Props {
   onOpenModal?: () => void;
 }
 
 export default function TastingNoteSection({ onOpenModal }: Props) {
   const { t } = useLocale();
+  const [mode, setMode] = useState<Mode>('beginner');
   const [variant, setVariant] = useState<FormVariant>('white');
+
+  // Beginner 모드에서는 Blind 비활성 — 자동으로 white로 fallback
+  const effectiveVariant: FormVariant =
+    mode === 'beginner' && variant === 'blind' ? 'white' : variant;
 
   return (
     <section
@@ -105,19 +113,30 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           </p>
         </motion.div>
 
-        <FormTabBar active={variant} onSelect={setVariant} t={t} />
+        <ModeToggle active={mode} onSelect={setMode} t={t} />
+
+        <FormTabBar
+          active={effectiveVariant}
+          onSelect={setVariant}
+          t={t}
+          showBlind={mode === 'expert'}
+        />
 
         <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center' }}>
           <PhoneFrame>
             <AnimatePresence mode="wait">
               <motion.div
-                key={variant}
+                key={`${mode}-${effectiveVariant}`}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
               >
-                <MockupForVariant variant={variant} />
+                {mode === 'beginner' ? (
+                  <BeginnerMockupForVariant variant={effectiveVariant} />
+                ) : (
+                  <MockupForVariant variant={effectiveVariant} />
+                )}
               </motion.div>
             </AnimatePresence>
           </PhoneFrame>
@@ -134,10 +153,30 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           }}
         >
           <p style={{ marginBottom: 24, color: '#9B8B7A' }}>{t('tastingNote.outro')}</p>
-          {onOpenModal && (
-            <button
-              type="button"
-              onClick={onOpenModal}
+          <div style={{ display: 'inline-flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {onOpenModal && (
+              <button
+                type="button"
+                onClick={onOpenModal}
+                style={{
+                  background: '#8B1A2A',
+                  border: '1px solid #8B1A2A',
+                  color: '#F5F0E8',
+                  padding: '12px 28px',
+                  borderRadius: 28,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'background 200ms ease',
+                }}
+              >
+                {t('tastingNote.cta.waitlist')}
+              </button>
+            )}
+            <Link
+              href="/tasting-note-playground"
               style={{
                 background: 'transparent',
                 border: '1px solid #C9A84C',
@@ -147,14 +186,14 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
                 fontSize: 14,
                 fontWeight: 600,
                 letterSpacing: '0.02em',
-                cursor: 'pointer',
                 fontFamily: 'inherit',
+                textDecoration: 'none',
                 transition: 'background 200ms ease',
               }}
             >
-              {t('tastingNote.cta.waitlist')}
-            </button>
-          )}
+              {t('tastingNote.playground.pageTitle')} →
+            </Link>
+          </div>
         </div>
       </div>
     </section>
@@ -187,21 +226,98 @@ function SectionEyebrow({ text }: { text: string }) {
   );
 }
 
-function FormTabBar({
+function ModeToggle({
   active,
   onSelect,
   t,
 }: {
+  active: Mode;
+  onSelect: (m: Mode) => void;
+  t: (key: string) => string;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Mode"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: 12,
+        maxWidth: 720,
+        margin: '0 auto 16px',
+      }}
+    >
+      {(['beginner', 'expert'] as Mode[]).map(m => {
+        const isActive = active === m;
+        return (
+          <button
+            key={m}
+            type="button"
+            role="radio"
+            aria-checked={isActive}
+            onClick={() => onSelect(m)}
+            style={{
+              padding: '14px 18px',
+              background: isActive
+                ? m === 'beginner'
+                  ? 'linear-gradient(135deg, rgba(201,168,76,0.22) 0%, rgba(201,168,76,0.10) 100%)'
+                  : 'linear-gradient(135deg, rgba(139,26,42,0.28) 0%, rgba(139,26,42,0.10) 100%)'
+                : 'rgba(15,7,24,0.6)',
+              border: `1.5px solid ${isActive ? (m === 'beginner' ? GOLD : '#A02030') : 'rgba(245,240,232,0.10)'}`,
+              borderRadius: 12,
+              cursor: 'pointer',
+              fontFamily: 'var(--font-inter, system-ui, sans-serif)',
+              textAlign: 'left',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              transition: 'background 200ms ease, border-color 200ms ease',
+            }}
+          >
+            <span style={{ fontSize: 22 }} aria-hidden>
+              {m === 'beginner' ? '🌱' : '🎓'}
+            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-playfair, Georgia, serif)',
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: isActive ? '#F5F0E8' : '#D4C5B0',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {t(`tastingNote.playground.mode.${m}`)}
+              </span>
+              <span style={{ fontSize: 11, color: '#9B8B7A' }}>
+                {t(`tastingNote.playground.mode.${m}Subtitle`)}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function FormTabBar({
+  active,
+  onSelect,
+  t,
+  showBlind = true,
+}: {
   active: FormVariant;
   onSelect: (v: FormVariant) => void;
   t: (key: string) => string;
+  showBlind?: boolean;
 }) {
+  const visible = showBlind ? VARIANTS : VARIANTS.filter(v => v.id !== 'blind');
   return (
     <div
       role="tablist"
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: `repeat(${visible.length}, 1fr)`,
         background: 'rgba(15,7,24,0.6)',
         border: '1px solid rgba(201,168,76,0.16)',
         borderRadius: 12,
@@ -210,7 +326,7 @@ function FormTabBar({
         margin: '0 auto',
       }}
     >
-      {VARIANTS.map(v => {
+      {visible.map(v => {
         const isActive = active === v.id;
         return (
           <button
@@ -1302,3 +1418,385 @@ function GuessRow({
   );
 }
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Beginner Mockups — 입문자가 작성한 짧은 노트 (정적, 인터랙션 X)
+// 데이터: WSET 5단계 → 3단계, 어휘 200개 → 4 큰 카테고리, 카우달리 X
+// ─────────────────────────────────────────────────────────────────────────────
+
+type Level = 'low' | 'mid' | 'high';
+type Impression = 'love' | 'ok' | 'meh';
+type FinishLevel = 'short' | 'medium' | 'long';
+
+interface BeginnerData {
+  variant: FormVariant;
+  impression: Impression;
+  sweetness: Level;
+  acidity: Level;
+  body: Level;
+  tannin?: Level;
+  bubbles?: Level;
+  aromas: string[]; // 'berry' | 'citrus' | 'stoneFruit' | 'floral' | 'spice' | 'sweet' | 'earth' | 'yeast'
+  finish: FinishLevel;
+  rating: number;
+}
+
+const BEGINNER_DATA: Record<'white' | 'red' | 'sparkling', BeginnerData> = {
+  white: {
+    variant: 'white',
+    impression: 'love',
+    sweetness: 'low',
+    acidity: 'high',
+    body: 'mid',
+    aromas: ['citrus', 'stoneFruit', 'floral', 'yeast'],
+    finish: 'long',
+    rating: 5,
+  },
+  red: {
+    variant: 'red',
+    impression: 'love',
+    sweetness: 'low',
+    acidity: 'mid',
+    body: 'mid',
+    tannin: 'mid',
+    aromas: ['berry', 'spice', 'earth', 'floral'],
+    finish: 'long',
+    rating: 5,
+  },
+  sparkling: {
+    variant: 'sparkling',
+    impression: 'love',
+    sweetness: 'low',
+    acidity: 'high',
+    body: 'mid',
+    bubbles: 'mid',
+    aromas: ['citrus', 'stoneFruit', 'yeast', 'floral'],
+    finish: 'long',
+    rating: 5,
+  },
+};
+
+const AROMA_EMOJI: Record<string, string> = {
+  berry: '🍓',
+  citrus: '🍋',
+  stoneFruit: '🍑',
+  floral: '🌹',
+  spice: '🌶',
+  sweet: '🍯',
+  earth: '🍂',
+  yeast: '🥖',
+};
+
+function BeginnerMockupForVariant({ variant }: { variant: FormVariant }) {
+  if (variant === 'blind') return null;
+  const wine = MOCK_WINES.find(w => w.variant === variant);
+  if (!wine) return null;
+  const data = BEGINNER_DATA[variant as 'white' | 'red' | 'sparkling'];
+  return <BeginnerMockup wine={wine} data={data} />;
+}
+
+function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) {
+  const { t } = useLocale();
+  const variantKey = wine.variant as 'white' | 'red' | 'sparkling';
+
+  const impEmoji: Record<Impression, string> = { love: '🤩', ok: '🙂', meh: '🤔' };
+
+  return (
+    <>
+      {/* Header */}
+      <div style={{ padding: '8px 22px 16px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            gap: 12,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontFamily: 'var(--font-playfair, Georgia, serif)',
+                fontSize: 17,
+                fontWeight: 700,
+                letterSpacing: '-0.01em',
+                color: PAPER_INK,
+                lineHeight: 1.2,
+              }}
+            >
+              {t(`tastingNote.mockup.beginner.title.${variantKey}`)}
+            </div>
+            <div
+              style={{
+                fontSize: 10,
+                fontStyle: 'italic',
+                color: PAPER_INK_DIM,
+                letterSpacing: '0.04em',
+                marginTop: 4,
+              }}
+            >
+              🌱 {t('tastingNote.playground.mode.beginner')}
+            </div>
+          </div>
+          <div style={{ fontSize: 10, color: PAPER_INK_DIM, letterSpacing: '0.06em' }}>
+            {t('tastingNote.mockup.fakeDate')}
+          </div>
+        </div>
+        <div style={{ marginTop: 12, height: 2, width: 36, background: GOLD, borderRadius: 2 }} />
+      </div>
+
+      {/* Wine identity */}
+      <div style={{ padding: '14px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            fontFamily: 'var(--font-playfair, Georgia, serif)',
+            fontSize: 16,
+            fontWeight: 700,
+            color: PAPER_INK,
+            lineHeight: 1.3,
+            marginBottom: 4,
+          }}
+        >
+          {wine.wineName}
+        </div>
+        <div style={{ fontSize: 11, fontStyle: 'italic', color: PAPER_INK_DIM }}>
+          {wine.producer} · {wine.vintage === 0 ? 'NV' : wine.vintage}
+        </div>
+      </div>
+
+      {/* First impression */}
+      <div style={{ padding: '16px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: PAPER_INK,
+            marginBottom: 10,
+          }}
+        >
+          {t('tastingNote.beginner.step.impression')}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            alignItems: 'center',
+            padding: '10px 14px',
+            background: 'rgba(201,168,76,0.14)',
+            border: `1.5px solid ${GOLD}`,
+            borderRadius: 12,
+          }}
+        >
+          <span style={{ fontSize: 28 }} aria-hidden>{impEmoji[data.impression]}</span>
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: PAPER_INK,
+            }}
+          >
+            {t(`tastingNote.beginner.impression.${data.impression}`)}
+          </span>
+        </div>
+      </div>
+
+      {/* Taste — 3 levels */}
+      <div style={{ padding: '14px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: PAPER_INK,
+            marginBottom: 10,
+          }}
+        >
+          {t('tastingNote.beginner.step.taste')}
+        </div>
+        <ThreeWayRow
+          label={t('tastingNote.beginner.tasteLabel.sweetness')}
+          value={data.sweetness}
+          options={['sweetLow', 'sweetMid', 'sweetHigh']}
+        />
+        <ThreeWayRow
+          label={t('tastingNote.beginner.tasteLabel.acidity')}
+          value={data.acidity}
+          options={['acidLow', 'acidMid', 'acidHigh']}
+        />
+        <ThreeWayRow
+          label={t('tastingNote.beginner.tasteLabel.body')}
+          value={data.body}
+          options={['bodyLow', 'bodyMid', 'bodyHigh']}
+        />
+        {data.tannin && (
+          <ThreeWayRow
+            label={t('tastingNote.beginner.tasteLabel.tannin')}
+            value={data.tannin}
+            options={['tanninLow', 'tanninMid', 'tanninHigh']}
+          />
+        )}
+        {data.bubbles && (
+          <ThreeWayRow
+            label={t('tastingNote.beginner.tasteLabel.bubbles')}
+            value={data.bubbles}
+            options={['bubblesLow', 'bubblesMid', 'bubblesHigh']}
+          />
+        )}
+      </div>
+
+      {/* Aroma cards */}
+      <div style={{ padding: '14px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: PAPER_INK,
+            marginBottom: 10,
+          }}
+        >
+          {t('tastingNote.beginner.step.aroma')}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
+          {data.aromas.map(id => (
+            <div
+              key={id}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '8px 10px',
+                background: 'rgba(139,26,42,0.10)',
+                border: `1px solid ${WINE_RED}`,
+                borderRadius: 10,
+              }}
+            >
+              <span style={{ fontSize: 18 }} aria-hidden>{AROMA_EMOJI[id]}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: PAPER_INK }}>
+                {t(`tastingNote.beginner.aromaCard.${id}`)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Finish */}
+      <div style={{ padding: '14px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: PAPER_INK,
+            marginBottom: 8,
+          }}
+        >
+          {t('tastingNote.beginner.step.finish')}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 22 }} aria-hidden>
+            {data.finish === 'short' ? '⏱' : data.finish === 'medium' ? '🕰' : '🍷'}
+          </span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: PAPER_INK }}>
+            {t(`tastingNote.beginner.finishOption.${data.finish}`)}
+          </span>
+        </div>
+      </div>
+
+      {/* Rating + memo */}
+      <div style={{ padding: '14px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: PAPER_INK,
+            marginBottom: 8,
+          }}
+        >
+          {t('tastingNote.beginner.step.rating')}
+        </div>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 12 }}>
+          {[1, 2, 3, 4, 5].map(i => (
+            <WineGlassMark key={i} filled={i <= data.rating} />
+          ))}
+          <span style={{ fontSize: 11, color: PAPER_INK_DIM, marginLeft: 8 }}>
+            {data.rating}/5
+          </span>
+        </div>
+        <div
+          style={{
+            padding: '10px 12px',
+            background: 'rgba(26,10,30,0.04)',
+            borderLeft: `2px solid ${GOLD}`,
+            borderRadius: 4,
+            fontSize: 12,
+            fontStyle: 'italic',
+            color: PAPER_INK,
+            lineHeight: 1.5,
+          }}
+        >
+          “{t(`tastingNote.mockup.beginner.note.${variantKey}`)}”
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ThreeWayRow({
+  label,
+  value,
+  options,
+}: {
+  label: string;
+  value: Level;
+  options: [string, string, string]; // i18n keys for sweetLow/Mid/High etc.
+}) {
+  const { t } = useLocale();
+  const idx = value === 'low' ? 0 : value === 'mid' ? 1 : 2;
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          marginBottom: 4,
+        }}
+      >
+        <span style={{ fontSize: 11, fontWeight: 700, color: PAPER_INK }}>{label}</span>
+        <span style={{ fontSize: 11, color: WINE_RED, fontStyle: 'italic', fontWeight: 600 }}>
+          {t(`tastingNote.beginner.scale.${options[idx]}`)}
+        </span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
+        {options.map((opt, i) => {
+          const active = i === idx;
+          return (
+            <div
+              key={opt}
+              style={{
+                padding: '4px 6px',
+                textAlign: 'center',
+                background: active ? WINE_RED : 'transparent',
+                color: active ? '#F5F0E8' : PAPER_INK_DIM,
+                border: `1px solid ${active ? WINE_RED : PAPER_LINE}`,
+                borderRadius: 6,
+                fontSize: 10,
+                fontWeight: active ? 700 : 400,
+              }}
+            >
+              {t(`tastingNote.beginner.scale.${opt}`)}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
