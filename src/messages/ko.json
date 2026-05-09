@@ -48,6 +48,129 @@
     "heading": "와인을 깊게 파고드시나요?"
   },
 
+  "tastingNote": {
+    "eyebrow": "기록 · CAPTURE",
+    "heading": "그리고 그 한 잔, 어떻게 기억에 남기시겠어요?",
+    "subhead": "와인 전문가들이 손글씨로 채우는 그 양식, 카메라 한 번이면 디지털로 끝납니다.",
+    "tabs": {
+      "white": "White",
+      "red": "Red",
+      "sparkling": "Sparkling",
+      "blind": "Blind"
+    },
+    "steps": {
+      "capture": "라벨 인식",
+      "aroma": "아로마",
+      "palate": "미각",
+      "finish": "피니시",
+      "faults": "결함 점검",
+      "evolution": "오프닝 타임라인",
+      "rating": "평가",
+      "blind": "블라인드"
+    },
+    "scale": {
+      "low": "낮음",
+      "mediumMinus": "중간−",
+      "medium": "중간",
+      "mediumPlus": "중간+",
+      "high": "높음"
+    },
+    "dimensions": {
+      "sweetness": "당도",
+      "acidity": "산도",
+      "body": "바디",
+      "alcohol": "알코올",
+      "tannin": "타닌",
+      "tanninTexture": "타닌 질감",
+      "tanninRipeness": "타닌 성숙도",
+      "bubbleSize": "기포 크기",
+      "bubblePersistence": "기포 지속성",
+      "mousse": "무쎄 질감",
+      "pressure": "압력 (bar)",
+      "method": "제조 방식",
+      "dosage": "도사주 (당도)",
+      "intensity": "향 강도",
+      "flavorIntensity": "풍미 강도",
+      "finishLength": "피니시 길이"
+    },
+    "aroma": {
+      "title": "아로마 — UC Davis Wheel",
+      "selectCategory": "카테고리를 선택하세요",
+      "wheelHint": "wedge를 클릭하면 어휘가 펼쳐집니다",
+      "searchPlaceholder": "어휘 검색"
+    },
+    "caudalie": {
+      "title": "피니시 — Caudalie",
+      "tapStart": "Tap to start",
+      "tapStop": "Tap to stop",
+      "reset": "다시",
+      "label": "{count} caudalies",
+      "manualToggle": "측정 없이 분류만 선택"
+    },
+    "faults": {
+      "title": "결함 점검 · Fault Check",
+      "intro": "전문가 모드를 켜면 11종 결함 카탈로그가 펼쳐집니다",
+      "footnote": "결함은 명시적 사용자 체크가 있을 때만 기록됩니다 — 자동 추론 X"
+    },
+    "evolution": {
+      "title": "오프닝 타임라인 · Opening Timeline",
+      "intro": "코르크 따고 와인이 어떻게 변하는지 시간축으로 기록해보세요",
+      "openedAtNow": "지금",
+      "openedAtCustom": "직접 입력",
+      "decantLabel": "디캔터 사용?",
+      "yes": "예",
+      "no": "아니오",
+      "addTimepoint": "시점 추가",
+      "deltaAroma": "T0 대비 향 강도",
+      "deltaTannin": "T0 대비 타닌 부드러움",
+      "deltaBody": "T0 대비 바디",
+      "reductionLabel": "환원취 (Reduction) 느껴짐",
+      "reductionTooltip": "성냥·고무·H₂S·양배추·마늘. 산소 노출로 사라지는 결함성 향. 영 시라·환원성 양조 와인에 흔함.",
+      "newAromas": "이 시점에서 새로 등장한 향",
+      "scoreLabel": "이 시점의 전반 점수",
+      "noteLabel": "메모",
+      "peakLabel": "★ 이 시점이 정점",
+      "recommendationTitle": "권장 디캔팅",
+      "recommendedRange": "권장: {min}~{max}분 (평균 Peak {peak}분)",
+      "compareEarly": "권장보다 빠르게 깨우는 편",
+      "compareOnTime": "권장 시간과 정확히 일치합니다",
+      "compareLate": "권장보다 늦게 깨우는 편",
+      "compareWayEarly": "꽤 일찍 깨우시네요 — 와인이 더 풀릴 여지가 있을지도",
+      "compareWayLate": "권장보다 길게 두시는 편 — 매우 인내심 있는 스타일"
+    },
+    "blind": {
+      "title": "GUESS THE WINE",
+      "grape": "품종 추정",
+      "region": "지역 추정",
+      "country": "국가 추정",
+      "vintage": "빈티지 추정",
+      "priceRange": "가격대 추정",
+      "reveal": "정답 공개 (Reveal & Score)",
+      "retry": "재시도",
+      "scoreTotal": "총점 {score}/100",
+      "rankMaster": "Master Sommelier 수준 🏆",
+      "rankAdvanced": "Advanced Sommelier 후보",
+      "rankEnthusiast": "Wine Enthusiast",
+      "rankExploring": "탐험 단계 — 더 마셔보세요",
+      "rankFinding": "재미있는 발견 — 와인의 다양성을 즐기세요",
+      "demoNote": "이 모드는 데모용입니다. 실제 와인은 mockup의 가상 데이터입니다."
+    },
+    "autoDescription": {
+      "title": "자동 시음 노트",
+      "saveCta": "이 노트, 앱에서 진짜로 저장해 보기"
+    },
+    "rating": {
+      "title": "평가",
+      "wouldBuyAgain": "다시 사시겠어요?"
+    },
+    "cta": {
+      "save": "이 노트, 앱에서 진짜로 저장해 보기",
+      "waitlist": "웨이팅 리스트에 등록"
+    },
+    "outro": "당신의 셀러에 50병이 쌓인 어느 날, 우리는 그 50병을 한 줄로 정리해 드립니다.",
+    "placeholder": "{variant} 양식을 선택했습니다 — Day 2 이후 mockup·부케 휠·슬라이더가 채워집니다."
+  },
+
   "franceWineDetail": {
     "sectionLabel": "내가 마신 와인",
     "heading": "와인 컬렉션",

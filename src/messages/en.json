@@ -48,6 +48,129 @@
     "heading": "Going deep into wine?"
   },
 
+  "tastingNote": {
+    "eyebrow": "CAPTURE",
+    "heading": "And how will you remember that one glass?",
+    "subhead": "The same paper form wine experts fill by hand — done with one tap of the camera.",
+    "tabs": {
+      "white": "White",
+      "red": "Red",
+      "sparkling": "Sparkling",
+      "blind": "Blind"
+    },
+    "steps": {
+      "capture": "Label Capture",
+      "aroma": "Aroma",
+      "palate": "Palate",
+      "finish": "Finish",
+      "faults": "Fault Check",
+      "evolution": "Opening Timeline",
+      "rating": "Rating",
+      "blind": "Blind"
+    },
+    "scale": {
+      "low": "Low",
+      "mediumMinus": "Medium−",
+      "medium": "Medium",
+      "mediumPlus": "Medium+",
+      "high": "High"
+    },
+    "dimensions": {
+      "sweetness": "Sweetness",
+      "acidity": "Acidity",
+      "body": "Body",
+      "alcohol": "Alcohol",
+      "tannin": "Tannin",
+      "tanninTexture": "Tannin Texture",
+      "tanninRipeness": "Tannin Ripeness",
+      "bubbleSize": "Bubble Size",
+      "bubblePersistence": "Bubble Persistence",
+      "mousse": "Mousse Texture",
+      "pressure": "Pressure (bar)",
+      "method": "Method",
+      "dosage": "Dosage",
+      "intensity": "Aroma Intensity",
+      "flavorIntensity": "Flavor Intensity",
+      "finishLength": "Finish Length"
+    },
+    "aroma": {
+      "title": "Aroma — UC Davis Wheel",
+      "selectCategory": "Select a category",
+      "wheelHint": "Click a wedge to expand vocabulary",
+      "searchPlaceholder": "Search vocabulary"
+    },
+    "caudalie": {
+      "title": "Finish — Caudalie",
+      "tapStart": "Tap to start",
+      "tapStop": "Tap to stop",
+      "reset": "Reset",
+      "label": "{count} caudalies",
+      "manualToggle": "Pick category without measuring"
+    },
+    "faults": {
+      "title": "Fault Check",
+      "intro": "Expert mode reveals an 11-fault catalog",
+      "footnote": "Faults are recorded only when explicitly checked — never inferred."
+    },
+    "evolution": {
+      "title": "Opening Timeline",
+      "intro": "Track how the wine changes after the cork is pulled",
+      "openedAtNow": "Now",
+      "openedAtCustom": "Enter manually",
+      "decantLabel": "Decanter used?",
+      "yes": "Yes",
+      "no": "No",
+      "addTimepoint": "Add timepoint",
+      "deltaAroma": "Aroma intensity vs T0",
+      "deltaTannin": "Tannin softness vs T0",
+      "deltaBody": "Body vs T0",
+      "reductionLabel": "Reduction present",
+      "reductionTooltip": "Matchstick, rubber, H₂S, cabbage, garlic. A reductive fault that fades with oxygen exposure. Common in young Syrah and reductively vinified wines.",
+      "newAromas": "New aromas emerging",
+      "scoreLabel": "Score at this point",
+      "noteLabel": "Note",
+      "peakLabel": "★ Peak",
+      "recommendationTitle": "Recommended Decanting",
+      "recommendedRange": "Recommended: {min}-{max} min (avg peak {peak} min)",
+      "compareEarly": "You open earlier than average",
+      "compareOnTime": "Right on the recommended time",
+      "compareLate": "You open later than average",
+      "compareWayEarly": "Quite early — the wine may have more to give",
+      "compareWayLate": "Long-haul style — very patient"
+    },
+    "blind": {
+      "title": "GUESS THE WINE",
+      "grape": "Grape Variety",
+      "region": "Region",
+      "country": "Country",
+      "vintage": "Vintage",
+      "priceRange": "Price Range",
+      "reveal": "Reveal & Score",
+      "retry": "Retry",
+      "scoreTotal": "Total {score}/100",
+      "rankMaster": "Master Sommelier level 🏆",
+      "rankAdvanced": "Advanced Sommelier candidate",
+      "rankEnthusiast": "Wine Enthusiast",
+      "rankExploring": "Exploring — drink more",
+      "rankFinding": "A fun discovery — enjoy the diversity",
+      "demoNote": "This mode is a demo. The wine is mocked data."
+    },
+    "autoDescription": {
+      "title": "Auto Tasting Note",
+      "saveCta": "Save this note for real in the app"
+    },
+    "rating": {
+      "title": "Rating",
+      "wouldBuyAgain": "Would buy again?"
+    },
+    "cta": {
+      "save": "Save this note for real in the app",
+      "waitlist": "Join the waitlist"
+    },
+    "outro": "When 50 bottles fill your cellar, we'll line them up for you in a single thread.",
+    "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2."
+  },
+
   "franceWineDetail": {
     "sectionLabel": "Wines I've Tasted",
     "heading": "Wine Collection",
