@@ -363,6 +363,18 @@
         "white": "{vintage} {region}, {producer}. Pronounced nose with lemon and lime, backed by acacia, hazelnut and flint. Medium+ body with crisp acidity and dry sweetness. Persistent, mineral-driven finish.",
         "red": "{vintage} {region}, {producer}. Pronounced nose with black cherry and violet, backed by leather, tobacco leaf and forest floor. Medium+ body with crisp acidity. Fine-grained tannins. Persistent, elegant finish.",
         "sparkling": "{producer}'s {wineName}. Pronounced nose with brioche and hazelnut, backed by apple, honeysuckle and butter. Fine bubbles rise persistently into a creamy mousse. Complex, seamless finish."
+      },
+      "beginner": {
+        "title": {
+          "white": "Tonight's white",
+          "red": "Tonight's red",
+          "sparkling": "Tonight's bubbles"
+        },
+        "note": {
+          "white": "A gentle start to dinner with a friend.",
+          "red": "A rainy evening, one warm glass.",
+          "sparkling": "A celebratory glass — cheers together."
+        }
       }
     }
   },
