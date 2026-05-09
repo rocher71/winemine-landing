@@ -33,6 +33,9 @@ import AutoDescription from '@/components/tasting-note/auto-description';
 import BlindMode from '@/components/tasting-note/blind-mode';
 import { TanninPanel, BubblePanel } from '@/components/tasting-note/tannin-bubble-panels';
 import BeginnerNote from '@/components/tasting-note/beginner-note';
+import WaitlistModal from '@/components/waitlist/waitlist-modal';
+import { StoreButtons } from '@/components/ui/store-buttons';
+import { FloatingCTA } from '@/components/ui/floating-cta';
 
 type Mode = 'beginner' | 'expert';
 
@@ -135,6 +138,9 @@ export default function PlaygroundPage() {
   const { t } = useLocale();
   const [mode, setMode] = useState<Mode>('beginner');
   const [state, dispatch] = useReducer(reducer, INITIAL);
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal  = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
   // Blind 모드는 expert 전용. beginner에서는 자동으로 red 양식으로 fallback
   const effectiveVariant: FormVariant = mode === 'beginner' && state.variant === 'blind'
@@ -158,7 +164,10 @@ export default function PlaygroundPage() {
             wineName={state.meta.wineName}
             producer={state.meta.producer}
           />
+          <DownloadCta onOpenModal={openModal} />
         </Container>
+        <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
+        <FloatingCTA onOpenModal={openModal} isModalOpen={modalOpen} />
       </main>
     );
   }
@@ -175,8 +184,11 @@ export default function PlaygroundPage() {
           showBlind
         />
         <Container>
-          <BlindMode />
+          <BlindMode onCTA={openModal} />
+          <DownloadCta onOpenModal={openModal} />
         </Container>
+        <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
+        <FloatingCTA onOpenModal={openModal} isModalOpen={modalOpen} />
       </main>
     );
   }
@@ -291,8 +303,90 @@ export default function PlaygroundPage() {
         <p style={{ textAlign: 'center', fontSize: 12, color: MUTED, marginTop: 32, fontStyle: 'italic' }}>
           {t('tastingNote.playground.demoNote')}
         </p>
+        <DownloadCta onOpenModal={openModal} />
       </Container>
+      <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
+      <FloatingCTA onOpenModal={openModal} isModalOpen={modalOpen} />
     </main>
+  );
+}
+
+function DownloadCta({ onOpenModal }: { onOpenModal: () => void }) {
+  const { t } = useLocale();
+  return (
+    <section
+      style={{
+        marginTop: 64,
+        padding: '40px 28px',
+        background: 'linear-gradient(135deg, rgba(139,26,42,0.18) 0%, rgba(201,168,76,0.10) 100%)',
+        border: `1px solid ${GOLD}`,
+        borderRadius: 20,
+        textAlign: 'center',
+      }}
+    >
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          fontSize: 11,
+          fontWeight: 500,
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          color: GOLD,
+          marginBottom: 16,
+        }}
+      >
+        <span style={{ width: 8, height: 1, background: GOLD }} />
+        {t('tastingNote.playground.downloadCta.eyebrow')}
+        <span style={{ width: 8, height: 1, background: GOLD }} />
+      </div>
+      <h2
+        style={{
+          fontFamily: 'var(--font-playfair, Georgia, serif)',
+          fontSize: 'clamp(22px, 4vw, 32px)',
+          fontWeight: 700,
+          color: '#F5F0E8',
+          margin: '0 0 16px',
+          lineHeight: 1.3,
+          letterSpacing: '-0.01em',
+        }}
+      >
+        {t('tastingNote.playground.downloadCta.heading')}
+      </h2>
+      <p
+        style={{
+          fontSize: 14,
+          color: '#D4C5B0',
+          lineHeight: 1.6,
+          maxWidth: 520,
+          margin: '0 auto 28px',
+        }}
+      >
+        {t('tastingNote.playground.downloadCta.body')}
+      </p>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+        <StoreButtons onOpenModal={onOpenModal} location="playground_bottom" />
+      </div>
+      <button
+        type="button"
+        onClick={onOpenModal}
+        style={{
+          background: 'transparent',
+          border: `1px solid ${GOLD}`,
+          color: GOLD,
+          padding: '10px 22px',
+          borderRadius: 24,
+          fontSize: 13,
+          fontWeight: 600,
+          letterSpacing: '0.02em',
+          cursor: 'pointer',
+          fontFamily: 'inherit',
+        }}
+      >
+        {t('tastingNote.playground.downloadCta.waitlist')} →
+      </button>
+    </section>
   );
 }
 

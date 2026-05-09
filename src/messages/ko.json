@@ -190,6 +190,12 @@
         "expert": "전문가용",
         "beginnerSubtitle": "5분이면 끝, 어려운 용어 없이",
         "expertSubtitle": "WSET · 카우달리 · 부케 휠까지"
+      },
+      "downloadCta": {
+        "eyebrow": "내 셀러로",
+        "heading": "이걸 나만의 기록으로 남기고 싶다면",
+        "body": "지금 작성한 노트는 페이지를 떠나면 사라져요. 앱을 받으면 매 잔의 기록이 셀러에 쌓이고, 친구와 한 줄로 공유할 수 있어요.",
+        "waitlist": "웨이팅 리스트 등록"
       }
     },
     "beginner": {

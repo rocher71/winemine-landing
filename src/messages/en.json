@@ -190,6 +190,12 @@
         "expert": "Expert",
         "beginnerSubtitle": "5 minutes, no jargon",
         "expertSubtitle": "WSET · Caudalies · Aroma Wheel"
+      },
+      "downloadCta": {
+        "eyebrow": "To your cellar",
+        "heading": "Want to keep this as your own record?",
+        "body": "Your notes vanish when you leave this page. With the app, every glass goes into your cellar — and shares with friends in one line.",
+        "waitlist": "Join the waitlist"
       }
     },
     "beginner": {
