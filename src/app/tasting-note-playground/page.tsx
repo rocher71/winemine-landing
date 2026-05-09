@@ -32,6 +32,9 @@ import OpeningTimeline from '@/components/tasting-note/opening-timeline';
 import AutoDescription from '@/components/tasting-note/auto-description';
 import BlindMode from '@/components/tasting-note/blind-mode';
 import { TanninPanel, BubblePanel } from '@/components/tasting-note/tannin-bubble-panels';
+import BeginnerNote from '@/components/tasting-note/beginner-note';
+
+type Mode = 'beginner' | 'expert';
 
 const GOLD = '#C9A84C';
 const WINE_RED = '#8B1A2A';
@@ -130,12 +133,47 @@ const VARIANTS: { id: FormVariant; icon: string }[] = [
 
 export default function PlaygroundPage() {
   const { t } = useLocale();
+  const [mode, setMode] = useState<Mode>('beginner');
   const [state, dispatch] = useReducer(reducer, INITIAL);
 
+  // Blind 모드는 expert 전용. beginner에서는 자동으로 red 양식으로 fallback
+  const effectiveVariant: FormVariant = mode === 'beginner' && state.variant === 'blind'
+    ? 'red'
+    : state.variant;
+
+  // Beginner mode UI
+  if (mode === 'beginner') {
+    return (
+      <main style={pageStyle}>
+        <TopBar
+          variant={effectiveVariant}
+          onSelect={v => dispatch({ type: 'SET_VARIANT', v })}
+          mode={mode}
+          onMode={setMode}
+          showBlind={false}
+        />
+        <Container>
+          <BeginnerNote
+            variant={effectiveVariant}
+            wineName={state.meta.wineName}
+            producer={state.meta.producer}
+          />
+        </Container>
+      </main>
+    );
+  }
+
+  // Expert mode — Blind 양식
   if (state.variant === 'blind') {
     return (
       <main style={pageStyle}>
-        <TopBar variant={state.variant} onSelect={v => dispatch({ type: 'SET_VARIANT', v })} />
+        <TopBar
+          variant={state.variant}
+          onSelect={v => dispatch({ type: 'SET_VARIANT', v })}
+          mode={mode}
+          onMode={setMode}
+          showBlind
+        />
         <Container>
           <BlindMode />
         </Container>
@@ -143,9 +181,16 @@ export default function PlaygroundPage() {
     );
   }
 
+  // Expert mode — White/Red/Sparkling
   return (
     <main style={pageStyle}>
-      <TopBar variant={state.variant} onSelect={v => dispatch({ type: 'SET_VARIANT', v })} />
+      <TopBar
+        variant={state.variant}
+        onSelect={v => dispatch({ type: 'SET_VARIANT', v })}
+        mode={mode}
+        onMode={setMode}
+        showBlind
+      />
       <Container>
         <Step n={1} titleKey="tastingNote.playground.stepCapture">
           <CaptureCard meta={state.meta} />
@@ -266,8 +311,21 @@ function Container({ children }: { children: React.ReactNode }) {
   );
 }
 
-function TopBar({ variant, onSelect }: { variant: FormVariant; onSelect: (v: FormVariant) => void }) {
+function TopBar({
+  variant,
+  onSelect,
+  mode,
+  onMode,
+  showBlind,
+}: {
+  variant: FormVariant;
+  onSelect: (v: FormVariant) => void;
+  mode: Mode;
+  onMode: (m: Mode) => void;
+  showBlind: boolean;
+}) {
   const { t } = useLocale();
+  const visibleVariants = showBlind ? VARIANTS : VARIANTS.filter(v => v.id !== 'blind');
   return (
     <header style={{ padding: 'clamp(24px, 5vw, 48px) clamp(20px, 5vw, 48px) 32px' }}>
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
@@ -287,14 +345,80 @@ function TopBar({ variant, onSelect }: { variant: FormVariant; onSelect: (v: For
         >
           {t('tastingNote.playground.pageTitle')}
         </h1>
-        <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.6, maxWidth: 640, margin: '0 0 24px' }}>
+        <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.6, maxWidth: 640, margin: '0 0 28px' }}>
           {t('tastingNote.playground.pageIntro')}
         </p>
+
+        {/* MODE TOGGLE — beginner / expert (큰 버튼) */}
+        <div
+          role="radiogroup"
+          aria-label="Mode"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 12,
+            maxWidth: 720,
+            marginBottom: 20,
+          }}
+        >
+          {(['beginner', 'expert'] as Mode[]).map(m => {
+            const isActive = mode === m;
+            return (
+              <button
+                key={m}
+                type="button"
+                role="radio"
+                aria-checked={isActive}
+                onClick={() => onMode(m)}
+                style={{
+                  padding: '20px 22px',
+                  background: isActive
+                    ? m === 'beginner'
+                      ? 'linear-gradient(135deg, rgba(201,168,76,0.22) 0%, rgba(201,168,76,0.10) 100%)'
+                      : 'linear-gradient(135deg, rgba(139,26,42,0.28) 0%, rgba(139,26,42,0.10) 100%)'
+                    : 'rgba(15,7,24,0.6)',
+                  border: `2px solid ${isActive ? (m === 'beginner' ? GOLD : '#A02030') : BORDER}`,
+                  borderRadius: 16,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4,
+                  transition: 'background 200ms ease, border-color 200ms ease, transform 200ms ease',
+                  transform: isActive ? 'translateY(-1px)' : 'none',
+                  boxShadow: isActive ? '0 8px 24px rgba(0,0,0,0.4)' : 'none',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 22 }} aria-hidden>
+                    {m === 'beginner' ? '🌱' : '🎓'}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-playfair, Georgia, serif)',
+                      fontSize: 20,
+                      fontWeight: 700,
+                      color: isActive ? '#F5F0E8' : '#D4C5B0',
+                    }}
+                  >
+                    {t(`tastingNote.playground.mode.${m}`)}
+                  </span>
+                </div>
+                <span style={{ fontSize: 12, color: MUTED, marginLeft: 30 }}>
+                  {t(`tastingNote.playground.mode.${m}Subtitle`)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Variant tab bar */}
         <div
           role="tablist"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: `repeat(${visibleVariants.length}, 1fr)`,
             background: 'rgba(15,7,24,0.6)',
             border: '1px solid rgba(201,168,76,0.16)',
             borderRadius: 12,
@@ -302,7 +426,7 @@ function TopBar({ variant, onSelect }: { variant: FormVariant; onSelect: (v: For
             maxWidth: 720,
           }}
         >
-          {VARIANTS.map(v => {
+          {visibleVariants.map(v => {
             const isActive = variant === v.id;
             return (
               <button

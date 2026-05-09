@@ -184,7 +184,82 @@
       "demoNote": "이 페이지의 입력은 어디에도 저장되지 않습니다. 페이지를 떠나면 사라집니다.",
       "aromaHint": "어휘를 hover하면 임팩트 화합물 정보가 나타납니다.",
       "finishHint": "마지막 모금 후 풍미가 사라지는 시간을 측정해보세요.",
-      "ratingLabel": "별점"
+      "ratingLabel": "별점",
+      "mode": {
+        "beginner": "입문자용",
+        "expert": "전문가용",
+        "beginnerSubtitle": "5분이면 끝, 어려운 용어 없이",
+        "expertSubtitle": "WSET · 카우달리 · 부케 휠까지"
+      }
+    },
+    "beginner": {
+      "intro": "와인 한 잔, 5분이면 끝나는 짧은 기록. 어려운 용어는 잠시 잊고 느낀대로 적어보세요.",
+      "step": {
+        "wine": "어떤 와인인가요?",
+        "impression": "첫 모금, 어땠어요?",
+        "taste": "맛은 어땠어요?",
+        "aroma": "어떤 향이 떠올랐나요?",
+        "finish": "여운은 어땠어요?",
+        "rating": "얼마나 마음에 들었나요?",
+        "memo": "오늘의 한 줄"
+      },
+      "impression": {
+        "love": "마음에 쏙",
+        "ok": "괜찮았어요",
+        "meh": "음… 별로"
+      },
+      "tasteLabel": {
+        "sweetness": "단맛",
+        "acidity": "신맛",
+        "body": "무게감",
+        "tannin": "떫은 맛",
+        "bubbles": "기포"
+      },
+      "scale": {
+        "sweetLow": "안 달아요",
+        "sweetMid": "살짝 달아요",
+        "sweetHigh": "달콤해요",
+        "acidLow": "부드러워요",
+        "acidMid": "적당해요",
+        "acidHigh": "짜릿해요",
+        "bodyLow": "물처럼 가벼워요",
+        "bodyMid": "보통이에요",
+        "bodyHigh": "우유처럼 묵직해요",
+        "tanninLow": "부드러워요",
+        "tanninMid": "적당히 잡혀요",
+        "tanninHigh": "혀가 까칠해요",
+        "bubblesLow": "부드러워요",
+        "bubblesMid": "톡톡 튀어요",
+        "bubblesHigh": "강하게 터져요"
+      },
+      "aromaCard": {
+        "berry": "베리",
+        "citrus": "시트러스",
+        "stoneFruit": "사과·복숭아",
+        "floral": "꽃",
+        "spice": "향신료",
+        "sweet": "달콤한 향",
+        "earth": "흙·나무",
+        "yeast": "빵·견과"
+      },
+      "aromaHint": "여러 개 골라도 좋아요",
+      "finishOption": {
+        "short": "금방 사라져요",
+        "medium": "잠시 머물러요",
+        "long": "한참 남아요"
+      },
+      "ratingHint": "다음에 또 사고 싶나요?",
+      "memoPlaceholder": "누구와, 어디서, 어떤 기분이었나요?",
+      "summary": "오늘의 한 잔",
+      "switchToExpert": "더 자세히 기록하고 싶다면 ‘전문가용’으로 전환하세요",
+      "tipTitle": "💡 와인 전문가들은 이걸 이렇게 부른답니다",
+      "tip": {
+        "sweetness": "단맛의 정도는 ‘잔당(Residual Sugar)’이라고 하며, g/L 단위로 표기해요. WSET에서는 Bone Dry → Sweet 까지 5단계로 구분합니다.",
+        "acidity": "신맛은 ‘산도(Acidity)’예요. 화이트 와인은 보통 6~10 g/L, 레드는 5~7 g/L 정도. 침이 고이는 강도로 느낄 수 있어요.",
+        "body": "무게감은 ‘바디(Body)’ — 알코올·추출물·잔당이 합쳐진 입안의 인상이에요. 탈지유 vs 전유로 비유하기도 해요.",
+        "tannin": "떫은 맛은 ‘타닌(Tannin)’ — 적포도 껍질·씨에서 나오는 폴리페놀. 시간이 지날수록 둥글어져요.",
+        "finish": "여운은 ‘피니시(Finish)’ — 보르도 와인 학교에서는 1초 = 1 카우달리(Caudalie)로 측정합니다."
+      }
     },
     "mockup": {
       "title": {

@@ -184,7 +184,82 @@
       "demoNote": "Inputs on this page are never saved. They disappear when you leave.",
       "aromaHint": "Hover over a word to see impact compound info.",
       "finishHint": "Time how long flavor lingers after the last sip.",
-      "ratingLabel": "Rating"
+      "ratingLabel": "Rating",
+      "mode": {
+        "beginner": "Beginner",
+        "expert": "Expert",
+        "beginnerSubtitle": "5 minutes, no jargon",
+        "expertSubtitle": "WSET · Caudalies · Aroma Wheel"
+      }
+    },
+    "beginner": {
+      "intro": "A short note that takes 5 minutes per glass. Forget the jargon and write what you feel.",
+      "step": {
+        "wine": "What's the wine?",
+        "impression": "First sip — how was it?",
+        "taste": "How did it taste?",
+        "aroma": "What aromas came to mind?",
+        "finish": "How long did the flavor last?",
+        "rating": "How much did you like it?",
+        "memo": "One line for today"
+      },
+      "impression": {
+        "love": "Loved it",
+        "ok": "It was fine",
+        "meh": "Hmm… not for me"
+      },
+      "tasteLabel": {
+        "sweetness": "Sweetness",
+        "acidity": "Acidity",
+        "body": "Body",
+        "tannin": "Tannin",
+        "bubbles": "Bubbles"
+      },
+      "scale": {
+        "sweetLow": "Not sweet",
+        "sweetMid": "Slightly sweet",
+        "sweetHigh": "Sweet",
+        "acidLow": "Soft",
+        "acidMid": "Balanced",
+        "acidHigh": "Zippy",
+        "bodyLow": "Light, water-like",
+        "bodyMid": "Medium",
+        "bodyHigh": "Full, milk-like",
+        "tanninLow": "Soft",
+        "tanninMid": "Balanced",
+        "tanninHigh": "Drying / grippy",
+        "bubblesLow": "Soft",
+        "bubblesMid": "Lively",
+        "bubblesHigh": "Aggressive"
+      },
+      "aromaCard": {
+        "berry": "Berry",
+        "citrus": "Citrus",
+        "stoneFruit": "Apple · Peach",
+        "floral": "Floral",
+        "spice": "Spice",
+        "sweet": "Sweet aroma",
+        "earth": "Earth · Wood",
+        "yeast": "Bread · Nutty"
+      },
+      "aromaHint": "Pick as many as you like",
+      "finishOption": {
+        "short": "Faded quickly",
+        "medium": "Stayed for a moment",
+        "long": "Lingered for a while"
+      },
+      "ratingHint": "Would you buy it again?",
+      "memoPlaceholder": "With whom, where, what was the mood?",
+      "summary": "Your glass today",
+      "switchToExpert": "Want to go deeper? Switch to Expert mode",
+      "tipTitle": "💡 What wine pros call it",
+      "tip": {
+        "sweetness": "Sweetness comes from 'Residual Sugar' (g/L). WSET classifies it from Bone Dry to Sweet across 5 levels.",
+        "acidity": "What you taste as sour is 'Acidity' — typically 6–10 g/L for whites, 5–7 g/L for reds. The salivation tells you the level.",
+        "body": "Body is the perceived weight in your mouth — driven by alcohol, extract and residual sugar. Compared to skim milk vs. whole milk.",
+        "tannin": "The drying sensation is 'Tannin' — polyphenols from grape skins/seeds. They round out with age.",
+        "finish": "Finish length is measured in 'Caudalies' (1 sec = 1 caudalie) at the Bordeaux School of Oenology."
+      }
     },
     "mockup": {
       "title": {
