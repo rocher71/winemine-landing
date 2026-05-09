@@ -142,9 +142,12 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           </PhoneFrame>
         </div>
 
+        {/* 플레이그라운드 초대 카드 — mockup 직후 시각 강조 */}
+        <PlaygroundInviteCard />
+
         <div
           style={{
-            marginTop: 56,
+            marginTop: 40,
             textAlign: 'center',
             color: '#D4C5B0',
             fontFamily: 'var(--font-inter, system-ui, sans-serif)',
@@ -153,50 +156,208 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           }}
         >
           <p style={{ marginBottom: 24, color: '#9B8B7A' }}>{t('tastingNote.outro')}</p>
-          <div style={{ display: 'inline-flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-            {onOpenModal && (
-              <button
-                type="button"
-                onClick={onOpenModal}
-                style={{
-                  background: '#8B1A2A',
-                  border: '1px solid #8B1A2A',
-                  color: '#F5F0E8',
-                  padding: '12px 28px',
-                  borderRadius: 28,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  letterSpacing: '0.02em',
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  transition: 'background 200ms ease',
-                }}
-              >
-                {t('tastingNote.cta.waitlist')}
-              </button>
-            )}
-            <Link
-              href="/tasting-note-playground"
+          {onOpenModal && (
+            <button
+              type="button"
+              onClick={onOpenModal}
               style={{
                 background: 'transparent',
-                border: '1px solid #C9A84C',
-                color: '#C9A84C',
-                padding: '12px 28px',
-                borderRadius: 28,
-                fontSize: 14,
-                fontWeight: 600,
+                border: '1px solid rgba(245,240,232,0.18)',
+                color: '#D4C5B0',
+                padding: '10px 24px',
+                borderRadius: 24,
+                fontSize: 13,
+                fontWeight: 500,
                 letterSpacing: '0.02em',
+                cursor: 'pointer',
                 fontFamily: 'inherit',
-                textDecoration: 'none',
-                transition: 'background 200ms ease',
+                transition: 'background 200ms ease, border-color 200ms ease',
               }}
             >
-              {t('tastingNote.playground.pageTitle')} →
-            </Link>
-          </div>
+              {t('tastingNote.cta.waitlist')}
+            </button>
+          )}
         </div>
       </div>
     </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Playground Invite Card — mockup 직후 시각 강조 진입점
+// ─────────────────────────────────────────────────────────────────────────────
+
+function PlaygroundInviteCard() {
+  const { t } = useLocale();
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1], delay: 0.1 }}
+      style={{ marginTop: 56, display: 'flex', justifyContent: 'center' }}
+    >
+      <Link
+        href="/tasting-note-playground"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          width: '100%',
+          maxWidth: 720,
+          padding: '28px clamp(20px, 4vw, 36px)',
+          background: hovered
+            ? 'linear-gradient(135deg, rgba(201,168,76,0.28) 0%, rgba(139,26,42,0.22) 100%)'
+            : 'linear-gradient(135deg, rgba(201,168,76,0.16) 0%, rgba(139,26,42,0.14) 100%)',
+          border: `2px solid ${hovered ? GOLD : 'rgba(201,168,76,0.55)'}`,
+          borderRadius: 20,
+          textDecoration: 'none',
+          color: '#F5F0E8',
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 'clamp(14px, 3vw, 24px)',
+          boxShadow: hovered
+            ? '0 16px 40px rgba(201,168,76,0.22), 0 8px 24px rgba(139,26,42,0.18)'
+            : '0 8px 24px rgba(0,0,0,0.4)',
+          transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
+          transition: 'background 240ms ease, border-color 240ms ease, box-shadow 240ms ease, transform 240ms ease',
+        }}
+      >
+        {/* 큰 펄스 ✨ 아이콘 */}
+        <div
+          style={{
+            position: 'relative',
+            flexShrink: 0,
+            width: 64,
+            height: 64,
+            borderRadius: 999,
+            background: 'rgba(201,168,76,0.20)',
+            border: `1.5px solid ${GOLD}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 30,
+          }}
+          aria-hidden
+        >
+          ✨
+          <motion.span
+            animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: 999,
+              border: `2px solid ${GOLD}`,
+              pointerEvents: 'none',
+            }}
+          />
+        </div>
+
+        {/* 가운데 텍스트 영역 */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: GOLD,
+              marginBottom: 6,
+            }}
+          >
+            {t('tastingNote.invite.eyebrow')}
+          </div>
+          <h3
+            style={{
+              fontFamily: 'var(--font-playfair, Georgia, serif)',
+              fontSize: 'clamp(18px, 2.4vw, 24px)',
+              fontWeight: 700,
+              color: '#F5F0E8',
+              margin: '0 0 6px',
+              lineHeight: 1.3,
+              letterSpacing: '-0.01em',
+            }}
+          >
+            {t('tastingNote.invite.title')}
+          </h3>
+          <p
+            style={{
+              fontSize: 13,
+              lineHeight: 1.55,
+              color: '#D4C5B0',
+              margin: '0 0 12px',
+            }}
+          >
+            {t('tastingNote.invite.subtitle')}
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 6,
+            }}
+          >
+            {(['bullet1', 'bullet2', 'bullet3', 'bullet4'] as const).map(k => (
+              <span
+                key={k}
+                style={{
+                  padding: '4px 10px',
+                  background: 'rgba(15,7,24,0.45)',
+                  border: '1px solid rgba(245,240,232,0.10)',
+                  borderRadius: 999,
+                  fontSize: 11,
+                  color: '#D4C5B0',
+                  fontWeight: 500,
+                }}
+              >
+                {t(`tastingNote.invite.${k}`)}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* 우측 CTA 버튼 + 화살표 */}
+        <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+          <div
+            style={{
+              padding: '12px 20px',
+              background: GOLD,
+              color: '#1A0A1E',
+              borderRadius: 24,
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: '0.02em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span>{t('tastingNote.invite.cta')}</span>
+            <motion.span
+              animate={{ x: hovered ? 4 : 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: 'inline-block' }}
+            >
+              →
+            </motion.span>
+          </div>
+          <span
+            style={{
+              fontSize: 10,
+              color: '#9B8B7A',
+              fontStyle: 'italic',
+              textAlign: 'right',
+              maxWidth: 180,
+            }}
+          >
+            {t('tastingNote.invite.hint')}
+          </span>
+        </div>
+      </Link>
+    </motion.div>
   );
 }
 

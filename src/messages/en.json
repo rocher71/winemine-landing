@@ -169,6 +169,17 @@
     },
     "outro": "When 50 bottles fill your cellar, we'll line them up for you in a single thread.",
     "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2.",
+    "invite": {
+      "eyebrow": "Try it yourself",
+      "title": "Want to actually write this note?",
+      "subtitle": "Spin the aroma wheel, measure caudalies, pick from 120 vocabulary words. Five minutes is all it takes.",
+      "bullet1": "🎡 Aroma wheel · 12 categories",
+      "bullet2": "⏱ Caudalie meter",
+      "bullet3": "⚠ 11 fault checklist",
+      "bullet4": "🍷 Opening timeline",
+      "cta": "Open the Playground",
+      "hint": "Opens a new page · Inputs are never saved"
+    },
     "playground": {
       "pageTitle": "Tasting Note Playground",
       "pageIntro": "Full interactive demo — aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline and auto description, all live. Inputs are never saved anywhere.",
