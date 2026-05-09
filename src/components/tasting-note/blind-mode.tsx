@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
+import { TargetIcon, EyeIcon, CheckIcon } from '@/components/icons/wine-icons';
 
 const GOLD = '#C9A84C';
 const WINE_RED = '#8B1A2A';
@@ -38,8 +39,9 @@ export default function BlindMode({ onCTA }: Props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 22, color: '#F5F0E8', margin: 0 }}>
-        🎯 {t('tastingNote.blind.title')}
+      <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 22, color: '#F5F0E8', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span aria-hidden style={{ color: WINE_RED, display: 'inline-flex' }}><TargetIcon size={20} /></span>
+        {t('tastingNote.blind.title')}
       </h3>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
@@ -91,7 +93,10 @@ export default function BlindMode({ onCTA }: Props) {
           alignSelf: 'flex-start',
         }}
       >
-        {revealed ? '✓' : '👁'} {t('tastingNote.blind.reveal')}
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          {revealed ? <CheckIcon size={16} aria-hidden /> : <EyeIcon size={16} aria-hidden />}
+          {t('tastingNote.blind.reveal')}
+        </span>
       </button>
 
       {revealed && score && (

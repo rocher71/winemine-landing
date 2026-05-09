@@ -3,15 +3,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
+import {
+  CountryFlag,
+  StarFilledIcon,
+  GrapeIcon,
+  CalendarIcon,
+  StarBurstIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  type CountryFlagProps,
+} from '@/components/icons/wine-icons';
 
 // ── Panel 1: GlassCardStack — 3 stacked glass wine cards ──────────────────
-const REGIONS = [
-  { flag: '🇫🇷', country: '프랑스', wines: 28, bar: 95, color: '#C41E3A' },
-  { flag: '🇮🇹', country: '이탈리아', wines: 21, bar: 74, color: '#C41E3A' },
-  { flag: '🇨🇱', country: '칠레', wines: 18, bar: 62, color: '#C41E3A' },
-  { flag: '🇳🇿', country: '뉴질랜드', wines: 14, bar: 48, color: '#C41E3A' },
-  { flag: '🇪🇸', country: '스페인', wines: 11, bar: 38, color: '#C41E3A' },
-  { flag: '🇦🇷', country: '아르헨티나', wines: 9, bar: 30, color: '#C41E3A' },
+const REGIONS: { code: CountryFlagProps['code']; country: string; wines: number; bar: number; color: string }[] = [
+  { code: 'FR', country: '프랑스', wines: 28, bar: 95, color: '#C41E3A' },
+  { code: 'IT', country: '이탈리아', wines: 21, bar: 74, color: '#C41E3A' },
+  { code: 'CL', country: '칠레', wines: 18, bar: 62, color: '#C41E3A' },
+  { code: 'NZ', country: '뉴질랜드', wines: 14, bar: 48, color: '#C41E3A' },
+  { code: 'ES', country: '스페인', wines: 11, bar: 38, color: '#C41E3A' },
+  { code: 'AR', country: '아르헨티나', wines: 9, bar: 30, color: '#C41E3A' },
 ];
 
 type GlassWine = {
@@ -29,9 +39,14 @@ const GLASS_WINES: GlassWine[] = [
 function StarRating({ rating }: { rating: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 10 }}>
-      {[1, 2, 3, 4, 5].map(n => (
-        <span key={n} style={{ fontSize: 12, color: n <= Math.round(rating) ? '#C9A84C' : '#2D1540' }}>★</span>
-      ))}
+      {[1, 2, 3, 4, 5].map(n => {
+        const filled = n <= Math.round(rating);
+        return (
+          <span key={n} aria-hidden style={{ display: 'inline-flex', color: filled ? '#C9A84C' : '#2D1540' }}>
+            <StarFilledIcon size={12} filled={filled} />
+          </span>
+        );
+      })}
       <span style={{ fontSize: 11, color: '#C9A84C', fontWeight: 700, marginLeft: 4 }}>{rating.toFixed(1)}</span>
     </div>
   );
@@ -108,15 +123,15 @@ function WineCardInner({ wine }: { wine: GlassWine }) {
       {/* Meta rows */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 9 }}>🍇</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: '#9B8B7A' }}><GrapeIcon size={11} /></span>
           <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.grapes}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 9 }}>📅</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: '#9B8B7A' }}><CalendarIcon size={11} /></span>
           <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.date}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 9 }}>✦</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: '#9B8B7A' }}><StarBurstIcon size={11} /></span>
           <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wineCard?.occasion ?? wine.occasion}</span>
         </div>
       </div>
@@ -195,7 +210,7 @@ function GlassCardStack() {
       if (jumpTimerRef.current) clearTimeout(jumpTimerRef.current);
       jumpTimerRef.current = setTimeout(() => {
         setWithAnim(false);
-        // 0 → real last (index N), last → real first (index 1)
+        // 0 -> real last (index N), last -> real first (index 1)
         setCarouselIdx(nextIdx === 0 ? N : 1);
       }, 380);
     }
@@ -299,9 +314,10 @@ function GlassCardStack() {
                 <motion.span
                   animate={{ x: [-4, 0, -4] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}
+                  style={{ display: 'inline-flex', color: 'rgba(255,255,255,0.75)' }}
+                  aria-hidden
                 >
-                  ←
+                  <ArrowLeftIcon size={14} />
                 </motion.span>
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.80)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
                   좌우로 스와이프 해보세요
@@ -309,9 +325,10 @@ function GlassCardStack() {
                 <motion.span
                   animate={{ x: [4, 0, 4] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)' }}
+                  style={{ display: 'inline-flex', color: 'rgba(255,255,255,0.75)' }}
+                  aria-hidden
                 >
-                  →
+                  <ArrowRightIcon size={14} />
                 </motion.span>
               </div>
               <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
@@ -420,7 +437,8 @@ function GlassCardStack() {
 }
 
 // ── Panel 2: Label scan demo ───────────────────────────────────────────────
-const WINE_TAGS = ['Château Margaux', '2019', 'Médoc AOC', 'Premier Grand Cru Classé', 'Cabernet Sauvignon', '🇫🇷 France'];
+const FLAG_TAG = '__FLAG_FR__'; // 표시 시 CountryFlag(FR) + 'France'로 렌더
+const WINE_TAGS = ['Château Margaux', '2019', 'Médoc AOC', 'Premier Grand Cru Classé', 'Cabernet Sauvignon', FLAG_TAG];
 
 export function ScanPanel() {
   const [step, setStep] = useState(0);
@@ -503,7 +521,7 @@ export function ScanPanel() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', alignItems: 'flex-start', alignContent: 'flex-start' }}>
         {WINE_TAGS.map((tag, i) => {
           const isWineName = tag === 'Château Margaux';
-          const isFlag = tag === '🇫🇷 France';
+          const isFlag = tag === FLAG_TAG;
           const isClassification = tag === 'Premier Grand Cru Classé';
           return (
           <span
@@ -519,9 +537,17 @@ export function ScanPanel() {
               letterSpacing: isClassification ? '0.02em' : undefined,
               opacity: i < step ? 1 : 0,
               transition: 'opacity 0.3s ease',
+              display: isFlag ? 'inline-flex' : undefined,
+              alignItems: isFlag ? 'center' : undefined,
+              gap: isFlag ? 6 : undefined,
             }}
           >
-            {tag}
+            {isFlag ? (
+              <>
+                <CountryFlag code="FR" size={12} />
+                <span>France</span>
+              </>
+            ) : tag}
           </span>
           );
         })}

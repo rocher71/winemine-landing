@@ -8,7 +8,7 @@
   "franceWine": {
     "sectionLabel": "지역 탐험",
     "heading": "프랑스 와인 산지",
-    "scrollHint": "↓ SCROLL",
+    "scrollHint": "SCROLL",
     "regions": {
       "21": "부르고뉴",
       "33": "보르도",
@@ -129,7 +129,7 @@
       "newAromas": "이 시점에서 새로 등장한 향",
       "scoreLabel": "이 시점의 전반 점수",
       "noteLabel": "메모",
-      "peakLabel": "★ 이 시점이 정점",
+      "peakLabel": "이 시점이 정점",
       "recommendationTitle": "권장 디캔팅",
       "recommendedRange": "권장: {min}~{max}분 (평균 Peak {peak}분)",
       "compareEarly": "권장보다 빠르게 깨우는 편",
@@ -148,7 +148,7 @@
       "reveal": "정답 공개 (Reveal & Score)",
       "retry": "재시도",
       "scoreTotal": "총점 {score}/100",
-      "rankMaster": "Master Sommelier 수준 🏆",
+      "rankMaster": "Master Sommelier 수준",
       "rankAdvanced": "Advanced Sommelier 후보",
       "rankEnthusiast": "Wine Enthusiast",
       "rankExploring": "탐험 단계 — 더 마셔보세요",
@@ -173,17 +173,17 @@
       "eyebrow": "직접 만져보세요",
       "title": "이 노트, 진짜로 작성해볼 수 있어요",
       "subtitle": "부케 휠을 돌리고, 카우달리를 측정하고, 120종 어휘에서 직접 골라보세요. 5분이면 충분해요.",
-      "bullet1": "🎡 부케 휠 12 카테고리",
-      "bullet2": "⏱ 카우달리 측정기",
-      "bullet3": "⚠ 결함 11종 체크리스트",
-      "bullet4": "🍷 오프닝 타임라인",
+      "bullet1": "부케 휠 12 카테고리",
+      "bullet2": "카우달리 측정기",
+      "bullet3": "결함 11종 체크리스트",
+      "bullet4": "오프닝 타임라인",
       "cta": "Playground 열어보기",
       "hint": "새 페이지에서 열려요 · 입력은 저장되지 않아요"
     },
     "playground": {
       "pageTitle": "테이스팅 노트 플레이그라운드",
       "pageIntro": "전체 인터랙티브 데모 — 부케 휠·WSET 슬라이더·카우달리 측정·결함 점검·오프닝 타임라인·자동 묘사 모두 살아있는 환경에서 체험. 입력은 어디에도 저장되지 않습니다.",
-      "backToHome": "← 메인으로 돌아가기",
+      "backToHome": "메인으로 돌아가기",
       "stepCapture": "1 · 라벨 인식",
       "stepAroma": "2 · 아로마",
       "stepPalate": "3 · 미각",
@@ -269,9 +269,9 @@
       "memoPlaceholder": "누구와, 어디서, 어떤 기분이었나요?",
       "summary": "오늘의 한 잔",
       "switchToExpert": "더 자세히 기록하고 싶다면 ‘전문가용’으로 전환하세요",
-      "tipTitle": "💡 와인 전문가들은 이걸 이렇게 부른답니다",
+      "tipTitle": "와인 전문가들은 이걸 이렇게 부른답니다",
       "tip": {
-        "sweetness": "단맛의 정도는 ‘잔당(Residual Sugar)’이라고 하며, g/L 단위로 표기해요. WSET에서는 Bone Dry → Sweet 까지 5단계로 구분합니다.",
+        "sweetness": "단맛의 정도는 ‘잔당(Residual Sugar)’이라고 하며, g/L 단위로 표기해요. WSET에서는 Bone Dry부터 Sweet까지 5단계로 구분합니다.",
         "acidity": "신맛은 ‘산도(Acidity)’예요. 화이트 와인은 보통 6~10 g/L, 레드는 5~7 g/L 정도. 침이 고이는 강도로 느낄 수 있어요.",
         "body": "무게감은 ‘바디(Body)’ — 알코올·추출물·잔당이 합쳐진 입안의 인상이에요. 탈지유 vs 전유로 비유하기도 해요.",
         "tannin": "떫은 맛은 ‘타닌(Tannin)’ — 적포도 껍질·씨에서 나오는 폴리페놀. 시간이 지날수록 둥글어져요.",
@@ -420,7 +420,7 @@
       "france": { "name": "프랑스", "stat": "금액 1위 · $173M" },
       "chile": { "name": "칠레", "stat": "수입량 1위 · 22.54%" },
       "italy": { "name": "이탈리아", "stat": "모스카토 · 키안티" },
-      "newZealand": { "name": "뉴질랜드", "stat": "화이트 1위 · +10%↑" }
+      "newZealand": { "name": "뉴질랜드", "stat": "화이트 1위 · +10%" }
     }
   },
 
@@ -434,7 +434,7 @@
       { "note": "체리, 트러플, 벨벳. 실키한 질감과 무한한 여운.", "occasion": "발렌타인데이" },
       { "note": "헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.", "occasion": "지인 모임" }
     ],
-    "mobileSwipeHint": "← 스와이프 →",
+    "mobileSwipeHint": "좌우로 스와이프",
     "mobileTapHint": "탭해서 다른 와인 보기"
   },
 
@@ -462,8 +462,8 @@
     "heading": "이렇게 사용해요",
     "steps": [
       { "title": "라벨 촬영하기", "body": "레스토랑, 와인 바, 집. 언제 어디서든 마시는 와인 라벨을 카메라로 촬영해주세요.", "detail": "2초 내로 인식" },
-      { "title": "AI 분석으로 지도 물들이기", "body": "원산지가 자동으로 파악되어 세계 지도 위에 기록된다. 마실수록 지도가 물든다.", "detail": "Bordeaux → Pomerol → Premier Grand Cru" },
-      { "title": "내 취향 파고들기", "body": "국가를 탭하면 세부 지역으로 확대됩니다. 내가 탐험한 아펠라시옹과 그랑 크뤼까지 한눈에.", "detail": "AOC → Appellation → Classification" },
+      { "title": "AI 분석으로 지도 물들이기", "body": "원산지가 자동으로 파악되어 세계 지도 위에 기록된다. 마실수록 지도가 물든다.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "내 취향 파고들기", "body": "국가를 탭하면 세부 지역으로 확대됩니다. 내가 탐험한 아펠라시옹과 그랑 크뤼까지 한눈에.", "detail": "AOC · Appellation · Classification" },
       { "title": "한 컷에 담기", "body": "내 와인 여정을 한 눈에 볼 수 있는 이미지로 저장합니다. 클릭 한 번으로 공유해보세요!", "detail": "Recap 이미지 생성" }
     ]
   },

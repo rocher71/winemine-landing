@@ -8,7 +8,7 @@
 //
 // spec: _workspace/tasting-note-section-spec.md
 
-import { useState, type ReactNode } from 'react';
+import { useState, type ReactNode, type ComponentType } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
@@ -28,12 +28,41 @@ import {
   type MockWine,
   type WSETScale,
 } from '@/lib/tasting-note-lexicon';
+import {
+  WineGlassRedIcon,
+  WineGlassWhiteIcon,
+  ChampagneFluteIcon,
+  TargetIcon,
+  SparkleIcon,
+  SproutIcon,
+  GraduationCapIcon,
+  StarEyesFaceIcon,
+  SmileFaceIcon,
+  ThinkingFaceIcon,
+  StrawberryIcon,
+  LemonIcon,
+  PeachIcon,
+  RoseIcon,
+  ChiliIcon,
+  HoneyJarIcon,
+  LeafIcon,
+  BreadIcon,
+  StopwatchIcon,
+  ClockIcon,
+  CheckIcon,
+  CrossIcon,
+  TrophyIcon,
+  ArrowRightIcon,
+  type IconProps,
+} from '@/components/icons/wine-icons';
 
-const VARIANTS: { id: FormVariant; icon: string }[] = [
-  { id: 'white',     icon: '🥂' },
-  { id: 'red',       icon: '🍷' },
-  { id: 'sparkling', icon: '✨' },
-  { id: 'blind',     icon: '🎯' },
+type IconComponent = ComponentType<IconProps>;
+
+const VARIANTS: { id: FormVariant; Icon: IconComponent }[] = [
+  { id: 'white',     Icon: WineGlassWhiteIcon },
+  { id: 'red',       Icon: WineGlassRedIcon },
+  { id: 'sparkling', Icon: ChampagneFluteIcon },
+  { id: 'blind',     Icon: TargetIcon },
 ];
 
 // 디자인 토큰
@@ -225,7 +254,7 @@ function PlaygroundInviteCard() {
       >
         {/* Row 1: 아이콘 + 텍스트 (좁은 화면에서도 안 깨짐) */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-          {/* 펄스 ✨ 아이콘 */}
+          {/* 펄스 sparkle 아이콘 */}
           <div
             style={{
               position: 'relative',
@@ -238,11 +267,11 @@ function PlaygroundInviteCard() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 24,
+              color: GOLD,
             }}
             aria-hidden
           >
-            ✨
+            <SparkleIcon size={24} />
             <motion.span
               animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
@@ -362,9 +391,10 @@ function PlaygroundInviteCard() {
             <motion.span
               animate={{ x: hovered ? 4 : 0 }}
               transition={{ duration: 0.2 }}
-              style={{ display: 'inline-block' }}
+              style={{ display: 'inline-flex', alignItems: 'center' }}
+              aria-hidden
             >
-              →
+              <ArrowRightIcon size={16} />
             </motion.span>
           </div>
           <span
@@ -458,8 +488,8 @@ function ModeToggle({
               transition: 'background 200ms ease, border-color 200ms ease',
             }}
           >
-            <span style={{ fontSize: 22 }} aria-hidden>
-              {m === 'beginner' ? '🌱' : '🎓'}
+            <span aria-hidden style={{ display: 'inline-flex', flexShrink: 0, color: m === 'beginner' ? GOLD : '#A02030' }}>
+              {m === 'beginner' ? <SproutIcon size={22} /> : <GraduationCapIcon size={22} />}
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <span
@@ -512,6 +542,7 @@ function FormTabBar({
     >
       {visible.map(v => {
         const isActive = active === v.id;
+        const Icon = v.Icon;
         return (
           <button
             key={v.id}
@@ -537,9 +568,7 @@ function FormTabBar({
               transition: 'background 200ms ease, color 200ms ease',
             }}
           >
-            <span style={{ fontSize: 18 }} aria-hidden>
-              {v.icon}
-            </span>
+            <Icon size={18} aria-hidden />
             <span>{t(`tastingNote.tabs.${v.id}`)}</span>
           </button>
         );
@@ -1489,9 +1518,12 @@ function BlindMockup({ wine }: { wine: MockWine }) {
           </div>
           <div>
             <div
-              style={{ fontSize: 13, fontWeight: 700, color: PAPER_INK, marginBottom: 2 }}
+              style={{ fontSize: 13, fontWeight: 700, color: PAPER_INK, marginBottom: 2, display: 'flex', alignItems: 'center', gap: 6 }}
             >
-              {t('tastingNote.mockup.score.master')} 🏆
+              {t('tastingNote.mockup.score.master')}
+              <span aria-hidden style={{ color: GOLD, display: 'inline-flex' }}>
+                <TrophyIcon size={16} />
+              </span>
             </div>
             <div style={{ fontSize: 10, color: PAPER_INK_DIM, fontStyle: 'italic' }}>
               {t('tastingNote.mockup.score.matched').replace('{n}', '4')}
@@ -1592,11 +1624,10 @@ function GuessRow({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 11,
-          fontWeight: 700,
         }}
+        aria-hidden
       >
-        {correct ? '✓' : '✕'}
+        {correct ? <CheckIcon size={11} /> : <CrossIcon size={11} />}
       </span>
     </div>
   );
@@ -1605,7 +1636,7 @@ function GuessRow({
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Beginner Mockups — 입문자가 작성한 짧은 노트 (정적, 인터랙션 X)
-// 데이터: WSET 5단계 → 3단계, 어휘 200개 → 4 큰 카테고리, 카우달리 X
+// 데이터: WSET 5단계 -> 3단계, 어휘 200개 -> 4 큰 카테고리, 카우달리 X
 // ─────────────────────────────────────────────────────────────────────────────
 
 type Level = 'low' | 'mid' | 'high';
@@ -1660,15 +1691,15 @@ const BEGINNER_DATA: Record<'white' | 'red' | 'sparkling', BeginnerData> = {
   },
 };
 
-const AROMA_EMOJI: Record<string, string> = {
-  berry: '🍓',
-  citrus: '🍋',
-  stoneFruit: '🍑',
-  floral: '🌹',
-  spice: '🌶',
-  sweet: '🍯',
-  earth: '🍂',
-  yeast: '🥖',
+const AROMA_ICON: Record<string, IconComponent> = {
+  berry: StrawberryIcon,
+  citrus: LemonIcon,
+  stoneFruit: PeachIcon,
+  floral: RoseIcon,
+  spice: ChiliIcon,
+  sweet: HoneyJarIcon,
+  earth: LeafIcon,
+  yeast: BreadIcon,
 };
 
 function BeginnerMockupForVariant({ variant }: { variant: FormVariant }) {
@@ -1683,7 +1714,11 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
   const { t } = useLocale();
   const variantKey = wine.variant as 'white' | 'red' | 'sparkling';
 
-  const impEmoji: Record<Impression, string> = { love: '🤩', ok: '🙂', meh: '🤔' };
+  const ImpIcon: Record<Impression, IconComponent> = {
+    love: StarEyesFaceIcon,
+    ok: SmileFaceIcon,
+    meh: ThinkingFaceIcon,
+  };
 
   return (
     <>
@@ -1719,7 +1754,12 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
                 marginTop: 4,
               }}
             >
-              🌱 {t('tastingNote.playground.mode.beginner')}
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <span aria-hidden style={{ color: GOLD, display: 'inline-flex' }}>
+                  <SproutIcon size={11} />
+                </span>
+                {t('tastingNote.playground.mode.beginner')}
+              </span>
             </div>
           </div>
           <div style={{ fontSize: 10, color: PAPER_INK_DIM, letterSpacing: '0.06em' }}>
@@ -1773,7 +1813,12 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
             borderRadius: 12,
           }}
         >
-          <span style={{ fontSize: 28 }} aria-hidden>{impEmoji[data.impression]}</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: WINE_RED }}>
+            {(() => {
+              const Icon = ImpIcon[data.impression];
+              return <Icon size={28} />;
+            })()}
+          </span>
           <span
             style={{
               fontSize: 14,
@@ -1859,7 +1904,12 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
                 borderRadius: 10,
               }}
             >
-              <span style={{ fontSize: 18 }} aria-hidden>{AROMA_EMOJI[id]}</span>
+              <span aria-hidden style={{ display: 'inline-flex', color: WINE_RED }}>
+                {(() => {
+                  const Icon = AROMA_ICON[id];
+                  return Icon ? <Icon size={18} /> : null;
+                })()}
+              </span>
               <span style={{ fontSize: 12, fontWeight: 600, color: PAPER_INK }}>
                 {t(`tastingNote.beginner.aromaCard.${id}`)}
               </span>
@@ -1883,8 +1933,10 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
           {t('tastingNote.beginner.step.finish')}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 22 }} aria-hidden>
-            {data.finish === 'short' ? '⏱' : data.finish === 'medium' ? '🕰' : '🍷'}
+          <span aria-hidden style={{ display: 'inline-flex', color: WINE_RED }}>
+            {data.finish === 'short' ? <StopwatchIcon size={22} />
+              : data.finish === 'medium' ? <ClockIcon size={22} />
+              : <WineGlassRedIcon size={22} />}
           </span>
           <span style={{ fontSize: 13, fontWeight: 600, color: PAPER_INK }}>
             {t(`tastingNote.beginner.finishOption.${data.finish}`)}

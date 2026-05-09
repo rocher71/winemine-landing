@@ -2,10 +2,19 @@
 
 import { motion } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
+import { CountryFlag, ArrowUpIcon, type CountryFlagProps } from '@/components/icons/wine-icons';
 
-const VINEYARDS = [
+const VINEYARDS: {
+  code: CountryFlagProps['code'];
+  country: string;
+  korean: string;
+  stat: string;
+  hasGrowthArrow?: boolean;
+  img: string;
+  alt: string;
+}[] = [
   {
-    flag: '🇫🇷',
+    code: 'FR',
     country: 'France',
     korean: '프랑스',
     stat: '금액 1위 · $173M',
@@ -13,7 +22,7 @@ const VINEYARDS = [
     alt: '프랑스 포도밭',
   },
   {
-    flag: '🇨🇱',
+    code: 'CL',
     country: 'Chile',
     korean: '칠레',
     stat: '수입량 1위 · 22.54%',
@@ -21,7 +30,7 @@ const VINEYARDS = [
     alt: '칠레 포도밭',
   },
   {
-    flag: '🇮🇹',
+    code: 'IT',
     country: 'Italy',
     korean: '이탈리아',
     stat: '모스카토 · 키안티',
@@ -29,10 +38,11 @@ const VINEYARDS = [
     alt: '이탈리아 토스카나 포도밭',
   },
   {
-    flag: '🇳🇿',
+    code: 'NZ',
     country: 'New Zealand',
     korean: '뉴질랜드',
-    stat: '화이트 1위 · +10%↑',
+    stat: '화이트 1위 · +10%',
+    hasGrowthArrow: true,
     img: 'https://images.pexels.com/photos/19065636/pexels-photo-19065636.jpeg?auto=compress&cs=tinysrgb&w=800',
     alt: '뉴질랜드 포도밭',
   },
@@ -123,7 +133,9 @@ export default function VineyardStrip() {
               position: 'absolute', bottom: 0, left: 0, right: 0,
               padding: 'clamp(12px,2vw,20px)',
             }}>
-              <div style={{ fontSize: 'clamp(18px,3vw,28px)', marginBottom: 4 }}>{v.flag}</div>
+              <div style={{ marginBottom: 6 }}>
+                <CountryFlag code={v.code} size={20} />
+              </div>
               <div style={{
                 fontFamily: 'var(--font-playfair), Georgia, serif',
                 fontSize: 'clamp(13px,1.8vw,20px)',
@@ -133,8 +145,9 @@ export default function VineyardStrip() {
               }}>
                 {messages.vineyardStrip.countries[countryKeys[i]].name}
               </div>
-              <div style={{ fontSize: 'clamp(9px,1vw,12px)', color: '#C9A84C', letterSpacing: '0.06em' }}>
+              <div style={{ fontSize: 'clamp(9px,1vw,12px)', color: '#C9A84C', letterSpacing: '0.06em', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                 {messages.vineyardStrip.countries[countryKeys[i]].stat}
+                {v.hasGrowthArrow && <ArrowUpIcon size={10} aria-hidden />}
               </div>
             </div>
           </motion.div>

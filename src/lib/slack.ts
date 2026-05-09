@@ -30,7 +30,7 @@ export async function notifyNewSignup(p: Payload): Promise<void> {
   const marketingKo = p.marketingAgree ? '동의' : '미동의';
   const time = formatKstNow();
 
-  const headline = p.isDuplicate ? '🔁 중복 시도' : '🍷 새 사전 신청';
+  const headline = p.isDuplicate ? '[REPEAT] 중복 시도' : '[NEW] 새 사전 신청';
   const timeLabel = p.isDuplicate ? '시도 시간' : '등록 시간';
 
   const lines = [

@@ -6,6 +6,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
 import {
+  WineGlassRedIcon,
+  StarFilledIcon,
+  CheckIcon,
+  StarBurstIcon,
+} from '@/components/icons/wine-icons';
+import {
   TIMEPOINT_PRESETS,
   matchOpeningGuide,
   type EvolutionPoint,
@@ -91,8 +97,9 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
       {/* 컨트롤 행 */}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, color: MUTED, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            🍷 Cork
+          <span style={{ fontSize: 12, color: MUTED, letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <span aria-hidden style={{ display: 'inline-flex' }}><WineGlassRedIcon size={14} /></span>
+            Cork
           </span>
           {state.openedAt ? (
             <button
@@ -164,12 +171,11 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#1A0A1E',
-                    fontSize: 9,
-                    fontWeight: 700,
+                    color: isPeak ? '#F5F0E8' : '#1A0A1E',
                   }}
+                  aria-hidden
                 >
-                  {isPeak ? '★' : filled ? '✓' : ''}
+                  {isPeak ? <StarFilledIcon size={9} filled /> : filled ? <CheckIcon size={9} /> : null}
                 </div>
                 <span style={{ fontSize: 10, color: isActive ? GOLD : MUTED, fontWeight: isActive ? 700 : 400 }}>
                   {preset.label}
@@ -270,7 +276,10 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
               fontWeight: 600,
             }}
           >
-            ★ {t('tastingNote.evolution.peakLabel').replace('★ ', '')}
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <StarFilledIcon size={11} filled aria-hidden />
+              {t('tastingNote.evolution.peakLabel')}
+            </span>
           </button>
         </div>
       </div>
@@ -278,8 +287,9 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
       {/* Recommendation */}
       {guide && (
         <div style={{ padding: 16, background: 'rgba(201,168,76,0.06)', border: `1px solid ${GOLD}`, borderRadius: 12 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: GOLD, marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            ✦ {t('tastingNote.evolution.recommendationTitle')}
+          <div style={{ fontSize: 12, fontWeight: 700, color: GOLD, marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <span aria-hidden style={{ display: 'inline-flex' }}><StarBurstIcon size={12} /></span>
+            {t('tastingNote.evolution.recommendationTitle')}
           </div>
           <div style={{ fontSize: 14, color: '#F5F0E8', fontWeight: 600, marginBottom: 4 }}>
             {locale === 'ko' ? guide.ko : guide.en}
@@ -414,7 +424,12 @@ function EvolutionChart({ timepoints, peakIndex }: { timepoints: EvolutionPoint[
           <g key={s.minutesAfterOpen}>
             <circle cx={xOf(s.minutesAfterOpen)} cy={yOf(s.overallScore)} r={peak ? 6 : 4} fill={s.reductionPresent ? '#9B8B7A' : peak ? WINE_RED : GOLD} />
             {peak && (
-              <text x={xOf(s.minutesAfterOpen)} y={yOf(s.overallScore) - 12} textAnchor="middle" fill={WINE_RED} fontSize="11" fontWeight="700">★</text>
+              <g transform={`translate(${xOf(s.minutesAfterOpen) - 6}, ${yOf(s.overallScore) - 18})`}>
+                <path
+                  d="M6 1 L7.2 4.7 L11 4.8 L8 7.2 L9 11 L6 8.8 L3 11 L4 7.2 L1 4.8 L4.8 4.7 Z"
+                  fill={WINE_RED}
+                />
+              </g>
             )}
           </g>
         );

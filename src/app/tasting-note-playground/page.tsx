@@ -5,8 +5,21 @@
 // 메인 랜딩의 정적 mockup과 별개. 입력은 어디에도 저장되지 않음.
 
 import Link from 'next/link';
-import { useReducer, useState } from 'react';
+import { useReducer, useState, type ComponentType } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
+import {
+  WineGlassRedIcon,
+  WineGlassWhiteIcon,
+  ChampagneFluteIcon,
+  TargetIcon,
+  SproutIcon,
+  GraduationCapIcon,
+  CameraIcon,
+  StarFilledIcon,
+  ArrowRightIcon,
+  ArrowLeftIcon,
+  type IconProps,
+} from '@/components/icons/wine-icons';
 import {
   SWEETNESS_LABELS,
   ACIDITY_LABELS,
@@ -127,11 +140,13 @@ function reducer(s: State, a: Action): State {
   }
 }
 
-const VARIANTS: { id: FormVariant; icon: string }[] = [
-  { id: 'white',     icon: '🥂' },
-  { id: 'red',       icon: '🍷' },
-  { id: 'sparkling', icon: '✨' },
-  { id: 'blind',     icon: '🎯' },
+type IconComponent = ComponentType<IconProps>;
+
+const VARIANTS: { id: FormVariant; Icon: IconComponent }[] = [
+  { id: 'white',     Icon: WineGlassWhiteIcon },
+  { id: 'red',       Icon: WineGlassRedIcon },
+  { id: 'sparkling', Icon: ChampagneFluteIcon },
+  { id: 'blind',     Icon: TargetIcon },
 ];
 
 export default function PlaygroundPage() {
@@ -384,7 +399,10 @@ function DownloadCta({ onOpenModal }: { onOpenModal: () => void }) {
           fontFamily: 'inherit',
         }}
       >
-        {t('tastingNote.playground.downloadCta.waitlist')} →
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          {t('tastingNote.playground.downloadCta.waitlist')}
+          <ArrowRightIcon size={14} aria-hidden />
+        </span>
       </button>
     </section>
   );
@@ -423,7 +441,8 @@ function TopBar({
   return (
     <header style={{ padding: 'clamp(24px, 5vw, 48px) clamp(20px, 5vw, 48px) 32px' }}>
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        <Link href="/" style={{ color: GOLD, fontSize: 12, textDecoration: 'none', letterSpacing: '0.08em' }}>
+        <Link href="/" style={{ color: GOLD, fontSize: 12, textDecoration: 'none', letterSpacing: '0.08em', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <ArrowLeftIcon size={12} aria-hidden />
           {t('tastingNote.playground.backToHome')}
         </Link>
         <h1
@@ -485,8 +504,8 @@ function TopBar({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 22 }} aria-hidden>
-                    {m === 'beginner' ? '🌱' : '🎓'}
+                  <span aria-hidden style={{ display: 'inline-flex', color: m === 'beginner' ? GOLD : '#A02030' }}>
+                    {m === 'beginner' ? <SproutIcon size={22} /> : <GraduationCapIcon size={22} />}
                   </span>
                   <span
                     style={{
@@ -522,6 +541,7 @@ function TopBar({
         >
           {visibleVariants.map(v => {
             const isActive = variant === v.id;
+            const Icon = v.Icon;
             return (
               <button
                 key={v.id}
@@ -546,7 +566,7 @@ function TopBar({
                   transition: 'background 200ms ease',
                 }}
               >
-                <span style={{ fontSize: 18 }} aria-hidden>{v.icon}</span>
+                <Icon size={18} aria-hidden />
                 <span>{t(`tastingNote.tabs.${v.id}`)}</span>
               </button>
             );
@@ -589,8 +609,9 @@ function CaptureCard({ meta }: { meta: State['meta'] }) {
         borderRadius: 12,
       }}
     >
-      <div style={{ fontSize: 11, color: GOLD, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>
-        📷 Camera · OCR
+      <div style={{ fontSize: 11, color: GOLD, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <span aria-hidden style={{ display: 'inline-flex' }}><CameraIcon size={12} /></span>
+        Camera · OCR
       </div>
       <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 20, fontWeight: 700, margin: '0 0 6px', color: '#F5F0E8' }}>
         {meta.wineName}
@@ -640,11 +661,13 @@ function RatingPicker({ value, onChange }: { value: number; onChange: (n: number
                 border: `1px solid ${filled ? WINE_RED : BORDER}`,
                 cursor: 'pointer',
                 color: filled ? '#F5F0E8' : MUTED,
-                fontSize: 16,
                 fontFamily: 'inherit',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              ★
+              <StarFilledIcon size={16} filled={filled} />
             </button>
           );
         })}

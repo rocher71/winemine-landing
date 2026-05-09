@@ -68,7 +68,7 @@ function RegionLabel({ korName, count, featured, visible, bottleUnit }: {
       />
       <text textAnchor="middle" y={featured ? -8 : -6}
         style={{ fill: featured ? GOLD : '#F5F0E8', fontSize: featured ? 11 : 9, fontFamily: 'Inter,sans-serif', fontWeight: featured ? 700 : 600 } as React.CSSProperties}>
-        {featured ? `✦ ${korName}` : korName}
+        {featured ? `* ${korName}` : korName}
       </text>
       <text textAnchor="middle" y={featured ? 8 : 7}
         style={{ fill: '#C9A84C', fontSize: featured ? 13 : 11, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>

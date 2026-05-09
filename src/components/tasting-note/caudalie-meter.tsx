@@ -5,6 +5,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
+import { RefreshIcon } from '@/components/icons/wine-icons';
 import {
   caudalieCategory,
   caudalieComparison,
@@ -187,7 +188,10 @@ export default function CaudalieMeter({ caudalies, onChange }: Props) {
             fontFamily: 'inherit',
           }}
         >
-          ↻ {t('tastingNote.caudalie.reset')}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <RefreshIcon size={13} aria-hidden />
+            {t('tastingNote.caudalie.reset')}
+          </span>
         </button>
       </div>
     </div>

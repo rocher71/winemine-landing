@@ -3,15 +3,47 @@
 // Aroma Wheel — UC Davis 12 wedge SVG, 활성 wedge의 어휘 칩 패널, 임팩트 화합물 hover 툴팁
 // spec §aroma_wheel
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ComponentType } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
 import {
   AROMA_CATEGORIES,
   AROMA_LEXICON,
   IMPACT_BY_ID,
   type AromaCategoryId,
+  type AromaCategoryIconKey,
   type FormVariant,
 } from '@/lib/tasting-note-lexicon';
+import {
+  CherryIconSimple,
+  RoseIcon,
+  ChiliIcon,
+  HerbIcon,
+  ChestnutIcon,
+  HoneyJarIcon,
+  WoodIcon,
+  LeafIcon,
+  TestTubeIcon,
+  FlameIcon,
+  WhiskyGlassIcon,
+  DnaIcon,
+  CheckIcon,
+  type IconProps,
+} from '@/components/icons/wine-icons';
+
+const CATEGORY_ICON: Record<AromaCategoryIconKey, ComponentType<IconProps>> = {
+  cherry: CherryIconSimple,
+  rose: RoseIcon,
+  chili: ChiliIcon,
+  herb: HerbIcon,
+  chestnut: ChestnutIcon,
+  honey: HoneyJarIcon,
+  wood: WoodIcon,
+  leaf: LeafIcon,
+  testTube: TestTubeIcon,
+  flame: FlameIcon,
+  whisky: WhiskyGlassIcon,
+  dna: DnaIcon,
+};
 
 const GOLD = '#C9A84C';
 const WINE_RED = '#8B1A2A';
@@ -81,15 +113,16 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                 strokeWidth={isActive ? 2 : 1}
                 style={{ transition: 'fill-opacity 180ms ease' }}
               />
-              <text
-                x={lx}
-                y={ly - 6}
-                textAnchor="middle"
-                fill="#F5F0E8"
-                fontSize="14"
-              >
-                {cat.icon}
-              </text>
+              {(() => {
+                const Icon = CATEGORY_ICON[cat.icon];
+                if (!Icon) return null;
+                // SVG 안에 React SVG 컴포넌트를 transform으로 위치 조정
+                return (
+                  <g transform={`translate(${lx - 8}, ${ly - 16})`} style={{ pointerEvents: 'none' }}>
+                    <Icon size={16} color="#F5F0E8" />
+                  </g>
+                );
+              })()}
               <text
                 x={lx}
                 y={ly + 8}
@@ -173,7 +206,11 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                       transition: 'background 180ms ease',
                     }}
                   >
-                    {isOn && '✓ '}
+                    {isOn && (
+                      <span aria-hidden style={{ display: 'inline-flex' }}>
+                        <CheckIcon size={11} />
+                      </span>
+                    )}
                     {locale === 'ko' ? lex.ko : lex.en}
                     {impact && (
                       <span

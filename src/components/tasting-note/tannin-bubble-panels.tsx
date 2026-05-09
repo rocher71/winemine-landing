@@ -5,6 +5,7 @@
 
 import WSETSlider from './wset-slider';
 import { useLocale } from '@/components/providers/locale-provider';
+import { WineGlassRedIcon, SparkleIcon } from '@/components/icons/wine-icons';
 import {
   TANNIN_INTENSITY_LABELS,
   DOSAGE_LABELS,
@@ -44,8 +45,9 @@ export function TanninPanel({
   const { t } = useLocale();
   return (
     <div style={{ padding: 16, background: 'rgba(139,26,42,0.08)', border: `1px solid ${WINE_RED}`, borderRadius: 12 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: WINE_RED, marginBottom: 12, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-        🍷 {t('tastingNote.dimensions.tannin')}
+      <div style={{ fontSize: 12, fontWeight: 700, color: WINE_RED, marginBottom: 12, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+        <span aria-hidden style={{ display: 'inline-flex' }}><WineGlassRedIcon size={14} /></span>
+        {t('tastingNote.dimensions.tannin')}
       </div>
       <WSETSlider
         labelKey="tastingNote.dimensions.tannin"
@@ -144,8 +146,9 @@ export function BubblePanel({
   const { t, locale } = useLocale();
   return (
     <div style={{ padding: 16, background: 'rgba(201,168,76,0.06)', border: `1px solid ${GOLD}`, borderRadius: 12 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: GOLD, marginBottom: 12, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-        ✨ {t('tastingNote.mockup.section.bubbles')}
+      <div style={{ fontSize: 12, fontWeight: 700, color: GOLD, marginBottom: 12, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+        <span aria-hidden style={{ display: 'inline-flex' }}><SparkleIcon size={14} /></span>
+        {t('tastingNote.mockup.section.bubbles')}
       </div>
       <Group label={t('tastingNote.mockup.bubbles.size')}>
         {(['fine', 'medium', 'coarse'] as const).map(s => (

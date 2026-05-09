@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
+import { WarningTriangleIcon, CheckIcon, ArrowUpIcon, ArrowDownIcon } from '@/components/icons/wine-icons';
 import { FAULTS, type Fault } from '@/lib/tasting-note-lexicon';
 
 const GOLD = '#C9A84C';
@@ -39,13 +40,18 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
           fontWeight: 600,
         }}
       >
-        <span>
-          ⚠ {t('tastingNote.faults.title')}
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <span aria-hidden style={{ color: WINE_RED, display: 'inline-flex' }}>
+            <WarningTriangleIcon size={16} />
+          </span>
+          {t('tastingNote.faults.title')}
           {selected.length > 0 && (
-            <span style={{ color: WINE_RED, marginLeft: 8 }}>({selected.length})</span>
+            <span style={{ color: WINE_RED, marginLeft: 4 }}>({selected.length})</span>
           )}
         </span>
-        <span style={{ color: MUTED, fontSize: 13 }}>{open ? '▲' : '▼'}</span>
+        <span aria-hidden style={{ color: MUTED, display: 'inline-flex' }}>
+          {open ? <ArrowUpIcon size={13} /> : <ArrowDownIcon size={13} />}
+        </span>
       </button>
       {open && (
         <div style={{ padding: '0 18px 18px' }}>
@@ -89,12 +95,11 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: 10,
                         color: '#1A0A1E',
-                        fontWeight: 700,
                       }}
+                      aria-hidden
                     >
-                      {isOn ? '✓' : ''}
+                      {isOn && <CheckIcon size={10} />}
                     </span>
                     <span style={{ fontSize: 13, fontWeight: 600 }}>{f.ko}</span>
                   </div>

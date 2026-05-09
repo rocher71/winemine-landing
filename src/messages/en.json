@@ -8,7 +8,7 @@
   "franceWine": {
     "sectionLabel": "Explore Regions",
     "heading": "Wine Regions of France",
-    "scrollHint": "↓ SCROLL",
+    "scrollHint": "SCROLL",
     "regions": {
       "21": "Burgundy",
       "33": "Bordeaux",
@@ -129,7 +129,7 @@
       "newAromas": "New aromas emerging",
       "scoreLabel": "Score at this point",
       "noteLabel": "Note",
-      "peakLabel": "★ Peak",
+      "peakLabel": "Peak",
       "recommendationTitle": "Recommended Decanting",
       "recommendedRange": "Recommended: {min}-{max} min (avg peak {peak} min)",
       "compareEarly": "You open earlier than average",
@@ -148,7 +148,7 @@
       "reveal": "Reveal & Score",
       "retry": "Retry",
       "scoreTotal": "Total {score}/100",
-      "rankMaster": "Master Sommelier level 🏆",
+      "rankMaster": "Master Sommelier level",
       "rankAdvanced": "Advanced Sommelier candidate",
       "rankEnthusiast": "Wine Enthusiast",
       "rankExploring": "Exploring — drink more",
@@ -173,17 +173,17 @@
       "eyebrow": "Try it yourself",
       "title": "Want to actually write this note?",
       "subtitle": "Spin the aroma wheel, measure caudalies, pick from 120 vocabulary words. Five minutes is all it takes.",
-      "bullet1": "🎡 Aroma wheel · 12 categories",
-      "bullet2": "⏱ Caudalie meter",
-      "bullet3": "⚠ 11 fault checklist",
-      "bullet4": "🍷 Opening timeline",
+      "bullet1": "Aroma wheel · 12 categories",
+      "bullet2": "Caudalie meter",
+      "bullet3": "11 fault checklist",
+      "bullet4": "Opening timeline",
       "cta": "Open the Playground",
       "hint": "Opens a new page · Inputs are never saved"
     },
     "playground": {
       "pageTitle": "Tasting Note Playground",
       "pageIntro": "Full interactive demo — aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline and auto description, all live. Inputs are never saved anywhere.",
-      "backToHome": "← Back to home",
+      "backToHome": "Back to home",
       "stepCapture": "1 · Label Capture",
       "stepAroma": "2 · Aroma",
       "stepPalate": "3 · Palate",
@@ -269,7 +269,7 @@
       "memoPlaceholder": "With whom, where, what was the mood?",
       "summary": "Your glass today",
       "switchToExpert": "Want to go deeper? Switch to Expert mode",
-      "tipTitle": "💡 What wine pros call it",
+      "tipTitle": "What wine pros call it",
       "tip": {
         "sweetness": "Sweetness comes from 'Residual Sugar' (g/L). WSET classifies it from Bone Dry to Sweet across 5 levels.",
         "acidity": "What you taste as sour is 'Acidity' — typically 6–10 g/L for whites, 5–7 g/L for reds. The salivation tells you the level.",
@@ -420,7 +420,7 @@
       "france": { "name": "France", "stat": "#1 by value · $173M" },
       "chile": { "name": "Chile", "stat": "#1 by volume · 22.54%" },
       "italy": { "name": "Italy", "stat": "Moscato · Chianti" },
-      "newZealand": { "name": "New Zealand", "stat": "White #1 · +10%↑" }
+      "newZealand": { "name": "New Zealand", "stat": "White #1 · +10%" }
     }
   },
 
@@ -434,7 +434,7 @@
       { "note": "Cherry, truffle, velvet. Silky texture with an endless finish.", "occasion": "Valentine's Day" },
       { "note": "Hazelnut, butter, pure minerality. The very definition of elegance.", "occasion": "Friends gathering" }
     ],
-    "mobileSwipeHint": "← Swipe →",
+    "mobileSwipeHint": "Swipe left or right",
     "mobileTapHint": "Tap to see next wine"
   },
 
@@ -462,8 +462,8 @@
     "heading": "Here's how it works",
     "steps": [
       { "title": "Shoot the label", "body": "At a restaurant, wine bar, or home. Snap the label wherever you are drinking.", "detail": "Recognized in 2 seconds" },
-      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "Bordeaux → Pomerol → Premier Grand Cru" },
-      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation and Grand Cru classification you've explored.", "detail": "AOC → Appellation → Classification" },
+      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation and Grand Cru classification you've explored.", "detail": "AOC · Appellation · Classification" },
       { "title": "Capture it all", "body": "Save your wine journey as a shareable image. One tap to share with the world.", "detail": "Recap image generation" }
     ]
   },

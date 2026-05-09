@@ -30,7 +30,7 @@ export type SparklingDosage =
 // Caudalie 4단계 (Peynaud)
 export type FinishLength = 'short' | 'medium' | 'long' | 'veryLong';
 
-// 타닌 질감 — 02 §3.1 (부드러운 → 거친)
+// 타닌 질감 — 02 §3.1 (부드러운 -> 거친)
 export type TanninTexture =
   | 'silky'
   | 'velvety'
@@ -113,27 +113,32 @@ export type AromaCategoryId =
   | 'oxidized'
   | 'microbiological';
 
+export type AromaCategoryIconKey =
+  | 'cherry' | 'rose' | 'chili' | 'herb' | 'chestnut'
+  | 'honey' | 'wood' | 'leaf' | 'testTube' | 'flame'
+  | 'whisky' | 'dna';
+
 export interface AromaCategory {
   id: AromaCategoryId;
   ko: string;
   en: string;
   color: string;
-  icon: string;
+  icon: AromaCategoryIconKey;
 }
 
 export const AROMA_CATEGORIES: readonly AromaCategory[] = [
-  { id: 'fruity',          ko: '과일',     en: 'Fruity',          color: '#C9A84C', icon: '🍒' },
-  { id: 'floral',          ko: '꽃',       en: 'Floral',          color: '#E8B4D2', icon: '🌹' },
-  { id: 'spicy',           ko: '향신료',   en: 'Spicy',           color: '#A05A3D', icon: '🌶' },
-  { id: 'herbaceous',      ko: '허브·식물', en: 'Herbaceous',      color: '#7A8B5C', icon: '🌿' },
-  { id: 'nutty',           ko: '견과',     en: 'Nutty',           color: '#8B6B47', icon: '🌰' },
-  { id: 'caramelized',     ko: '캐러멜',   en: 'Caramelized',     color: '#6B4423', icon: '🍯' },
-  { id: 'woody',           ko: '나무·오크', en: 'Woody',           color: '#5C3A1E', icon: '🪵' },
-  { id: 'earthy',          ko: '흙',       en: 'Earthy',          color: '#4A3D32', icon: '🍂' },
-  { id: 'chemical',        ko: '화학',     en: 'Chemical',        color: '#6A5D7B', icon: '🧪' },
-  { id: 'pungent',         ko: '자극',     en: 'Pungent',         color: '#8B1A2A', icon: '🔥' },
-  { id: 'oxidized',        ko: '산화·셰리', en: 'Oxidized',        color: '#7B5C3A', icon: '🥃' },
-  { id: 'microbiological', ko: '미생물',   en: 'Microbiological', color: '#5C5C5C', icon: '🧬' },
+  { id: 'fruity',          ko: '과일',     en: 'Fruity',          color: '#C9A84C', icon: 'cherry' },
+  { id: 'floral',          ko: '꽃',       en: 'Floral',          color: '#E8B4D2', icon: 'rose' },
+  { id: 'spicy',           ko: '향신료',   en: 'Spicy',           color: '#A05A3D', icon: 'chili' },
+  { id: 'herbaceous',      ko: '허브·식물', en: 'Herbaceous',      color: '#7A8B5C', icon: 'herb' },
+  { id: 'nutty',           ko: '견과',     en: 'Nutty',           color: '#8B6B47', icon: 'chestnut' },
+  { id: 'caramelized',     ko: '캐러멜',   en: 'Caramelized',     color: '#6B4423', icon: 'honey' },
+  { id: 'woody',           ko: '나무·오크', en: 'Woody',           color: '#5C3A1E', icon: 'wood' },
+  { id: 'earthy',          ko: '흙',       en: 'Earthy',          color: '#4A3D32', icon: 'leaf' },
+  { id: 'chemical',        ko: '화학',     en: 'Chemical',        color: '#6A5D7B', icon: 'testTube' },
+  { id: 'pungent',         ko: '자극',     en: 'Pungent',         color: '#8B1A2A', icon: 'flame' },
+  { id: 'oxidized',        ko: '산화·셰리', en: 'Oxidized',        color: '#7B5C3A', icon: 'whisky' },
+  { id: 'microbiological', ko: '미생물',   en: 'Microbiological', color: '#5C5C5C', icon: 'dna' },
 ] as const;
 
 // ── 어휘 위계 (2·3차) ───────────────────────────────────────────────────────
@@ -301,7 +306,7 @@ export const FAULTS: readonly FaultEntry[] = [
     id: 'volatileAcidity',
     ko: '휘발산 (VA)',
     en: 'Volatile Acidity',
-    cause: 'Acetobacter / 야생효모 → 아세트산·에틸 아세테이트',
+    cause: 'Acetobacter / 야생효모로 아세트산·에틸 아세테이트 생성',
     threshold: '~0.7 g/L 초과 시 결함',
     aroma: '식초·매니큐어·아세톤',
   },
@@ -309,7 +314,7 @@ export const FAULTS: readonly FaultEntry[] = [
     id: 'reduction',
     ko: '환원취 (Reduction)',
     en: 'Reduction',
-    cause: '산소 부족 → H₂S, 메르캅탄 등 황 화합물',
+    cause: '산소 부족으로 H₂S, 메르캅탄 등 황 화합물 형성',
     threshold: 'H₂S ~1 µg/L',
     aroma: '썩은 달걀·양배추·마늘·양파·고무·성냥. 산소 노출로 사라짐 (스크류캡에 빈번)',
   },
@@ -341,7 +346,7 @@ export const FAULTS: readonly FaultEntry[] = [
     id: 'lightstruck',
     ko: '라이트 스트럭 (Lightstruck)',
     en: 'Lightstruck',
-    cause: 'UV 노출 → 메티오닌 분해',
+    cause: 'UV 노출로 메티오닌 분해',
     threshold: '—',
     aroma: '양배추·젖은 양털·삶은 채소. 투명병 샴페인 위험',
   },
@@ -461,7 +466,7 @@ export const IMPACT_COMPOUNDS: readonly ImpactEntry[] = [
     name: '4-Mercapto-4-methylpentan-2-one (4MMP)',
     chemistry: 'Volatile Thiol',
     threshold: '~0.8 ng/L',
-    note: '회양목·박스나무 (저농도) → 고양이 오줌 (고농도). SB 마커',
+    note: '회양목·박스나무 (저농도)에서 고양이 오줌 (고농도)으로. SB 마커',
     primaryFor: [],
     foundIn: ['Sauvignon Blanc'],
   },
@@ -946,7 +951,7 @@ export const SPARKLING_METHOD_LABELS: Record<SparklingMethod, { ko: string; en: 
   traditional: { ko: 'Méthode Traditionnelle', en: 'Méthode Traditionnelle', note: '병 안 2차 발효, 자가분해 풍미. Champagne·Cava·Crémant·Franciacorta 표준' },
   charmat:     { ko: 'Charmat (Tank)',         en: 'Charmat (Tank)',         note: '대형 압력 탱크 발효. 신선·과실미. Prosecco·Lambrusco' },
   asti:        { ko: 'Asti Method',            en: 'Asti Method',            note: '1회 탱크 발효. 낮은 알코올+잔당. Asti DOCG·Moscato d\'Asti' },
-  ancestral:   { ko: 'Ancestral (Pét-Nat)',    en: 'Ancestral (Pét-Nat)',    note: '1차 발효 미완료 상태로 병입 → 자연 종결. 침전물 있음' },
+  ancestral:   { ko: 'Ancestral (Pét-Nat)',    en: 'Ancestral (Pét-Nat)',    note: '1차 발효 미완료 상태로 병입 후 자연 종결. 침전물 있음' },
   unknown:     { ko: '미상',                    en: 'Unknown',                note: '제조 방식 미상' },
 };
 
@@ -999,7 +1004,7 @@ export function matchOpeningGuide(meta: {
   return null;
 }
 
-// ── 카우달리 → 비교 한 줄 ───────────────────────────────────────────────────
+// ── 카우달리 -> 비교 한 줄 ───────────────────────────────────────────────────
 
 export function caudalieComparison(c: number, locale: Locale = 'ko'): string {
   if (locale === 'en') {
@@ -1016,7 +1021,7 @@ export function caudalieComparison(c: number, locale: Locale = 'ko'): string {
   return '보졸레 누보, 가벼운 무스카데';
 }
 
-// ── 카우달리 → 카테고리 ────────────────────────────────────────────────────
+// ── 카우달리 -> 카테고리 ────────────────────────────────────────────────────
 
 export function caudalieCategory(c: number): FinishLength {
   if (c < 3)   return 'short';
@@ -1025,7 +1030,7 @@ export function caudalieCategory(c: number): FinishLength {
   return 'veryLong';
 }
 
-// ── Lexicon 인덱스 (id → entry) ─────────────────────────────────────────────
+// ── Lexicon 인덱스 (id -> entry) ─────────────────────────────────────────────
 
 export const LEX_BY_ID: Record<string, LexEntry> = AROMA_LEXICON.reduce(
   (acc, entry) => {

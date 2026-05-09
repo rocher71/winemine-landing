@@ -1,12 +1,36 @@
 'use client';
 
 // Beginner Note — 입문자용 단순화 모드
-// WSET 5단계 → 3단계, 어휘 200개 → 8개 큰 카테고리, 카우달리·결함·자동묘사 X
+// WSET 5단계 -> 3단계, 어휘 200개 -> 8개 큰 카테고리, 카우달리·결함·자동묘사 X
 // 리서치 출처: 사내 01·02·03_research.md + 한국 와인 매체(미슐랭/와인21/소믈리에타임즈) 권장 수준
 
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
 import type { FormVariant } from '@/lib/tasting-note-lexicon';
+import {
+  StrawberryIcon,
+  LemonIcon,
+  PeachIcon,
+  RoseIcon,
+  ChiliIcon,
+  HoneyJarIcon,
+  LeafIcon,
+  BreadIcon,
+  StarEyesFaceIcon,
+  SmileFaceIcon,
+  ThinkingFaceIcon,
+  StopwatchIcon,
+  ClockIcon,
+  WineGlassRedIcon,
+  StarFilledIcon,
+  StarBurstIcon,
+  LightbulbIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  type IconProps,
+} from '@/components/icons/wine-icons';
+
+type IconComponent = ComponentType<IconProps>;
 
 const GOLD = '#C9A84C';
 const WINE_RED = '#8B1A2A';
@@ -19,16 +43,21 @@ type Level = 'low' | 'mid' | 'high';
 type Impression = 'love' | 'ok' | 'meh';
 type FinishLevel = 'short' | 'medium' | 'long';
 
-const AROMA_CARDS: { id: string; emoji: string; appliesTo: FormVariant[] }[] = [
-  { id: 'berry',      emoji: '🍓', appliesTo: ['red', 'sparkling'] },
-  { id: 'citrus',     emoji: '🍋', appliesTo: ['white', 'sparkling'] },
-  { id: 'stoneFruit', emoji: '🍑', appliesTo: ['white', 'sparkling'] },
-  { id: 'floral',     emoji: '🌹', appliesTo: ['white', 'red', 'sparkling'] },
-  { id: 'spice',      emoji: '🌶', appliesTo: ['red'] },
-  { id: 'sweet',      emoji: '🍯', appliesTo: ['white', 'red', 'sparkling'] },
-  { id: 'earth',      emoji: '🍂', appliesTo: ['red'] },
-  { id: 'yeast',      emoji: '🥖', appliesTo: ['sparkling', 'white'] },
+const AROMA_CARDS: { id: string; Icon: IconComponent; appliesTo: FormVariant[] }[] = [
+  { id: 'berry',      Icon: StrawberryIcon, appliesTo: ['red', 'sparkling'] },
+  { id: 'citrus',     Icon: LemonIcon,      appliesTo: ['white', 'sparkling'] },
+  { id: 'stoneFruit', Icon: PeachIcon,      appliesTo: ['white', 'sparkling'] },
+  { id: 'floral',     Icon: RoseIcon,       appliesTo: ['white', 'red', 'sparkling'] },
+  { id: 'spice',      Icon: ChiliIcon,      appliesTo: ['red'] },
+  { id: 'sweet',      Icon: HoneyJarIcon,   appliesTo: ['white', 'red', 'sparkling'] },
+  { id: 'earth',      Icon: LeafIcon,       appliesTo: ['red'] },
+  { id: 'yeast',      Icon: BreadIcon,      appliesTo: ['sparkling', 'white'] },
 ];
+
+const AROMA_CARD_BY_ID: Record<string, IconComponent> = AROMA_CARDS.reduce((acc, c) => {
+  acc[c.id] = c.Icon;
+  return acc;
+}, {} as Record<string, IconComponent>);
 
 interface Props {
   variant: FormVariant; // 'blind'은 beginner에서 비활성
@@ -95,11 +124,12 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
         <CardLabel>{t('tastingNote.beginner.step.impression')}</CardLabel>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>
           {([
-            { id: 'love', emoji: '🤩' },
-            { id: 'ok',   emoji: '🙂' },
-            { id: 'meh',  emoji: '🤔' },
-          ] as { id: Impression; emoji: string }[]).map(opt => {
+            { id: 'love', Icon: StarEyesFaceIcon },
+            { id: 'ok',   Icon: SmileFaceIcon },
+            { id: 'meh',  Icon: ThinkingFaceIcon },
+          ] as { id: Impression; Icon: IconComponent }[]).map(opt => {
             const active = impression === opt.id;
+            const Icon = opt.Icon;
             return (
               <button
                 key={opt.id}
@@ -118,10 +148,13 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   alignItems: 'center',
                   transition: 'background 200ms ease, border-color 200ms ease, transform 200ms ease',
                   transform: active ? 'scale(1.03)' : 'scale(1)',
+                  color: active ? GOLD : CREAM,
                 }}
               >
-                <span style={{ fontSize: 36 }} aria-hidden>{opt.emoji}</span>
-                <span style={{ fontSize: 13, fontWeight: 600, color: active ? GOLD : CREAM }}>
+                <span aria-hidden style={{ display: 'inline-flex' }}>
+                  <Icon size={36} />
+                </span>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>
                   {t(`tastingNote.beginner.impression.${opt.id}`)}
                 </span>
               </button>
@@ -228,7 +261,9 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   transition: 'background 200ms ease, border-color 200ms ease',
                 }}
               >
-                <span style={{ fontSize: 28 }} aria-hidden>{c.emoji}</span>
+                <span aria-hidden style={{ display: 'inline-flex', color: active ? WINE_RED : '#9B8B7A' }}>
+                  <c.Icon size={28} />
+                </span>
                 <span style={{ fontSize: 13, fontWeight: 600, color: active ? CREAM : '#D4C5B0' }}>
                   {t(`tastingNote.beginner.aromaCard.${c.id}`)}
                 </span>
@@ -262,8 +297,10 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   gap: 4,
                 }}
               >
-                <span style={{ fontSize: 20, color: active ? GOLD : MUTED }}>
-                  {opt === 'short' ? '⏱' : opt === 'medium' ? '🕰' : '🍷'}
+                <span aria-hidden style={{ display: 'inline-flex', color: active ? GOLD : MUTED }}>
+                  {opt === 'short' ? <StopwatchIcon size={20} />
+                    : opt === 'medium' ? <ClockIcon size={20} />
+                    : <WineGlassRedIcon size={20} />}
                 </span>
                 <span style={{ fontSize: 12, fontWeight: 600, color: active ? CREAM : '#D4C5B0' }}>
                   {t(`tastingNote.beginner.finishOption.${opt}`)}
@@ -298,14 +335,16 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   background: filled ? WINE_RED : 'transparent',
                   border: `2px solid ${filled ? WINE_RED : BORDER}`,
                   cursor: 'pointer',
-                  fontSize: 22,
                   color: filled ? CREAM : MUTED,
                   fontFamily: 'inherit',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   transition: 'background 180ms ease, transform 180ms ease',
                   transform: filled ? 'scale(1.04)' : 'scale(1)',
                 }}
               >
-                ★
+                <StarFilledIcon size={20} filled={filled} />
               </button>
             );
           })}
@@ -377,8 +416,15 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
             alignItems: 'center',
           }}
         >
-          <span>{t('tastingNote.beginner.tipTitle')}</span>
-          <span>{tipOpen ? '▲' : '▼'}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <span aria-hidden style={{ display: 'inline-flex' }}>
+              <LightbulbIcon size={14} />
+            </span>
+            {t('tastingNote.beginner.tipTitle')}
+          </span>
+          <span aria-hidden style={{ display: 'inline-flex' }}>
+            {tipOpen ? <ArrowUpIcon size={12} /> : <ArrowDownIcon size={12} />}
+          </span>
         </button>
         {tipOpen && (
           <div
@@ -507,7 +553,11 @@ function SummaryCard({
   memo: string;
 }) {
   const { t } = useLocale();
-  const impEmoji: Record<Impression, string> = { love: '🤩', ok: '🙂', meh: '🤔' };
+  const ImpIcon: Record<Impression, IconComponent> = {
+    love: StarEyesFaceIcon,
+    ok: SmileFaceIcon,
+    meh: ThinkingFaceIcon,
+  };
   return (
     <div
       style={{
@@ -527,7 +577,12 @@ function SummaryCard({
           marginBottom: 10,
         }}
       >
-        ✦ {t('tastingNote.beginner.summary')}
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span aria-hidden style={{ color: GOLD, display: 'inline-flex' }}>
+            <StarBurstIcon size={12} />
+          </span>
+          {t('tastingNote.beginner.summary')}
+        </span>
       </div>
       <div
         style={{
@@ -545,7 +600,14 @@ function SummaryCard({
         {producer}
       </div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-        {impression && <Tag>{impEmoji[impression]} {t(`tastingNote.beginner.impression.${impression}`)}</Tag>}
+        {impression && (
+          <Tag>
+            <span aria-hidden style={{ display: 'inline-flex', marginRight: 4 }}>
+              {(() => { const I = ImpIcon[impression]; return <I size={12} />; })()}
+            </span>
+            {t(`tastingNote.beginner.impression.${impression}`)}
+          </Tag>
+        )}
         {sweetness && <Tag>{t('tastingNote.beginner.tasteLabel.sweetness')} · {t(`tastingNote.beginner.scale.sweet${cap(sweetness)}`)}</Tag>}
         {acidity && <Tag>{t('tastingNote.beginner.tasteLabel.acidity')} · {t(`tastingNote.beginner.scale.acid${cap(acidity)}`)}</Tag>}
         {body && <Tag>{t('tastingNote.beginner.tasteLabel.body')} · {t(`tastingNote.beginner.scale.body${cap(body)}`)}</Tag>}
@@ -555,17 +617,28 @@ function SummaryCard({
       </div>
       {aromas.length > 0 && (
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
-          {aromas.map(id => (
-            <Tag key={id} accent>
-              {AROMA_CARDS.find(c => c.id === id)?.emoji} {t(`tastingNote.beginner.aromaCard.${id}`)}
-            </Tag>
-          ))}
+          {aromas.map(id => {
+            const Icon = AROMA_CARD_BY_ID[id];
+            return (
+              <Tag key={id} accent>
+                {Icon && (
+                  <span aria-hidden style={{ display: 'inline-flex', marginRight: 4 }}>
+                    <Icon size={12} />
+                  </span>
+                )}
+                {t(`tastingNote.beginner.aromaCard.${id}`)}
+              </Tag>
+            );
+          })}
         </div>
       )}
       {rating > 0 && (
-        <div style={{ marginBottom: memo ? 12 : 0, color: WINE_RED, fontSize: 18 }}>
-          {'★'.repeat(rating)}
-          <span style={{ color: BORDER }}>{'★'.repeat(5 - rating)}</span>
+        <div style={{ marginBottom: memo ? 12 : 0, display: 'flex', gap: 2 }}>
+          {[1, 2, 3, 4, 5].map(i => (
+            <span key={i} aria-hidden style={{ display: 'inline-flex', color: i <= rating ? WINE_RED : BORDER }}>
+              <StarFilledIcon size={18} filled={i <= rating} />
+            </span>
+          ))}
         </div>
       )}
       {memo && (

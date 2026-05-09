@@ -1,10 +1,11 @@
 'use client';
 
-// Auto Description — 입력 종합 → 자동 묘사 문장 생성 (디바운스 200ms)
+// Auto Description — 입력 종합 -> 자동 묘사 문장 생성 (디바운스 200ms)
 // spec §auto_description
 
 import { useEffect, useState } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
+import { StarBurstIcon, ArrowRightIcon } from '@/components/icons/wine-icons';
 import {
   DESCRIPTION_TEMPLATES,
   LEX_BY_ID,
@@ -76,8 +77,9 @@ export default function AutoDescription({ variant, meta, aroma, palate, finish, 
         background: 'rgba(201,168,76,0.04)',
       }}
     >
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', color: GOLD, marginBottom: 10, textTransform: 'uppercase' }}>
-        ✦ {t('tastingNote.autoDescription.title')}
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', color: GOLD, marginBottom: 10, textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <span aria-hidden style={{ display: 'inline-flex' }}><StarBurstIcon size={12} /></span>
+        {t('tastingNote.autoDescription.title')}
       </div>
       <p
         style={{
@@ -109,7 +111,10 @@ export default function AutoDescription({ variant, meta, aroma, palate, finish, 
               fontFamily: 'inherit',
             }}
           >
-            {t('tastingNote.autoDescription.saveCta')} →
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              {t('tastingNote.autoDescription.saveCta')}
+              <ArrowRightIcon size={14} aria-hidden />
+            </span>
           </button>
         </div>
       )}

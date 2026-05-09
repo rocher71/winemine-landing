@@ -1,9 +1,15 @@
 'use client';
 
-import { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import { useState, useRef, useLayoutEffect, useEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
+import {
+  WineGlassRedIcon,
+  WineGlassWhiteIcon,
+  PinkRoseIcon,
+  StarFilledIcon,
+} from '@/components/icons/wine-icons';
 
 const DEPT_URL = '/france-departments.json';
 const GOLD = '#f0c876';
@@ -15,7 +21,7 @@ type WineType = 'red' | 'white' | 'rosé';
 type Cote = 'Côte de Nuits' | 'Côte de Beaune' | 'Chablis' | 'Côte Chalonnaise' | 'Mâconnais';
 type ColorFilter = 'all' | WineType;
 
-// 위계 드릴다운: 부르고뉴 → 꼬뜨 → 마을 → 등급 → (와인)
+// 위계 드릴다운: 부르고뉴 -> 꼬뜨 -> 마을 -> 등급 -> (와인)
 type DrillLevel =
   | { kind: 'overview' }
   | { kind: 'cote'; coteId: Cote }
@@ -86,13 +92,13 @@ const CRU_META: Record<Cru, { ko: string; chip: string; color: string; bg: strin
   'Village':   { ko: '빌라주',       chip: 'V',   color: '#9098A8', bg: 'rgba(107,114,128,0.16)',border: 'rgba(107,114,128,0.45)' },
   'Régional':  { ko: '레지오날',     chip: 'R',   color: '#B8A07A', bg: 'rgba(168,149,111,0.14)', border: 'rgba(168,149,111,0.42)'  },
 };
-const WINE_TYPE_META: Record<WineType, { ko: string; emoji: string; color: string }> = {
-  'red':   { ko: '레드',   emoji: '🍷', color: '#A8233A' },
-  'white': { ko: '화이트', emoji: '🥂', color: '#D4C065' },
-  'rosé':  { ko: '로제',   emoji: '🌸', color: '#D97A8A' },
+const WINE_TYPE_META: Record<WineType, { ko: string; color: string }> = {
+  'red':   { ko: '레드',   color: '#A8233A' },
+  'white': { ko: '화이트', color: '#D4C065' },
+  'rosé':  { ko: '로제',   color: '#D97A8A' },
 };
 
-// 꼬뜨(광역) 메타 — 드릴다운 Level 0 → 1
+// 꼬뜨(광역) 메타 — 드릴다운 Level 0 -> 1
 const COTES: CoteData[] = [
   { id: 'Côte de Nuits',    nameKo: '꼬뜨 드 뉘',    zoom: 4.8, center: [4.97, 47.18], character: '피노 누아의 본거지. 부르고뉴 최고급 레드 거의 전부.' },
   { id: 'Côte de Beaune',   nameKo: '꼬뜨 드 본',    zoom: 4.5, center: [4.80, 46.95], character: '화이트 왕국 + 우아한 레드. 몽라셰·뫼르소·볼네.' },
@@ -101,9 +107,9 @@ const COTES: CoteData[] = [
   { id: 'Mâconnais',        nameKo: '마코네',        zoom: 4.8, center: [4.73, 46.30], character: '따뜻한 화이트. Pouilly-Fuissé(2020년 1er Cru 승격)·Saint-Véran.' },
 ];
 
-// 마을(코뮌) 메타 — 드릴다운 Level 1 → 2. id는 Wine.village와 일치시킴
+// 마을(코뮌) 메타 — 드릴다운 Level 1 -> 2. id는 Wine.village와 일치시킴
 const COMMUNES: CommuneData[] = [
-  // Côte de Nuits (북→남)
+  // Côte de Nuits (북->남)
   { id: 'Marsannay',           name: 'Marsannay',           nameKo: '막사네',         cote: 'Côte de Nuits',  coords: [4.972, 47.310], character: '꼬뜨 드 뉘 최북단. 가벼운 피노 + 부르고뉴 유일 빌라주급 로제 AOC.', hasGrandCru: false, notableNote: '부르고뉴 유일 마을명 로제 AOC (1987)' },
   { id: 'Fixin',               name: 'Fixin',               nameKo: '픽생',           cote: 'Côte de Nuits',  coords: [4.987, 47.265], character: '막사네 바로 남쪽. 견고하고 흙내음 강한 레드, 잘 알려지지 않아 가성비.', hasGrandCru: false },
   { id: 'Gevrey-Chambertin',   name: 'Gevrey-Chambertin',   nameKo: '주브레-샹베르탱', cote: 'Côte de Nuits',  coords: [5.003, 47.226], character: '묵직, 남성적, 검은 과실. 샹베르탱·클로 드 베즈.', hasGrandCru: true },
@@ -112,7 +118,7 @@ const COMMUNES: CommuneData[] = [
   { id: 'Vougeot',             name: 'Vougeot',             nameKo: '부조',           cote: 'Côte de Nuits',  coords: [4.970, 47.196], character: '클로 드 부조 50ha를 80여 명이 공유.',                            hasGrandCru: true },
   { id: 'Vosne-Romanée',       name: 'Vosne-Romanée',       nameKo: '본-로마네',      cote: 'Côte de Nuits',  coords: [4.975, 47.171], character: '이국적, 향신료, 깊이. 로마네-콩티·라 타슈·리슈부르.',          hasGrandCru: true },
   { id: 'Nuits-Saint-Georges', name: 'Nuits-Saint-Georges', nameKo: '뉘-생-조르주',   cote: 'Côte de Nuits',  coords: [4.959, 47.109], character: '견고, 광물성. 그랑 크뤼는 없지만 1er Cru 절대 강자.',           hasGrandCru: false },
-  // Côte de Beaune (북→남)
+  // Côte de Beaune (북->남)
   { id: 'Aloxe-Corton',        name: 'Aloxe-Corton',        nameKo: '알록스-코르통',  cote: 'Côte de Beaune', coords: [4.857, 47.062], character: '코트 드 본 최북단. Corton(레드)·Corton-Charlemagne(화이트) — 코트 드 본 유일 GC.', hasGrandCru: true },
   { id: 'Beaune',              name: 'Beaune',              nameKo: '본',             cote: 'Côte de Beaune', coords: [4.840, 47.024], character: '부르고뉴 와인 무역의 수도. 그랑 크뤼는 없으나 1er Cru가 다수.',  hasGrandCru: false },
   { id: 'Pommard',             name: 'Pommard',             nameKo: '포마르',         cote: 'Côte de Beaune', coords: [4.785, 46.934], character: '강건, 흙내음, 검은 과실. 코트 드 본의 가장 남성적 레드. 레 뤼지엥·레 제프노.', hasGrandCru: false, notableNote: '레 뤼지엥은 GC급 1er Cru로 자주 회자' },
@@ -124,17 +130,17 @@ const COMMUNES: CommuneData[] = [
   { id: 'Bourgogne',           name: 'Bourgogne',           nameKo: '부르고뉴 광역',  cote: 'Côte de Beaune', coords: [4.840, 47.024], character: 'Régional AOC. 좋은 도멘의 부르고뉴는 가성비 보석.',              hasGrandCru: false },
   // Chablis
   { id: 'Chablis',             name: 'Chablis',             nameKo: '샤블리',         cote: 'Chablis',        coords: [3.801, 47.821], character: '굴껍데기·라임·부싯돌. 100% 샤르도네 미네랄의 정점.',             hasGrandCru: true },
-  // Côte Chalonnaise (북→남)
+  // Côte Chalonnaise (북->남)
   { id: 'Bouzeron',            name: 'Bouzeron',            nameKo: '부즈롱',         cote: 'Côte Chalonnaise', coords: [4.738, 46.882], character: '알리고테 단일 품종 AOC — 부르고뉴 유일.',                       hasGrandCru: false, notableNote: '부르고뉴 유일 알리고테 마을 AOC' },
   { id: 'Rully',               name: 'Rully',               nameKo: '륄리',           cote: 'Côte Chalonnaise', coords: [4.755, 46.864], character: '화이트 중심 + 크레망 베이스. 23개 1er Cru 클리마.',                hasGrandCru: false },
   { id: 'Mercurey',            name: 'Mercurey',            nameKo: '메르퀴레',       cote: 'Côte Chalonnaise', coords: [4.718, 46.829], character: '코트 샬로네즈 최대 마을, 레드 중심. 32개 1er Cru.',                hasGrandCru: false },
   { id: 'Givry',               name: 'Givry',               nameKo: '지브리',         cote: 'Côte Chalonnaise', coords: [4.745, 46.776], character: '레드 중심. 헨리 4세가 즐긴 마을로 전해짐.',                       hasGrandCru: false, notableNote: '헨리 4세의 와인' },
-  // Mâconnais (북→남)
+  // Mâconnais (북->남)
   { id: 'Saint-Véran',         name: 'Saint-Véran',         nameKo: '생-베랑',        cote: 'Mâconnais',       coords: [4.732, 46.275], character: 'Pouilly-Fuissé 인근. 따뜻하고 풍성한 샤르도네, 가성비.',           hasGrandCru: false },
   { id: 'Pouilly-Fuissé',      name: 'Pouilly-Fuissé',      nameKo: '푸이-퓌세',      cote: 'Mâconnais',       coords: [4.737, 46.286], character: '마코네 최상급 화이트. 2020년 22개 클리마가 1er Cru 승격(마코네 최초).', hasGrandCru: false, notableNote: '2020년 마코네 최초 1er Cru 승격' },
 ];
 
-// Wine.subregionId → Cote 매핑 (드릴다운 그룹핑용)
+// Wine.subregionId -> Cote 매핑 (드릴다운 그룹핑용)
 const SUBREGION_TO_COTE: Record<string, Cote> = {
   'cote-nuits': 'Côte de Nuits',
   'cote-beaune': 'Côte de Beaune',
@@ -725,7 +731,12 @@ function CommuneCard({ data, onClick, colorFilter, active }: {
       </div>
       <div style={{ fontSize: 11, color: '#9B8B7A', lineHeight: 1.45, marginBottom: 6 }}>{data.character}</div>
       {data.notableNote && (
-        <div style={{ fontSize: 10.5, color: GOLD, fontStyle: 'italic' as const, marginBottom: 6 }}>★ {data.notableNote}</div>
+        <div style={{ fontSize: 10.5, color: GOLD, fontStyle: 'italic' as const, marginBottom: 6, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          <span aria-hidden style={{ display: 'inline-flex' }}>
+            <StarFilledIcon size={11} filled />
+          </span>
+          {data.notableNote}
+        </div>
       )}
       {wines.length > 0 && (
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const, marginTop: 4 }}>
@@ -807,11 +818,11 @@ function Breadcrumb({ drill, onDrill, mobile }: {
 function ColorToggle({ value, onChange, mobile }: {
   value: ColorFilter; onChange: (v: ColorFilter) => void; mobile?: boolean;
 }) {
-  const opts: { v: ColorFilter; label: string }[] = [
+  const opts: { v: ColorFilter; label: string; icon?: ReactNode }[] = [
     { v: 'all',   label: '전체' },
-    { v: 'red',   label: '🍷 레드' },
-    { v: 'white', label: '🥂 화이트' },
-    { v: 'rosé',  label: '🌸 로제' },
+    { v: 'red',   label: '레드',   icon: <WineGlassRedIcon size={12} /> },
+    { v: 'white', label: '화이트', icon: <WineGlassWhiteIcon size={12} /> },
+    { v: 'rosé',  label: '로제',   icon: <PinkRoseIcon size={12} /> },
   ];
   return (
     <div style={{
@@ -833,7 +844,11 @@ function ColorToggle({ value, onChange, mobile }: {
             fontFamily: 'inherit',
             transition: 'all 150ms',
             whiteSpace: 'nowrap' as const,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
           }}>
+            {o.icon && <span aria-hidden style={{ display: 'inline-flex' }}>{o.icon}</span>}
             {o.label}
           </button>
         );
@@ -899,8 +914,12 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
                   padding: '10px 14px', background: 'rgba(240,200,118,0.08)',
                   border: '1px solid rgba(240,200,118,0.3)', borderRadius: 12,
                   fontSize: 11.5, color: GOLD, fontStyle: 'italic' as const,
+                  display: 'flex', alignItems: 'center', gap: 6,
                 }}>
-                  ★ {cm.notableNote}
+                  <span aria-hidden style={{ display: 'inline-flex', flexShrink: 0 }}>
+                    <StarFilledIcon size={11} filled />
+                  </span>
+                  {cm.notableNote}
                 </div>
               )}
               {CRU_ORDER.map(cru => {

@@ -24,7 +24,7 @@ export default function Home() {
       {/* 1. Hero — 전 세계 지도 슬라이딩 배경 */}
       <HeroSection onOpenModal={openModal} />
 
-      {/* 2. Wine Discovery — 초보자 친화 스크롤 스토리텔링 (라벨 → 입맛 → Recap → 부르고뉴 전환) */}
+      {/* 2. Wine Discovery — 초보자 친화 스크롤 스토리텔링 (라벨 - 입맛 - Recap - 부르고뉴 전환) */}
       <WineDiscoverySection />
 
       {/* 3. 부르고뉴 드릴다운 — AI가 자동 분류한 내 와인 컬렉션 */}
