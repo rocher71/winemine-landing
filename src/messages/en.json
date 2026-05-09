@@ -169,6 +169,23 @@
     },
     "outro": "When 50 bottles fill your cellar, we'll line them up for you in a single thread.",
     "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2.",
+    "playground": {
+      "pageTitle": "Tasting Note Playground",
+      "pageIntro": "Full interactive demo — aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline and auto description, all live. Inputs are never saved anywhere.",
+      "backToHome": "← Back to home",
+      "stepCapture": "1 · Label Capture",
+      "stepAroma": "2 · Aroma",
+      "stepPalate": "3 · Palate",
+      "stepFinish": "4 · Finish",
+      "stepFaults": "5 · Fault Check",
+      "stepEvolution": "6 · Opening Timeline",
+      "stepRating": "7 · Rating",
+      "stepBlind": "8 · Blind",
+      "demoNote": "Inputs on this page are never saved. They disappear when you leave.",
+      "aromaHint": "Hover over a word to see impact compound info.",
+      "finishHint": "Time how long flavor lingers after the last sip.",
+      "ratingLabel": "Rating"
+    },
     "mockup": {
       "title": {
         "white": "WHITE WINE TASTING NOTES",

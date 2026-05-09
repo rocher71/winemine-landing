@@ -169,6 +169,23 @@
     },
     "outro": "당신의 셀러에 50병이 쌓인 어느 날, 우리는 그 50병을 한 줄로 정리해 드립니다.",
     "placeholder": "{variant} 양식을 선택했습니다 — Day 2 이후 mockup·부케 휠·슬라이더가 채워집니다.",
+    "playground": {
+      "pageTitle": "테이스팅 노트 플레이그라운드",
+      "pageIntro": "전체 인터랙티브 데모 — 부케 휠·WSET 슬라이더·카우달리 측정·결함 점검·오프닝 타임라인·자동 묘사 모두 살아있는 환경에서 체험. 입력은 어디에도 저장되지 않습니다.",
+      "backToHome": "← 메인으로 돌아가기",
+      "stepCapture": "1 · 라벨 인식",
+      "stepAroma": "2 · 아로마",
+      "stepPalate": "3 · 미각",
+      "stepFinish": "4 · 피니시",
+      "stepFaults": "5 · 결함 점검",
+      "stepEvolution": "6 · 오프닝 타임라인",
+      "stepRating": "7 · 평가",
+      "stepBlind": "8 · 블라인드",
+      "demoNote": "이 페이지의 입력은 어디에도 저장되지 않습니다. 페이지를 떠나면 사라집니다.",
+      "aromaHint": "어휘를 hover하면 임팩트 화합물 정보가 나타납니다.",
+      "finishHint": "마지막 모금 후 풍미가 사라지는 시간을 측정해보세요.",
+      "ratingLabel": "별점"
+    },
     "mockup": {
       "title": {
         "white": "WHITE WINE TASTING NOTES",

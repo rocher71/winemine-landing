@@ -9,6 +9,7 @@
 // spec: _workspace/tasting-note-section-spec.md
 
 import { useState, type ReactNode } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
 import {
@@ -134,10 +135,30 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           }}
         >
           <p style={{ marginBottom: 24, color: '#9B8B7A' }}>{t('tastingNote.outro')}</p>
-          {onOpenModal && (
-            <button
-              type="button"
-              onClick={onOpenModal}
+          <div style={{ display: 'inline-flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {onOpenModal && (
+              <button
+                type="button"
+                onClick={onOpenModal}
+                style={{
+                  background: '#8B1A2A',
+                  border: '1px solid #8B1A2A',
+                  color: '#F5F0E8',
+                  padding: '12px 28px',
+                  borderRadius: 28,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'background 200ms ease',
+                }}
+              >
+                {t('tastingNote.cta.waitlist')}
+              </button>
+            )}
+            <Link
+              href="/tasting-note-playground"
               style={{
                 background: 'transparent',
                 border: '1px solid #C9A84C',
@@ -147,14 +168,14 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
                 fontSize: 14,
                 fontWeight: 600,
                 letterSpacing: '0.02em',
-                cursor: 'pointer',
                 fontFamily: 'inherit',
+                textDecoration: 'none',
                 transition: 'background 200ms ease',
               }}
             >
-              {t('tastingNote.cta.waitlist')}
-            </button>
-          )}
+              {t('tastingNote.playground.pageTitle')} →
+            </Link>
+          </div>
         </div>
       </div>
     </section>
