@@ -168,7 +168,105 @@
       "waitlist": "Join the waitlist"
     },
     "outro": "When 50 bottles fill your cellar, we'll line them up for you in a single thread.",
-    "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2."
+    "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2.",
+    "mockup": {
+      "title": {
+        "white": "WHITE WINE TASTING NOTES",
+        "red": "RED WINE TASTING NOTES",
+        "sparkling": "CHAMPAGNE TASTING NOTES",
+        "blind": "BLIND TASTING SHEET"
+      },
+      "subtitle": {
+        "journal": "A page from your cellar journal",
+        "blind": "What is in the glass?"
+      },
+      "section": {
+        "wine": "Wine",
+        "aroma": "Aroma",
+        "palate": "Palate",
+        "bubbles": "Bubbles · Mousse",
+        "visual": "Visual",
+        "finish": "Finish",
+        "overall": "Overall Impression",
+        "rating": "Rating",
+        "guess": "Guess The Wine",
+        "score": "Score"
+      },
+      "meta": {
+        "vintage": "Vintage",
+        "region": "Region",
+        "appellation": "Appellation",
+        "grape": "Grape",
+        "price": "Price",
+        "nv": "NV"
+      },
+      "aromaGroup": {
+        "citrus": "Citrus",
+        "treeFruit": "Tree Fruit",
+        "tropical": "Tropical",
+        "floral": "Floral",
+        "mineral": "Mineral",
+        "yeastOak": "Yeast / Oak",
+        "redBerry": "Red Berry",
+        "blackBerry": "Black Berry",
+        "spicy": "Spicy",
+        "earthLeather": "Earth · Leather",
+        "oak": "Oak",
+        "autolytic": "Autolytic",
+        "nutty": "Nutty",
+        "earth": "Earth"
+      },
+      "intensity": {
+        "light": "Light",
+        "mediumMinus": "Medium−",
+        "medium": "Medium",
+        "pronounced": "Pronounced"
+      },
+      "bubbles": {
+        "size": "Size",
+        "persistence": "Persistence",
+        "mousse": "Mousse",
+        "bar": "bar"
+      },
+      "dosage": "Dosage",
+      "visual": {
+        "hue": "Garnet · Deep",
+        "depth": "Depth",
+        "clarity": "Clarity",
+        "legs": "Legs",
+        "deep": "Deep",
+        "clear": "Clear",
+        "thick": "Thick"
+      },
+      "tannin": {
+        "texture": "Texture",
+        "ripe": "Ripe",
+        "unripe": "Unripe",
+        "overripe": "Overripe"
+      },
+      "caudalies": "caudalies",
+      "guessRow": {
+        "guess": "Guess",
+        "answer": "Answer"
+      },
+      "guessLabel": {
+        "grape": "Grape",
+        "region": "Region",
+        "vintage": "Vintage",
+        "price": "Price"
+      },
+      "score": {
+        "master": "Master Sommelier level",
+        "matched": "{n} / 4 fields matched"
+      },
+      "statusTime": "9:41",
+      "fakeDate": "2026.05.09",
+      "overall": {
+        "white": "{vintage} {region}, {producer}. Pronounced nose with lemon and lime, backed by acacia, hazelnut and flint. Medium+ body with crisp acidity and dry sweetness. Persistent, mineral-driven finish.",
+        "red": "{vintage} {region}, {producer}. Pronounced nose with black cherry and violet, backed by leather, tobacco leaf and forest floor. Medium+ body with crisp acidity. Fine-grained tannins. Persistent, elegant finish.",
+        "sparkling": "{producer}'s {wineName}. Pronounced nose with brioche and hazelnut, backed by apple, honeysuckle and butter. Fine bubbles rise persistently into a creamy mousse. Complex, seamless finish."
+      }
+    }
   },
 
   "franceWineDetail": {

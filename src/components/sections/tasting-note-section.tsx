@@ -2,8 +2,9 @@
 
 // Tasting Note Section
 // 4종 양식 (White/Red/Sparkling/Blind) 의 "이미 작성된" 정적 mockup 전시.
-// 사용자는 4탭만 전환하며, mockup 안의 모든 필드는 인터랙티브하지 않다 —
-// "앱을 쓰면 이런 식으로 기록할 수 있다"를 한눈에 보여주는 것이 목적.
+// 사용자는 4탭만 전환하며, mockup 안의 모든 필드는 인터랙티브하지 않다.
+// 모든 텍스트는 useLocale() 의 t() 또는 lex[locale] 로 분기.
+// 폰 베젤은 iPhone 14/15 스타일 (Dynamic Island + status bar + home indicator).
 //
 // spec: _workspace/tasting-note-section-spec.md
 
@@ -34,8 +35,6 @@ const VARIANTS: { id: FormVariant; icon: string }[] = [
   { id: 'blind',     icon: '🎯' },
 ];
 
-const FAKE_DATE = '2026.05.09';
-
 // 디자인 토큰
 const PAPER_BG = '#F5F0E8';
 const PAPER_INK = '#1A0A1E';
@@ -44,6 +43,12 @@ const PAPER_INK_VERY_DIM = 'rgba(26,10,30,0.18)';
 const PAPER_LINE = 'rgba(26,10,30,0.10)';
 const GOLD = '#C9A84C';
 const WINE_RED = '#8B1A2A';
+
+// 폰 mockup 크기
+const PHONE_WIDTH = 392;
+const PHONE_BEZEL = 12;
+const PHONE_INNER_RADIUS = 44;
+const STATUS_BAR_HEIGHT = 48;
 
 interface Props {
   onOpenModal?: () => void;
@@ -64,7 +69,6 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
       }}
     >
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,10 +105,8 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           </p>
         </motion.div>
 
-        {/* Form Tab Bar */}
         <FormTabBar active={variant} onSelect={setVariant} t={t} />
 
-        {/* Phone Mockup with full mock tasting note */}
         <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center' }}>
           <PhoneFrame>
             <AnimatePresence mode="wait">
@@ -121,7 +123,6 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           </PhoneFrame>
         </div>
 
-        {/* Section Footer */}
         <div
           style={{
             marginTop: 56,
@@ -248,35 +249,177 @@ function FormTabBar({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Phone Frame (베젤만 — 안은 종이 양식 mockup)
+// iPhone Mockup Frame — Dynamic Island + status bar + home indicator
 // ─────────────────────────────────────────────────────────────────────────────
 
 function PhoneFrame({ children }: { children: ReactNode }) {
+  const { t } = useLocale();
   return (
     <div
       style={{
+        position: 'relative',
         width: '100%',
-        maxWidth: 392,
-        background: '#0F0718',
-        borderRadius: 40,
-        padding: 8,
-        border: '1px solid rgba(245,240,232,0.06)',
-        boxShadow:
-          '0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.08), inset 0 0 0 1px rgba(245,240,232,0.04)',
+        maxWidth: PHONE_WIDTH,
       }}
     >
+      {/* Side buttons (volume + power) — purely decorative */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          left: -2,
+          top: 96,
+          width: 3,
+          height: 28,
+          background: '#0A050F',
+          borderTopLeftRadius: 2,
+          borderBottomLeftRadius: 2,
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          left: -2,
+          top: 138,
+          width: 3,
+          height: 52,
+          background: '#0A050F',
+          borderTopLeftRadius: 2,
+          borderBottomLeftRadius: 2,
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          left: -2,
+          top: 196,
+          width: 3,
+          height: 52,
+          background: '#0A050F',
+          borderTopLeftRadius: 2,
+          borderBottomLeftRadius: 2,
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          right: -2,
+          top: 156,
+          width: 3,
+          height: 76,
+          background: '#0A050F',
+          borderTopRightRadius: 2,
+          borderBottomRightRadius: 2,
+        }}
+      />
+
+      {/* Outer bezel */}
       <div
         style={{
-          background: PAPER_BG,
-          borderRadius: 32,
-          overflow: 'hidden',
-          color: PAPER_INK,
-          fontFamily: 'var(--font-inter, system-ui, sans-serif)',
+          background: '#050208',
+          borderRadius: 56,
+          padding: PHONE_BEZEL,
+          border: '1px solid rgba(245,240,232,0.08)',
+          boxShadow:
+            '0 40px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.06), inset 0 0 0 1px rgba(245,240,232,0.04)',
         }}
       >
-        {children}
+        {/* Inner screen */}
+        <div
+          style={{
+            position: 'relative',
+            background: PAPER_BG,
+            borderRadius: PHONE_INNER_RADIUS,
+            overflow: 'hidden',
+            color: PAPER_INK,
+            fontFamily: 'var(--font-inter, system-ui, sans-serif)',
+            paddingBottom: 28, // home indicator 자리
+          }}
+        >
+          {/* Status bar row */}
+          <div
+            style={{
+              position: 'relative',
+              height: STATUS_BAR_HEIGHT,
+              padding: '0 28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: 14,
+              fontWeight: 600,
+              color: PAPER_INK,
+              letterSpacing: '-0.01em',
+            }}
+          >
+            <span>{t('tastingNote.mockup.statusTime')}</span>
+
+            {/* Dynamic Island — absolute centered */}
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                top: 10,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 108,
+                height: 30,
+                background: '#000',
+                borderRadius: 999,
+              }}
+            />
+
+            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }} aria-hidden>
+              <SignalGlyph />
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.04em' }}>LTE</span>
+              <BatteryGlyph />
+            </span>
+          </div>
+
+          {/* Mock content */}
+          {children}
+
+          {/* Home indicator */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              bottom: 8,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 132,
+              height: 5,
+              background: PAPER_INK,
+              opacity: 0.32,
+              borderRadius: 999,
+            }}
+          />
+        </div>
       </div>
     </div>
+  );
+}
+
+function SignalGlyph() {
+  return (
+    <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor">
+      <rect x="0"  y="7" width="3" height="4"  rx="0.6" />
+      <rect x="4"  y="5" width="3" height="6"  rx="0.6" />
+      <rect x="8"  y="3" width="3" height="8"  rx="0.6" />
+      <rect x="12" y="0" width="3" height="11" rx="0.6" />
+    </svg>
+  );
+}
+
+function BatteryGlyph() {
+  return (
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+      <rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="currentColor" strokeOpacity="0.4" />
+      <rect x="2"   y="2"   width="14" height="8"  rx="1.5" fill="currentColor" />
+      <rect x="23"  y="4"   width="1.5" height="4" rx="0.5" fill="currentColor" fillOpacity="0.4" />
+    </svg>
   );
 }
 
@@ -296,16 +439,24 @@ function MockupForVariant({ variant }: { variant: FormVariant }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Mockup — common building blocks
+// Common building blocks (i18n-aware)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function PaperHeader({ title, subtitle, accent }: { title: string; subtitle?: string; accent: string }) {
+function PaperHeader({
+  titleKey,
+  subtitleKey,
+  accent,
+}: {
+  titleKey: 'white' | 'red' | 'sparkling' | 'blind';
+  subtitleKey: 'journal' | 'blind';
+  accent: string;
+}) {
+  const { t } = useLocale();
   return (
     <div
       style={{
-        padding: '20px 22px 16px',
+        padding: '8px 22px 14px',
         borderBottom: `1px solid ${PAPER_LINE}`,
-        background: `linear-gradient(180deg, ${PAPER_BG} 0%, rgba(245,240,232,0.92) 100%)`,
       }}
     >
       <div
@@ -320,28 +471,26 @@ function PaperHeader({ title, subtitle, accent }: { title: string; subtitle?: st
           <div
             style={{
               fontFamily: 'var(--font-playfair, Georgia, serif)',
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: 700,
               letterSpacing: '-0.01em',
               color: PAPER_INK,
               lineHeight: 1.2,
             }}
           >
-            {title}
+            {t(`tastingNote.mockup.title.${titleKey}`)}
           </div>
-          {subtitle && (
-            <div
-              style={{
-                fontSize: 10,
-                fontStyle: 'italic',
-                color: PAPER_INK_DIM,
-                letterSpacing: '0.04em',
-                marginTop: 4,
-              }}
-            >
-              {subtitle}
-            </div>
-          )}
+          <div
+            style={{
+              fontSize: 10,
+              fontStyle: 'italic',
+              color: PAPER_INK_DIM,
+              letterSpacing: '0.04em',
+              marginTop: 4,
+            }}
+          >
+            {t(`tastingNote.mockup.subtitle.${subtitleKey}`)}
+          </div>
         </div>
         <div
           style={{
@@ -350,7 +499,7 @@ function PaperHeader({ title, subtitle, accent }: { title: string; subtitle?: st
             letterSpacing: '0.06em',
           }}
         >
-          {FAKE_DATE}
+          {t('tastingNote.mockup.fakeDate')}
         </div>
       </div>
       <div
@@ -366,7 +515,16 @@ function PaperHeader({ title, subtitle, accent }: { title: string; subtitle?: st
   );
 }
 
-function PaperSection({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+function PaperSection({
+  titleKey,
+  hint,
+  children,
+}: {
+  titleKey: string;
+  hint?: string;
+  children: ReactNode;
+}) {
+  const { t } = useLocale();
   return (
     <div style={{ padding: '14px 22px', borderBottom: `1px solid ${PAPER_LINE}` }}>
       <div
@@ -386,7 +544,7 @@ function PaperSection({ title, hint, children }: { title: string; hint?: string;
             color: PAPER_INK,
           }}
         >
-          {title}
+          {t(titleKey)}
         </div>
         {hint && (
           <div style={{ fontSize: 10, fontStyle: 'italic', color: PAPER_INK_DIM }}>{hint}</div>
@@ -397,7 +555,8 @@ function PaperSection({ title, hint, children }: { title: string; hint?: string;
   );
 }
 
-function MetaRow({ label, value }: { label: string; value: string | number }) {
+function MetaRow({ labelKey, value }: { labelKey: string; value: string | number }) {
+  const { t } = useLocale();
   return (
     <div
       style={{
@@ -409,10 +568,20 @@ function MetaRow({ label, value }: { label: string; value: string | number }) {
         fontSize: 12,
       }}
     >
-      <span style={{ color: PAPER_INK_DIM, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 10, fontWeight: 600 }}>
-        {label}
+      <span
+        style={{
+          color: PAPER_INK_DIM,
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          fontSize: 10,
+          fontWeight: 600,
+        }}
+      >
+        {t(labelKey)}
       </span>
-      <span style={{ color: PAPER_INK, textAlign: 'right', maxWidth: '70%', wordBreak: 'break-word' }}>
+      <span
+        style={{ color: PAPER_INK, textAlign: 'right', maxWidth: '70%', wordBreak: 'break-word' }}
+      >
         {value}
       </span>
     </div>
@@ -420,8 +589,12 @@ function MetaRow({ label, value }: { label: string; value: string | number }) {
 }
 
 function WineIdentity({ wine }: { wine: MockWine }) {
+  const { t, locale } = useLocale();
+  const priceFmt = locale === 'ko'
+    ? `₩${wine.pricePaid.toLocaleString('ko-KR')}`
+    : `₩${wine.pricePaid.toLocaleString('en-US')}`;
   return (
-    <PaperSection title="Wine">
+    <PaperSection titleKey="tastingNote.mockup.section.wine">
       <div
         style={{
           fontFamily: 'var(--font-playfair, Georgia, serif)',
@@ -434,53 +607,57 @@ function WineIdentity({ wine }: { wine: MockWine }) {
       >
         {wine.wineName}
       </div>
-      <div style={{ fontSize: 11, fontStyle: 'italic', color: PAPER_INK_DIM, marginBottom: 10 }}>
+      <div
+        style={{ fontSize: 11, fontStyle: 'italic', color: PAPER_INK_DIM, marginBottom: 10 }}
+      >
         {wine.producer}
       </div>
-      <MetaRow label="Vintage" value={wine.vintage === 0 ? 'NV' : wine.vintage} />
-      <MetaRow label="Region" value={wine.region} />
-      <MetaRow label="Appellation" value={wine.appellation} />
-      <MetaRow label="Grape" value={wine.grapeVarieties.join(' · ')} />
-      <MetaRow label="Price" value={`₩${wine.pricePaid.toLocaleString()}`} />
+      <MetaRow
+        labelKey="tastingNote.mockup.meta.vintage"
+        value={wine.vintage === 0 ? t('tastingNote.mockup.meta.nv') : wine.vintage}
+      />
+      <MetaRow labelKey="tastingNote.mockup.meta.region" value={wine.region} />
+      <MetaRow labelKey="tastingNote.mockup.meta.appellation" value={wine.appellation} />
+      <MetaRow labelKey="tastingNote.mockup.meta.grape" value={wine.grapeVarieties.join(' · ')} />
+      <MetaRow labelKey="tastingNote.mockup.meta.price" value={priceFmt} />
     </PaperSection>
   );
 }
 
-// 향 카테고리별 어휘 칩 — 양식별 아로마 카테고리 fixed list
-const AROMA_GROUPS_WHITE: { title: string; ids: string[] }[] = [
-  { title: 'Citrus',     ids: ['lemon', 'grapefruit', 'lime', 'orange-peel'] },
-  { title: 'Tree Fruit', ids: ['apple', 'pear', 'peach', 'apricot'] },
-  { title: 'Tropical',   ids: ['pineapple', 'mango', 'lychee', 'passion-fruit'] },
-  { title: 'Floral',     ids: ['acacia', 'honeysuckle', 'jasmine', 'orange-blossom'] },
-  { title: 'Mineral',    ids: ['flint', 'wet-stone', 'chalk', 'oyster-shell'] },
-  { title: 'Yeast / Oak', ids: ['brioche', 'hazelnut', 'butter', 'vanilla'] },
-];
-
-const AROMA_GROUPS_RED: { title: string; ids: string[] }[] = [
-  { title: 'Red Berry',   ids: ['strawberry', 'raspberry', 'red-cherry', 'cranberry'] },
-  { title: 'Black Berry', ids: ['blackberry', 'blueberry', 'black-cherry', 'cassis'] },
-  { title: 'Floral',      ids: ['violet', 'rose', 'lavender'] },
-  { title: 'Spicy',       ids: ['black-pepper', 'clove', 'cinnamon', 'licorice'] },
-  { title: 'Earth · Leather', ids: ['leather', 'forest-floor', 'truffle', 'mushroom', 'tobacco'] },
-  { title: 'Oak',         ids: ['vanilla', 'cedar', 'pencil-lead', 'cocoa', 'coffee'] },
-];
-
-const AROMA_GROUPS_SPARKLING: { title: string; ids: string[] }[] = [
-  { title: 'Citrus',      ids: ['lemon', 'grapefruit'] },
-  { title: 'Tree Fruit',  ids: ['apple', 'pear'] },
-  { title: 'Floral',      ids: ['honeysuckle', 'acacia'] },
-  { title: 'Autolytic',   ids: ['brioche', 'bread-dough', 'yeast', 'butter'] },
-  { title: 'Nutty',       ids: ['hazelnut', 'almond', 'walnut'] },
-  { title: 'Mineral',     ids: ['flint', 'chalk'] },
-];
-
-const AROMA_GROUPS_BLIND: { title: string; ids: string[] }[] = [
-  { title: 'Red Berry',   ids: ['red-cherry', 'raspberry'] },
-  { title: 'Black Berry', ids: ['cassis', 'blackberry', 'black-cherry'] },
-  { title: 'Spicy',       ids: ['black-pepper', 'clove'] },
-  { title: 'Earth',       ids: ['tobacco', 'graphite', 'leather'] },
-  { title: 'Oak',         ids: ['cedar', 'pencil-lead', 'vanilla'] },
-];
+// 양식별 아로마 그룹 — group id는 i18n 키
+const AROMA_GROUPS: Record<FormVariant, { id: string; ids: string[] }[]> = {
+  white: [
+    { id: 'citrus',     ids: ['lemon', 'grapefruit', 'lime', 'orange-peel'] },
+    { id: 'treeFruit',  ids: ['apple', 'pear', 'peach', 'apricot'] },
+    { id: 'tropical',   ids: ['pineapple', 'mango', 'lychee', 'passion-fruit'] },
+    { id: 'floral',     ids: ['acacia', 'honeysuckle', 'jasmine', 'orange-blossom'] },
+    { id: 'mineral',    ids: ['flint', 'wet-stone', 'chalk', 'oyster-shell'] },
+    { id: 'yeastOak',   ids: ['brioche', 'hazelnut', 'butter', 'vanilla'] },
+  ],
+  red: [
+    { id: 'redBerry',     ids: ['strawberry', 'raspberry', 'red-cherry', 'cranberry'] },
+    { id: 'blackBerry',   ids: ['blackberry', 'blueberry', 'black-cherry', 'cassis'] },
+    { id: 'floral',       ids: ['violet', 'rose', 'lavender'] },
+    { id: 'spicy',        ids: ['black-pepper', 'clove', 'cinnamon', 'licorice'] },
+    { id: 'earthLeather', ids: ['leather', 'forest-floor', 'truffle', 'mushroom', 'tobacco'] },
+    { id: 'oak',          ids: ['vanilla', 'cedar', 'pencil-lead', 'cocoa', 'coffee'] },
+  ],
+  sparkling: [
+    { id: 'citrus',     ids: ['lemon', 'grapefruit'] },
+    { id: 'treeFruit',  ids: ['apple', 'pear'] },
+    { id: 'floral',     ids: ['honeysuckle', 'acacia'] },
+    { id: 'autolytic',  ids: ['brioche', 'bread-dough', 'yeast', 'butter'] },
+    { id: 'nutty',      ids: ['hazelnut', 'almond', 'walnut'] },
+    { id: 'mineral',    ids: ['flint', 'chalk'] },
+  ],
+  blind: [
+    { id: 'redBerry',   ids: ['red-cherry', 'raspberry'] },
+    { id: 'blackBerry', ids: ['cassis', 'blackberry', 'black-cherry'] },
+    { id: 'spicy',      ids: ['black-pepper', 'clove'] },
+    { id: 'earth',      ids: ['tobacco', 'graphite', 'leather'] },
+    { id: 'oak',        ids: ['cedar', 'pencil-lead', 'vanilla'] },
+  ],
+};
 
 function AromaSection({
   variant,
@@ -491,19 +668,23 @@ function AromaSection({
   intensity: WSETScale;
   selected: string[];
 }) {
-  const groups =
-    variant === 'white'     ? AROMA_GROUPS_WHITE :
-    variant === 'red'       ? AROMA_GROUPS_RED :
-    variant === 'sparkling' ? AROMA_GROUPS_SPARKLING :
-                              AROMA_GROUPS_BLIND;
-  const intensityLabel: Record<WSETScale, string> = {
-    low: 'Light', mediumMinus: 'Medium−', medium: 'Medium', mediumPlus: 'Pronounced', high: 'Pronounced',
+  const { t, locale } = useLocale();
+  const groups = AROMA_GROUPS[variant];
+  const intensityKey: Record<WSETScale, string> = {
+    low:         'light',
+    mediumMinus: 'mediumMinus',
+    medium:      'medium',
+    mediumPlus:  'pronounced',
+    high:        'pronounced',
   };
   return (
-    <PaperSection title="Aroma" hint={intensityLabel[intensity]}>
+    <PaperSection
+      titleKey="tastingNote.mockup.section.aroma"
+      hint={t(`tastingNote.mockup.intensity.${intensityKey[intensity]}`)}
+    >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {groups.map(g => (
-          <div key={g.title}>
+          <div key={g.id}>
             <div
               style={{
                 fontSize: 9,
@@ -514,7 +695,7 @@ function AromaSection({
                 marginBottom: 4,
               }}
             >
-              {g.title}
+              {t(`tastingNote.mockup.aromaGroup.${g.id}`)}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
               {g.ids.map(id => {
@@ -538,7 +719,7 @@ function AromaSection({
                     }}
                   >
                     {isOn && <CheckMark color={WINE_RED} />}
-                    {lex.ko}
+                    {locale === 'ko' ? lex.ko : lex.en}
                   </span>
                 );
               })}
@@ -553,7 +734,13 @@ function AromaSection({
 function CheckMark({ color }: { color: string }) {
   return (
     <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
-      <path d="M2 6l3 3 5-6" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M2 6l3 3 5-6"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -561,14 +748,15 @@ function CheckMark({ color }: { color: string }) {
 const SCALE_ORDER: WSETScale[] = ['low', 'mediumMinus', 'medium', 'mediumPlus', 'high'];
 
 function PalateRow({
-  label,
+  labelKey,
   value,
   labels,
 }: {
-  label: string;
+  labelKey: string;
   value: WSETScale;
   labels: Record<WSETScale, { ko: string; en: string }>;
 }) {
+  const { t, locale } = useLocale();
   const idx = SCALE_ORDER.indexOf(value);
   return (
     <div style={{ marginBottom: 10 }}>
@@ -580,11 +768,13 @@ function PalateRow({
           marginBottom: 4,
         }}
       >
-        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: PAPER_INK }}>
-          {label}
+        <span
+          style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', color: PAPER_INK }}
+        >
+          {t(labelKey)}
         </span>
         <span style={{ fontSize: 10, color: PAPER_INK_DIM, fontStyle: 'italic' }}>
-          {labels[value].ko}
+          {labels[value][locale]}
         </span>
       </div>
       <div style={{ position: 'relative', height: 14, display: 'flex', alignItems: 'center' }}>
@@ -627,20 +817,13 @@ function PalateRow({
   );
 }
 
-function CaudalieDisplay({
-  caudalies,
-  showComparison = true,
-}: {
-  caudalies: number;
-  showComparison?: boolean;
-}) {
+function CaudalieDisplay({ caudalies }: { caudalies: number }) {
+  const { t, locale } = useLocale();
   const cat = caudalieCategory(caudalies);
-  const catLabel: Record<typeof cat, string> = {
-    short:    'Short',
-    medium:   'Medium',
-    long:     'Long',
-    veryLong: 'Very Long',
-  };
+  const catShort = (locale === 'en'
+    ? { short: 'Short', medium: 'Medium', long: 'Long', veryLong: 'Very Long' }
+    : { short: '짧음', medium: '중간', long: '긴', veryLong: '매우 긴' }
+  )[cat];
   return (
     <div>
       <div
@@ -648,7 +831,7 @@ function CaudalieDisplay({
           display: 'flex',
           alignItems: 'baseline',
           gap: 8,
-          marginBottom: showComparison ? 6 : 0,
+          marginBottom: 6,
         }}
       >
         <span
@@ -662,7 +845,9 @@ function CaudalieDisplay({
         >
           {caudalies}
         </span>
-        <span style={{ fontSize: 11, color: PAPER_INK_DIM }}>caudalies</span>
+        <span style={{ fontSize: 11, color: PAPER_INK_DIM }}>
+          {t('tastingNote.mockup.caudalies')}
+        </span>
         <span
           style={{
             marginLeft: 'auto',
@@ -676,14 +861,12 @@ function CaudalieDisplay({
             borderRadius: 4,
           }}
         >
-          {catLabel[cat]}
+          {catShort}
         </span>
       </div>
-      {showComparison && (
-        <div style={{ fontSize: 11, fontStyle: 'italic', color: PAPER_INK_DIM, lineHeight: 1.4 }}>
-          ≈ {caudalieComparison(caudalies, 'ko')}
-        </div>
-      )}
+      <div style={{ fontSize: 11, fontStyle: 'italic', color: PAPER_INK_DIM, lineHeight: 1.4 }}>
+        ≈ {caudalieComparison(caudalies, locale)}
+      </div>
     </div>
   );
 }
@@ -709,9 +892,56 @@ function WineGlassMark({ filled }: { filled: boolean }) {
         strokeWidth="0.8"
         strokeLinejoin="round"
       />
-      <line x1="6" y1="7" x2="6" y2="13" stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM} strokeWidth="0.8" />
-      <line x1="3.5" y1="13.5" x2="8.5" y2="13.5" stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM} strokeWidth="0.8" strokeLinecap="round" />
+      <line
+        x1="6"
+        y1="7"
+        x2="6"
+        y2="13"
+        stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM}
+        strokeWidth="0.8"
+      />
+      <line
+        x1="3.5"
+        y1="13.5"
+        x2="8.5"
+        y2="13.5"
+        stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM}
+        strokeWidth="0.8"
+        strokeLinecap="round"
+      />
     </svg>
+  );
+}
+
+// 자동 묘사 문장 — i18n 템플릿에서 placeholder 치환
+function buildOverall(
+  t: (k: string) => string,
+  variantKey: 'white' | 'red' | 'sparkling',
+  wine: MockWine,
+): string {
+  let template = t(`tastingNote.mockup.overall.${variantKey}`);
+  template = template
+    .replace('{vintage}', String(wine.vintage))
+    .replace('{region}', wine.region)
+    .replace('{producer}', wine.producer)
+    .replace('{wineName}', wine.wineName);
+  return template;
+}
+
+function OverallNote({ children }: { children: ReactNode }) {
+  return (
+    <p
+      style={{
+        fontFamily: 'var(--font-playfair, Georgia, serif)',
+        fontSize: 13,
+        fontStyle: 'italic',
+        lineHeight: 1.55,
+        color: PAPER_INK,
+        margin: 0,
+      }}
+    >
+      {children}
+    </p>
   );
 }
 
@@ -720,30 +950,29 @@ function WineGlassMark({ filled }: { filled: boolean }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function WhiteMockup({ wine }: { wine: MockWine }) {
+  const { t } = useLocale();
   return (
     <>
-      <PaperHeader
-        title="WHITE WINE TASTING NOTES"
-        subtitle="A page from your cellar journal"
-        accent={GOLD}
-      />
+      <PaperHeader titleKey="white" subtitleKey="journal" accent={GOLD} />
       <WineIdentity wine={wine} />
-      <AromaSection variant="white" intensity={wine.presets.aroma.intensity} selected={wine.presets.aroma.selectedLexIds} />
-      <PaperSection title="Palate">
-        <PalateRow label="Sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
-        <PalateRow label="Acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
-        <PalateRow label="Body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
-        <PalateRow label="Alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
+      <AromaSection
+        variant="white"
+        intensity={wine.presets.aroma.intensity}
+        selected={wine.presets.aroma.selectedLexIds}
+      />
+      <PaperSection titleKey="tastingNote.mockup.section.palate">
+        <PalateRow labelKey="tastingNote.dimensions.sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
       </PaperSection>
-      <PaperSection title="Finish">
+      <PaperSection titleKey="tastingNote.mockup.section.finish">
         <CaudalieDisplay caudalies={wine.presets.finish.caudalies} />
       </PaperSection>
-      <PaperSection title="Overall Impression">
-        <p style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 13, fontStyle: 'italic', lineHeight: 1.55, color: PAPER_INK, margin: 0 }}>
-          {`${wine.vintage}년 ${wine.region}, ${wine.producer}. 강한 향에 레몬·라임이 도드라지고 아카시아·헤이즐넛·부싯돌이 뒤를 받칩니다. 중간+ 바디에 또렷한 산도, 드라이 단맛. 끈기 있고 미네랄리티가 살아있는 마무리.`}
-        </p>
+      <PaperSection titleKey="tastingNote.mockup.section.overall">
+        <OverallNote>{buildOverall(t, 'white', wine)}</OverallNote>
       </PaperSection>
-      <PaperSection title="Rating">
+      <PaperSection titleKey="tastingNote.mockup.section.rating">
         <StarsRow value={wine.presets.rating} />
       </PaperSection>
     </>
@@ -751,40 +980,39 @@ function WhiteMockup({ wine }: { wine: MockWine }) {
 }
 
 function RedMockup({ wine }: { wine: MockWine }) {
+  const { t } = useLocale();
   const tannin = wine.presets.palate.tannin;
   return (
     <>
-      <PaperHeader
-        title="RED WINE TASTING NOTES"
-        subtitle="A page from your cellar journal"
-        accent={WINE_RED}
-      />
+      <PaperHeader titleKey="red" subtitleKey="journal" accent={WINE_RED} />
       <WineIdentity wine={wine} />
-      <AromaSection variant="red" intensity={wine.presets.aroma.intensity} selected={wine.presets.aroma.selectedLexIds} />
-      <PaperSection title="Palate">
-        <PalateRow label="Sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
-        <PalateRow label="Acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
-        <PalateRow label="Body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
-        <PalateRow label="Alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
+      <AromaSection
+        variant="red"
+        intensity={wine.presets.aroma.intensity}
+        selected={wine.presets.aroma.selectedLexIds}
+      />
+      <PaperSection titleKey="tastingNote.mockup.section.palate">
+        <PalateRow labelKey="tastingNote.dimensions.sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
         {tannin && (
           <>
-            <PalateRow label="Tannin" value={tannin.intensity} labels={TANNIN_INTENSITY_LABELS} />
+            <PalateRow labelKey="tastingNote.dimensions.tannin" value={tannin.intensity} labels={TANNIN_INTENSITY_LABELS} />
             <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
-              <Pill color={GOLD}>Texture · {tannin.texture}</Pill>
-              <Pill color={GOLD}>{tannin.ripeness === 'ripe' ? 'Ripe' : tannin.ripeness === 'unripe' ? 'Unripe' : 'Overripe'}</Pill>
+              <Pill color={GOLD}>{t('tastingNote.mockup.tannin.texture')} · {tannin.texture}</Pill>
+              <Pill color={GOLD}>{t(`tastingNote.mockup.tannin.${tannin.ripeness}`)}</Pill>
             </div>
           </>
         )}
       </PaperSection>
-      <PaperSection title="Finish">
+      <PaperSection titleKey="tastingNote.mockup.section.finish">
         <CaudalieDisplay caudalies={wine.presets.finish.caudalies} />
       </PaperSection>
-      <PaperSection title="Overall Impression">
-        <p style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 13, fontStyle: 'italic', lineHeight: 1.55, color: PAPER_INK, margin: 0 }}>
-          {`${wine.vintage}년 ${wine.region}, ${wine.producer}. 강한 향에 검은체리·제비꽃이 도드라지고 가죽·담뱃잎·숲바닥이 뒤를 받칩니다. 중간+ 바디에 또렷한 산도. 타닌은 fine-grained 인상으로 매끈하게 짜여 있습니다. 끈기 있고 우아한 마무리.`}
-        </p>
+      <PaperSection titleKey="tastingNote.mockup.section.overall">
+        <OverallNote>{buildOverall(t, 'red', wine)}</OverallNote>
       </PaperSection>
-      <PaperSection title="Rating">
+      <PaperSection titleKey="tastingNote.mockup.section.rating">
         <StarsRow value={wine.presets.rating} />
       </PaperSection>
     </>
@@ -792,33 +1020,54 @@ function RedMockup({ wine }: { wine: MockWine }) {
 }
 
 function SparklingMockup({ wine }: { wine: MockWine }) {
+  const { t, locale } = useLocale();
   const bubbles = wine.presets.palate.bubbles;
   const dosage = wine.presets.palate.sparklingDosage;
   return (
     <>
-      <PaperHeader
-        title="CHAMPAGNE TASTING NOTES"
-        subtitle="A page from your cellar journal"
-        accent={GOLD}
-      />
+      <PaperHeader titleKey="sparkling" subtitleKey="journal" accent={GOLD} />
       <WineIdentity wine={wine} />
-      <AromaSection variant="sparkling" intensity={wine.presets.aroma.intensity} selected={wine.presets.aroma.selectedLexIds} />
-      <PaperSection title="Bubbles · Mousse" hint={bubbles ? SPARKLING_METHOD_LABELS[bubbles.method].ko : undefined}>
+      <AromaSection
+        variant="sparkling"
+        intensity={wine.presets.aroma.intensity}
+        selected={wine.presets.aroma.selectedLexIds}
+      />
+      <PaperSection
+        titleKey="tastingNote.mockup.section.bubbles"
+        hint={bubbles ? SPARKLING_METHOD_LABELS[bubbles.method][locale] : undefined}
+      >
         {bubbles && (
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-            <Pill color={GOLD}>크기 · {bubbles.size}</Pill>
-            <Pill color={GOLD}>지속 · {bubbles.persistence}</Pill>
-            <Pill color={GOLD}>무쎄 · {bubbles.mousse}</Pill>
-            <Pill color={GOLD}>{bubbles.pressure} bar</Pill>
+            <Pill color={GOLD}>{t('tastingNote.mockup.bubbles.size')} · {bubbles.size}</Pill>
+            <Pill color={GOLD}>{t('tastingNote.mockup.bubbles.persistence')} · {bubbles.persistence}</Pill>
+            <Pill color={GOLD}>{t('tastingNote.mockup.bubbles.mousse')} · {bubbles.mousse}</Pill>
+            <Pill color={GOLD}>{bubbles.pressure} {t('tastingNote.mockup.bubbles.bar')}</Pill>
           </div>
         )}
         {dosage && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: PAPER_INK_DIM, textTransform: 'uppercase' }}>
-              Dosage
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                color: PAPER_INK_DIM,
+                textTransform: 'uppercase',
+              }}
+            >
+              {t('tastingNote.mockup.dosage')}
             </span>
-            <span style={{ padding: '3px 10px', borderRadius: 4, background: WINE_RED, color: '#F5F0E8', fontSize: 11, fontWeight: 600 }}>
-              {DOSAGE_LABELS[dosage].ko}
+            <span
+              style={{
+                padding: '3px 10px',
+                borderRadius: 4,
+                background: WINE_RED,
+                color: '#F5F0E8',
+                fontSize: 11,
+                fontWeight: 600,
+              }}
+            >
+              {DOSAGE_LABELS[dosage][locale]}
             </span>
             <span style={{ fontSize: 10, color: PAPER_INK_DIM, fontStyle: 'italic' }}>
               {DOSAGE_LABELS[dosage].range}
@@ -826,21 +1075,19 @@ function SparklingMockup({ wine }: { wine: MockWine }) {
           </div>
         )}
       </PaperSection>
-      <PaperSection title="Palate">
-        <PalateRow label="Sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
-        <PalateRow label="Acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
-        <PalateRow label="Body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
-        <PalateRow label="Alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
+      <PaperSection titleKey="tastingNote.mockup.section.palate">
+        <PalateRow labelKey="tastingNote.dimensions.sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
       </PaperSection>
-      <PaperSection title="Finish">
+      <PaperSection titleKey="tastingNote.mockup.section.finish">
         <CaudalieDisplay caudalies={wine.presets.finish.caudalies} />
       </PaperSection>
-      <PaperSection title="Overall Impression">
-        <p style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 13, fontStyle: 'italic', lineHeight: 1.55, color: PAPER_INK, margin: 0 }}>
-          {`${wine.producer}의 ${wine.wineName}. 강한 향에 브리오슈·헤이즐넛이 도드라지고 사과·인동초·버터가 뒤를 받칩니다. fine 기포가 persistent하게 올라오며 creamy 무쎄를 만듭니다. 복합적이고 매끄러운 마무리.`}
-        </p>
+      <PaperSection titleKey="tastingNote.mockup.section.overall">
+        <OverallNote>{buildOverall(t, 'sparkling', wine)}</OverallNote>
       </PaperSection>
-      <PaperSection title="Rating">
+      <PaperSection titleKey="tastingNote.mockup.section.rating">
         <StarsRow value={wine.presets.rating} />
       </PaperSection>
     </>
@@ -848,48 +1095,80 @@ function SparklingMockup({ wine }: { wine: MockWine }) {
 }
 
 function BlindMockup({ wine }: { wine: MockWine }) {
+  const { t, locale } = useLocale();
   const tannin = wine.presets.palate.tannin;
+  const priceFmt = locale === 'ko'
+    ? `₩${wine.pricePaid.toLocaleString('ko-KR')}`
+    : `₩${wine.pricePaid.toLocaleString('en-US')}`;
   return (
     <>
-      <PaperHeader
-        title="BLIND TASTING SHEET"
-        subtitle="What is in the glass?"
-        accent={WINE_RED}
-      />
-      <PaperSection title="Visual">
+      <PaperHeader titleKey="blind" subtitleKey="blind" accent={WINE_RED} />
+      <PaperSection titleKey="tastingNote.mockup.section.visual">
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
           <ColorSwatch color="#5A0E18" />
           <ColorSwatch color="#7A1828" active />
           <ColorSwatch color="#A02E3E" />
           <ColorSwatch color="#C75A4A" />
           <span style={{ fontSize: 11, color: PAPER_INK_DIM, marginLeft: 8 }}>
-            Garnet · Deep
+            {t('tastingNote.mockup.visual.hue')}
           </span>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          <Pill color={GOLD}>Depth · Deep</Pill>
-          <Pill color={GOLD}>Clarity · Clear</Pill>
-          <Pill color={GOLD}>Legs · Thick</Pill>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <Pill color={GOLD}>
+            {t('tastingNote.mockup.visual.depth')} · {t('tastingNote.mockup.visual.deep')}
+          </Pill>
+          <Pill color={GOLD}>
+            {t('tastingNote.mockup.visual.clarity')} · {t('tastingNote.mockup.visual.clear')}
+          </Pill>
+          <Pill color={GOLD}>
+            {t('tastingNote.mockup.visual.legs')} · {t('tastingNote.mockup.visual.thick')}
+          </Pill>
         </div>
       </PaperSection>
-      <AromaSection variant="blind" intensity={wine.presets.aroma.intensity} selected={wine.presets.aroma.selectedLexIds} />
-      <PaperSection title="Palate">
-        <PalateRow label="Sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
-        <PalateRow label="Acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
-        <PalateRow label="Body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
-        <PalateRow label="Alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
-        {tannin && <PalateRow label="Tannin" value={tannin.intensity} labels={TANNIN_INTENSITY_LABELS} />}
+      <AromaSection
+        variant="blind"
+        intensity={wine.presets.aroma.intensity}
+        selected={wine.presets.aroma.selectedLexIds}
+      />
+      <PaperSection titleKey="tastingNote.mockup.section.palate">
+        <PalateRow labelKey="tastingNote.dimensions.sweetness" value={wine.presets.palate.sweetness} labels={SWEETNESS_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.acidity"   value={wine.presets.palate.acidity}   labels={ACIDITY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.body"      value={wine.presets.palate.body}      labels={BODY_LABELS} />
+        <PalateRow labelKey="tastingNote.dimensions.alcohol"   value={wine.presets.palate.alcohol}   labels={ALCOHOL_LABELS} />
+        {tannin && (
+          <PalateRow labelKey="tastingNote.dimensions.tannin" value={tannin.intensity} labels={TANNIN_INTENSITY_LABELS} />
+        )}
       </PaperSection>
-      <PaperSection title="Finish">
+      <PaperSection titleKey="tastingNote.mockup.section.finish">
         <CaudalieDisplay caudalies={wine.presets.finish.caudalies} />
       </PaperSection>
-      <PaperSection title="Guess The Wine">
-        <GuessRow label="Grape"   guess="Cabernet Sauvignon" answer="Cabernet Sauvignon 75% · Merlot 25%" correct />
-        <GuessRow label="Region"  guess="Bordeaux"            answer="Bordeaux / Pauillac"                correct />
-        <GuessRow label="Vintage" guess="2015"                answer="2015"                                correct />
-        <GuessRow label="Price"   guess="100~200K"            answer="₩280,000"                            correct />
+      <PaperSection titleKey="tastingNote.mockup.section.guess">
+        <GuessRow
+          labelKey="tastingNote.mockup.guessLabel.grape"
+          guess="Cabernet Sauvignon"
+          answer={wine.grapeVarieties.join(' · ')}
+          correct
+        />
+        <GuessRow
+          labelKey="tastingNote.mockup.guessLabel.region"
+          guess="Bordeaux"
+          answer={wine.region}
+          correct
+        />
+        <GuessRow
+          labelKey="tastingNote.mockup.guessLabel.vintage"
+          guess={String(wine.vintage)}
+          answer={String(wine.vintage)}
+          correct
+        />
+        <GuessRow
+          labelKey="tastingNote.mockup.guessLabel.price"
+          guess={locale === 'ko' ? '10~20만' : '100K~200K'}
+          answer={priceFmt}
+          correct
+        />
       </PaperSection>
-      <PaperSection title="Score">
+      <PaperSection titleKey="tastingNote.mockup.section.score">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div
             style={{
@@ -909,11 +1188,13 @@ function BlindMockup({ wine }: { wine: MockWine }) {
             100
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: PAPER_INK, marginBottom: 2 }}>
-              Master Sommelier 수준 🏆
+            <div
+              style={{ fontSize: 13, fontWeight: 700, color: PAPER_INK, marginBottom: 2 }}
+            >
+              {t('tastingNote.mockup.score.master')} 🏆
             </div>
             <div style={{ fontSize: 10, color: PAPER_INK_DIM, fontStyle: 'italic' }}>
-              4 / 4 fields matched
+              {t('tastingNote.mockup.score.matched').replace('{n}', '4')}
             </div>
           </div>
         </div>
@@ -959,21 +1240,22 @@ function ColorSwatch({ color, active = false }: { color: string; active?: boolea
 }
 
 function GuessRow({
-  label,
+  labelKey,
   guess,
   answer,
   correct,
 }: {
-  label: string;
+  labelKey: string;
   guess: string;
   answer: string;
   correct: boolean;
 }) {
+  const { t } = useLocale();
   return (
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '60px 1fr auto',
+        gridTemplateColumns: '64px 1fr auto',
         alignItems: 'center',
         gap: 8,
         padding: '6px 0',
@@ -981,15 +1263,23 @@ function GuessRow({
         fontSize: 11,
       }}
     >
-      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: PAPER_INK_DIM }}>
-        {label}
+      <span
+        style={{
+          fontSize: 9,
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color: PAPER_INK_DIM,
+        }}
+      >
+        {t(labelKey)}
       </span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <span style={{ color: PAPER_INK_DIM, fontSize: 10, fontStyle: 'italic' }}>
-          추정 · {guess}
+          {t('tastingNote.mockup.guessRow.guess')} · {guess}
         </span>
         <span style={{ color: PAPER_INK, fontWeight: 600 }}>
-          정답 · {answer}
+          {t('tastingNote.mockup.guessRow.answer')} · {answer}
         </span>
       </div>
       <span
@@ -1011,3 +1301,4 @@ function GuessRow({
     </div>
   );
 }
+
