@@ -50,7 +50,7 @@
 
   "tastingNote": {
     "eyebrow": "CAPTURE",
-    "heading": "How will you remember the glass you drank?",
+    "heading": "How will you remember it?",
     "subhead": "The same paper form wine experts fill by hand — made easy with WineMine.",
     "tabs": {
       "white": "White",
@@ -181,8 +181,8 @@
       "hint": "Opens a new page · Inputs are never saved"
     },
     "playground": {
-      "pageTitle": "Tasting Note Playground",
-      "pageIntro": "Full interactive demo — aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline and auto description, all live. Inputs are never saved anywhere.",
+      "pageTitle": "Try the Tasting Note",
+      "pageIntro": "Aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline, auto description — try them all!",
       "backToHome": "Back to home",
       "stepCapture": "1. Label Capture",
       "stepAroma": "2. Aroma",
