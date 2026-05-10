@@ -8,7 +8,7 @@
   "franceWine": {
     "sectionLabel": "Explore Regions",
     "heading": "Wine Regions of France",
-    "scrollHint": "↓ SCROLL",
+    "scrollHint": "SCROLL",
     "regions": {
       "21": "Burgundy",
       "33": "Bordeaux",
@@ -48,6 +48,348 @@
     "heading": "Going deep into wine?"
   },
 
+  "tastingNote": {
+    "eyebrow": "CAPTURE",
+    "heading": "And how will you remember that one glass?",
+    "subhead": "The same paper form wine experts fill by hand — done with one tap of the camera.",
+    "tabs": {
+      "white": "White",
+      "red": "Red",
+      "sparkling": "Sparkling",
+      "blind": "Blind"
+    },
+    "steps": {
+      "capture": "Label Capture",
+      "aroma": "Aroma",
+      "palate": "Palate",
+      "finish": "Finish",
+      "faults": "Fault Check",
+      "evolution": "Opening Timeline",
+      "rating": "Rating",
+      "blind": "Blind"
+    },
+    "scale": {
+      "low": "Low",
+      "mediumMinus": "Medium−",
+      "medium": "Medium",
+      "mediumPlus": "Medium+",
+      "high": "High"
+    },
+    "dimensions": {
+      "sweetness": "Sweetness",
+      "acidity": "Acidity",
+      "body": "Body",
+      "alcohol": "Alcohol",
+      "tannin": "Tannin",
+      "tanninTexture": "Tannin Texture",
+      "tanninRipeness": "Tannin Ripeness",
+      "bubbleSize": "Bubble Size",
+      "bubblePersistence": "Bubble Persistence",
+      "mousse": "Mousse Texture",
+      "pressure": "Pressure (bar)",
+      "method": "Method",
+      "dosage": "Dosage",
+      "intensity": "Aroma Intensity",
+      "flavorIntensity": "Flavor Intensity",
+      "finishLength": "Finish Length"
+    },
+    "aroma": {
+      "title": "Aroma — UC Davis Wheel",
+      "selectCategory": "Select a category",
+      "wheelHint": "Click a wedge to expand vocabulary",
+      "searchPlaceholder": "Search vocabulary"
+    },
+    "caudalie": {
+      "title": "Finish — Caudalie",
+      "tapStart": "Tap to start",
+      "tapStop": "Tap to stop",
+      "reset": "Reset",
+      "label": "{count} caudalies",
+      "manualToggle": "Pick category without measuring"
+    },
+    "faults": {
+      "title": "Fault Check",
+      "intro": "Expert mode reveals an 11-fault catalog",
+      "footnote": "Faults are recorded only when explicitly checked — never inferred."
+    },
+    "evolution": {
+      "title": "Opening Timeline",
+      "intro": "Track how the wine changes after the cork is pulled",
+      "openedAtNow": "Now",
+      "openedAtCustom": "Enter manually",
+      "decantLabel": "Decanter used?",
+      "yes": "Yes",
+      "no": "No",
+      "addTimepoint": "Add timepoint",
+      "deltaAroma": "Aroma intensity vs T0",
+      "deltaTannin": "Tannin softness vs T0",
+      "deltaBody": "Body vs T0",
+      "reductionLabel": "Reduction present",
+      "reductionTooltip": "Matchstick, rubber, H₂S, cabbage, garlic. A reductive fault that fades with oxygen exposure. Common in young Syrah and reductively vinified wines.",
+      "newAromas": "New aromas emerging",
+      "scoreLabel": "Score at this point",
+      "noteLabel": "Note",
+      "peakLabel": "Peak",
+      "recommendationTitle": "Recommended Decanting",
+      "recommendedRange": "Recommended: {min}-{max} min (avg peak {peak} min)",
+      "compareEarly": "You open earlier than average",
+      "compareOnTime": "Right on the recommended time",
+      "compareLate": "You open later than average",
+      "compareWayEarly": "Quite early — the wine may have more to give",
+      "compareWayLate": "Long-haul style — very patient"
+    },
+    "blind": {
+      "title": "GUESS THE WINE",
+      "grape": "Grape Variety",
+      "region": "Region",
+      "country": "Country",
+      "vintage": "Vintage",
+      "priceRange": "Price Range",
+      "reveal": "Reveal & Score",
+      "retry": "Retry",
+      "scoreTotal": "Total {score}/100",
+      "rankMaster": "Master Sommelier level",
+      "rankAdvanced": "Advanced Sommelier candidate",
+      "rankEnthusiast": "Wine Enthusiast",
+      "rankExploring": "Exploring — drink more",
+      "rankFinding": "A fun discovery — enjoy the diversity",
+      "demoNote": "This mode is a demo. The wine is mocked data."
+    },
+    "autoDescription": {
+      "title": "Auto Tasting Note",
+      "saveCta": "Save this note for real in the app"
+    },
+    "rating": {
+      "title": "Rating",
+      "wouldBuyAgain": "Would buy again?"
+    },
+    "cta": {
+      "save": "Save this note for real in the app",
+      "waitlist": "Join the waitlist"
+    },
+    "outro": "When 50 bottles fill your cellar, we'll line them up for you in a single thread.",
+    "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2.",
+    "invite": {
+      "eyebrow": "Try it yourself",
+      "title": "Want to actually write this note?",
+      "subtitle": "Spin the aroma wheel, measure caudalies, pick from 120 vocabulary words. Five minutes is all it takes.",
+      "bullet1": "Aroma wheel · 12 categories",
+      "bullet2": "Caudalie meter",
+      "bullet3": "11 fault checklist",
+      "bullet4": "Opening timeline",
+      "cta": "Open the Playground",
+      "hint": "Opens a new page · Inputs are never saved"
+    },
+    "playground": {
+      "pageTitle": "Tasting Note Playground",
+      "pageIntro": "Full interactive demo — aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline and auto description, all live. Inputs are never saved anywhere.",
+      "backToHome": "Back to home",
+      "stepCapture": "1 · Label Capture",
+      "stepAroma": "2 · Aroma",
+      "stepPalate": "3 · Palate",
+      "stepFinish": "4 · Finish",
+      "stepFaults": "5 · Fault Check",
+      "stepEvolution": "6 · Opening Timeline",
+      "stepRating": "7 · Rating",
+      "stepBlind": "8 · Blind",
+      "demoNote": "Inputs on this page are never saved. They disappear when you leave.",
+      "aromaHint": "Hover over a word to see impact compound info.",
+      "finishHint": "Time how long flavor lingers after the last sip.",
+      "ratingLabel": "Rating",
+      "mode": {
+        "beginner": "Beginner",
+        "expert": "Expert",
+        "beginnerSubtitle": "5 minutes, no jargon",
+        "expertSubtitle": "WSET · Caudalies · Aroma Wheel"
+      },
+      "downloadCta": {
+        "eyebrow": "To your cellar",
+        "heading": "Want to keep this as your own record?",
+        "body": "Your notes vanish when you leave this page. With the app, every glass goes into your cellar — and shares with friends in one line.",
+        "waitlist": "Join the waitlist"
+      }
+    },
+    "beginner": {
+      "intro": "A short note that takes 5 minutes per glass. Forget the jargon and write what you feel.",
+      "step": {
+        "wine": "What's the wine?",
+        "impression": "First sip — how was it?",
+        "taste": "How did it taste?",
+        "aroma": "What aromas came to mind?",
+        "finish": "How long did the flavor last?",
+        "rating": "How much did you like it?",
+        "memo": "One line for today"
+      },
+      "impression": {
+        "love": "Loved it",
+        "ok": "It was fine",
+        "meh": "Hmm… not for me"
+      },
+      "tasteLabel": {
+        "sweetness": "Sweetness",
+        "acidity": "Acidity",
+        "body": "Body",
+        "tannin": "Tannin",
+        "bubbles": "Bubbles"
+      },
+      "scale": {
+        "sweetLow": "Not sweet",
+        "sweetMid": "Slightly sweet",
+        "sweetHigh": "Sweet",
+        "acidLow": "Soft",
+        "acidMid": "Balanced",
+        "acidHigh": "Zippy",
+        "bodyLow": "Light, water-like",
+        "bodyMid": "Medium",
+        "bodyHigh": "Full, milk-like",
+        "tanninLow": "Soft",
+        "tanninMid": "Balanced",
+        "tanninHigh": "Drying / grippy",
+        "bubblesLow": "Soft",
+        "bubblesMid": "Lively",
+        "bubblesHigh": "Aggressive"
+      },
+      "aromaCard": {
+        "berry": "Berry",
+        "citrus": "Citrus",
+        "stoneFruit": "Apple · Peach",
+        "floral": "Floral",
+        "spice": "Spice",
+        "sweet": "Sweet aroma",
+        "earth": "Earth · Wood",
+        "yeast": "Bread · Nutty"
+      },
+      "aromaHint": "Pick as many as you like",
+      "finishOption": {
+        "short": "Faded quickly",
+        "medium": "Stayed for a moment",
+        "long": "Lingered for a while"
+      },
+      "ratingHint": "Would you buy it again?",
+      "memoPlaceholder": "With whom, where, what was the mood?",
+      "summary": "Your glass today",
+      "switchToExpert": "Want to go deeper? Switch to Expert mode",
+      "tipTitle": "What wine pros call it",
+      "tip": {
+        "sweetness": "Sweetness comes from 'Residual Sugar' (g/L). WSET classifies it from Bone Dry to Sweet across 5 levels.",
+        "acidity": "What you taste as sour is 'Acidity' — typically 6–10 g/L for whites, 5–7 g/L for reds. The salivation tells you the level.",
+        "body": "Body is the perceived weight in your mouth — driven by alcohol, extract and residual sugar. Compared to skim milk vs. whole milk.",
+        "tannin": "The drying sensation is 'Tannin' — polyphenols from grape skins/seeds. They round out with age.",
+        "finish": "Finish length is measured in 'Caudalies' (1 sec = 1 caudalie) at the Bordeaux School of Oenology."
+      }
+    },
+    "mockup": {
+      "title": {
+        "white": "WHITE WINE TASTING NOTES",
+        "red": "RED WINE TASTING NOTES",
+        "sparkling": "CHAMPAGNE TASTING NOTES",
+        "blind": "BLIND TASTING SHEET"
+      },
+      "subtitle": {
+        "journal": "A page from your cellar journal",
+        "blind": "What is in the glass?"
+      },
+      "section": {
+        "wine": "Wine",
+        "aroma": "Aroma",
+        "palate": "Palate",
+        "bubbles": "Bubbles · Mousse",
+        "visual": "Visual",
+        "finish": "Finish",
+        "overall": "Overall Impression",
+        "rating": "Rating",
+        "guess": "Guess The Wine",
+        "score": "Score"
+      },
+      "meta": {
+        "vintage": "Vintage",
+        "region": "Region",
+        "appellation": "Appellation",
+        "grape": "Grape",
+        "price": "Price",
+        "nv": "NV"
+      },
+      "aromaGroup": {
+        "citrus": "Citrus",
+        "treeFruit": "Tree Fruit",
+        "tropical": "Tropical",
+        "floral": "Floral",
+        "mineral": "Mineral",
+        "yeastOak": "Yeast / Oak",
+        "redBerry": "Red Berry",
+        "blackBerry": "Black Berry",
+        "spicy": "Spicy",
+        "earthLeather": "Earth · Leather",
+        "oak": "Oak",
+        "autolytic": "Autolytic",
+        "nutty": "Nutty",
+        "earth": "Earth"
+      },
+      "intensity": {
+        "light": "Light",
+        "mediumMinus": "Medium−",
+        "medium": "Medium",
+        "pronounced": "Pronounced"
+      },
+      "bubbles": {
+        "size": "Size",
+        "persistence": "Persistence",
+        "mousse": "Mousse",
+        "bar": "bar"
+      },
+      "dosage": "Dosage",
+      "visual": {
+        "hue": "Garnet · Deep",
+        "depth": "Depth",
+        "clarity": "Clarity",
+        "legs": "Legs",
+        "deep": "Deep",
+        "clear": "Clear",
+        "thick": "Thick"
+      },
+      "tannin": {
+        "texture": "Texture",
+        "ripe": "Ripe",
+        "unripe": "Unripe",
+        "overripe": "Overripe"
+      },
+      "caudalies": "caudalies",
+      "guessRow": {
+        "guess": "Guess",
+        "answer": "Answer"
+      },
+      "guessLabel": {
+        "grape": "Grape",
+        "region": "Region",
+        "vintage": "Vintage",
+        "price": "Price"
+      },
+      "score": {
+        "master": "Master Sommelier level",
+        "matched": "{n} / 4 fields matched"
+      },
+      "statusTime": "9:41",
+      "fakeDate": "2026.05.09",
+      "overall": {
+        "white": "{vintage} {region}, {producer}. Pronounced nose with lemon and lime, backed by acacia, hazelnut and flint. Medium+ body with crisp acidity and dry sweetness. Persistent, mineral-driven finish.",
+        "red": "{vintage} {region}, {producer}. Pronounced nose with black cherry and violet, backed by leather, tobacco leaf and forest floor. Medium+ body with crisp acidity. Fine-grained tannins. Persistent, elegant finish.",
+        "sparkling": "{producer}'s {wineName}. Pronounced nose with brioche and hazelnut, backed by apple, honeysuckle and butter. Fine bubbles rise persistently into a creamy mousse. Complex, seamless finish."
+      },
+      "beginner": {
+        "title": {
+          "white": "Tonight's white",
+          "red": "Tonight's red",
+          "sparkling": "Tonight's bubbles"
+        },
+        "note": {
+          "white": "A gentle start to dinner with a friend.",
+          "red": "A rainy evening, one warm glass.",
+          "sparkling": "A celebratory glass — cheers together."
+        }
+      }
+    }
+  },
+
   "franceWineDetail": {
     "sectionLabel": "Wines I've Tasted",
     "heading": "Wine Collection",
@@ -78,7 +420,7 @@
       "france": { "name": "France", "stat": "#1 by value · $173M" },
       "chile": { "name": "Chile", "stat": "#1 by volume · 22.54%" },
       "italy": { "name": "Italy", "stat": "Moscato · Chianti" },
-      "newZealand": { "name": "New Zealand", "stat": "White #1 · +10%↑" }
+      "newZealand": { "name": "New Zealand", "stat": "White #1 · +10%" }
     }
   },
 
@@ -92,7 +434,7 @@
       { "note": "Cherry, truffle, velvet. Silky texture with an endless finish.", "occasion": "Valentine's Day" },
       { "note": "Hazelnut, butter, pure minerality. The very definition of elegance.", "occasion": "Friends gathering" }
     ],
-    "mobileSwipeHint": "← Swipe →",
+    "mobileSwipeHint": "Swipe left or right",
     "mobileTapHint": "Tap to see next wine"
   },
 
@@ -120,8 +462,8 @@
     "heading": "Here's how it works",
     "steps": [
       { "title": "Shoot the label", "body": "At a restaurant, wine bar, or home. Snap the label wherever you are drinking.", "detail": "Recognized in 2 seconds" },
-      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "Bordeaux → Pomerol → Premier Grand Cru" },
-      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation and Grand Cru classification you've explored.", "detail": "AOC → Appellation → Classification" },
+      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation and Grand Cru classification you've explored.", "detail": "AOC · Appellation · Classification" },
       { "title": "Capture it all", "body": "Save your wine journey as a shareable image. One tap to share with the world.", "detail": "Recap image generation" }
     ]
   },

@@ -4,14 +4,15 @@ import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
+import { CountryFlag, type CountryFlagProps } from '@/components/icons/wine-icons';
 
 // ── Story card content ──────────────────────────────────────────────────────
-const STORY_COUNTRIES = [
-  { flag: '🇫🇷', name: 'France',      wines: 28, pct: 92 },
-  { flag: '🇮🇹', name: 'Italy',       wines: 21, pct: 70 },
-  { flag: '🇨🇱', name: 'Chile',       wines: 18, pct: 58 },
-  { flag: '🇳🇿', name: 'New Zealand', wines: 14, pct: 44 },
-  { flag: '🇪🇸', name: 'Spain',       wines: 11, pct: 34 },
+const STORY_COUNTRIES: { code: CountryFlagProps['code']; name: string; wines: number; pct: number }[] = [
+  { code: 'FR', name: 'France',      wines: 28, pct: 92 },
+  { code: 'IT', name: 'Italy',       wines: 21, pct: 70 },
+  { code: 'CL', name: 'Chile',       wines: 18, pct: 58 },
+  { code: 'NZ', name: 'New Zealand', wines: 14, pct: 44 },
+  { code: 'ES', name: 'Spain',       wines: 11, pct: 34 },
 ];
 
 // Wine regions for mini-map (same ISO numeric codes as world-map.tsx)
@@ -191,7 +192,9 @@ export function StoryCard({ animate }: { animate: boolean }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
         {STORY_COUNTRIES.map((c, i) => (
           <div key={c.name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 13, flexShrink: 0 }}>{c.flag}</span>
+            <span style={{ flexShrink: 0, display: 'inline-flex' }}>
+              <CountryFlag code={c.code} size={13} />
+            </span>
             <div style={{ flex: 1 }}>
               <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
                 <div style={{

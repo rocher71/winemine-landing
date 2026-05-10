@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { CheckboxEmptyIcon, CheckboxCheckedIcon } from '@/components/icons/wine-icons';
 import { submitWaitlist } from '@/app/actions';
 import { trackEvent } from '@/lib/analytics';
 import {
@@ -167,8 +168,8 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         onClick={() => setMarketingAgree(!marketingAgree)}
         style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, cursor: 'pointer', userSelect: 'none' }}
       >
-        <span style={{ fontSize: 16, flexShrink: 0, lineHeight: 1 }}>
-          {marketingAgree ? '✅' : '☐'}
+        <span aria-hidden style={{ flexShrink: 0, display: 'inline-flex', color: marketingAgree ? '#8B1A2A' : '#9B8B7A' }}>
+          {marketingAgree ? <CheckboxCheckedIcon size={16} /> : <CheckboxEmptyIcon size={16} />}
         </span>
         <span style={{ fontSize: 12, color: '#6A5E4A', lineHeight: 1.5 }}>
           {t('waitlistForm.marketingCheckbox')}

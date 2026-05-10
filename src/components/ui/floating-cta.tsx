@@ -50,7 +50,7 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
   // Hide the floating CTA while sections that need uncluttered visuals are in view
   // (Wine Discovery's cinematic map, Burgundy drilldown).
   useEffect(() => {
-    const ids = ['wine-discovery', 'burgundy'];
+    const ids = ['wine-discovery', 'burgundy', 'tasting-note'];
     const elements = ids
       .map(id => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);

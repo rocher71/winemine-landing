@@ -174,31 +174,26 @@ function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: n
   );
 }
 
-// ── Cinematic tour stops ─────────────────────────────────────────────────
-// One stop per geographic region. Pins for every wine still appear on the
-// map during the initial neural-link phase; the camera just doesn't redundantly
-// zoom into adjacent wines that share a single visual frame.
+// ── Camera tour ──────────────────────────────────────────────────────────
+// Two-stop tour: hold tight on France while the neural-link extends, then
+// zoom out to a wide world view so every reached region is visible at once.
+// No more country-by-country zoom-ins — just France → world.
 type TourStop = { wine: RecommendedWine; coord: [number, number]; zoom: number };
 
 const wineById = (id: string): RecommendedWine =>
   ALL_WINES.find(w => w.id === id) as RecommendedWine;
 
 const TOUR_STOPS: TourStop[] = [
-  // Europe — frames France · Italy · Spain in one wide view.
-  { wine: wineById('chianti'),   coord: [4.0, 43.5],       zoom: 1.7 },
-  // USA — Napa.
-  { wine: wineById('napa-cab'),  coord: [-122.27, 38.30],  zoom: 3.4 },
-  // South America — Chile + Argentina (~3° apart, fit in one frame).
-  { wine: wineById('mendoza'),   coord: [-69.75, -33.17],  zoom: 3.0 },
-  // Australia — South Australia / Barossa.
-  { wine: wineById('jacobs'),    coord: [138.6, -34.93],   zoom: 3.4 },
+  // Open on France (Bordeaux) — origin of the neural-link.
+  { wine: wineById('chianti'),  coord: STARTING_WINE.coords, zoom: 3.5 },
+  // Zoom out to the world — all reached regions visible in one frame.
+  { wine: wineById('napa-cab'), coord: [10, 22],             zoom: 1.0 },
 ];
 
 const TOUR_START = 0.10; // before this, hold on stop 0 + lines drawing
 const TOUR_END   = 0.85; // last stop reached here, then hold until 1.0 (dwell time)
-const DIP_ZOOM   = 1.25;
 
-// Build keyframe arrays for useTransform.
+// Build keyframe arrays for useTransform — hold start, linear transition to end, hold end.
 function buildTour() {
   const stops = TOUR_STOPS;
   const inputs: number[] = [0];
@@ -206,32 +201,25 @@ function buildTour() {
   const lats: number[]   = [stops[0].coord[1]];
   const zooms: number[]  = [stops[0].zoom];
 
+  // Hold on the opening stop until TOUR_START so the neural-link can draw.
   inputs.push(TOUR_START);
   lons.push(stops[0].coord[0]);
   lats.push(stops[0].coord[1]);
   zooms.push(stops[0].zoom);
 
   const span = TOUR_END - TOUR_START;
-  const segCount = stops.length - 1;
-  const segLen = span / segCount;
+  const segLen = span / Math.max(1, stops.length - 1);
 
   for (let i = 1; i < stops.length; i++) {
-    const prev = stops[i - 1];
     const curr = stops[i];
-    const transitT = TOUR_START + (i - 0.5) * segLen;
-    const arriveT  = TOUR_START + i * segLen;
-
-    inputs.push(transitT);
-    lons.push((prev.coord[0] + curr.coord[0]) / 2);
-    lats.push((prev.coord[1] + curr.coord[1]) / 2);
-    zooms.push(DIP_ZOOM);
-
+    const arriveT = TOUR_START + i * segLen;
     inputs.push(arriveT);
     lons.push(curr.coord[0]);
     lats.push(curr.coord[1]);
     zooms.push(curr.zoom);
   }
 
+  // Hold the final stop until the section end (dwell time).
   const last = stops[stops.length - 1];
   inputs.push(1.0);
   lons.push(last.coord[0]);

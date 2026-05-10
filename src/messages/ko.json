@@ -8,7 +8,7 @@
   "franceWine": {
     "sectionLabel": "지역 탐험",
     "heading": "프랑스 와인 산지",
-    "scrollHint": "↓ SCROLL",
+    "scrollHint": "SCROLL",
     "regions": {
       "21": "부르고뉴",
       "33": "보르도",
@@ -48,6 +48,348 @@
     "heading": "와인을 깊게 파고드시나요?"
   },
 
+  "tastingNote": {
+    "eyebrow": "기록 · CAPTURE",
+    "heading": "그리고 그 한 잔, 어떻게 기억에 남기시겠어요?",
+    "subhead": "와인 전문가들이 손글씨로 채우는 그 양식, 카메라 한 번이면 디지털로 끝납니다.",
+    "tabs": {
+      "white": "White",
+      "red": "Red",
+      "sparkling": "Sparkling",
+      "blind": "Blind"
+    },
+    "steps": {
+      "capture": "라벨 인식",
+      "aroma": "아로마",
+      "palate": "미각",
+      "finish": "피니시",
+      "faults": "결함 점검",
+      "evolution": "오프닝 타임라인",
+      "rating": "평가",
+      "blind": "블라인드"
+    },
+    "scale": {
+      "low": "낮음",
+      "mediumMinus": "중간−",
+      "medium": "중간",
+      "mediumPlus": "중간+",
+      "high": "높음"
+    },
+    "dimensions": {
+      "sweetness": "당도",
+      "acidity": "산도",
+      "body": "바디",
+      "alcohol": "알코올",
+      "tannin": "타닌",
+      "tanninTexture": "타닌 질감",
+      "tanninRipeness": "타닌 성숙도",
+      "bubbleSize": "기포 크기",
+      "bubblePersistence": "기포 지속성",
+      "mousse": "무쎄 질감",
+      "pressure": "압력 (bar)",
+      "method": "제조 방식",
+      "dosage": "도사주 (당도)",
+      "intensity": "향 강도",
+      "flavorIntensity": "풍미 강도",
+      "finishLength": "피니시 길이"
+    },
+    "aroma": {
+      "title": "아로마 — UC Davis Wheel",
+      "selectCategory": "카테고리를 선택하세요",
+      "wheelHint": "wedge를 클릭하면 어휘가 펼쳐집니다",
+      "searchPlaceholder": "어휘 검색"
+    },
+    "caudalie": {
+      "title": "피니시 — Caudalie",
+      "tapStart": "Tap to start",
+      "tapStop": "Tap to stop",
+      "reset": "다시",
+      "label": "{count} caudalies",
+      "manualToggle": "측정 없이 분류만 선택"
+    },
+    "faults": {
+      "title": "결함 점검 · Fault Check",
+      "intro": "전문가 모드를 켜면 11종 결함 카탈로그가 펼쳐집니다",
+      "footnote": "결함은 명시적 사용자 체크가 있을 때만 기록됩니다 — 자동 추론 X"
+    },
+    "evolution": {
+      "title": "오프닝 타임라인 · Opening Timeline",
+      "intro": "코르크 따고 와인이 어떻게 변하는지 시간축으로 기록해보세요",
+      "openedAtNow": "지금",
+      "openedAtCustom": "직접 입력",
+      "decantLabel": "디캔터 사용?",
+      "yes": "예",
+      "no": "아니오",
+      "addTimepoint": "시점 추가",
+      "deltaAroma": "T0 대비 향 강도",
+      "deltaTannin": "T0 대비 타닌 부드러움",
+      "deltaBody": "T0 대비 바디",
+      "reductionLabel": "환원취 (Reduction) 느껴짐",
+      "reductionTooltip": "성냥·고무·H₂S·양배추·마늘. 산소 노출로 사라지는 결함성 향. 영 시라·환원성 양조 와인에 흔함.",
+      "newAromas": "이 시점에서 새로 등장한 향",
+      "scoreLabel": "이 시점의 전반 점수",
+      "noteLabel": "메모",
+      "peakLabel": "이 시점이 정점",
+      "recommendationTitle": "권장 디캔팅",
+      "recommendedRange": "권장: {min}~{max}분 (평균 Peak {peak}분)",
+      "compareEarly": "권장보다 빠르게 깨우는 편",
+      "compareOnTime": "권장 시간과 정확히 일치합니다",
+      "compareLate": "권장보다 늦게 깨우는 편",
+      "compareWayEarly": "꽤 일찍 깨우시네요 — 와인이 더 풀릴 여지가 있을지도",
+      "compareWayLate": "권장보다 길게 두시는 편 — 매우 인내심 있는 스타일"
+    },
+    "blind": {
+      "title": "GUESS THE WINE",
+      "grape": "품종 추정",
+      "region": "지역 추정",
+      "country": "국가 추정",
+      "vintage": "빈티지 추정",
+      "priceRange": "가격대 추정",
+      "reveal": "정답 공개 (Reveal & Score)",
+      "retry": "재시도",
+      "scoreTotal": "총점 {score}/100",
+      "rankMaster": "Master Sommelier 수준",
+      "rankAdvanced": "Advanced Sommelier 후보",
+      "rankEnthusiast": "Wine Enthusiast",
+      "rankExploring": "탐험 단계 — 더 마셔보세요",
+      "rankFinding": "재미있는 발견 — 와인의 다양성을 즐기세요",
+      "demoNote": "이 모드는 데모용입니다. 실제 와인은 mockup의 가상 데이터입니다."
+    },
+    "autoDescription": {
+      "title": "자동 시음 노트",
+      "saveCta": "이 노트, 앱에서 진짜로 저장해 보기"
+    },
+    "rating": {
+      "title": "평가",
+      "wouldBuyAgain": "다시 사시겠어요?"
+    },
+    "cta": {
+      "save": "이 노트, 앱에서 진짜로 저장해 보기",
+      "waitlist": "웨이팅 리스트에 등록"
+    },
+    "outro": "당신의 셀러에 50병이 쌓인 어느 날, 우리는 그 50병을 한 줄로 정리해 드립니다.",
+    "placeholder": "{variant} 양식을 선택했습니다 — Day 2 이후 mockup·부케 휠·슬라이더가 채워집니다.",
+    "invite": {
+      "eyebrow": "직접 만져보세요",
+      "title": "이 노트, 진짜로 작성해볼 수 있어요",
+      "subtitle": "부케 휠을 돌리고, 카우달리를 측정하고, 120종 어휘에서 직접 골라보세요. 5분이면 충분해요.",
+      "bullet1": "부케 휠 12 카테고리",
+      "bullet2": "카우달리 측정기",
+      "bullet3": "결함 11종 체크리스트",
+      "bullet4": "오프닝 타임라인",
+      "cta": "Playground 열어보기",
+      "hint": "새 페이지에서 열려요 · 입력은 저장되지 않아요"
+    },
+    "playground": {
+      "pageTitle": "테이스팅 노트 플레이그라운드",
+      "pageIntro": "전체 인터랙티브 데모 — 부케 휠·WSET 슬라이더·카우달리 측정·결함 점검·오프닝 타임라인·자동 묘사 모두 살아있는 환경에서 체험. 입력은 어디에도 저장되지 않습니다.",
+      "backToHome": "메인으로 돌아가기",
+      "stepCapture": "1 · 라벨 인식",
+      "stepAroma": "2 · 아로마",
+      "stepPalate": "3 · 미각",
+      "stepFinish": "4 · 피니시",
+      "stepFaults": "5 · 결함 점검",
+      "stepEvolution": "6 · 오프닝 타임라인",
+      "stepRating": "7 · 평가",
+      "stepBlind": "8 · 블라인드",
+      "demoNote": "이 페이지의 입력은 어디에도 저장되지 않습니다. 페이지를 떠나면 사라집니다.",
+      "aromaHint": "어휘를 hover하면 임팩트 화합물 정보가 나타납니다.",
+      "finishHint": "마지막 모금 후 풍미가 사라지는 시간을 측정해보세요.",
+      "ratingLabel": "별점",
+      "mode": {
+        "beginner": "입문자용",
+        "expert": "전문가용",
+        "beginnerSubtitle": "5분이면 끝, 어려운 용어 없이",
+        "expertSubtitle": "WSET · 카우달리 · 부케 휠까지"
+      },
+      "downloadCta": {
+        "eyebrow": "내 셀러로",
+        "heading": "이걸 나만의 기록으로 남기고 싶다면",
+        "body": "지금 작성한 노트는 페이지를 떠나면 사라져요. 앱을 받으면 매 잔의 기록이 셀러에 쌓이고, 친구와 한 줄로 공유할 수 있어요.",
+        "waitlist": "웨이팅 리스트 등록"
+      }
+    },
+    "beginner": {
+      "intro": "와인 한 잔, 5분이면 끝나는 짧은 기록. 어려운 용어는 잠시 잊고 느낀대로 적어보세요.",
+      "step": {
+        "wine": "어떤 와인인가요?",
+        "impression": "첫 모금, 어땠어요?",
+        "taste": "맛은 어땠어요?",
+        "aroma": "어떤 향이 떠올랐나요?",
+        "finish": "여운은 어땠어요?",
+        "rating": "얼마나 마음에 들었나요?",
+        "memo": "오늘의 한 줄"
+      },
+      "impression": {
+        "love": "마음에 쏙",
+        "ok": "괜찮았어요",
+        "meh": "음… 별로"
+      },
+      "tasteLabel": {
+        "sweetness": "단맛",
+        "acidity": "신맛",
+        "body": "무게감",
+        "tannin": "떫은 맛",
+        "bubbles": "기포"
+      },
+      "scale": {
+        "sweetLow": "안 달아요",
+        "sweetMid": "살짝 달아요",
+        "sweetHigh": "달콤해요",
+        "acidLow": "부드러워요",
+        "acidMid": "적당해요",
+        "acidHigh": "짜릿해요",
+        "bodyLow": "물처럼 가벼워요",
+        "bodyMid": "보통이에요",
+        "bodyHigh": "우유처럼 묵직해요",
+        "tanninLow": "부드러워요",
+        "tanninMid": "적당히 잡혀요",
+        "tanninHigh": "혀가 까칠해요",
+        "bubblesLow": "부드러워요",
+        "bubblesMid": "톡톡 튀어요",
+        "bubblesHigh": "강하게 터져요"
+      },
+      "aromaCard": {
+        "berry": "베리",
+        "citrus": "시트러스",
+        "stoneFruit": "사과·복숭아",
+        "floral": "꽃",
+        "spice": "향신료",
+        "sweet": "달콤한 향",
+        "earth": "흙·나무",
+        "yeast": "빵·견과"
+      },
+      "aromaHint": "여러 개 골라도 좋아요",
+      "finishOption": {
+        "short": "금방 사라져요",
+        "medium": "잠시 머물러요",
+        "long": "한참 남아요"
+      },
+      "ratingHint": "다음에 또 사고 싶나요?",
+      "memoPlaceholder": "누구와, 어디서, 어떤 기분이었나요?",
+      "summary": "오늘의 한 잔",
+      "switchToExpert": "더 자세히 기록하고 싶다면 ‘전문가용’으로 전환하세요",
+      "tipTitle": "와인 전문가들은 이걸 이렇게 부른답니다",
+      "tip": {
+        "sweetness": "단맛의 정도는 ‘잔당(Residual Sugar)’이라고 하며, g/L 단위로 표기해요. WSET에서는 Bone Dry부터 Sweet까지 5단계로 구분합니다.",
+        "acidity": "신맛은 ‘산도(Acidity)’예요. 화이트 와인은 보통 6~10 g/L, 레드는 5~7 g/L 정도. 침이 고이는 강도로 느낄 수 있어요.",
+        "body": "무게감은 ‘바디(Body)’ — 알코올·추출물·잔당이 합쳐진 입안의 인상이에요. 탈지유 vs 전유로 비유하기도 해요.",
+        "tannin": "떫은 맛은 ‘타닌(Tannin)’ — 적포도 껍질·씨에서 나오는 폴리페놀. 시간이 지날수록 둥글어져요.",
+        "finish": "여운은 ‘피니시(Finish)’ — 보르도 와인 학교에서는 1초 = 1 카우달리(Caudalie)로 측정합니다."
+      }
+    },
+    "mockup": {
+      "title": {
+        "white": "WHITE WINE TASTING NOTES",
+        "red": "RED WINE TASTING NOTES",
+        "sparkling": "CHAMPAGNE TASTING NOTES",
+        "blind": "BLIND TASTING SHEET"
+      },
+      "subtitle": {
+        "journal": "한 잔의 기록 — 디지털 셀러 저널",
+        "blind": "이 잔에 든 와인은 무엇일까요?"
+      },
+      "section": {
+        "wine": "와인",
+        "aroma": "아로마",
+        "palate": "미각",
+        "bubbles": "기포 · 무쎄",
+        "visual": "시각",
+        "finish": "피니시",
+        "overall": "종합 인상",
+        "rating": "평가",
+        "guess": "와인 추정",
+        "score": "점수"
+      },
+      "meta": {
+        "vintage": "빈티지",
+        "region": "지역",
+        "appellation": "아펠라시옹",
+        "grape": "품종",
+        "price": "가격",
+        "nv": "NV"
+      },
+      "aromaGroup": {
+        "citrus": "시트러스",
+        "treeFruit": "핵과",
+        "tropical": "트로피컬",
+        "floral": "꽃",
+        "mineral": "미네랄",
+        "yeastOak": "발효 · 오크",
+        "redBerry": "붉은 베리",
+        "blackBerry": "검은 베리",
+        "spicy": "향신료",
+        "earthLeather": "흙 · 가죽",
+        "oak": "오크",
+        "autolytic": "자가분해 (효모)",
+        "nutty": "견과",
+        "earth": "흙"
+      },
+      "intensity": {
+        "light": "가벼움",
+        "mediumMinus": "중간−",
+        "medium": "중간",
+        "pronounced": "뚜렷함"
+      },
+      "bubbles": {
+        "size": "크기",
+        "persistence": "지속",
+        "mousse": "무쎄",
+        "bar": "bar"
+      },
+      "dosage": "도사주",
+      "visual": {
+        "hue": "가넷 · 짙음",
+        "depth": "농도",
+        "clarity": "투명도",
+        "legs": "점도",
+        "deep": "Deep",
+        "clear": "Clear",
+        "thick": "Thick"
+      },
+      "tannin": {
+        "texture": "질감",
+        "ripe": "잘 익음",
+        "unripe": "덜 익음",
+        "overripe": "과숙"
+      },
+      "caudalies": "카우달리",
+      "guessRow": {
+        "guess": "추정",
+        "answer": "정답"
+      },
+      "guessLabel": {
+        "grape": "품종",
+        "region": "지역",
+        "vintage": "빈티지",
+        "price": "가격"
+      },
+      "score": {
+        "master": "Master Sommelier 수준",
+        "matched": "{n} / 4 정답"
+      },
+      "statusTime": "9:41",
+      "fakeDate": "2026.05.09",
+      "overall": {
+        "white": "{vintage}년 {region}, {producer}. 강한 향에 레몬·라임이 도드라지고 아카시아·헤이즐넛·부싯돌이 뒤를 받칩니다. 중간+ 바디에 또렷한 산도, 드라이 단맛. 끈기 있고 미네랄리티가 살아있는 마무리.",
+        "red": "{vintage}년 {region}, {producer}. 강한 향에 검은체리·제비꽃이 도드라지고 가죽·담뱃잎·숲바닥이 뒤를 받칩니다. 중간+ 바디에 또렷한 산도. 타닌은 fine-grained 인상으로 매끈하게 짜여 있습니다. 끈기 있고 우아한 마무리.",
+        "sparkling": "{producer}의 {wineName}. 강한 향에 브리오슈·헤이즐넛이 도드라지고 사과·인동초·버터가 뒤를 받칩니다. fine 기포가 persistent하게 올라오며 creamy 무쎄를 만듭니다. 복합적이고 매끄러운 마무리."
+      },
+      "beginner": {
+        "title": {
+          "white": "오늘의 화이트 한 잔",
+          "red": "오늘의 레드 한 잔",
+          "sparkling": "오늘의 스파클링 한 잔"
+        },
+        "note": {
+          "white": "친구와 함께한 디너, 부드럽게 시작한 저녁.",
+          "red": "비오는 저녁, 따뜻한 한 잔.",
+          "sparkling": "축하의 한 잔 — 함께 건배."
+        }
+      }
+    }
+  },
+
   "franceWineDetail": {
     "sectionLabel": "내가 마신 와인",
     "heading": "와인 컬렉션",
@@ -78,7 +420,7 @@
       "france": { "name": "프랑스", "stat": "금액 1위 · $173M" },
       "chile": { "name": "칠레", "stat": "수입량 1위 · 22.54%" },
       "italy": { "name": "이탈리아", "stat": "모스카토 · 키안티" },
-      "newZealand": { "name": "뉴질랜드", "stat": "화이트 1위 · +10%↑" }
+      "newZealand": { "name": "뉴질랜드", "stat": "화이트 1위 · +10%" }
     }
   },
 
@@ -92,7 +434,7 @@
       { "note": "체리, 트러플, 벨벳. 실키한 질감과 무한한 여운.", "occasion": "발렌타인데이" },
       { "note": "헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.", "occasion": "지인 모임" }
     ],
-    "mobileSwipeHint": "← 스와이프 →",
+    "mobileSwipeHint": "좌우로 스와이프",
     "mobileTapHint": "탭해서 다른 와인 보기"
   },
 
@@ -120,8 +462,8 @@
     "heading": "이렇게 사용해요",
     "steps": [
       { "title": "라벨 촬영하기", "body": "레스토랑, 와인 바, 집. 언제 어디서든 마시는 와인 라벨을 카메라로 촬영해주세요.", "detail": "2초 내로 인식" },
-      { "title": "AI 분석으로 지도 물들이기", "body": "원산지가 자동으로 파악되어 세계 지도 위에 기록된다. 마실수록 지도가 물든다.", "detail": "Bordeaux → Pomerol → Premier Grand Cru" },
-      { "title": "내 취향 파고들기", "body": "국가를 탭하면 세부 지역으로 확대됩니다. 내가 탐험한 아펠라시옹과 그랑 크뤼까지 한눈에.", "detail": "AOC → Appellation → Classification" },
+      { "title": "AI 분석으로 지도 물들이기", "body": "원산지가 자동으로 파악되어 세계 지도 위에 기록된다. 마실수록 지도가 물든다.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "내 취향 파고들기", "body": "국가를 탭하면 세부 지역으로 확대됩니다. 내가 탐험한 아펠라시옹과 그랑 크뤼까지 한눈에.", "detail": "AOC · Appellation · Classification" },
       { "title": "한 컷에 담기", "body": "내 와인 여정을 한 눈에 볼 수 있는 이미지로 저장합니다. 클릭 한 번으로 공유해보세요!", "detail": "Recap 이미지 생성" }
     ]
   },

@@ -1,23 +1,33 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { type ComponentType } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
+import {
+  CameraIcon,
+  MapIcon,
+  SearchIcon,
+  StarBurstIcon,
+  type IconProps,
+} from '@/components/icons/wine-icons';
 
-const STEPS = [
+type StepIcon = ComponentType<IconProps>;
+
+const STEPS: { num: string; title: string; body: string; detail: string; Icon: StepIcon; color: string }[] = [
   {
     num: '01',
     title: '라벨 촬영하기',
     body: '레스토랑, 와인 바, 집. 언제 어디서든 마시는 와인 라벨을 카메라로 촬영해주세요.',
     detail: '2초 내로 인식',
-    icon: '📸',
+    Icon: CameraIcon,
     color: '#C41E3A',
   },
   {
     num: '02',
     title: 'AI 분석으로 지도 물들이기',
     body: '원산지가 자동으로 파악되어 세계 지도 위에 기록된다. 마실수록 지도가 물든다.',
-    detail: '프랑스 → 보르도 → 포므롤',
-    icon: '🗺',
+    detail: '프랑스 - 보르도 - 포므롤',
+    Icon: MapIcon,
     color: '#8B5CF6',
   },
   {
@@ -25,7 +35,7 @@ const STEPS = [
     title: '내 취향 파고들기',
     body: '국가를 탭하면 세부 지역으로 확대됩니다. 내가 탐험한 아펠라시옹이 한눈에 보입니다.',
     detail: '드릴다운 지도 탐색',
-    icon: '🔍',
+    Icon: SearchIcon,
     color: '#C9A84C',
   },
   {
@@ -33,7 +43,7 @@ const STEPS = [
     title: '한 컷에 담기',
     body: '내 와인 여정을 한 눈에 볼 수 있는 이미지로 저장합니다. 클릭 한 번으로 공유해보세요!',
     detail: 'Recap 이미지 생성',
-    icon: '✦',
+    Icon: StarBurstIcon,
     color: '#E8C97A',
   },
 ];
@@ -106,11 +116,11 @@ export default function HowItWorksSection() {
                   borderRadius: 14,
                   background: `${step.color}18`,
                   border: `1px solid ${step.color}40`,
-                  fontSize: 'clamp(18px,3vw,24px)',
+                  color: step.color,
                   flexShrink: 0,
                   marginTop: 2,
                 }}>
-                  {step.icon}
+                  <step.Icon size={22} aria-hidden />
                 </div>
 
                 {/* Text */}

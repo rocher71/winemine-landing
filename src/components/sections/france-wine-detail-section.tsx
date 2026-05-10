@@ -54,7 +54,7 @@ const REGION_META: Record<string, { count: number; avg: number; top: string; en:
 };
 const REGION_KOR: Record<string, string> = { '33': '보르도', '21': '부르고뉴', '51': '샹파뉴' };
 
-// 지도에서 클릭 가능한 지역 (département code → region key)
+// 지도에서 클릭 가능한 지역 (département code -> region key)
 const CLICKABLE_DEPTS: Record<string, string> = { '33': '33', '21': '21', '51': '51' };
 const STATIC_FILL: Record<string, { opacity: number }> = {
   '33': { opacity: 0.68 }, '21': { opacity: 0.95 }, '51': { opacity: 0.50 },
@@ -193,7 +193,7 @@ function InteractiveRegionLabel({ korName, count, featured, selected, onClick }:
       {/* Region name */}
       <text textAnchor="middle" y={featured ? -5 : -4}
         style={{ fill: selected ? GOLD : '#F5F0E8', fontSize: featured ? 12 : 10, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
-        {featured ? `✦ ${korName}` : korName}
+        {featured ? `* ${korName}` : korName}
       </text>
 
       {/* Count */}

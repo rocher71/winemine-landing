@@ -62,7 +62,7 @@ export default function WorldMap() {
     <div className="absolute inset-0 overflow-hidden" style={{ background: '#0d0810' }}>
       {/*
         Width = 384vh = 2 × (100vh × 960/500).
-        Each 50%-wide child has aspect ratio 960/500 → SVG fills exactly, no cropping.
+        Each 50%-wide child has aspect ratio 960/500 so SVG fills exactly, no cropping.
         The right edge of copy 1 (= Pacific seam at 140°W) meets the left edge of copy 2
         (= same 140°W), so the tiling is seamless over open ocean.
         translateX(-50%) = exactly one copy's width per loop cycle.

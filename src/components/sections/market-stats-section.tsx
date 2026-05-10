@@ -1,14 +1,22 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, type ComponentType } from 'react';
 import { motion } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
+import {
+  BoltIcon,
+  ChampagneFluteIcon,
+  PhoneIcon,
+  StoreIcon,
+  ArrowUpIcon,
+  type IconProps,
+} from '@/components/icons/wine-icons';
 
 const STATS = [
-  { value: 487558, suffix: '㎘', label: '2025 수입량', sub: '전년比 +5.27%', color: '#E8253E' },
-  { value: 409,    suffix: 'M$', label: '수입 금액',   sub: '4.09억 달러',   color: '#C9A84C' },
-  { value: 10,     suffix: '%↑', label: '화이트 성장', sub: '유일한 두 자릿수', color: '#C9A84C' },
-  { value: 22.54,  suffix: '%',  label: '칠레 점유율', sub: '수입량 기준 1위', color: '#E8253E' },
+  { value: 487558, suffix: '㎘', label: '2025 수입량', sub: '전년比 +5.27%', color: '#E8253E', growth: false },
+  { value: 409,    suffix: 'M$', label: '수입 금액',   sub: '4.09억 달러',   color: '#C9A84C', growth: false },
+  { value: 10,     suffix: '%',  label: '화이트 성장', sub: '유일한 두 자릿수', color: '#C9A84C', growth: true },
+  { value: 22.54,  suffix: '%',  label: '칠레 점유율', sub: '수입량 기준 1위', color: '#E8253E', growth: false },
 ];
 
 function AnimatedNumber({ target, suffix, isDecimal }: { target: number; suffix: string; isDecimal?: boolean }) {
@@ -44,11 +52,11 @@ function AnimatedNumber({ target, suffix, isDecimal }: { target: number; suffix:
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-const TRENDS = [
-  { icon: '⚡', title: '시장 양극화', desc: '1만원대 데일리 와인과 10만원+ 프리미엄이 동반 성장. 중간 가격대는 위축.' },
-  { icon: '🥂', title: '화이트 와인 부상', desc: '전체 -7.5% 축소 속에서 화이트만 +10%. 뉴질랜드 소비뇽 블랑 견인.' },
-  { icon: '📱', title: 'MZ세대 일상화', desc: '홈술·혼술·SNS 페어링 콘텐츠. 와인을 특별한 날이 아닌 일상으로.' },
-  { icon: '🏪', title: '편의점 채널 폭발', desc: '1~2만원 데일리 와인이 주도. 두 자릿수 신장 지속.' },
+const TRENDS: { Icon: ComponentType<IconProps>; title: string; desc: string }[] = [
+  { Icon: BoltIcon,            title: '시장 양극화',     desc: '1만원대 데일리 와인과 10만원+ 프리미엄이 동반 성장. 중간 가격대는 위축.' },
+  { Icon: ChampagneFluteIcon,  title: '화이트 와인 부상', desc: '전체 -7.5% 축소 속에서 화이트만 +10%. 뉴질랜드 소비뇽 블랑 견인.' },
+  { Icon: PhoneIcon,           title: 'MZ세대 일상화',   desc: '홈술·혼술·SNS 페어링 콘텐츠. 와인을 특별한 날이 아닌 일상으로.' },
+  { Icon: StoreIcon,           title: '편의점 채널 폭발', desc: '1~2만원 데일리 와인이 주도. 두 자릿수 신장 지속.' },
 ];
 
 export default function MarketStatsSection() {
@@ -123,12 +131,20 @@ export default function MarketStatsSection() {
                 lineHeight: 1,
                 marginBottom: 8,
                 fontVariantNumeric: 'tabular-nums',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: 4,
               }}>
                 <AnimatedNumber
                   target={s.value}
                   suffix={s.suffix}
                   isDecimal={s.value !== Math.floor(s.value)}
                 />
+                {s.growth && (
+                  <span aria-hidden style={{ display: 'inline-flex', color: s.color }}>
+                    <ArrowUpIcon size={20} />
+                  </span>
+                )}
               </div>
               <div style={{ fontSize: 'clamp(12px,1.2vw,15px)', fontWeight: 600, color: '#F5F0E8', marginBottom: 4 }}>
                 {messages.marketStats.stats[i].label}
@@ -166,7 +182,9 @@ export default function MarketStatsSection() {
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.2)'; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)'; }}
             >
-              <div style={{ fontSize: 22, flexShrink: 0 }}>{t.icon}</div>
+              <div style={{ flexShrink: 0, color: '#C9A84C', display: 'inline-flex' }} aria-hidden>
+                <t.Icon size={22} />
+              </div>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#F5F0E8', marginBottom: 6 }}>{messages.marketStats.trends[i].title}</div>
                 <div style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.7 }}>{messages.marketStats.trends[i].desc}</div>
