@@ -8,10 +8,13 @@ import { useLocale } from '@/components/providers/locale-provider';
 import { WineGlassRedIcon, SparkleIcon } from '@/components/icons/wine-icons';
 import {
   TANNIN_INTENSITY_LABELS,
+  TANNIN_TEXTURE_LABELS,
+  TANNIN_TEXTURE_GROUP_LABELS,
   DOSAGE_LABELS,
   SPARKLING_METHOD_LABELS,
   type WSETScale,
   type TanninTexture,
+  type TanninTextureGroup,
   type BubbleSize,
   type BubblePersistence,
   type MousseTexture,
@@ -42,7 +45,7 @@ export function TanninPanel({
   state: TanninState;
   onChange: (s: TanninState) => void;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   return (
     <div style={{ padding: 16, background: 'rgba(139,26,42,0.08)', border: `1px solid ${WINE_RED}`, borderRadius: 12 }}>
       <div style={{ fontSize: 12, fontWeight: 700, color: WINE_RED, marginBottom: 12, letterSpacing: '0.12em', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -59,10 +62,10 @@ export function TanninPanel({
         <div style={{ fontSize: 12, color: MUTED, marginBottom: 8 }}>
           {t('tastingNote.dimensions.tanninTexture')}
         </div>
-        <TextureGroup label="Soft" textures={TEXTURE_SOFT} active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent={GOLD} />
-        <TextureGroup label="Fine" textures={TEXTURE_FINE} active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="#D4C5B0" />
-        <TextureGroup label="Grippy" textures={TEXTURE_GRIPPY} active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="#A05A3D" />
-        <TextureGroup label="Harsh" textures={TEXTURE_HARSH} active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent={WINE_RED} />
+        <TextureGroup groupId="soft"   locale={locale} textures={TEXTURE_SOFT}   active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent={GOLD} />
+        <TextureGroup groupId="fine"   locale={locale} textures={TEXTURE_FINE}   active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="#D4C5B0" />
+        <TextureGroup groupId="grippy" locale={locale} textures={TEXTURE_GRIPPY} active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="#A05A3D" />
+        <TextureGroup groupId="harsh"  locale={locale} textures={TEXTURE_HARSH}  active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent={WINE_RED} />
       </div>
       <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
         {(['unripe', 'ripe', 'overripe'] as const).map(r => (
@@ -91,12 +94,13 @@ export function TanninPanel({
 }
 
 function TextureGroup({
-  label, textures, active, onSelect, accent,
-}: { label: string; textures: TanninTexture[]; active: TanninTexture; onSelect: (t: TanninTexture) => void; accent: string }) {
+  groupId, locale, textures, active, onSelect, accent,
+}: { groupId: TanninTextureGroup; locale: 'ko' | 'en'; textures: TanninTexture[]; active: TanninTexture; onSelect: (t: TanninTexture) => void; accent: string }) {
+  const groupLabel = TANNIN_TEXTURE_GROUP_LABELS[groupId][locale];
   return (
     <div style={{ marginBottom: 6 }}>
       <div style={{ fontSize: 9, color: accent, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4, fontWeight: 700 }}>
-        {label}
+        {groupLabel}
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
         {textures.map(tex => {
@@ -118,7 +122,7 @@ function TextureGroup({
                 fontWeight: isOn ? 700 : 400,
               }}
             >
-              {tex}
+              {TANNIN_TEXTURE_LABELS[tex][locale]}
             </button>
           );
         })}

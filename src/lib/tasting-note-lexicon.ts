@@ -891,43 +891,76 @@ export const WSET_LABELS_EN: Record<WSETScale, string> = {
 };
 
 export const SWEETNESS_LABELS: Record<WSETScale, { ko: string; en: string }> = {
-  low: { ko: 'Bone Dry', en: 'Bone Dry' },
-  mediumMinus: { ko: 'Dry', en: 'Dry' },
-  medium: { ko: 'Off-Dry', en: 'Off-Dry' },
-  mediumPlus: { ko: 'Medium', en: 'Medium' },
-  high: { ko: 'Sweet', en: 'Sweet' },
+  low: { ko: '본 드라이 (Bone Dry)', en: 'Bone Dry' },
+  mediumMinus: { ko: '드라이 (Dry)', en: 'Dry' },
+  medium: { ko: '오프 드라이 (Off-Dry)', en: 'Off-Dry' },
+  mediumPlus: { ko: '미디엄 (Medium)', en: 'Medium' },
+  high: { ko: '스위트 (Sweet)', en: 'Sweet' },
 };
 
 export const ACIDITY_LABELS: Record<WSETScale, { ko: string; en: string }> = {
-  low: { ko: 'Soft', en: 'Soft' },
-  mediumMinus: { ko: '중간−', en: 'Medium−' },
-  medium: { ko: '중간', en: 'Medium' },
-  mediumPlus: { ko: 'Crisp', en: 'Crisp' },
-  high: { ko: 'Racy', en: 'Racy' },
+  low: { ko: '부드러움 (Soft)', en: 'Soft' },
+  mediumMinus: { ko: '약간 낮음 (Medium−)', en: 'Medium−' },
+  medium: { ko: '중간 (Medium)', en: 'Medium' },
+  mediumPlus: { ko: '쨍함 (Crisp)', en: 'Crisp' },
+  high: { ko: '톡 쏨 (Racy)', en: 'Racy' },
 };
 
 export const BODY_LABELS: Record<WSETScale, { ko: string; en: string }> = {
-  low: { ko: 'Light', en: 'Light' },
-  mediumMinus: { ko: '중간−', en: 'Medium−' },
-  medium: { ko: '중간', en: 'Medium' },
-  mediumPlus: { ko: '중간+', en: 'Medium+' },
-  high: { ko: 'Full', en: 'Full' },
+  low: { ko: '가벼움 (Light)', en: 'Light' },
+  mediumMinus: { ko: '약간 가벼움 (Medium−)', en: 'Medium−' },
+  medium: { ko: '중간 (Medium)', en: 'Medium' },
+  mediumPlus: { ko: '약간 묵직 (Medium+)', en: 'Medium+' },
+  high: { ko: '풀바디 (Full)', en: 'Full' },
 };
 
 export const ALCOHOL_LABELS: Record<WSETScale, { ko: string; en: string }> = {
-  low: { ko: '<11%', en: '<11%' },
-  mediumMinus: { ko: '11–12.5%', en: '11–12.5%' },
-  medium: { ko: '12.5–13.5%', en: '12.5–13.5%' },
-  mediumPlus: { ko: '13.5–14%', en: '13.5–14%' },
-  high: { ko: '>14%', en: '>14%' },
+  low: { ko: '낮음 (<11%)', en: 'Low (<11%)' },
+  mediumMinus: { ko: '약간 낮음 (11–12.5%)', en: 'Medium− (11–12.5%)' },
+  medium: { ko: '중간 (12.5–13.5%)', en: 'Medium (12.5–13.5%)' },
+  mediumPlus: { ko: '약간 높음 (13.5–14%)', en: 'Medium+ (13.5–14%)' },
+  high: { ko: '높음 (>14%)', en: 'High (>14%)' },
 };
 
 export const TANNIN_INTENSITY_LABELS: Record<WSETScale, { ko: string; en: string }> = {
-  low: { ko: 'Soft', en: 'Soft' },
-  mediumMinus: { ko: '중간−', en: 'Medium−' },
-  medium: { ko: '중간', en: 'Medium' },
-  mediumPlus: { ko: 'Firm', en: 'Firm' },
-  high: { ko: 'Aggressive', en: 'Aggressive' },
+  low: { ko: '부드러움 (Soft)', en: 'Soft' },
+  mediumMinus: { ko: '약간 약함 (Medium−)', en: 'Medium−' },
+  medium: { ko: '중간 (Medium)', en: 'Medium' },
+  mediumPlus: { ko: '단단함 (Firm)', en: 'Firm' },
+  high: { ko: '강함 (Aggressive)', en: 'Aggressive' },
+};
+
+export const TANNIN_TEXTURE_LABELS: Record<TanninTexture, { ko: string; en: string }> = {
+  silky:       { ko: '실키 (Silky)',          en: 'Silky' },
+  velvety:     { ko: '벨벳 (Velvety)',        en: 'Velvety' },
+  smooth:      { ko: '매끄러움 (Smooth)',     en: 'Smooth' },
+  plush:       { ko: '풍성함 (Plush)',        en: 'Plush' },
+  soft:        { ko: '부드러움 (Soft)',       en: 'Soft' },
+  round:       { ko: '둥근 (Round)',          en: 'Round' },
+  fineGrained: { ko: '고운 입자 (Fine-grained)', en: 'Fine-grained' },
+  polished:    { ko: '광택 (Polished)',       en: 'Polished' },
+  powdery:     { ko: '파우더 (Powdery)',      en: 'Powdery' },
+  dusty:       { ko: '먼지 (Dusty)',          en: 'Dusty' },
+  chalky:      { ko: '백악질 (Chalky)',       en: 'Chalky' },
+  grainy:      { ko: '거친 입자 (Grainy)',    en: 'Grainy' },
+  grippy:      { ko: '잡힘 (Grippy)',         en: 'Grippy' },
+  firm:        { ko: '단단함 (Firm)',         en: 'Firm' },
+  chewy:       { ko: '씹힘 (Chewy)',          en: 'Chewy' },
+  coarse:      { ko: '거칢 (Coarse)',         en: 'Coarse' },
+  rough:       { ko: '거친 (Rough)',          en: 'Rough' },
+  harsh:       { ko: '날카로움 (Harsh)',      en: 'Harsh' },
+  astringent:  { ko: '수렴성 (Astringent)',   en: 'Astringent' },
+  drying:      { ko: '입 마름 (Drying)',      en: 'Drying' },
+  aggressive:  { ko: '공격적 (Aggressive)',   en: 'Aggressive' },
+};
+
+export type TanninTextureGroup = 'soft' | 'fine' | 'grippy' | 'harsh';
+
+export const TANNIN_TEXTURE_GROUP_LABELS: Record<TanninTextureGroup, { ko: string; en: string }> = {
+  soft:   { ko: '부드러운 계열 (Soft)',  en: 'Soft' },
+  fine:   { ko: '미세한 계열 (Fine)',    en: 'Fine' },
+  grippy: { ko: '잡히는 계열 (Grippy)',  en: 'Grippy' },
+  harsh:  { ko: '거친 계열 (Harsh)',     en: 'Harsh' },
 };
 
 export const FINISH_LENGTH_LABELS: Record<FinishLength, { ko: string; en: string; range: string }> = {
