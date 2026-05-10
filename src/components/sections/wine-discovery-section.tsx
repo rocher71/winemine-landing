@@ -183,19 +183,23 @@ type TourStop = { wine: RecommendedWine; coord: [number, number]; zoom: number }
 const wineById = (id: string): RecommendedWine =>
   ALL_WINES.find(w => w.id === id) as RecommendedWine;
 
-const TOUR_STOPS: TourStop[] = [
+// Mobile screens get a much wider world view because slice-cropping eats most
+// of the SVG horizontally. Desktop already shows the full 16:9 SVG.
+const getTourStops = (isMobile: boolean): TourStop[] => [
   // Open on France (Bordeaux) — origin of the neural-link.
   { wine: wineById('chianti'),  coord: STARTING_WINE.coords, zoom: 3.5 },
   // Zoom out to the world — all reached regions visible in one frame.
-  { wine: wineById('napa-cab'), coord: [10, 22],             zoom: 1.0 },
+  { wine: wineById('napa-cab'), coord: [10, 22],             zoom: isMobile ? 0.4 : 0.85 },
 ];
+
+// Wine sequence is viewport-independent — used by RecommendationCard.
+const TOUR_STOPS = getTourStops(false);
 
 const TOUR_START = 0.10; // before this, hold on stop 0 + lines drawing
 const TOUR_END   = 0.85; // last stop reached here, then hold until 1.0 (dwell time)
 
 // Build keyframe arrays for useTransform — hold start, linear transition to end, hold end.
-function buildTour() {
-  const stops = TOUR_STOPS;
+function buildTour(stops: TourStop[]) {
   const inputs: number[] = [0];
   const lons: number[]   = [stops[0].coord[0]];
   const lats: number[]   = [stops[0].coord[1]];
@@ -229,7 +233,6 @@ function buildTour() {
   return { inputs, lons, lats, zooms };
 }
 
-const TOUR_KF = buildTour();
 
 // ── Map content — controlled ZoomableGroup, no user input ─────────────────
 type MapContentProps = {
@@ -266,7 +269,7 @@ function MapContent({
       <ZoomableGroup
         zoom={zoom}
         center={center}
-        minZoom={0.5}
+        minZoom={0.3}
         maxZoom={10}
         // Disable all user input — camera is fully scroll-driven.
         filterZoomEvent={() => false}
@@ -358,12 +361,14 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
   const [isMobile, setIsMobile] = useState(false);
   const [waveIdx, setWaveIdx] = useState(-1);
 
-  // Camera state driven by scroll progress.
-  const lonMV  = useTransform(progress, TOUR_KF.inputs, TOUR_KF.lons);
-  const latMV  = useTransform(progress, TOUR_KF.inputs, TOUR_KF.lats);
-  const zoomMV = useTransform(progress, TOUR_KF.inputs, TOUR_KF.zooms);
-  const [center, setCenter] = useState<[number, number]>([TOUR_KF.lons[0], TOUR_KF.lats[0]]);
-  const [zoom, setZoom] = useState<number>(TOUR_STOPS[0].zoom);
+  // Camera state driven by scroll progress. Tour stops depend on viewport
+  // because mobile slice-cropping needs a much wider final world view.
+  const tourKF = useMemo(() => buildTour(getTourStops(isMobile)), [isMobile]);
+  const lonMV  = useTransform(progress, tourKF.inputs, tourKF.lons);
+  const latMV  = useTransform(progress, tourKF.inputs, tourKF.lats);
+  const zoomMV = useTransform(progress, tourKF.inputs, tourKF.zooms);
+  const [center, setCenter] = useState<[number, number]>([tourKF.lons[0], tourKF.lats[0]]);
+  const [zoom, setZoom] = useState<number>(tourKF.zooms[0]);
 
   useEffect(() => {
     setMounted(true);
