@@ -171,6 +171,9 @@ export default function VineyardStrip() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexDirection: 'column', gap: 8,
         }}>
+          <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.3em', color: '#C9A84C', textTransform: 'uppercase' }}>
+            {messages.vineyardStrip.label2}
+          </div>
           <div style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(18px,3.5vw,36px)',

@@ -20,18 +20,18 @@
 
   "wineDiscovery": {
     "sectionLabel": "Beginner's first map",
-    "topQuestion": "와인을 가볍게 즐기고 싶으신가요?",
+    "topQuestion": "나만의 와인지도, 어떻게 시작할까요?",
     "step0": {
       "title": "와인 한 병이,",
       "subtitle": "처음에는 그냥 라벨일 뿐"
     },
     "step1": {
-      "label": "01 · 먹어본 와인 스캔",
-      "title": "찍기만 하면\n나머지는 우리가",
-      "body": "Château·빈티지·등급·산지까지 자동 추출"
+      "label": "1. 먹어본 와인 스캔",
+      "title": "찍기만 하면\n나머지는 AI가 알아서",
+      "body": "Château, 빈티지, 등급, 산지까지 자동 추출"
     },
     "step2": {
-      "label": "02 · 비슷한 입문 한 병",
+      "label": "2. 비슷한 입문 한 병",
       "title": "기록이 쌓일수록\n취향에 딱 맞는 한 병",
       "body": "당신이 마신 산지에서 시작해\n비슷한 입문 와인을 지도 위에 추천해드립니다",
       "startHint": "당신이 마신 보르도 레드와 비슷한…",
@@ -44,14 +44,14 @@
   },
 
   "burgundy": {
-    "sectionLabel": "AI 자동 분류 · 부르고뉴",
-    "heading": "와인을 깊게 파고드시나요?"
+    "sectionLabel": "AI 자동 분류 - 부르고뉴",
+    "heading": "부르고뉴 한 병의 디테일까지."
   },
 
   "tastingNote": {
-    "eyebrow": "기록 · CAPTURE",
-    "heading": "그리고 그 한 잔, 어떻게 기억에 남기시겠어요?",
-    "subhead": "와인 전문가들이 손글씨로 채우는 그 양식, 카메라 한 번이면 디지털로 끝납니다.",
+    "eyebrow": "기록, CAPTURE",
+    "heading": "내가 마신 한 잔, 어떻게 기억에 남기시겠어요?",
+    "subhead": "와인 전문가들이 손글씨로 채우는 그 양식, WineMine으로 쉽게.",
     "tabs": {
       "white": "White",
       "red": "Red",
@@ -110,7 +110,7 @@
     "faults": {
       "title": "결함 점검 · Fault Check",
       "intro": "전문가 모드를 켜면 11종 결함 카탈로그가 펼쳐집니다",
-      "footnote": "결함은 명시적 사용자 체크가 있을 때만 기록됩니다 — 자동 추론 X"
+      "footnote": "결함은 명시적 사용자 체크가 있을 때만 기록됩니다."
     },
     "evolution": {
       "title": "오프닝 타임라인 · Opening Timeline",
@@ -125,7 +125,7 @@
       "deltaTannin": "T0 대비 타닌 부드러움",
       "deltaBody": "T0 대비 바디",
       "reductionLabel": "환원취 (Reduction) 느껴짐",
-      "reductionTooltip": "성냥·고무·H₂S·양배추·마늘. 산소 노출로 사라지는 결함성 향. 영 시라·환원성 양조 와인에 흔함.",
+      "reductionTooltip": "성냥, 고무, H₂S, 양배추, 마늘. 산소 노출로 사라지는 결함성 향. 영 시라, 환원성 양조 와인에 흔함.",
       "newAromas": "이 시점에서 새로 등장한 향",
       "scoreLabel": "이 시점의 전반 점수",
       "noteLabel": "메모",
@@ -153,25 +153,25 @@
       "rankEnthusiast": "Wine Enthusiast",
       "rankExploring": "탐험 단계 — 더 마셔보세요",
       "rankFinding": "재미있는 발견 — 와인의 다양성을 즐기세요",
-      "demoNote": "이 모드는 데모용입니다. 실제 와인은 mockup의 가상 데이터입니다."
+      "demoNote": "이 모드는 데모용입니다. 앱에서 실제 데이터를 기반으로 사용해보세요."
     },
     "autoDescription": {
       "title": "자동 시음 노트",
-      "saveCta": "이 노트, 앱에서 진짜로 저장해 보기"
+      "saveCta": "앱에서 테이스팅 노트 직접 작성하기"
     },
     "rating": {
       "title": "평가",
       "wouldBuyAgain": "다시 사시겠어요?"
     },
     "cta": {
-      "save": "이 노트, 앱에서 진짜로 저장해 보기",
+      "save": "테이스팅 노트를 직접 작성해보세요.",
       "waitlist": "웨이팅 리스트에 등록"
     },
-    "outro": "당신의 셀러에 50병이 쌓인 어느 날, 우리는 그 50병을 한 줄로 정리해 드립니다.",
-    "placeholder": "{variant} 양식을 선택했습니다 — Day 2 이후 mockup·부케 휠·슬라이더가 채워집니다.",
+    "outro": "기록이 쌓일수록 당신의 와인 취향이 선명해집니다. 앱에서 당신만의 와인지도를 완성해보세요.",
+    "placeholder": "{variant} 양식을 선택했습니다 — Day 2 이후 mockup, 부케 휠, 슬라이더가 채워집니다.",
     "invite": {
       "eyebrow": "직접 만져보세요",
-      "title": "이 노트, 진짜로 작성해볼 수 있어요",
+      "title": "테이스팅 노트를 직접 작성해보세요.",
       "subtitle": "부케 휠을 돌리고, 카우달리를 측정하고, 120종 어휘에서 직접 골라보세요. 5분이면 충분해요.",
       "bullet1": "부케 휠 12 카테고리",
       "bullet2": "카우달리 측정기",
@@ -182,16 +182,16 @@
     },
     "playground": {
       "pageTitle": "테이스팅 노트 플레이그라운드",
-      "pageIntro": "전체 인터랙티브 데모 — 부케 휠·WSET 슬라이더·카우달리 측정·결함 점검·오프닝 타임라인·자동 묘사 모두 살아있는 환경에서 체험. 입력은 어디에도 저장되지 않습니다.",
+      "pageIntro": "전체 인터랙티브 데모 — 부케 휠, WSET 슬라이더, 카우달리 측정, 결함 점검, 오프닝 타임라인, 자동 묘사 모두 살아있는 환경에서 체험. 입력은 어디에도 저장되지 않습니다.",
       "backToHome": "메인으로 돌아가기",
-      "stepCapture": "1 · 라벨 인식",
-      "stepAroma": "2 · 아로마",
-      "stepPalate": "3 · 미각",
-      "stepFinish": "4 · 피니시",
-      "stepFaults": "5 · 결함 점검",
-      "stepEvolution": "6 · 오프닝 타임라인",
-      "stepRating": "7 · 평가",
-      "stepBlind": "8 · 블라인드",
+      "stepCapture": "1. 라벨 인식",
+      "stepAroma": "2. 아로마",
+      "stepPalate": "3. 미각",
+      "stepFinish": "4. 피니시",
+      "stepFaults": "5. 결함 점검",
+      "stepEvolution": "6. 오프닝 타임라인",
+      "stepRating": "7. 평가",
+      "stepBlind": "8. 블라인드",
       "demoNote": "이 페이지의 입력은 어디에도 저장되지 않습니다. 페이지를 떠나면 사라집니다.",
       "aromaHint": "어휘를 hover하면 임팩트 화합물 정보가 나타납니다.",
       "finishHint": "마지막 모금 후 풍미가 사라지는 시간을 측정해보세요.",
@@ -204,7 +204,7 @@
       },
       "downloadCta": {
         "eyebrow": "내 셀러로",
-        "heading": "이걸 나만의 기록으로 남기고 싶다면",
+        "heading": "나만의 기록으로 남기고 싶다면",
         "body": "지금 작성한 노트는 페이지를 떠나면 사라져요. 앱을 받으면 매 잔의 기록이 셀러에 쌓이고, 친구와 한 줄로 공유할 수 있어요.",
         "waitlist": "웨이팅 리스트 등록"
       }
@@ -252,12 +252,12 @@
       "aromaCard": {
         "berry": "베리",
         "citrus": "시트러스",
-        "stoneFruit": "사과·복숭아",
+        "stoneFruit": "사과, 복숭아",
         "floral": "꽃",
         "spice": "향신료",
         "sweet": "달콤한 향",
-        "earth": "흙·나무",
-        "yeast": "빵·견과"
+        "earth": "흙, 나무",
+        "yeast": "빵, 견과"
       },
       "aromaHint": "여러 개 골라도 좋아요",
       "finishOption": {
@@ -315,11 +315,11 @@
         "tropical": "트로피컬",
         "floral": "꽃",
         "mineral": "미네랄",
-        "yeastOak": "발효 · 오크",
+        "yeastOak": "발효, 오크",
         "redBerry": "붉은 베리",
         "blackBerry": "검은 베리",
         "spicy": "향신료",
-        "earthLeather": "흙 · 가죽",
+        "earthLeather": "흙, 가죽",
         "oak": "오크",
         "autolytic": "자가분해 (효모)",
         "nutty": "견과",
@@ -414,7 +414,7 @@
   "vineyardStrip": {
     "label1": "Vineyards of the World",
     "heading": "당신이 마신 와인이 태어난 땅",
-    "label2": "Korea Wine Market 2026",
+    "label2": "With WINEMINE",
     "body": "나만의 와인을\n지도 위에 기록하다",
     "countries": {
       "france": { "name": "프랑스", "stat": "금액 1위 · $173M" },
