@@ -4,6 +4,7 @@ import { useState, useRef, useLayoutEffect, useEffect, type ReactNode } from 're
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
+import { Bottle } from '@/components/wine-bottles/wine-bottle';
 import {
   WineGlassRedIcon,
   WineGlassWhiteIcon,
@@ -399,30 +400,30 @@ function WineGlassRating({ value, size = 9, color = GOLD, gap = 2 }: { value: nu
   );
 }
 
+const BURGUNDY_LABEL_FG: Record<WineType, string> = {
+  red:    '#3a1a20',
+  white:  '#1a3a1a',
+  'rosé': '#7a3a3a',
+};
+
 function BottleSilhouette({ wine, width = 44, height = 105 }: { wine: Wine; width?: number; height?: number }) {
-  const uid = `bb-${wine.id}`;
-  const c = wine.color;
-  const lbl = wine.vintage > 0 ? String(wine.vintage) : 'NV';
-  const app = (wine.appellation || '').slice(0, 8).toUpperCase();
+  const vintageStr = wine.vintage > 0 ? String(wine.vintage) : 'NV';
+  const region = `${(wine.appellation || '').toUpperCase()} · ${vintageStr}`;
   return (
-    <svg width={width} height={height} viewBox="0 0 48 108" style={{ flexShrink: 0 }}>
-      <defs>
-        <linearGradient id={uid} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%"  stopColor={c} stopOpacity="1"    />
-          <stop offset="75%" stopColor={c} stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#000" stopOpacity="0.6" />
-        </linearGradient>
-      </defs>
-      <path d="M15 30 L15 90 Q15 98 24 98 Q33 98 33 90 L33 30 Q31 28 29 26 L29 18 Q29 14 25 14 L23 14 Q19 14 19 18 L19 26 Q17 28 15 30 Z" fill={`url(#${uid})`} />
-      <rect x="20" y="9"  width="8"  height="9"  rx="2" fill="#0a0612" fillOpacity="0.85" />
-      <rect x="19" y="15" width="10" height="2"        fill={GOLD}     fillOpacity="0.8"  />
-      <rect x="17" y="50" width="14" height="24" rx="1" fill="#f5ecd6" stroke={GOLD} strokeWidth="0.5" strokeOpacity="0.6" />
-      <text x="24" y="57"   textAnchor="middle" fontFamily="Georgia,serif"  fontSize="3.5" fontStyle="italic" fill="#3d1a26">Domaine</text>
-      <text x="24" y="63"   textAnchor="middle" fontFamily="Georgia,serif"  fontSize="5"   fontWeight="bold" fill="#3d1a26">{wine.label}</text>
-      <line x1="19" y1="65" x2="29" y2="65" stroke="#3d1a26" strokeWidth="0.4" strokeOpacity="0.5" />
-      <text x="24" y="68.5" textAnchor="middle" fontFamily="Inter,sans-serif" fontSize="2.5" letterSpacing="0.8" fill="#3d1a26">{app}</text>
-      <text x="24" y="72.5" textAnchor="middle" fontFamily="Georgia,serif"   fontSize="4"   fontWeight="600" fill="#3d1a26">{lbl}</text>
-    </svg>
+    <Bottle
+      shape="burgundy"
+      style="detailed"
+      glass={wine.color}
+      liquid={wine.color}
+      foil={wine.wineType === 'white' ? '#F5F0E8' : wine.wineType === 'rosé' ? '#F5F0E8' : '#8B1A2A'}
+      label="#F5F0E8"
+      labelText={BURGUNDY_LABEL_FG[wine.wineType]}
+      typeName={wine.label}
+      region={region}
+      ornament="line"
+      width={width}
+      height={height}
+    />
   );
 }
 
