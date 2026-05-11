@@ -20,18 +20,14 @@
 
   "wineDiscovery": {
     "sectionLabel": "Beginner's first map",
-    "topQuestion": "Curious about wine?",
-    "step0": {
-      "title": "A bottle of wine",
-      "subtitle": "begins as just a label"
-    },
+    "topQuestion": "How will your wine map begin?",
     "step1": {
-      "label": "01 · Scan what you drank",
-      "title": "Snap once,\nwe handle the rest",
+      "label": "1. Scan what you drank",
+      "title": "Snap once,\nAI handles the rest",
       "body": "Château, vintage, grade, region — auto-extracted"
     },
     "step2": {
-      "label": "02 · A similar first bottle",
+      "label": "2. A similar first bottle",
       "title": "The more you log,\nthe better the next bottle",
       "body": "Starting from the region you tasted,\nwe pin similar starter wines on the map",
       "startHint": "Similar to the Bordeaux red you had…",
@@ -44,14 +40,14 @@
   },
 
   "burgundy": {
-    "sectionLabel": "AI Auto-sort · Burgundy",
-    "heading": "Going deep into wine?"
+    "sectionLabel": "AI Auto-sort - Burgundy",
+    "heading": "Down to every Burgundy detail."
   },
 
   "tastingNote": {
     "eyebrow": "CAPTURE",
-    "heading": "And how will you remember that one glass?",
-    "subhead": "The same paper form wine experts fill by hand — done with one tap of the camera.",
+    "heading": "How will you remember it?",
+    "subhead": "The same paper form wine experts fill by hand — made easy with WineMine.",
     "tabs": {
       "white": "White",
       "red": "Red",
@@ -110,7 +106,7 @@
     "faults": {
       "title": "Fault Check",
       "intro": "Expert mode reveals an 11-fault catalog",
-      "footnote": "Faults are recorded only when explicitly checked — never inferred."
+      "footnote": "Faults are recorded only when explicitly checked."
     },
     "evolution": {
       "title": "Opening Timeline",
@@ -153,25 +149,25 @@
       "rankEnthusiast": "Wine Enthusiast",
       "rankExploring": "Exploring — drink more",
       "rankFinding": "A fun discovery — enjoy the diversity",
-      "demoNote": "This mode is a demo. The wine is mocked data."
+      "demoNote": "This mode is a demo. Try the real thing in the app with your own wines."
     },
     "autoDescription": {
       "title": "Auto Tasting Note",
-      "saveCta": "Save this note for real in the app"
+      "saveCta": "Write your own tasting note in the app"
     },
     "rating": {
       "title": "Rating",
       "wouldBuyAgain": "Would buy again?"
     },
     "cta": {
-      "save": "Save this note for real in the app",
+      "save": "Try writing your own tasting note.",
       "waitlist": "Join the waitlist"
     },
-    "outro": "When 50 bottles fill your cellar, we'll line them up for you in a single thread.",
+    "outro": "The more you log, the clearer your taste becomes. Build your own wine map in the app.",
     "placeholder": "Selected: {variant} — mockup, aroma wheel and sliders arrive in Day 2.",
     "invite": {
       "eyebrow": "Try it yourself",
-      "title": "Want to actually write this note?",
+      "title": "Try writing a tasting note yourself.",
       "subtitle": "Spin the aroma wheel, measure caudalies, pick from 120 vocabulary words. Five minutes is all it takes.",
       "bullet1": "Aroma wheel · 12 categories",
       "bullet2": "Caudalie meter",
@@ -181,17 +177,17 @@
       "hint": "Opens a new page · Inputs are never saved"
     },
     "playground": {
-      "pageTitle": "Tasting Note Playground",
-      "pageIntro": "Full interactive demo — aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline and auto description, all live. Inputs are never saved anywhere.",
+      "pageTitle": "Try the Tasting Note",
+      "pageIntro": "Aroma wheel, WSET sliders, caudalie measurement, fault check, opening timeline, auto description — try them all!",
       "backToHome": "Back to home",
-      "stepCapture": "1 · Label Capture",
-      "stepAroma": "2 · Aroma",
-      "stepPalate": "3 · Palate",
-      "stepFinish": "4 · Finish",
-      "stepFaults": "5 · Fault Check",
-      "stepEvolution": "6 · Opening Timeline",
-      "stepRating": "7 · Rating",
-      "stepBlind": "8 · Blind",
+      "stepCapture": "1. Label Capture",
+      "stepAroma": "2. Aroma",
+      "stepPalate": "3. Palate",
+      "stepFinish": "4. Finish",
+      "stepFaults": "5. Fault Check",
+      "stepEvolution": "6. Opening Timeline",
+      "stepRating": "7. Rating",
+      "stepBlind": "8. Blind",
       "demoNote": "Inputs on this page are never saved. They disappear when you leave.",
       "aromaHint": "Hover over a word to see impact compound info.",
       "finishHint": "Time how long flavor lingers after the last sip.",
@@ -204,7 +200,7 @@
       },
       "downloadCta": {
         "eyebrow": "To your cellar",
-        "heading": "Want to keep this as your own record?",
+        "heading": "Want to keep it as your own record?",
         "body": "Your notes vanish when you leave this page. With the app, every glass goes into your cellar — and shares with friends in one line.",
         "waitlist": "Join the waitlist"
       }
@@ -252,12 +248,12 @@
       "aromaCard": {
         "berry": "Berry",
         "citrus": "Citrus",
-        "stoneFruit": "Apple · Peach",
+        "stoneFruit": "Apple, Peach",
         "floral": "Floral",
         "spice": "Spice",
         "sweet": "Sweet aroma",
-        "earth": "Earth · Wood",
-        "yeast": "Bread · Nutty"
+        "earth": "Earth, Wood",
+        "yeast": "Bread, Nutty"
       },
       "aromaHint": "Pick as many as you like",
       "finishOption": {
@@ -319,7 +315,7 @@
         "redBerry": "Red Berry",
         "blackBerry": "Black Berry",
         "spicy": "Spicy",
-        "earthLeather": "Earth · Leather",
+        "earthLeather": "Earth, Leather",
         "oak": "Oak",
         "autolytic": "Autolytic",
         "nutty": "Nutty",
@@ -414,7 +410,7 @@
   "vineyardStrip": {
     "label1": "Vineyards of the World",
     "heading": "The land where your wine was born",
-    "label2": "Korea Wine Market 2026",
+    "label2": "With WINEMINE",
     "body": "Your wines,\nmapped to the world.",
     "countries": {
       "france": { "name": "France", "stat": "#1 by value · $173M" },

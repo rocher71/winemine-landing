@@ -2,10 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
-import { CountryFlag, ArrowUpIcon, type CountryFlagProps } from '@/components/icons/wine-icons';
+import { ArrowUpIcon } from '@/components/icons/wine-icons';
 
 const VINEYARDS: {
-  code: CountryFlagProps['code'];
   country: string;
   korean: string;
   stat: string;
@@ -14,7 +13,6 @@ const VINEYARDS: {
   alt: string;
 }[] = [
   {
-    code: 'FR',
     country: 'France',
     korean: '프랑스',
     stat: '금액 1위 · $173M',
@@ -22,7 +20,6 @@ const VINEYARDS: {
     alt: '프랑스 포도밭',
   },
   {
-    code: 'CL',
     country: 'Chile',
     korean: '칠레',
     stat: '수입량 1위 · 22.54%',
@@ -30,7 +27,6 @@ const VINEYARDS: {
     alt: '칠레 포도밭',
   },
   {
-    code: 'IT',
     country: 'Italy',
     korean: '이탈리아',
     stat: '모스카토 · 키안티',
@@ -38,7 +34,6 @@ const VINEYARDS: {
     alt: '이탈리아 토스카나 포도밭',
   },
   {
-    code: 'NZ',
     country: 'New Zealand',
     korean: '뉴질랜드',
     stat: '화이트 1위 · +10%',
@@ -133,9 +128,6 @@ export default function VineyardStrip() {
               position: 'absolute', bottom: 0, left: 0, right: 0,
               padding: 'clamp(12px,2vw,20px)',
             }}>
-              <div style={{ marginBottom: 6 }}>
-                <CountryFlag code={v.code} size={20} />
-              </div>
               <div style={{
                 fontFamily: 'var(--font-playfair), Georgia, serif',
                 fontSize: 'clamp(13px,1.8vw,20px)',

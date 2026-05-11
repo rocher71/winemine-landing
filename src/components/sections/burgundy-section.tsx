@@ -149,7 +149,7 @@ const SUBREGION_TO_COTE: Record<string, Cote> = {
   'maconnais': 'Mâconnais',
 };
 
-const MOBILE_TAB_BAR_HEIGHT = 64; // 모바일 하단 breadcrumb + 컬러 토글 영역
+// 모바일 breadcrumb + 컬러 토글은 시트 상단(드래그 핸들 아래)에 위치 — 하단 바 없음
 
 // 지도 배경 앰비언트 라벨 (마커보다 흐림, 맥락 이해용)
 type AmbientSize = 'lg' | 'md' | 'sm';
@@ -760,9 +760,7 @@ function CommuneCard({ data, onClick, colorFilter, active }: {
 
 // ── Breadcrumb / Color toggle ────────────────────────────────────────────────
 
-function Breadcrumb({ drill, onDrill, mobile }: {
-  drill: DrillLevel; onDrill: (d: DrillLevel) => void; mobile?: boolean;
-}) {
+function buildCrumbs(drill: DrillLevel, onDrill: (d: DrillLevel) => void) {
   type Crumb = { label: string; click?: () => void };
   const crumbs: Crumb[] = [];
   crumbs.push({ label: '부르고뉴', click: () => onDrill({ kind: 'overview' }) });
@@ -782,10 +780,17 @@ function Breadcrumb({ drill, onDrill, mobile }: {
   if (drill.kind === 'cru') {
     crumbs.push({ label: CRU_META[drill.cru].ko });
   }
+  return crumbs;
+}
+
+function Breadcrumb({ drill, onDrill }: {
+  drill: DrillLevel; onDrill: (d: DrillLevel) => void;
+}) {
+  const crumbs = buildCrumbs(drill, onDrill);
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' as const,
-      fontSize: mobile ? 12 : 11.5, letterSpacing: '0.02em',
+      fontSize: 11.5, letterSpacing: '0.02em',
     }}>
       {crumbs.map((c, i) => {
         const last = i === crumbs.length - 1;
@@ -809,6 +814,70 @@ function Breadcrumb({ drill, onDrill, mobile }: {
               <span style={{ color: last ? GOLD : '#D4C5B0', fontWeight: last ? 700 : 500 }}>{c.label}</span>
             )}
           </span>
+        );
+      })}
+    </div>
+  );
+}
+
+// 모바일 시트 상단 chip 형태 — 알약 버튼으로 명확한 탭 가능 표시. 가로 스크롤 지원.
+function MobileBreadcrumbChips({ drill, onDrill }: {
+  drill: DrillLevel; onDrill: (d: DrillLevel) => void;
+}) {
+  const crumbs = buildCrumbs(drill, onDrill);
+  return (
+    <div
+      style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+        overflowX: 'auto', overflowY: 'hidden',
+        WebkitOverflowScrolling: 'touch',
+        paddingBottom: 2, // 가로 스크롤 시 클리핑 방지
+      }}
+    >
+      {crumbs.map((c, i) => {
+        const last = i === crumbs.length - 1;
+        const clickable = !!c.click && !last;
+        if (last) {
+          return (
+            <span key={i} style={{
+              flexShrink: 0,
+              padding: '6px 12px',
+              background: 'rgba(240,200,118,0.14)',
+              border: '1px solid rgba(240,200,118,0.5)',
+              borderRadius: 9999,
+              color: GOLD,
+              fontSize: 12.5, fontWeight: 700,
+              letterSpacing: '0.02em',
+              whiteSpace: 'nowrap' as const,
+            }}>
+              {c.label}
+            </span>
+          );
+        }
+        return (
+          <button
+            key={i}
+            onClick={clickable ? c.click : undefined}
+            disabled={!clickable}
+            style={{
+              flexShrink: 0,
+              padding: '6px 11px 6px 8px',
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.16)',
+              borderRadius: 9999,
+              color: '#E4D8C4',
+              fontSize: 12.5, fontWeight: 500,
+              fontFamily: 'inherit',
+              cursor: clickable ? 'pointer' : 'default',
+              display: 'inline-flex', alignItems: 'center', gap: 3,
+              whiteSpace: 'nowrap' as const,
+              transition: 'all 150ms',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <span aria-hidden style={{ fontSize: 14, lineHeight: 1, color: GOLD, marginTop: -1 }}>‹</span>
+            {c.label}
+          </button>
         );
       })}
     </div>
@@ -1015,36 +1084,6 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
   );
 }
 
-// ── Mobile bottom bar (breadcrumb + 색 토글, 시트 위) ─────────────────────────
-function MobileBottomBar({ drill, onDrill, colorFilter, onColor, visible }: {
-  drill: DrillLevel; onDrill: (d: DrillLevel) => void;
-  colorFilter: ColorFilter; onColor: (cf: ColorFilter) => void;
-  visible: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 16 }}
-      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-      style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: 'rgba(5,2,14,0.96)',
-        backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-        borderTop: '1px solid rgba(240,200,118,0.18)',
-        display: 'flex', flexDirection: 'column', gap: 6, zIndex: 40,
-        padding: '8px 12px',
-        paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 0px))',
-        pointerEvents: visible ? 'auto' : 'none',
-      }}
-    >
-      <Breadcrumb drill={drill} onDrill={onDrill} mobile />
-      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-        <ColorToggle value={colorFilter} onChange={onColor} mobile />
-      </div>
-    </motion.div>
-  );
-}
-
 // ── Desktop panel ─────────────────────────────────────────────────────────────
 
 function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible }: {
@@ -1084,14 +1123,14 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
 
 // ── Mobile sheet ──────────────────────────────────────────────────────────────
 
-function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible, bottomOffset }: {
-  drill: DrillLevel; onDrill: (d: DrillLevel) => void; colorFilter: ColorFilter;
+function MobileSheet({ drill, onDrill, colorFilter, onColor, hoveredId, onHover, visible }: {
+  drill: DrillLevel; onDrill: (d: DrillLevel) => void;
+  colorFilter: ColorFilter; onColor: (cf: ColorFilter) => void;
   hoveredId: string | null; onHover: (id: string | null) => void;
   visible: boolean;
-  bottomOffset: number; // 하단 바 높이 — 시트는 그 위에 위치
 }) {
-  const [sheetH, setSheetH] = useState(0.52);
-  const sheetHRef = useRef(0.52);
+  const [sheetH, setSheetH] = useState(0.58);
+  const sheetHRef = useRef(0.58);
   const handleRef = useRef<HTMLDivElement>(null);
 
   const updateH = (h: number) => { sheetHRef.current = h; setSheetH(h); };
@@ -1101,7 +1140,7 @@ function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible,
     if (!el) return;
     let y0 = 0, h0 = 0;
     const ph = () => el.parentElement?.offsetHeight ?? 844;
-    const clamp = (v: number) => Math.min(0.86, Math.max(0.30, v));
+    const clamp = (v: number) => Math.min(0.88, Math.max(0.32, v));
     const move = (y: number) => updateH(clamp(h0 + (y0 - y) / ph()));
     const onMM = (e: MouseEvent) => move(e.clientY);
     const onTM = (e: TouchEvent) => { e.preventDefault(); move(e.touches[0].clientY); };
@@ -1121,7 +1160,7 @@ function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible,
       animate={{ y: visible ? 0 : '110%' }}
       transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
       style={{
-        position: 'absolute', left: 0, right: 0, bottom: bottomOffset,
+        position: 'absolute', left: 0, right: 0, bottom: 0,
         height: `${sheetH * 100}%`,
         background: 'linear-gradient(180deg, rgba(28,18,42,0.98) 0%, rgba(15,8,25,0.99) 100%)',
         backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
@@ -1130,10 +1169,22 @@ function MobileSheet({ drill, onDrill, colorFilter, hoveredId, onHover, visible,
         zIndex: 30, display: 'flex', flexDirection: 'column', overflow: 'hidden',
       }}
     >
-      <div ref={handleRef} style={{ padding: '12px 0 8px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0, touchAction: 'none' }}>
+      <div ref={handleRef} style={{ padding: '10px 0 6px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0, touchAction: 'none' }}>
         <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.28)' }} />
       </div>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 12px 20px' }}>
+      {/* Chip 형태 breadcrumb + 색 토글 (시트 최상단 sticky) */}
+      <div style={{
+        flexShrink: 0,
+        padding: '4px 12px 10px',
+        display: 'flex', flexDirection: 'column', gap: 8,
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <MobileBreadcrumbChips drill={drill} onDrill={onDrill} />
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <ColorToggle value={colorFilter} onChange={onColor} mobile />
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px calc(20px + env(safe-area-inset-bottom, 0px))' }}>
         <PanelContent drill={drill} colorFilter={colorFilter}
           onDrill={onDrill} hoveredId={hoveredId} onHover={onHover} />
       </div>
@@ -1189,9 +1240,28 @@ export default function BurgundySection() {
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, rgba(4,1,10,0.9) 100%)' }} />
 
       {/* Header */}
-      <div style={{ position: 'absolute', top: 'clamp(14px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>{sectionLabel}</div>
-        <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>{heading}</h2>
+      <div style={{
+        position: 'absolute',
+        top: isMobile ? 10 : 'clamp(14px,2.5vh,28px)',
+        left: '50%', transform: 'translateX(-50%)',
+        textAlign: 'center', zIndex: 10, pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        width: isMobile ? '92vw' : 'auto',
+      }}>
+        <div style={{
+          fontSize: isMobile ? 8 : 9,
+          letterSpacing: '0.28em',
+          color: '#C9A84C',
+          textTransform: 'uppercase',
+          marginBottom: isMobile ? 3 : 6,
+        }}>{sectionLabel}</div>
+        <h2 style={{
+          fontFamily: 'var(--font-playfair),Georgia,serif',
+          fontSize: isMobile ? 18 : 'clamp(18px,3vw,32px)',
+          fontWeight: 400,
+          color: '#F5F0E8',
+          lineHeight: 1.15,
+        }}>{heading}</h2>
       </div>
 
       {/* Side rail (PC) */}
@@ -1199,14 +1269,11 @@ export default function BurgundySection() {
         colorFilter={colorFilter} onColor={setColorFilter} visible={visible} />}
 
       {/* Panels */}
-      {isMobile && <MobileSheet drill={drill} onDrill={setDrill} colorFilter={colorFilter}
-        hoveredId={hoveredId} onHover={setHoveredId} visible={visible} bottomOffset={MOBILE_TAB_BAR_HEIGHT} />}
+      {isMobile && <MobileSheet drill={drill} onDrill={setDrill}
+        colorFilter={colorFilter} onColor={setColorFilter}
+        hoveredId={hoveredId} onHover={setHoveredId} visible={visible} />}
       {!isMobile && <DesktopPanel drill={drill} onDrill={setDrill} colorFilter={colorFilter}
         hoveredId={hoveredId} onHover={setHoveredId} visible={visible} />}
-
-      {/* Mobile bottom bar (breadcrumb + 색 토글) */}
-      {isMobile && <MobileBottomBar drill={drill} onDrill={setDrill}
-        colorFilter={colorFilter} onColor={setColorFilter} visible={visible} />}
     </section>
   );
 }
