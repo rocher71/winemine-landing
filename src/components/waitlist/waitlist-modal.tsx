@@ -63,9 +63,9 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
 
           {/* Modal — desktop: centered, mobile: bottom sheet */}
           <motion.div
-            initial={isMobile ? { y: '100%' } : { scale: 0.95, opacity: 0 }}
-            animate={isMobile ? { y: 0 } : { scale: 1, opacity: 1 }}
-            exit={isMobile ? { y: '100%' } : { scale: 0.95, opacity: 0 }}
+            initial={isMobile ? { y: '100%' } : { scale: 0.95, opacity: 0, x: '-50%', y: '-50%' }}
+            animate={isMobile ? { y: 0 } : { scale: 1, opacity: 1, x: '-50%', y: '-50%' }}
+            exit={isMobile ? { y: '100%' } : { scale: 0.95, opacity: 0, x: '-50%', y: '-50%' }}
             transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
             onClick={(e) => e.stopPropagation()}
             style={isMobile ? {
@@ -81,10 +81,9 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               maxHeight: '92vh',
               overflowY: 'auto',
             } : {
-              /* Desktop: centered modal */
+              /* Desktop: centered modal — framer-motion x/y handle the -50% offset */
               position: 'fixed',
               top: '50%', left: '50%',
-              transform: 'translate(-50%, -50%)',
               width: 'min(480px, calc(100vw - 32px))',
               background: '#0F0718',
               border: '1px solid #2D1540',
