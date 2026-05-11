@@ -895,16 +895,18 @@ function ColorToggle({ value, onChange, mobile }: {
   ];
   return (
     <div style={{
-      display: 'flex', gap: 4,
+      display: 'flex', gap: 3,
       padding: 3, background: 'rgba(5,2,14,0.7)',
       border: '1px solid rgba(255,255,255,0.08)',
       borderRadius: 9999,
+      width: '100%',
+      justifyContent: 'space-between',
     }}>
       {opts.map(o => {
         const active = value === o.v;
         return (
           <button key={o.v} onClick={() => onChange(o.v)} style={{
-            padding: mobile ? '5px 10px' : '4px 11px',
+            padding: mobile ? '5px 10px' : '4px 8px',
             borderRadius: 9999, border: 'none', cursor: 'pointer',
             background: active ? 'rgba(240,200,118,0.18)' : 'transparent',
             color: active ? GOLD : '#9B8B7A',
@@ -915,7 +917,10 @@ function ColorToggle({ value, onChange, mobile }: {
             whiteSpace: 'nowrap' as const,
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 4,
+            justifyContent: 'center',
+            gap: 3,
+            flex: '0 1 auto',
+            minWidth: 0,
           }}>
             {o.icon && <span aria-hidden style={{ display: 'inline-flex' }}>{o.icon}</span>}
             {o.label}
@@ -1052,7 +1057,7 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
       transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
       style={{
         position: 'absolute', top: 'clamp(96px, 14vh, 160px)', left: 'clamp(16px, 3vw, 36px)',
-        width: 'clamp(220px, 18vw, 280px)', zIndex: 25,
+        width: 'clamp(260px, 20vw, 300px)', zIndex: 25,
         display: 'flex', flexDirection: 'column', gap: 12,
         pointerEvents: visible ? 'auto' : 'none',
       }}
