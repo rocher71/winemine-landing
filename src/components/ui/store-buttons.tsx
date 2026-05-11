@@ -57,7 +57,11 @@ export function StoreButtons({ onOpenModal, location = 'unknown', size = 'defaul
   });
 
   const handleClick = (store: 'ios' | 'android') => {
-    trackEvent('store_button_click', { store, location });
+    trackEvent('app_download_click', {
+      store,
+      location,
+      button_id: `app_download_${store}_${location}`,
+    });
     onOpenModal();
   };
 

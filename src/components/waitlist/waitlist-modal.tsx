@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import WaitlistForm from './waitlist-form';
 import WaitlistSuccess from './waitlist-success';
 import { useLocale } from '@/components/providers/locale-provider';
+import { trackEvent } from '@/lib/analytics';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -108,7 +109,13 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             )}
 
             <button
-              onClick={onClose}
+              onClick={() => {
+                trackEvent('waitlist_modal_close', {
+                  stage: showSuccess ? 'success' : 'form',
+                  button_id: 'waitlist_modal_close_x',
+                });
+                onClose();
+              }}
               style={{
                 position: 'absolute', top: 16, right: 16,
                 background: 'transparent', border: 'none',

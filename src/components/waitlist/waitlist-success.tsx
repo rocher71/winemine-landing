@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 import { useLocale } from '@/components/providers/locale-provider';
+import { trackEvent } from '@/lib/analytics';
 
 interface WaitlistSuccessProps {
   onClose: () => void;
@@ -33,7 +34,12 @@ export default function WaitlistSuccess({ onClose }: WaitlistSuccessProps) {
         {t('waitlistSuccess.message').split('\n')[0]}<br />{t('waitlistSuccess.message').split('\n')[1]}
       </p>
       <button
-        onClick={onClose}
+        onClick={() => {
+          trackEvent('waitlist_success_close', {
+            button_id: 'waitlist_success_close',
+          });
+          onClose();
+        }}
         style={{
           marginTop: 32,
           border: '1px solid #2D1540',

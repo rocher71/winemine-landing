@@ -1,7 +1,7 @@
 {
   "hero": {
     "appName": "WineMine",
-    "tagline": "와인으로 물들이는 나만의 세계지도",
+    "tagline": "Your wine journey, mapped.",
     "subtitle": "라벨을 찍으면, 세계가 물든다."
   },
 
@@ -21,6 +21,10 @@
   "wineDiscovery": {
     "sectionLabel": "Beginner's first map",
     "topQuestion": "나만의 와인지도, 어떻게 시작할까요?",
+    "step0": {
+      "title": "와인 한 병이,",
+      "subtitle": "처음에는 그냥 라벨일 뿐"
+    },
     "step1": {
       "label": "1. 먹어본 와인 스캔",
       "title": "찍기만 하면\n나머지는 AI가 알아서",
@@ -469,12 +473,7 @@
     "heading": "내 와인 지도를\n공유해보세요",
     "body": "기록이 쌓이면 자동으로 만들어지는 나만의 Recap.\n탭 한 번이면 공유 완료",
     "timestamp": "지금",
-    "mapBadge": "15개국",
     "statsLabels": { "bottles": "병", "countries": "국가", "months": "개월" },
-    "colorLabels": { "red": "레드", "white": "화이트", "sparkling": "스파클링", "rose": "로제" },
-    "ratingLabel": "평균",
-    "grapesLabel": "품종",
-    "topWineLabel": "올해의 와인",
     "features": [
       { "title": "자동 생성", "desc": "와인을 기록할 때마다 기록이 업데이트됩니다." },
       { "title": "이미지로 저장", "desc": "한 눈에 볼 수 있는 이미지로 저장됩니다." },

@@ -1,19 +1,25 @@
 'use client';
 
 import { useRef, useEffect, useLayoutEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { useLocale } from '@/components/providers/locale-provider';
-import { CountryFlag, type CountryFlagProps } from '@/components/icons/wine-icons';
-
 // ── Story card content ──────────────────────────────────────────────────────
-const STORY_COUNTRIES: { code: CountryFlagProps['code']; name: string; wines: number; pct: number }[] = [
-  { code: 'FR', name: 'France',      wines: 28, pct: 92 },
-  { code: 'IT', name: 'Italy',       wines: 21, pct: 70 },
-  { code: 'CL', name: 'Chile',       wines: 18, pct: 58 },
-  { code: 'NZ', name: 'New Zealand', wines: 14, pct: 44 },
-  { code: 'ES', name: 'Spain',       wines: 11, pct: 34 },
+const STORY_COUNTRIES: { name: string; wines: number; pct: number }[] = [
+  { name: 'France',      wines: 28, pct: 92 },
+  { name: 'Italy',       wines: 21, pct: 70 },
+  { name: 'Chile',       wines: 18, pct: 58 },
+  { name: 'New Zealand', wines: 14, pct: 44 },
+  { name: 'Spain',       wines: 11, pct: 34 },
 ];
+
+const COLOR_SPLIT = [
+  { key: 'red',       pct: 76, color: '#8B1A2A' },
+  { key: 'white',     pct: 14, color: '#E8D89A' },
+  { key: 'sparkling', pct:  6, color: '#C9A84C' },
+  { key: 'rose',      pct:  4, color: '#D4756B' },
+] as const;
 
 // Wine regions for mini-map (same ISO numeric codes as world-map.tsx)
 const MINI_WINE: Record<string, number> = {
@@ -32,7 +38,7 @@ export function StoryWorldMap() {
     if (!ref.current) return;
     const apply = () => {
       ref.current?.querySelectorAll('svg').forEach(svg => {
-        svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
         svg.style.display = 'block';
       });
     };
@@ -129,71 +135,143 @@ export function StoryCard({ animate }: { animate: boolean }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{
             width: 28, height: 28, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)',
+            background: '#1A0A1E',
+            border: '1px solid rgba(201,168,76,0.35)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 11, fontWeight: 700, color: '#F5F0E8',
+            overflow: 'hidden',
             flexShrink: 0,
-          }}>W</div>
+          }}>
+            <Image
+              src="/winemine-glass-mark.png"
+              alt="winemine"
+              width={20}
+              height={20}
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
           <span style={{ fontSize: 11, fontWeight: 600, color: '#F5F0E8' }}>winemine</span>
           <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>{messages.instagramPreview.timestamp}</span>
         </div>
       </div>
 
       {/* Title */}
-      <div style={{ textAlign: 'center', marginBottom: 16 }}>
-        <div style={{
-          fontSize: 9, letterSpacing: '0.25em', color: '#C9A84C',
-          textTransform: 'uppercase', marginBottom: 4,
-        }}>
-          My Wine Journey
-        </div>
+      <div style={{ textAlign: 'center', marginBottom: 10 }}>
         <div style={{
           fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 400,
           color: '#F5F0E8', lineHeight: 1.1, letterSpacing: '-0.01em',
         }}>
-          2026<br />Recap
+          My Wine Journey
         </div>
         <div style={{ width: 30, height: 1, background: '#C9A84C', margin: '8px auto 0' }} />
       </div>
 
-      {/* Real mini world map */}
+      {/* Real mini world map — full screen-width bleed, fits entire map */}
       <div style={{
+        marginLeft: -16,
+        marginRight: -16,
         marginBottom: 14,
-        height: 90,
-        borderRadius: 8,
+        height: 130,
         overflow: 'hidden',
-        border: '1px solid rgba(201,168,76,0.15)',
+        borderTop: '1px solid rgba(201,168,76,0.22)',
+        borderBottom: '1px solid rgba(201,168,76,0.22)',
         position: 'relative',
       }}>
         <StoryWorldMap />
-        {/* Vignette overlay */}
+        {/* Map pin badge */}
         <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, rgba(6,1,21,0.7) 100%)',
-        }} />
+          position: 'absolute', top: 8, right: 10,
+          fontSize: 9, color: '#C9A84C',
+          background: 'rgba(6,1,21,0.75)',
+          border: '1px solid rgba(201,168,76,0.35)',
+          padding: '3px 8px', borderRadius: 10,
+          letterSpacing: '0.05em',
+          fontWeight: 600,
+        }}>
+          {messages.instagramPreview.mapBadge}
+        </div>
       </div>
 
-      {/* Stats row */}
+      {/* Color split bar */}
+      <div style={{ marginBottom: 10 }}>
+        <div style={{
+          display: 'flex', gap: 1, height: 6,
+          borderRadius: 3, overflow: 'hidden',
+          marginBottom: 6,
+          background: 'rgba(255,255,255,0.04)',
+        }}>
+          {COLOR_SPLIT.map((c, i) => (
+            <div
+              key={c.key}
+              style={{
+                background: c.color,
+                width: animate ? `${c.pct}%` : '0%',
+                transition: `width 800ms cubic-bezier(0.4,0,0.2,1) ${500 + i * 80}ms`,
+              }}
+            />
+          ))}
+        </div>
+        <div style={{
+          display: 'flex', gap: 10, flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          fontSize: 8.5,
+        }}>
+          {COLOR_SPLIT.map((c) => (
+            <div key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: c.color, flexShrink: 0,
+              }} />
+              <span style={{ color: '#D4C5B0' }}>
+                {messages.instagramPreview.colorLabels[c.key]}
+              </span>
+              <span style={{ color: '#9B8B7A' }}>{c.pct}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Avg rating / vintage range / top grape — inline mini row */}
       <div style={{
-        display: 'flex', justifyContent: 'space-around',
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        borderRadius: 8, padding: '10px 8px', marginBottom: 14,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '6px 10px', marginBottom: 10,
+        background: 'rgba(201,168,76,0.06)',
+        border: '1px solid rgba(201,168,76,0.18)',
+        borderRadius: 8,
+        fontSize: 9.5,
+        color: '#D4C5B0',
       }}>
-        {[['82', messages.instagramPreview.statsLabels.bottles], ['15', messages.instagramPreview.statsLabels.countries], ['7', messages.instagramPreview.statsLabels.months]].map(([n, l]) => (
-          <div key={l} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#F5F0E8', lineHeight: 1 }}>{n}</div>
-            <div style={{ fontSize: 9, color: '#9B8B7A', marginTop: 3, letterSpacing: '0.05em' }}>{l}</div>
-          </div>
-        ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ color: '#C9A84C', fontSize: 11 }}>★</span>
+          <span style={{ fontWeight: 600, color: '#F5F0E8' }}>4.6</span>
+          <span style={{ color: '#9B8B7A', fontSize: 8.5 }}>{messages.instagramPreview.ratingLabel}</span>
+        </div>
+        <div style={{ width: 1, height: 10, background: 'rgba(201,168,76,0.2)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ color: '#C9A84C', fontSize: 10 }}>◈</span>
+          <span style={{ fontWeight: 600, color: '#F5F0E8' }}>2007–2024</span>
+        </div>
+        <div style={{ width: 1, height: 10, background: 'rgba(201,168,76,0.2)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ color: '#C9A84C', fontSize: 10 }}>✦</span>
+          <span style={{ fontWeight: 600, color: '#F5F0E8' }}>12</span>
+          <span style={{ color: '#9B8B7A', fontSize: 8.5 }}>{messages.instagramPreview.grapesLabel}</span>
+        </div>
       </div>
 
       {/* Country breakdown */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
         {STORY_COUNTRIES.map((c, i) => (
           <div key={c.name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ flexShrink: 0, display: 'inline-flex' }}>
-              <CountryFlag code={c.code} size={13} />
+            <span style={{
+              flexShrink: 0,
+              minWidth: 70,
+              fontSize: 9.5,
+              fontWeight: 600,
+              color: '#D4C5B0',
+              letterSpacing: '0.02em',
+              whiteSpace: 'nowrap',
+            }}>
+              {c.name}
             </span>
             <div style={{ flex: 1 }}>
               <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
@@ -206,7 +284,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
                 }} />
               </div>
             </div>
-            <span style={{ fontSize: 10, color: '#C9A84C', flexShrink: 0, minWidth: 20, textAlign: 'right' }}>
+            <span style={{ fontSize: 9.5, color: '#C9A84C', flexShrink: 0, minWidth: 18, textAlign: 'right' }}>
               {c.wines}
             </span>
           </div>
@@ -215,19 +293,22 @@ export function StoryCard({ animate }: { animate: boolean }) {
 
       {/* Footer */}
       <div style={{
-        marginTop: 14, paddingTop: 10,
+        marginTop: 10, paddingTop: 8,
         borderTop: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
       }}>
-        <div style={{
-          width: 16, height: 16, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #8B1A2A, #C9A84C)',
-        }} />
+        <Image
+          src="/winemine-glass-mark.png"
+          alt=""
+          width={16}
+          height={16}
+          style={{ objectFit: 'contain' }}
+        />
         <span style={{
           fontFamily: 'Georgia, serif', fontSize: 11,
           color: '#C9A84C', letterSpacing: '0.08em',
         }}>winemine</span>
-        <span style={{ fontSize: 9, color: '#4A3D56', marginLeft: 4 }}>winemine</span>
+        <span style={{ fontSize: 9, color: '#4A3D56', marginLeft: 4 }}>winemine.app</span>
       </div>
     </div>
   );
@@ -237,7 +318,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
 export function PhoneMockup({ children, scale = 1 }: { children: React.ReactNode; scale?: number }) {
   return (
     <div style={{
-      width: 240 * scale,
+      width: 250 * scale,
       height: 520 * scale,
       background: '#0C0C0C',
       borderRadius: 40 * scale,
