@@ -12,6 +12,7 @@ import { useState, type ReactNode, type ComponentType } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
+import { trackEvent } from '@/lib/analytics';
 import {
   MOCK_WINES,
   LEX_BY_ID,
@@ -188,7 +189,13 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           {onOpenModal && (
             <button
               type="button"
-              onClick={onOpenModal}
+              onClick={() => {
+                trackEvent('waitlist_cta_click', {
+                  location: 'tasting_note_section',
+                  button_id: 'waitlist_cta_tasting_note',
+                });
+                onOpenModal();
+              }}
               style={{
                 background: 'transparent',
                 border: '1px solid rgba(245,240,232,0.18)',

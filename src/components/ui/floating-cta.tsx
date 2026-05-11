@@ -76,7 +76,11 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
   }, []);
 
   const handleClick = () => {
-    trackEvent('floating_cta_click', { location: 'floating' });
+    trackEvent('app_download_click', {
+      store: 'any',
+      location: 'floating',
+      button_id: 'app_download_floating',
+    });
     onOpenModal();
   };
 
