@@ -3,6 +3,7 @@
 import { useState, useRef, useLayoutEffect, useEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
+import { geoCentroid } from 'd3-geo';
 import { useLocale } from '@/components/providers/locale-provider';
 import { Bottle } from '@/components/wine-bottles/wine-bottle';
 import {
@@ -141,6 +142,17 @@ const COMMUNES: CommuneData[] = [
   { id: 'Pouilly-Fuissé',      name: 'Pouilly-Fuissé',      nameKo: '푸이-퓌세',      cote: 'Mâconnais',       coords: [4.737, 46.286], character: '마코네 최상급 화이트. 2020년 22개 클리마가 1er Cru 승격(마코네 최초).', hasGrandCru: false, notableNote: '2020년 마코네 최초 1er Cru 승격' },
 ];
 
+// 부르고뉴 dept 코드 → 표시할 행정구역 이름 (지도 위 라벨용)
+const DEPT_NAMES: Record<string, string> = {
+  '21': "Côte-d'Or",
+  '71': 'Saône-et-Loire',
+  '89': 'Yonne',
+  '58': 'Nièvre',
+  '01': 'Ain',
+  '70': 'Haute-Saône',
+  '39': 'Jura',
+};
+
 // Wine.subregionId -> Cote 매핑 (드릴다운 그룹핑용)
 const SUBREGION_TO_COTE: Record<string, Cote> = {
   'cote-nuits': 'Côte de Nuits',
@@ -151,33 +163,6 @@ const SUBREGION_TO_COTE: Record<string, Cote> = {
 };
 
 // 모바일 breadcrumb + 컬러 토글은 시트 상단(드래그 핸들 아래)에 위치 — 하단 바 없음
-
-// 지도 배경 앰비언트 라벨 (마커보다 흐림, 맥락 이해용)
-type AmbientSize = 'lg' | 'md' | 'sm';
-const AMBIENT_LABELS: { text: string; coords: [number, number]; size: AmbientSize }[] = [
-  // 광역 / 꼬뜨
-  { text: 'Côte de Nuits',     coords: [5.20, 47.18], size: 'lg' },
-  { text: 'Côte de Beaune',    coords: [5.05, 46.95], size: 'lg' },
-  { text: 'Chablis',           coords: [3.95, 47.83], size: 'md' },
-  { text: 'Côte Chalonnaise',  coords: [4.95, 46.83], size: 'md' },
-  { text: 'Mâconnais',         coords: [4.95, 46.30], size: 'md' },
-  // 주요 마을 (와인이 자주 등장)
-  { text: 'Gevrey-Chambertin', coords: [5.07, 47.23], size: 'sm' },
-  { text: 'Vosne-Romanée',     coords: [5.04, 47.17], size: 'sm' },
-  { text: 'Nuits-Saint-Georges',coords:[5.04, 47.10], size: 'sm' },
-  { text: 'Aloxe-Corton',      coords: [4.93, 47.06], size: 'sm' },
-  { text: 'Pommard',           coords: [4.86, 46.93], size: 'sm' },
-  { text: 'Meursault',         coords: [4.88, 46.98], size: 'sm' },
-  { text: 'Puligny-Montrachet',coords: [4.86, 46.94], size: 'sm' },
-  { text: 'Mercurey',          coords: [4.79, 46.83], size: 'sm' },
-  { text: 'Pouilly-Fuissé',    coords: [4.80, 46.29], size: 'sm' },
-];
-
-const AMBIENT_FONT: Record<AmbientSize, { fontSize: number; letter: string; weight: number; opacity: number }> = {
-  lg: { fontSize: 7,   letter: '0.36em', weight: 600, opacity: 0.32 },
-  md: { fontSize: 5.5, letter: '0.28em', weight: 600, opacity: 0.30 },
-  sm: { fontSize: 3.6, letter: '0.18em', weight: 500, opacity: 0.40 },
-};
 
 const PRODUCERS: ProducerData[] = [
   { id: 'drc',      name: 'Domaine de la Romanée-Conti', nameKo: '도멘 드 라 로마네-콩티 (DRC)', initials: 'DRC', coords: [4.975, 47.171], village: 'Vosne-Romanée',      blurb: '전설 중의 전설. 모노폴 1.76ha.',           type: 'Domaine' },
@@ -336,13 +321,14 @@ function CountBadge({ n, x, y }: { n: number; x: number; y: number }) {
 }
 
 // 통일 마커 — 모든 탭에서 동일한 모양(작은 동그라미). 색만 의미 전달.
-function MapPin({ id, color, hovered, ring, count, onHover }: {
+function MapPin({ id, color, hovered, ring, count, onHover, onClick }: {
   id: string;
   color: string;
   hovered: boolean;
   ring?: boolean;          // 모노폴 / Landmark 표시
   count?: number;          // 표시할 마신 병수 (없으면 미표시)
   onHover: (id: string | null) => void;
+  onClick?: () => void;
 }) {
   return (
     <motion.g
@@ -353,6 +339,7 @@ function MapPin({ id, color, hovered, ring, count, onHover }: {
       onMouseEnter={() => onHover(id)}
       onMouseLeave={() => onHover(null)}
       onTouchStart={() => onHover(id)}
+      onClick={onClick}
     >
       {hovered && (
         <motion.circle cx={0} cy={0} r={6}
@@ -555,27 +542,9 @@ function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
 
   const cs = 1 / Math.pow(view.zoom, 0.65);
 
-  // 표시할 와인 (drill + colorFilter 적용)
-  const visibleWines: Wine[] = (() => {
-    let pool: Wine[] = WINES;
-    if (drill.kind === 'cote')    pool = winesByCote[drill.coteId] ?? [];
-    if (drill.kind === 'commune') pool = winesByCommune[drill.communeId] ?? [];
-    if (drill.kind === 'cru')     pool = (winesByCommune[drill.communeId] ?? []).filter(w => w.cru === drill.cru);
-    return applyColor(pool, colorFilter);
-  })();
-
-  // 마을 클릭 라벨 — cote 레벨에서만 노출
-  const visibleCommunes = drill.kind === 'cote' ? communesAtCote(drill.coteId) : [];
-
-  // 앰비언트 라벨: overview·cote에서만 (commune·cru는 줌인된 상태)
-  const showAmbient = drill.kind === 'overview' || drill.kind === 'cote';
-
-  // motion key — drill·color 바뀌면 그룹 fade 트리거
-  const drillKey =
-    drill.kind === 'overview' ? 'all'
-    : drill.kind === 'cote'    ? `cote-${drill.coteId}`
-    : drill.kind === 'commune' ? `cm-${drill.communeId}`
-    :                            `cru-${drill.communeId}-${drill.cru}`;
+  // 지도의 와인 점은 drill 단계와 무관하게 항상 모두 보여준다.
+  // colorFilter(Red/White/Rosé)만 적용. drill 단계는 카메라 줌·사이드 패널에서만 의미를 가진다.
+  const visibleWines: Wine[] = applyColor(WINES, colorFilter);
 
   return (
     <div ref={mapRef} style={{ width: '100%', height: '100%' }}>
@@ -593,85 +562,69 @@ function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
           filterZoomEvent={() => false}
         >
           <Geographies geography={DEPT_URL}>
-            {({ geographies }) => geographies.map(geo => {
-              const code = geo.properties.code as string;
-              const isBurgundy = BURGUNDY_DEPTS.has(code);
-              const isBeaujolais = code === '69';
-              const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : '#180830';
-              const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
-              return (
-                <Geography key={geo.rsmKey} geography={geo} style={{
-                  default: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#5A1028' : '#28085A', strokeWidth: (isBurgundy ? 0.8 : 0.4) * cs, outline: 'none', transition: 'fill-opacity 300ms' },
-                  hover:   { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#8B1A2A' : '#28085A', strokeWidth: (isBurgundy ? 1.0 : 0.4) * cs, outline: 'none' },
-                  pressed: { fill: fillColor, fillOpacity, stroke: '#28085A',                          strokeWidth: 0.4 * cs,                       outline: 'none' },
-                }} />
-              );
-            })}
-          </Geographies>
-
-          {/* 앰비언트 라벨 — overview·cote에서만 노출 */}
-          {showAmbient && AMBIENT_LABELS.map(l => {
-            const f = AMBIENT_FONT[l.size];
-            return (
-              <Marker key={l.text} coordinates={l.coords}>
-                <g transform={`scale(${cs})`} style={{ pointerEvents: 'none' }}>
-                  <text textAnchor="middle"
-                    style={{
-                      fill: '#D4C5B0', fillOpacity: f.opacity,
-                      fontSize: f.fontSize, fontFamily: 'Georgia, serif',
-                      fontWeight: f.weight, letterSpacing: f.letter,
-                      textTransform: 'uppercase' as const,
-                    } as React.CSSProperties}>
-                    {l.text}
-                  </text>
-                </g>
-              </Marker>
-            );
-          })}
-
-          <AnimatePresence>
-            {/* 와인 마커 — drill에 따라 가시성 분기 */}
-            <motion.g key={`wines-${drillKey}-${colorFilter}`}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}>
-              {visibleWines.map(w => (
-                <Marker key={w.id} coordinates={w.coords}>
-                  <g transform={`scale(${cs})`}>
-                    <MapPin id={w.id} color={CRU_META[w.cru].color}
-                      hovered={hoveredId === w.id} onHover={onHover} />
-                  </g>
-                </Marker>
-              ))}
-            </motion.g>
-
-            {/* 마을 클릭 라벨 — cote 레벨에서만 */}
-            {drill.kind === 'cote' && (
-              <motion.g key={`communes-${drill.coteId}`}
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.35 }}>
-                {visibleCommunes.map(c => {
-                  const wineCount = applyColor(winesByCommune[c.id] ?? [], colorFilter).length;
-                  if (wineCount === 0) return null;
+            {({ geographies }) => (
+              <>
+                {geographies.map(geo => {
+                  const code = geo.properties.code as string;
+                  const isBurgundy = BURGUNDY_DEPTS.has(code);
+                  const isBeaujolais = code === '69';
+                  const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : '#180830';
+                  const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
                   return (
-                    <Marker key={`cm-${c.id}`} coordinates={c.coords}>
-                      <g transform={`scale(${cs})`}
-                        onClick={() => onDrill({ kind: 'commune', coteId: drill.coteId, communeId: c.id })}
-                        style={{ cursor: 'pointer', pointerEvents: 'all' }}>
-                        <text textAnchor="middle" y={-7}
+                    <Geography key={geo.rsmKey} geography={geo} style={{
+                      default: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#5A1028' : '#28085A', strokeWidth: (isBurgundy ? 0.8 : 0.4) * cs, outline: 'none', transition: 'fill-opacity 300ms' },
+                      hover:   { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#8B1A2A' : '#28085A', strokeWidth: (isBurgundy ? 1.0 : 0.4) * cs, outline: 'none' },
+                      pressed: { fill: fillColor, fillOpacity, stroke: '#28085A',                          strokeWidth: 0.4 * cs,                       outline: 'none' },
+                    }} />
+                  );
+                })}
+                {/* 부르고뉴 dept 라벨 — 행정구역 위 가운데, 흰색 저채도 */}
+                {geographies.map(geo => {
+                  const code = geo.properties.code as string;
+                  const name = DEPT_NAMES[code];
+                  if (!name) return null;
+                  // react-simple-maps GeographyFeature -> d3-geo Feature 호환 (centroid 계산용)
+                  const centroid = geoCentroid(geo as unknown as Parameters<typeof geoCentroid>[0]);
+                  return (
+                    <Marker key={`dept-label-${code}`} coordinates={centroid}>
+                      <g transform={`scale(${cs})`} style={{ pointerEvents: 'none' }}>
+                        <text textAnchor="middle" dominantBaseline="middle"
                           style={{
-                            fill: GOLD, fillOpacity: 0.92, fontSize: 5,
-                            fontFamily: 'Georgia, serif', fontWeight: 700,
-                            letterSpacing: '0.06em',
-                            textTransform: 'uppercase' as const,
+                            fill: '#FFFFFF', fillOpacity: 0.45,
+                            fontSize: 4.5, fontFamily: 'Georgia, serif',
+                            fontWeight: 500, letterSpacing: '0.08em',
                           } as React.CSSProperties}>
-                          {c.nameKo}
+                          {name}
                         </text>
                       </g>
                     </Marker>
                   );
                 })}
-              </motion.g>
+              </>
             )}
+          </Geographies>
+
+          <AnimatePresence>
+            {/* 와인 마커 — 항상 모두 표시 (colorFilter 토글 시에만 fade 재마운트) */}
+            <motion.g key={`wines-${colorFilter}`}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}>
+              {visibleWines.map(w => {
+                const cote = SUBREGION_TO_COTE[w.subregionId];
+                const drillToWineCru = cote
+                  ? () => onDrill({ kind: 'cru', coteId: cote, communeId: w.village, cru: w.cru })
+                  : undefined;
+                return (
+                  <Marker key={w.id} coordinates={w.coords}>
+                    <g transform={`scale(${cs})`}>
+                      <MapPin id={w.id} color={CRU_META[w.cru].color}
+                        hovered={hoveredId === w.id} onHover={onHover}
+                        onClick={drillToWineCru} />
+                    </g>
+                  </Marker>
+                );
+              })}
+            </motion.g>
           </AnimatePresence>
         </ZoomableGroup>
       </ComposableMap>
