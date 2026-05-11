@@ -24,11 +24,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://winemine.vercel.ap
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'WineMine — Your wine journey, mapped.',
-  description: '와인 라벨을 찍으면 세계가 물든다. 마신 와인을 세계 지도 위에 기록하고 공유하세요.',
+  title: 'WineMine — 와인으로 물들이는 나만의 세계지도',
+  description: 'Drink the world. Map your taste. 와인으로 물들이는 나만의 세계지도.',
   openGraph: {
-    title: 'WineMine — Your wine journey, mapped.',
-    description: '와인 라벨을 찍으면 세계가 물든다. 마신 와인을 세계 지도 위에 기록하고 공유하세요.',
+    title: 'WineMine — 와인으로 물들이는 나만의 세계지도',
+    description: 'Drink the world. Map your taste. 와인으로 물들이는 나만의 세계지도.',
     type: 'website',
     locale: 'ko_KR',
     url: SITE_URL,
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'WineMine — Your wine journey, mapped.',
-    description: '와인 라벨을 찍으면 세계가 물든다. 마신 와인을 세계 지도 위에 기록하고 공유하세요.',
+    title: 'WineMine — 와인으로 물들이는 나만의 세계지도',
+    description: 'Drink the world. Map your taste. 와인으로 물들이는 나만의 세계지도.',
   },
 };
 

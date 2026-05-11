@@ -83,7 +83,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
             margin: 0,
           }}
         >
-          Your wine journey, mapped.
+          {t('hero.tagline')}
         </motion.p>
 
         <motion.p
