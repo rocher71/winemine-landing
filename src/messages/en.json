@@ -469,7 +469,12 @@
     "heading": "Share your\nwine map",
     "body": "Your personal Recap, built automatically as you log wines.\nOne tap to share.",
     "timestamp": "Now",
+    "mapBadge": "15 countries",
     "statsLabels": { "bottles": "btls", "countries": "countries", "months": "months" },
+    "colorLabels": { "red": "Red", "white": "White", "sparkling": "Sparkling", "rose": "Rosé" },
+    "ratingLabel": "avg",
+    "grapesLabel": "grapes",
+    "topWineLabel": "Wine of the Year",
     "features": [
       { "title": "Auto-generated", "desc": "Your Recap updates every time you log a new wine." },
       { "title": "Save as image", "desc": "Your whole journey in one beautiful shareable image." },
