@@ -21,10 +21,6 @@
   "wineDiscovery": {
     "sectionLabel": "Beginner's first map",
     "topQuestion": "나만의 와인지도, 어떻게 시작할까요?",
-    "step0": {
-      "title": "와인 한 병이,",
-      "subtitle": "처음에는 그냥 라벨일 뿐"
-    },
     "step1": {
       "label": "1. 먹어본 와인 스캔",
       "title": "찍기만 하면\n나머지는 AI가 알아서",

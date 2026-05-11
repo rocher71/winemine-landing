@@ -7,7 +7,7 @@ import { useLocale } from '@/components/providers/locale-provider';
 import { ScanPanel } from './features-section';
 import { STARTING_WINE, ALL_WINES, formatKrw, type RecommendedWine } from '@/lib/recommended-wines';
 
-const TOTAL_STEPS = 3; // 0 intro, 1 scan, 2 recommend
+const TOTAL_STEPS = 2; // 0 scan, 1 recommend
 
 function StepHeader({ label, title, body }: { label?: string; title: string; body?: string }) {
   return (
@@ -669,7 +669,7 @@ export default function WineDiscoverySection() {
   });
 
   useMotionValueEvent(scrollYProgress, 'change', v => {
-    setStep(v < 0.08 ? 0 : v < 0.20 ? 1 : 2);
+    setStep(v < 0.20 ? 0 : 1);
   });
 
   const recProgress = useTransform(scrollYProgress, [0.20, 0.92], [0, 1], { clamp: true });
@@ -695,7 +695,7 @@ export default function WineDiscoverySection() {
         height: '100vh', overflow: 'hidden',
         background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.05) 0%, transparent 60%), #04010A',
       }}>
-        <FullScreenMap progress={recProgress} visible={step === 2} />
+        <FullScreenMap progress={recProgress} visible={step === 1} />
 
         <motion.div
           style={{
@@ -756,28 +756,6 @@ export default function WineDiscoverySection() {
             >
               {step === 0 && (
                 <>
-                  <StepHeader title={`${t.step0.title}\n${t.step0.subtitle}`} />
-                  <div style={{
-                    width: 120, height: 168,
-                    background: 'linear-gradient(160deg, rgba(245,240,232,0.32) 0%, rgba(232,221,208,0.28) 100%)',
-                    borderRadius: 6,
-                    filter: 'blur(2px)',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    transform: 'rotate(-3deg)',
-                  }}>
-                    <div style={{
-                      position: 'absolute', top: '40%',
-                      left: '20%', right: '20%', height: 1,
-                      background: 'rgba(139,26,42,0.5)',
-                    }} />
-                  </div>
-                </>
-              )}
-
-              {step === 1 && (
-                <>
                   <StepHeader
                     label={t.step1.label}
                     title={t.step1.title}
@@ -787,7 +765,7 @@ export default function WineDiscoverySection() {
                 </>
               )}
 
-              {step === 2 && (
+              {step === 1 && (
                 <motion.div
                   style={{
                     y: step2HeaderY,
@@ -807,7 +785,7 @@ export default function WineDiscoverySection() {
           </AnimatePresence>
         </div>
 
-        {step === 2 && (
+        {step === 1 && (
           <>
             <StartHintPill progress={recProgress} text={t.step2.startHint} />
             <RecommendationCard progress={recProgress} cardLabel={t.step2.cardLabel} />
@@ -834,13 +812,13 @@ export default function WineDiscoverySection() {
         </div>
 
         <AnimatePresence>
-          {step < 2 && (
+          {step < 1 && (
             <motion.div
               key="scroll-hint"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, delay: step === 0 ? 0.6 : 0 }}
+              transition={{ duration: 0.4 }}
               style={{
                 position: 'absolute',
                 bottom: 'clamp(28px, 4.5vh, 48px)',

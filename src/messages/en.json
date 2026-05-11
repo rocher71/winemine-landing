@@ -21,10 +21,6 @@
   "wineDiscovery": {
     "sectionLabel": "Beginner's first map",
     "topQuestion": "How will your wine map begin?",
-    "step0": {
-      "title": "A bottle of wine",
-      "subtitle": "begins as just a label"
-    },
     "step1": {
       "label": "1. Scan what you drank",
       "title": "Snap once,\nAI handles the rest",
