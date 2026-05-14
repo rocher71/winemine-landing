@@ -13,7 +13,7 @@ function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: 
   return (
     <div
       style={{
-        background: 'rgba(15,7,24,0.7)',
+        background: 'var(--color-bg-surface)',
         border: '1px solid rgba(201,168,76,0.25)',
         borderRadius: 16,
         padding: 'clamp(20px, 3vw, 28px)',
@@ -35,7 +35,7 @@ function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: 
           style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(18px, 2.6vw, 22px)',
-            color: '#F5F0E8',
+            color: 'var(--color-text-primary)',
           }}
         >
           {level}
@@ -43,7 +43,7 @@ function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: 
         <div
           style={{
             fontSize: 12,
-            color: '#C9A84C',
+            color: 'var(--color-gold)',
             fontWeight: 600,
             letterSpacing: '0.04em',
           }}
@@ -57,7 +57,7 @@ function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: 
         style={{
           position: 'relative',
           height: 12,
-          background: 'rgba(255,255,255,0.05)',
+          background: 'var(--color-border-soft)',
           borderRadius: 999,
           overflow: 'hidden',
         }}
@@ -72,9 +72,9 @@ function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: 
             top: 0,
             bottom: 0,
             left: 0,
-            background: 'linear-gradient(90deg, #B08D57 0%, #C9A84C 50%, #E8C97A 100%)',
+            background: 'linear-gradient(90deg, #B08D57 0%, var(--color-gold) 50%, #E8C97A 100%)',
             borderRadius: 999,
-            boxShadow: '0 0 16px rgba(201,168,76,0.5), inset 0 0 6px rgba(255,255,255,0.2)',
+            boxShadow: '0 0 16px rgba(201,168,76,0.5), inset 0 0 6px var(--overlay-medium)',
           }}
         />
       </div>
@@ -83,7 +83,7 @@ function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: 
         style={{
           marginTop: 10,
           fontSize: 12,
-          color: '#9B8B7A',
+          color: 'var(--color-text-muted)',
           textAlign: 'right',
         }}
       >
@@ -98,8 +98,8 @@ function LevelCard({ tier, isCurrent }: { tier: LevelTier; isCurrent: boolean })
     <div
       style={{
         position: 'relative',
-        background: 'rgba(15,7,24,0.72)',
-        border: isCurrent ? `1px solid ${tier.color}` : '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--color-bg-surface)',
+        border: isCurrent ? `1px solid ${tier.color}` : '1px solid var(--color-border-soft)',
         borderRadius: 14,
         padding: '18px 14px',
         textAlign: 'center',
@@ -121,7 +121,7 @@ function LevelCard({ tier, isCurrent }: { tier: LevelTier; isCurrent: boolean })
       <div
         style={{
           fontSize: 10,
-          color: '#C9A84C',
+          color: 'var(--color-gold)',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
           fontWeight: 600,
@@ -134,13 +134,13 @@ function LevelCard({ tier, isCurrent }: { tier: LevelTier; isCurrent: boolean })
         style={{
           fontFamily: 'var(--font-playfair), Georgia, serif',
           fontSize: 16,
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           marginBottom: 6,
         }}
       >
         {tier.name}
       </div>
-      <div style={{ fontSize: 11, color: '#9B8B7A', lineHeight: 1.5 }}>{tier.req}</div>
+      <div style={{ fontSize: 11, color: 'var(--color-text-muted)', lineHeight: 1.5 }}>{tier.req}</div>
 
       {isCurrent && (
         <div
@@ -151,8 +151,8 @@ function LevelCard({ tier, isCurrent }: { tier: LevelTier; isCurrent: boolean })
             fontSize: 9,
             padding: '2px 6px',
             borderRadius: 4,
-            background: '#C9A84C',
-            color: '#05020A',
+            background: 'var(--color-gold)',
+            color: 'var(--color-bg-deepest)',
             fontWeight: 700,
             letterSpacing: '0.06em',
           }}
@@ -166,14 +166,14 @@ function LevelCard({ tier, isCurrent }: { tier: LevelTier; isCurrent: boolean })
 
 function BadgeTile({ badge, index }: { badge: BadgeItem; index: number }) {
   const Icon = BADGE_ICONS[index] ?? Wine;
-  const iconColor = badge.owned ? '#C9A84C' : '#6A5E4A';
+  const iconColor = badge.owned ? 'var(--color-gold)' : 'var(--color-text-muted)';
   return (
     <div
       style={{
         position: 'relative',
         aspectRatio: '1 / 1',
-        background: badge.owned ? 'rgba(201,168,76,0.08)' : 'rgba(255,255,255,0.02)',
-        border: badge.owned ? '1px solid rgba(201,168,76,0.40)' : '1px solid rgba(255,255,255,0.05)',
+        background: badge.owned ? 'rgba(201,168,76,0.08)' : 'var(--overlay-soft)',
+        border: badge.owned ? '1px solid rgba(201,168,76,0.40)' : '1px solid var(--color-border-soft)',
         borderRadius: 14,
         display: 'flex',
         flexDirection: 'column',
@@ -189,7 +189,7 @@ function BadgeTile({ badge, index }: { badge: BadgeItem; index: number }) {
       <div
         className="badge-name"
         style={{
-          color: badge.owned ? '#D4C5B0' : '#6A5E4A',
+          color: badge.owned ? 'var(--color-text-secondary)' : 'var(--color-text-muted)',
           textAlign: 'center',
           lineHeight: 1.3,
           fontWeight: 500,
@@ -208,7 +208,7 @@ function BadgeTile({ badge, index }: { badge: BadgeItem; index: number }) {
             display: 'flex',
           }}
         >
-          <Lock size={11} color="#6A5E4A" strokeWidth={2} />
+          <Lock size={11} color="var(--color-text-muted)" strokeWidth={2} />
         </div>
       )}
     </div>
@@ -226,7 +226,7 @@ export default function LevelBadgeSection() {
   return (
     <section
       style={{
-        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 58%), #0A050F',
+        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 58%), var(--color-bg-deep)',
         padding: 'clamp(80px,10vw,112px) 24px',
       }}
     >
@@ -243,7 +243,7 @@ export default function LevelBadgeSection() {
             style={{
               fontSize: 10,
               letterSpacing: '0.28em',
-              color: '#C9A84C',
+              color: 'var(--color-gold)',
               textTransform: 'uppercase',
               marginBottom: 14,
             }}
@@ -255,7 +255,7 @@ export default function LevelBadgeSection() {
               fontFamily: 'var(--font-playfair), Georgia, serif',
               fontSize: 'clamp(26px,4vw,40px)',
               fontWeight: 400,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               maxWidth: 720,
               margin: '0 auto',
               lineHeight: 1.25,
@@ -263,8 +263,8 @@ export default function LevelBadgeSection() {
           >
             {lb?.heading}
           </h2>
-          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 18px' }} />
-          <p style={{ fontSize: 15, color: '#9B8B7A', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
+          <div style={{ width: 60, height: 2, background: 'var(--color-gold)', margin: '20px auto 18px' }} />
+          <p style={{ fontSize: 15, color: 'var(--color-text-muted)', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
             {lb?.subheading}
           </p>
         </motion.div>
@@ -315,8 +315,8 @@ export default function LevelBadgeSection() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           style={{
-            background: 'rgba(15,7,24,0.55)',
-            border: '1px solid rgba(255,255,255,0.05)',
+            background: 'var(--color-bg-surface)',
+            border: '1px solid var(--color-border-soft)',
             borderRadius: 16,
             padding: 'clamp(20px, 3vw, 28px)',
             maxWidth: 640,
@@ -328,7 +328,7 @@ export default function LevelBadgeSection() {
               fontSize: 11,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              color: '#C9A84C',
+              color: 'var(--color-gold)',
               fontWeight: 600,
               marginBottom: 18,
               textAlign: 'center',
@@ -362,13 +362,13 @@ export default function LevelBadgeSection() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
             gap: 16,
             paddingTop: 24,
-            borderTop: '1px solid rgba(255,255,255,0.06)',
+            borderTop: '1px solid var(--color-border-soft)',
           }}
         >
           {(lb?.bullets ?? []).map((b, i) => (
             <div key={i} style={{ textAlign: 'center', padding: '8px 12px' }}>
-              <div style={{ fontSize: 14, color: '#F5F0E8', fontWeight: 600, marginBottom: 6 }}>{b.title}</div>
-              <div style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.6 }}>{b.desc}</div>
+              <div style={{ fontSize: 14, color: 'var(--color-text-primary)', fontWeight: 600, marginBottom: 6 }}>{b.title}</div>
+              <div style={{ fontSize: 12, color: 'var(--color-text-muted)', lineHeight: 1.6 }}>{b.desc}</div>
             </div>
           ))}
         </motion.div>

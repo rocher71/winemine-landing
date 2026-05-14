@@ -67,13 +67,13 @@ const VARIANTS: { id: FormVariant; Icon: IconComponent }[] = [
 ];
 
 // 디자인 토큰
-const PAPER_BG = '#F5F0E8';
-const PAPER_INK = '#1A0A1E';
-const PAPER_INK_DIM = 'rgba(26,10,30,0.42)';
-const PAPER_INK_VERY_DIM = 'rgba(26,10,30,0.18)';
-const PAPER_LINE = 'rgba(26,10,30,0.10)';
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
+const PAPER_BG = 'var(--color-paper)';
+const PAPER_INK = 'var(--color-ink)';
+const PAPER_INK_DIM = 'var(--color-ink-dim)';
+const PAPER_INK_VERY_DIM = 'var(--color-ink-very-dim)';
+const PAPER_LINE = 'var(--color-ink-line)';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
 
 // 폰 mockup 크기
 const PHONE_WIDTH = 392;
@@ -100,10 +100,10 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
     <section
       id="tasting-note"
       style={{
-        background: '#0A050F',
+        background: 'var(--color-bg-deep)',
         borderTop: '1px solid rgba(201,168,76,0.12)',
         padding: 'clamp(64px, 12vw, 128px) clamp(20px, 5vw, 48px)',
-        color: '#F5F0E8',
+        color: 'var(--color-text-primary)',
       }}
     >
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -121,7 +121,7 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
               fontSize: 'clamp(28px, 5vw, 48px)',
               fontWeight: 600,
               letterSpacing: '-0.02em',
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               margin: '24px auto 16px',
               maxWidth: 720,
               lineHeight: 1.25,
@@ -134,7 +134,7 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
               fontFamily: 'var(--font-inter, system-ui, sans-serif)',
               fontSize: 16,
               lineHeight: 1.6,
-              color: '#9B8B7A',
+              color: 'var(--color-text-muted)',
               maxWidth: 600,
               margin: '0 auto',
             }}
@@ -179,13 +179,13 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
           style={{
             marginTop: 40,
             textAlign: 'center',
-            color: '#D4C5B0',
+            color: 'var(--color-text-secondary)',
             fontFamily: 'var(--font-inter, system-ui, sans-serif)',
             fontSize: 16,
             lineHeight: 1.5,
           }}
         >
-          <p style={{ marginBottom: 24, color: '#9B8B7A' }}>{t('tastingNote.outro')}</p>
+          <p style={{ marginBottom: 24, color: 'var(--color-text-muted)' }}>{t('tastingNote.outro')}</p>
           {onOpenModal && (
             <button
               type="button"
@@ -199,7 +199,7 @@ export default function TastingNoteSection({ onOpenModal }: Props) {
               style={{
                 background: 'transparent',
                 border: '1px solid rgba(245,240,232,0.18)',
-                color: '#D4C5B0',
+                color: 'var(--color-text-secondary)',
                 padding: '10px 24px',
                 borderRadius: 24,
                 fontSize: 13,
@@ -248,7 +248,7 @@ function PlaygroundInviteCard() {
           border: `2px solid ${hovered ? GOLD : 'rgba(201,168,76,0.55)'}`,
           borderRadius: 20,
           textDecoration: 'none',
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           display: 'flex',
           flexDirection: 'column',
           gap: 18,
@@ -314,7 +314,7 @@ function PlaygroundInviteCard() {
                 fontFamily: 'var(--font-playfair, Georgia, serif)',
                 fontSize: 'clamp(18px, 4.4vw, 24px)',
                 fontWeight: 700,
-                color: '#F5F0E8',
+                color: 'var(--color-text-primary)',
                 margin: '0 0 8px',
                 lineHeight: 1.25,
                 letterSpacing: '-0.01em',
@@ -327,7 +327,7 @@ function PlaygroundInviteCard() {
               style={{
                 fontSize: 13,
                 lineHeight: 1.55,
-                color: '#D4C5B0',
+                color: 'var(--color-text-secondary)',
                 margin: 0,
                 wordBreak: 'keep-all',
               }}
@@ -350,11 +350,11 @@ function PlaygroundInviteCard() {
               key={k}
               style={{
                 padding: '5px 11px',
-                background: 'rgba(15,7,24,0.55)',
+                background: 'var(--color-bg-surface)',
                 border: '1px solid rgba(245,240,232,0.10)',
                 borderRadius: 999,
                 fontSize: 11,
-                color: '#D4C5B0',
+                color: 'var(--color-text-secondary)',
                 fontWeight: 500,
               }}
             >
@@ -379,7 +379,7 @@ function PlaygroundInviteCard() {
               maxWidth: 360,
               padding: '14px 20px',
               background: GOLD,
-              color: '#1A0A1E',
+              color: 'var(--color-bg-map)',
               borderRadius: 28,
               fontSize: 14,
               fontWeight: 700,
@@ -407,7 +407,7 @@ function PlaygroundInviteCard() {
           <span
             style={{
               fontSize: 10,
-              color: '#9B8B7A',
+              color: 'var(--color-text-muted)',
               fontStyle: 'italic',
               textAlign: 'center',
               wordBreak: 'keep-all',
@@ -483,8 +483,8 @@ function ModeToggle({
                 ? m === 'beginner'
                   ? 'linear-gradient(135deg, rgba(201,168,76,0.22) 0%, rgba(201,168,76,0.10) 100%)'
                   : 'linear-gradient(135deg, rgba(139,26,42,0.28) 0%, rgba(139,26,42,0.10) 100%)'
-                : 'rgba(15,7,24,0.6)',
-              border: `1.5px solid ${isActive ? (m === 'beginner' ? GOLD : '#A02030') : 'rgba(245,240,232,0.10)'}`,
+                : 'var(--color-bg-surface)',
+              border: `1.5px solid ${isActive ? (m === 'beginner' ? GOLD : 'var(--color-wine-red-hover)') : 'rgba(245,240,232,0.10)'}`,
               borderRadius: 12,
               cursor: 'pointer',
               fontFamily: 'var(--font-inter, system-ui, sans-serif)',
@@ -495,7 +495,7 @@ function ModeToggle({
               transition: 'background 200ms ease, border-color 200ms ease',
             }}
           >
-            <span aria-hidden style={{ display: 'inline-flex', flexShrink: 0, color: m === 'beginner' ? GOLD : '#A02030' }}>
+            <span aria-hidden style={{ display: 'inline-flex', flexShrink: 0, color: m === 'beginner' ? GOLD : 'var(--color-wine-red-hover)' }}>
               {m === 'beginner' ? <SproutIcon size={22} /> : <GraduationCapIcon size={22} />}
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -504,13 +504,13 @@ function ModeToggle({
                   fontFamily: 'var(--font-playfair, Georgia, serif)',
                   fontSize: 16,
                   fontWeight: 700,
-                  color: isActive ? '#F5F0E8' : '#D4C5B0',
+                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                   letterSpacing: '-0.01em',
                 }}
               >
                 {t(`tastingNote.playground.mode.${m}`)}
               </span>
-              <span style={{ fontSize: 11, color: '#9B8B7A' }}>
+              <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>
                 {t(`tastingNote.playground.mode.${m}Subtitle`)}
               </span>
             </div>
@@ -539,7 +539,7 @@ function FormTabBar({
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${visible.length}, 1fr)`,
-        background: 'rgba(15,7,24,0.6)',
+        background: 'var(--color-bg-surface)',
         border: '1px solid rgba(201,168,76,0.16)',
         borderRadius: 12,
         overflow: 'hidden',
@@ -561,7 +561,7 @@ function FormTabBar({
               background: isActive ? 'rgba(139,26,42,0.22)' : 'transparent',
               border: 'none',
               borderBottom: isActive ? `2px solid ${GOLD}` : '2px solid transparent',
-              color: isActive ? '#F5F0E8' : '#9B8B7A',
+              color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
               padding: '14px 8px',
               cursor: 'pointer',
               fontFamily: 'var(--font-inter, system-ui, sans-serif)',
@@ -607,7 +607,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
           top: 96,
           width: 3,
           height: 28,
-          background: '#0A050F',
+          background: 'var(--color-bg-deep)',
           borderTopLeftRadius: 2,
           borderBottomLeftRadius: 2,
         }}
@@ -620,7 +620,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
           top: 138,
           width: 3,
           height: 52,
-          background: '#0A050F',
+          background: 'var(--color-bg-deep)',
           borderTopLeftRadius: 2,
           borderBottomLeftRadius: 2,
         }}
@@ -633,7 +633,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
           top: 196,
           width: 3,
           height: 52,
-          background: '#0A050F',
+          background: 'var(--color-bg-deep)',
           borderTopLeftRadius: 2,
           borderBottomLeftRadius: 2,
         }}
@@ -646,7 +646,7 @@ function PhoneFrame({ children }: { children: ReactNode }) {
           top: 156,
           width: 3,
           height: 76,
-          background: '#0A050F',
+          background: 'var(--color-bg-deep)',
           borderTopRightRadius: 2,
           borderBottomRightRadius: 2,
         }}
@@ -1398,7 +1398,7 @@ function SparklingMockup({ wine }: { wine: MockWine }) {
                 padding: '3px 10px',
                 borderRadius: 4,
                 background: WINE_RED,
-                color: '#F5F0E8',
+                color: 'var(--color-text-primary)',
                 fontSize: 11,
                 fontWeight: 600,
               }}
@@ -1512,7 +1512,7 @@ function BlindMockup({ wine }: { wine: MockWine }) {
               height: 56,
               borderRadius: 999,
               background: WINE_RED,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -1976,7 +1976,7 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
         <div
           style={{
             padding: '10px 12px',
-            background: 'rgba(26,10,30,0.04)',
+            background: 'var(--color-ink-line)',
             borderLeft: `2px solid ${GOLD}`,
             borderRadius: 4,
             fontSize: 12,
@@ -2028,7 +2028,7 @@ function ThreeWayRow({
                 padding: '4px 6px',
                 textAlign: 'center',
                 background: active ? WINE_RED : 'transparent',
-                color: active ? '#F5F0E8' : PAPER_INK_DIM,
+                color: active ? 'var(--color-text-primary)' : PAPER_INK_DIM,
                 border: `1px solid ${active ? WINE_RED : PAPER_LINE}`,
                 borderRadius: 6,
                 fontSize: 10,

@@ -104,12 +104,12 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            background: hovered ? '#A02030' : '#8B1A2A',
+            background: hovered ? 'var(--color-wine-red-hover)' : 'var(--color-wine-red)',
             border: 'none',
             borderRadius: 28,
             padding: '12px 18px 12px 14px',
             cursor: 'pointer',
-            color: '#F5F0E8',
+            color: 'var(--color-text-primary)',
             boxShadow: hovered
               ? '0 8px 32px rgba(139,26,42,0.6), 0 2px 8px rgba(0,0,0,0.3)'
               : '0 4px 24px rgba(139,26,42,0.45), 0 2px 8px rgba(0,0,0,0.3)',
@@ -121,7 +121,7 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
           {/* 스토어 아이콘 2개 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <AppleIconSmall />
-            <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.25)' }} />
+            <div style={{ width: 1, height: 14, background: 'var(--overlay-strong)' }} />
             <PlayIconSmall />
           </div>
           <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>

@@ -49,7 +49,7 @@ const WINE_DEPTS: Record<string, RegionData> = {
 function RegionLabel({ korName, count, featured, visible, bottleUnit }: {
   korName: string; count: number; featured?: boolean; visible: boolean; bottleUnit: string;
 }) {
-  const border = featured ? 'rgba(255,208,96,0.55)' : 'rgba(255,255,255,0.12)';
+  const border = featured ? 'rgba(255,208,96,0.55)' : 'var(--overlay-medium)';
   const sw = featured ? 1.2 : 0.6;
 
   return (
@@ -64,14 +64,14 @@ function RegionLabel({ korName, count, featured, visible, bottleUnit }: {
         x={featured ? -44 : -36} y={featured ? -24 : -20}
         width={featured ? 88 : 72} height={featured ? 38 : 32}
         rx={6}
-        fill="rgba(4,1,10,0.82)" stroke={border} strokeWidth={sw}
+        fill="var(--overlay-strong)" stroke={border} strokeWidth={sw}
       />
       <text textAnchor="middle" y={featured ? -8 : -6}
-        style={{ fill: featured ? GOLD : '#F5F0E8', fontSize: featured ? 11 : 9, fontFamily: 'Inter,sans-serif', fontWeight: featured ? 700 : 600 } as React.CSSProperties}>
+        style={{ fill: featured ? GOLD : 'var(--color-text-primary)', fontSize: featured ? 11 : 9, fontFamily: 'Inter,sans-serif', fontWeight: featured ? 700 : 600 } as React.CSSProperties}>
         {featured ? `* ${korName}` : korName}
       </text>
       <text textAnchor="middle" y={featured ? 8 : 7}
-        style={{ fill: '#C9A84C', fontSize: featured ? 13 : 11, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
+        style={{ fill: 'var(--color-gold)', fontSize: featured ? 13 : 11, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
         {count}{bottleUnit}
       </text>
     </motion.g>
@@ -139,7 +139,7 @@ export default function FranceWineSection() {
     <div ref={outerRef} style={{ height: '340vh', position: 'relative' }}>
       <div style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
-        background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(139,26,42,0.12) 0%, transparent 55%), #04010A',
+        background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(139,26,42,0.12) 0%, transparent 55%), var(--color-map-bg)',
       }}>
         {/* Map */}
         <div ref={mapRef} style={{ width: '100%', height: '100%' }}>
@@ -157,9 +157,9 @@ export default function FranceWineSection() {
                   const shown = d && isDeptVisible(d.revealOrder);
                   return (
                     <Geography key={geo.rsmKey} geography={geo} style={{
-                      default: { fill: shown ? '#D42040' : '#1C0838', fillOpacity: shown ? (d?.opacity ?? 0) : 1, stroke: shown ? '#5A1028' : '#3A1068', strokeWidth: 0.8, outline: 'none', transition: 'fill 400ms, fill-opacity 400ms' },
-                      hover:   { fill: shown ? '#D42040' : '#1C0838', fillOpacity: shown ? (d?.opacity ?? 0) : 1, stroke: shown ? '#5A1028' : '#3A1068', strokeWidth: 0.8, outline: 'none' },
-                      pressed: { fill: '#1C0838', fillOpacity: 1, stroke: '#3A1068', strokeWidth: 0.8, outline: 'none' },
+                      default: { fill: shown ? '#D42040' : 'var(--color-map-inactive)', fillOpacity: shown ? (d?.opacity ?? 0) : 1, stroke: shown ? '#5A1028' : 'var(--color-map-stroke)', strokeWidth: 0.8, outline: 'none', transition: 'fill 400ms, fill-opacity 400ms' },
+                      hover:   { fill: shown ? '#D42040' : 'var(--color-map-inactive)', fillOpacity: shown ? (d?.opacity ?? 0) : 1, stroke: shown ? '#5A1028' : 'var(--color-map-stroke)', strokeWidth: 0.8, outline: 'none' },
+                      pressed: { fill: 'var(--color-map-inactive)', fillOpacity: 1, stroke: 'var(--color-map-stroke)', strokeWidth: 0.8, outline: 'none' },
                     }} />
                   );
                 })}
@@ -185,15 +185,15 @@ export default function FranceWineSection() {
         </div>
 
         {/* Vignette */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, rgba(4,1,10,0.88) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, var(--overlay-strong) 100%)' }} />
 
         {/* Header */}
         <AnimatePresence>
           {mapVisible && (
             <motion.div key="ttl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}
               style={{ position: 'absolute', top: 'clamp(14px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-              <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>{messages.franceWine.sectionLabel}</div>
-              <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>{messages.franceWine.heading}</h2>
+              <div style={{ fontSize: 9, letterSpacing: '0.28em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 6 }}>{messages.franceWine.sectionLabel}</div>
+              <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: 'var(--color-text-primary)' }}>{messages.franceWine.heading}</h2>
             </motion.div>
           )}
         </AnimatePresence>
@@ -205,7 +205,7 @@ export default function FranceWineSection() {
               width: 5,
               height: revealedCount >= i * 3 ? 20 : 5,
               borderRadius: 3,
-              background: revealedCount >= i * 3 ? '#C41E3A' : 'rgba(255,255,255,0.12)',
+              background: revealedCount >= i * 3 ? '#C41E3A' : 'var(--overlay-medium)',
               transition: 'all 350ms',
             }} />
           ))}
@@ -217,7 +217,7 @@ export default function FranceWineSection() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
               <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
-                style={{ color: '#4A3D56', fontSize: 11, letterSpacing: '0.12em', textAlign: 'center' }}>{messages.franceWine.scrollHint}</motion.div>
+                style={{ color: 'var(--color-text-disabled)', fontSize: 11, letterSpacing: '0.12em', textAlign: 'center' }}>{messages.franceWine.scrollHint}</motion.div>
             </motion.div>
           )}
         </AnimatePresence>

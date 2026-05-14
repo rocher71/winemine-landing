@@ -5,8 +5,8 @@ export type BottleStyle = 'detailed' | 'flat' | 'line';
 export type BottleOrnament = 'crest' | 'line' | 'none';
 
 const TOKENS = {
-  gold: '#C9A84C',
-  bg: '#05020A',
+  gold: 'var(--color-gold)',
+  bg: 'var(--color-bg-deepest)',
 } as const;
 
 const SHAPES: Record<BottleShape, string> = {
@@ -176,8 +176,8 @@ export function Bottle({
 
           {!isFlat && (
             <g clipPath={`url(#clip-${id})`}>
-              <rect x={60} y={20} width={6} height={420} fill="rgba(255,255,255,0.18)" />
-              <rect x={110} y={120} width={3} height={280} fill="rgba(255,255,255,0.08)" />
+              <rect x={60} y={20} width={6} height={420} fill="var(--overlay-medium)" />
+              <rect x={110} y={120} width={3} height={280} fill="var(--overlay-medium)" />
             </g>
           )}
 
@@ -300,7 +300,7 @@ export const BOTTLE_PRESETS: Record<BottlePreset, Omit<BottleProps, 'width' | 'h
     glass: '#0E1A0D',
     liquid: '#3a0a14',
     foil: '#5C0E1C',
-    label: '#F5F0E8',
+    label: 'var(--color-paper)',
     labelText: '#3a1a20',
     typeName: 'Château',
     region: 'BORDEAUX',
@@ -311,9 +311,9 @@ export const BOTTLE_PRESETS: Record<BottlePreset, Omit<BottleProps, 'width' | 'h
     style: 'detailed',
     glass: '#1F2E1C',
     liquid: '#5C0E1C',
-    foil: '#8B1A2A',
-    label: '#1A0A1E',
-    labelText: '#F5F0E8',
+    foil: 'var(--color-wine-red)',
+    label: 'var(--color-ink)',
+    labelText: 'var(--color-paper)',
     typeName: 'Pinot Noir',
     region: 'CÔTE DE NUITS',
     ornament: 'line',
@@ -323,8 +323,8 @@ export const BOTTLE_PRESETS: Record<BottlePreset, Omit<BottleProps, 'width' | 'h
     style: 'detailed',
     glass: '#3a5a3a',
     liquid: '#e8dfa8',
-    foil: '#C9A84C',
-    label: '#F5F0E8',
+    foil: 'var(--color-gold)',
+    label: 'var(--color-paper)',
     labelText: '#3a3a1a',
     typeName: 'Riesling',
     region: 'ALSACE',
@@ -335,8 +335,8 @@ export const BOTTLE_PRESETS: Record<BottlePreset, Omit<BottleProps, 'width' | 'h
     style: 'detailed',
     glass: '#2d4a2d',
     liquid: '#d4c574',
-    foil: '#F5F0E8',
-    label: '#F5F0E8',
+    foil: 'var(--color-paper)',
+    label: 'var(--color-paper)',
     labelText: '#1a3a1a',
     typeName: 'Chardonnay',
     region: 'CHABLIS',
@@ -347,8 +347,8 @@ export const BOTTLE_PRESETS: Record<BottlePreset, Omit<BottleProps, 'width' | 'h
     style: 'detailed',
     glass: '#d8b8a8',
     liquid: '#e8a890',
-    foil: '#F5F0E8',
-    label: '#F5F0E8',
+    foil: 'var(--color-paper)',
+    label: 'var(--color-paper)',
     labelText: '#7a3a3a',
     typeName: 'Provence',
     region: 'CÔTES DE PROVENCE',
@@ -359,9 +359,9 @@ export const BOTTLE_PRESETS: Record<BottlePreset, Omit<BottleProps, 'width' | 'h
     style: 'detailed',
     glass: '#0E1A0D',
     liquid: '#d4b85c',
-    foil: '#C9A84C',
-    label: '#1A0A1E',
-    labelText: '#C9A84C',
+    foil: 'var(--color-gold)',
+    label: 'var(--color-ink)',
+    labelText: 'var(--color-gold)',
     typeName: 'Brut',
     region: 'CHAMPAGNE',
     ornament: 'crest',

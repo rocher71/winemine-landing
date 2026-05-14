@@ -52,10 +52,10 @@ import { FloatingCTA } from '@/components/ui/floating-cta';
 
 type Mode = 'beginner' | 'expert';
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const MUTED = '#9B8B7A';
-const BORDER = '#2D1540';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const MUTED = 'var(--color-text-muted)';
+const BORDER = 'var(--color-border)';
 
 interface State {
   variant: FormVariant;
@@ -361,7 +361,7 @@ function DownloadCta({ onOpenModal }: { onOpenModal: () => void }) {
           fontFamily: 'var(--font-playfair, Georgia, serif)',
           fontSize: 'clamp(22px, 4vw, 32px)',
           fontWeight: 700,
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           margin: '0 0 16px',
           lineHeight: 1.3,
           letterSpacing: '-0.01em',
@@ -372,7 +372,7 @@ function DownloadCta({ onOpenModal }: { onOpenModal: () => void }) {
       <p
         style={{
           fontSize: 14,
-          color: '#D4C5B0',
+          color: 'var(--color-text-secondary)',
           lineHeight: 1.6,
           maxWidth: 520,
           margin: '0 auto 28px',
@@ -409,9 +409,9 @@ function DownloadCta({ onOpenModal }: { onOpenModal: () => void }) {
 }
 
 const pageStyle: React.CSSProperties = {
-  background: '#05020A',
+  background: 'var(--color-bg-deepest)',
   minHeight: '100vh',
-  color: '#F5F0E8',
+  color: 'var(--color-text-primary)',
   fontFamily: 'var(--font-inter, system-ui, sans-serif)',
 };
 
@@ -451,7 +451,7 @@ function TopBar({
             fontSize: 'clamp(32px, 5vw, 44px)',
             fontWeight: 700,
             letterSpacing: '-0.02em',
-            color: '#F5F0E8',
+            color: 'var(--color-text-primary)',
             margin: '12px 0 12px',
             lineHeight: 1.2,
           }}
@@ -489,8 +489,8 @@ function TopBar({
                     ? m === 'beginner'
                       ? 'linear-gradient(135deg, rgba(201,168,76,0.22) 0%, rgba(201,168,76,0.10) 100%)'
                       : 'linear-gradient(135deg, rgba(139,26,42,0.28) 0%, rgba(139,26,42,0.10) 100%)'
-                    : 'rgba(15,7,24,0.6)',
-                  border: `2px solid ${isActive ? (m === 'beginner' ? GOLD : '#A02030') : BORDER}`,
+                    : 'var(--color-bg-surface)',
+                  border: `2px solid ${isActive ? (m === 'beginner' ? GOLD : 'var(--color-wine-red-hover)') : BORDER}`,
                   borderRadius: 16,
                   cursor: 'pointer',
                   fontFamily: 'inherit',
@@ -504,7 +504,7 @@ function TopBar({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span aria-hidden style={{ display: 'inline-flex', color: m === 'beginner' ? GOLD : '#A02030' }}>
+                  <span aria-hidden style={{ display: 'inline-flex', color: m === 'beginner' ? GOLD : 'var(--color-wine-red-hover)' }}>
                     {m === 'beginner' ? <SproutIcon size={22} /> : <GraduationCapIcon size={22} />}
                   </span>
                   <span
@@ -512,7 +512,7 @@ function TopBar({
                       fontFamily: 'var(--font-playfair, Georgia, serif)',
                       fontSize: 20,
                       fontWeight: 700,
-                      color: isActive ? '#F5F0E8' : '#D4C5B0',
+                      color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                     }}
                   >
                     {t(`tastingNote.playground.mode.${m}`)}
@@ -532,7 +532,7 @@ function TopBar({
           style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${visibleVariants.length}, 1fr)`,
-            background: 'rgba(15,7,24,0.6)',
+            background: 'var(--color-bg-surface)',
             border: '1px solid rgba(201,168,76,0.16)',
             borderRadius: 12,
             overflow: 'hidden',
@@ -553,7 +553,7 @@ function TopBar({
                   background: isActive ? 'rgba(139,26,42,0.22)' : 'transparent',
                   border: 'none',
                   borderBottom: isActive ? `2px solid ${GOLD}` : '2px solid transparent',
-                  color: isActive ? '#F5F0E8' : MUTED,
+                  color: isActive ? 'var(--color-text-primary)' : MUTED,
                   padding: '14px 8px',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
@@ -604,7 +604,7 @@ function CaptureCard({ meta }: { meta: State['meta'] }) {
     <div
       style={{
         padding: 20,
-        background: 'linear-gradient(135deg, rgba(15,7,24,0.85) 0%, rgba(26,10,30,0.85) 100%)',
+        background: 'linear-gradient(135deg, var(--color-bg-surface) 0%, rgba(26,10,30,0.85) 100%)',
         border: `1px solid ${GOLD}`,
         borderRadius: 12,
       }}
@@ -613,7 +613,7 @@ function CaptureCard({ meta }: { meta: State['meta'] }) {
         <span aria-hidden style={{ display: 'inline-flex' }}><CameraIcon size={12} /></span>
         Camera · OCR
       </div>
-      <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 20, fontWeight: 700, margin: '0 0 6px', color: '#F5F0E8' }}>
+      <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 20, fontWeight: 700, margin: '0 0 6px', color: 'var(--color-text-primary)' }}>
         {meta.wineName}
       </h3>
       <p style={{ fontSize: 13, color: MUTED, fontStyle: 'italic', margin: '0 0 12px' }}>
@@ -630,9 +630,9 @@ function CaptureCard({ meta }: { meta: State['meta'] }) {
 
 function Tile({ k, v }: { k: string; v: string | number }) {
   return (
-    <div style={{ padding: '6px 10px', background: 'rgba(15,7,24,0.6)', borderRadius: 6 }}>
+    <div style={{ padding: '6px 10px', background: 'var(--color-bg-surface)', borderRadius: 6 }}>
       <div style={{ fontSize: 9, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>{k}</div>
-      <div style={{ color: '#F5F0E8', fontSize: 12 }}>{v}</div>
+      <div style={{ color: 'var(--color-text-primary)', fontSize: 12 }}>{v}</div>
     </div>
   );
 }
@@ -660,7 +660,7 @@ function RatingPicker({ value, onChange }: { value: number; onChange: (n: number
                 background: filled ? WINE_RED : 'transparent',
                 border: `1px solid ${filled ? WINE_RED : BORDER}`,
                 cursor: 'pointer',
-                color: filled ? '#F5F0E8' : MUTED,
+                color: filled ? 'var(--color-text-primary)' : MUTED,
                 fontFamily: 'inherit',
                 display: 'inline-flex',
                 alignItems: 'center',

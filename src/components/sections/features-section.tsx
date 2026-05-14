@@ -33,7 +33,7 @@ type GlassWine = {
 const GLASS_WINES: GlassWine[] = [
   { id: 'm',  initials: 'CM', region: 'BORDEAUX', vintage: '2015', appellation: 'Médoc',         grade: 'Premier Grand Cru', name: 'Château Margaux',     note: '잘 익은 카시스, 시가박스, 제비꽃. 우아한 탄닌이 한참 머무름.',  grapes: 'Cabernet Sauvignon · Merlot', date: '2026.04.18', occasion: '결혼기념일',  rating: 4.8, color: '#C41E3A' },
   { id: 'p',  initials: 'CP', region: 'POMEROL',  vintage: '2018', appellation: 'Pomerol',        grade: 'Grand Cru',         name: 'Château Pétrus',      note: '체리, 트러플, 벨벳. 실키한 질감과 무한한 여운.',              grapes: 'Merlot',                      date: '2026.02.14', occasion: '발렌타인데이', rating: 5.0, color: '#C41E3A' },
-  { id: 'mp', initials: 'MP', region: 'BOURGOGNE', vintage: '2021', appellation: 'Côte de Beaune', grade: '1er Cru',           name: 'Meursault Perrières', note: '헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.',               grapes: 'Chardonnay',                  date: '2026.01.12', occasion: '지인 모임', rating: 4.9, color: '#C9A84C' },
+  { id: 'mp', initials: 'MP', region: 'BOURGOGNE', vintage: '2021', appellation: 'Côte de Beaune', grade: '1er Cru',           name: 'Meursault Perrières', note: '헤이즐넛, 버터, 순수한 미네랄. 우아함의 극치.',               grapes: 'Chardonnay',                  date: '2026.01.12', occasion: '지인 모임', rating: 4.9, color: 'var(--color-gold)' },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -42,12 +42,12 @@ function StarRating({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map(n => {
         const filled = n <= Math.round(rating);
         return (
-          <span key={n} aria-hidden style={{ display: 'inline-flex', color: filled ? '#C9A84C' : '#2D1540' }}>
+          <span key={n} aria-hidden style={{ display: 'inline-flex', color: filled ? 'var(--color-gold)' : 'var(--color-border)' }}>
             <StarFilledIcon size={12} filled={filled} />
           </span>
         );
       })}
-      <span style={{ fontSize: 11, color: '#C9A84C', fontWeight: 700, marginLeft: 4 }}>{rating.toFixed(1)}</span>
+      <span style={{ fontSize: 11, color: 'var(--color-gold)', fontWeight: 700, marginLeft: 4 }}>{rating.toFixed(1)}</span>
     </div>
   );
 }
@@ -61,7 +61,7 @@ function WineCardInner({ wine }: { wine: GlassWine }) {
       background: 'rgba(12,4,24,0.88)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255,255,255,0.09)',
+      border: '1px solid var(--color-border-soft)',
       borderRadius: 18,
       padding: '16px 18px',
       boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
@@ -70,7 +70,7 @@ function WineCardInner({ wine }: { wine: GlassWine }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
         <span style={{
           fontSize: 7, textTransform: 'uppercase' as const, letterSpacing: '0.12em',
-          color: '#C9A84C', border: '1px solid rgba(201,168,76,0.25)',
+          color: 'var(--color-gold)', border: '1px solid rgba(201,168,76,0.25)',
           borderRadius: 4, padding: '2px 6px',
         }}>
           {wine.region}
@@ -85,54 +85,54 @@ function WineCardInner({ wine }: { wine: GlassWine }) {
             {wine.initials}
           </span>
         </div>
-        <span style={{ fontSize: 11, color: '#6A5E4A', marginLeft: 'auto' }}>
+        <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginLeft: 'auto' }}>
           {wine.vintage}
         </span>
       </div>
 
       {/* Divider */}
-      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
+      <div style={{ height: 1, background: 'var(--color-border-soft)', marginBottom: 10 }} />
 
       {/* Wine name + grade */}
-      <div style={{ fontSize: 16, fontFamily: 'Georgia, serif', color: '#F5F0E8', marginBottom: 3 }}>
+      <div style={{ fontSize: 16, fontFamily: 'Georgia, serif', color: 'var(--color-text-primary)', marginBottom: 3 }}>
         {wine.name}
       </div>
-      <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: 12 }}>
+      <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginBottom: 12 }}>
         {wine.appellation} · {wine.grade}
       </div>
 
       {/* Tasting note label */}
       <div style={{
         fontSize: 8, textTransform: 'uppercase' as const, letterSpacing: '0.15em',
-        color: '#C9A84C', marginBottom: 4,
+        color: 'var(--color-gold)', marginBottom: 4,
       }}>
         Tasting Note
       </div>
 
       {/* Note text */}
       <div style={{
-        fontSize: 12, color: '#D4C5B0', lineHeight: 1.6,
+        fontSize: 12, color: 'var(--color-text-secondary)', lineHeight: 1.6,
         fontStyle: 'italic', marginBottom: 12,
       }}>
         {wineCard?.note ?? wine.note}
       </div>
 
       {/* Divider */}
-      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 10 }} />
+      <div style={{ height: 1, background: 'var(--color-border-soft)', marginBottom: 10 }} />
 
       {/* Meta rows */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span aria-hidden style={{ display: 'inline-flex', color: '#9B8B7A' }}><GrapeIcon size={11} /></span>
-          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.grapes}</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: 'var(--color-text-muted)' }}><GrapeIcon size={11} /></span>
+          <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{wine.grapes}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span aria-hidden style={{ display: 'inline-flex', color: '#9B8B7A' }}><CalendarIcon size={11} /></span>
-          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wine.date}</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: 'var(--color-text-muted)' }}><CalendarIcon size={11} /></span>
+          <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{wine.date}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span aria-hidden style={{ display: 'inline-flex', color: '#9B8B7A' }}><StarBurstIcon size={11} /></span>
-          <span style={{ fontSize: 11, color: '#9B8B7A' }}>{wineCard?.occasion ?? wine.occasion}</span>
+          <span aria-hidden style={{ display: 'inline-flex', color: 'var(--color-text-muted)' }}><StarBurstIcon size={11} /></span>
+          <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{wineCard?.occasion ?? wine.occasion}</span>
         </div>
       </div>
 
@@ -254,7 +254,7 @@ function GlassCardStack() {
             width: i === active ? 16 : 6,
             height: 6,
             borderRadius: 3,
-            background: i === active ? '#C9A84C' : 'rgba(255,255,255,0.15)',
+            background: i === active ? 'var(--color-gold)' : 'var(--overlay-medium)',
             transition: 'all 300ms ease',
             cursor: 'pointer',
           }}
@@ -314,24 +314,24 @@ function GlassCardStack() {
                 <motion.span
                   animate={{ x: [-4, 0, -4] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ display: 'inline-flex', color: 'rgba(255,255,255,0.75)' }}
+                  style={{ display: 'inline-flex', color: 'var(--overlay-strong)' }}
                   aria-hidden
                 >
                   <ArrowLeftIcon size={14} />
                 </motion.span>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.80)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 11, color: 'var(--overlay-strong)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
                   좌우로 스와이프 해보세요
                 </span>
                 <motion.span
                   animate={{ x: [4, 0, 4] }}
                   transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ display: 'inline-flex', color: 'rgba(255,255,255,0.75)' }}
+                  style={{ display: 'inline-flex', color: 'var(--overlay-strong)' }}
                   aria-hidden
                 >
                   <ArrowRightIcon size={14} />
                 </motion.span>
               </div>
-              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
+              <span style={{ fontSize: 9, color: 'var(--overlay-strong)', letterSpacing: '0.14em', textTransform: 'uppercase' as const }}>
                 swipe left / right
               </span>
             </motion.div>
@@ -362,7 +362,7 @@ function GlassCardStack() {
                 background: 'rgba(12,4,24,0.88)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.09)',
+                border: '1px solid var(--color-border-soft)',
                 borderRadius: 18,
                 height: 310,
                 boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
@@ -409,19 +409,19 @@ function GlassCardStack() {
                   pointerEvents: 'none',
                 }}
               >
-                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 10, color: 'var(--overlay-strong)', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
                   탭 해보세요
                 </span>
                 <div style={{ position: 'relative', width: 38, height: 38 }}>
                   <motion.div
                     animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
                     transition={{ duration: 1.3, repeat: Infinity, ease: 'easeOut' }}
-                    style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }}
+                    style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--overlay-strong)' }}
                   />
                   <div style={{
                     position: 'absolute', inset: 0, borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.12)',
-                    border: '1.5px solid rgba(255,255,255,0.55)',
+                    background: 'var(--overlay-medium)',
+                    border: '1.5px solid var(--overlay-strong)',
                   }} />
                 </div>
               </motion.div>
@@ -474,7 +474,7 @@ export function ScanPanel() {
       {/* Wine label card */}
       <div style={{
         width: 160, height: 220,
-        background: 'linear-gradient(160deg, #F5F0E8 0%, #E8DDD0 100%)',
+        background: 'linear-gradient(160deg, var(--color-text-primary) 0%, #E8DDD0 100%)',
         borderRadius: 8,
         padding: '12px 16px',
         position: 'relative',
@@ -490,8 +490,8 @@ export function ScanPanel() {
           <div style={{ fontSize: 15, fontFamily: 'Georgia, serif', color: '#1A0810', fontWeight: 700, marginTop: 6, lineHeight: 1.2 }}>
             Château<br />Margaux
           </div>
-          <div style={{ width: 56, height: 1, background: '#8B1A2A', margin: '8px auto' }} />
-          <div style={{ fontSize: 22, color: '#8B1A2A', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
+          <div style={{ width: 56, height: 1, background: 'var(--color-wine-red)', margin: '8px auto' }} />
+          <div style={{ fontSize: 22, color: 'var(--color-wine-red)', fontFamily: 'Georgia, serif', fontWeight: 700 }}>
             2019
           </div>
           <div style={{ fontSize: 8, color: '#6B3040', marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
@@ -499,7 +499,7 @@ export function ScanPanel() {
           </div>
           <div style={{
             width: 48, height: 56, margin: '10px auto 0',
-            background: 'linear-gradient(135deg, #8B1A2A 0%, #C41E3A 50%, #8B1A2A 100%)',
+            background: 'linear-gradient(135deg, var(--color-wine-red) 0%, #C41E3A 50%, var(--color-wine-red) 100%)',
             borderRadius: '50% 50% 40% 40%',
             opacity: 0.13,
           }} />
@@ -509,7 +509,7 @@ export function ScanPanel() {
         {scanning && (
           <div style={{
             position: 'absolute', left: 0, right: 0, height: 2,
-            background: 'linear-gradient(90deg, transparent 0%, #C9A84C 30%, #FFF 50%, #C9A84C 70%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, var(--color-gold) 30%, #FFF 50%, var(--color-gold) 70%, transparent 100%)',
             animation: 'scanLine 1.8s ease-in-out',
             animationFillMode: 'forwards',
             boxShadow: '0 0 8px rgba(201,168,76,0.8)',
@@ -529,9 +529,9 @@ export function ScanPanel() {
             style={{
               padding: '5px 12px',
               borderRadius: 20,
-              background: isWineName ? 'rgba(196,30,58,0.2)' : isClassification ? 'rgba(201,168,76,0.18)' : isFlag ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.06)',
-              border: `1px solid ${isWineName ? 'rgba(196,30,58,0.4)' : isClassification ? 'rgba(201,168,76,0.5)' : isFlag ? 'rgba(201,168,76,0.3)' : 'rgba(255,255,255,0.1)'}`,
-              color: isWineName ? '#E06070' : isClassification ? '#C9A84C' : isFlag ? '#C9A84C' : '#D4C5B0',
+              background: isWineName ? 'rgba(196,30,58,0.2)' : isClassification ? 'rgba(201,168,76,0.18)' : isFlag ? 'rgba(201,168,76,0.15)' : 'var(--color-border-soft)',
+              border: `1px solid ${isWineName ? 'rgba(196,30,58,0.4)' : isClassification ? 'rgba(201,168,76,0.5)' : isFlag ? 'rgba(201,168,76,0.3)' : 'var(--overlay-medium)'}`,
+              color: isWineName ? '#E06070' : isClassification ? 'var(--color-gold)' : isFlag ? 'var(--color-gold)' : 'var(--color-text-secondary)',
               fontSize: isClassification ? 11 : 12,
               fontWeight: isClassification ? 600 : 500,
               letterSpacing: isClassification ? '0.02em' : undefined,
@@ -573,7 +573,7 @@ export default function FeaturesSection() {
 
   return (
     <section
-      style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), #05020A', padding: 'clamp(80px,10vw,120px) 24px', overflow: 'hidden' }}
+      style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), var(--color-bg-deepest)', padding: 'clamp(80px,10vw,120px) 24px', overflow: 'hidden' }}
     >
       <div style={{ maxWidth: 1160, margin: '0 auto' }}>
         {/* Header */}
@@ -589,12 +589,12 @@ export default function FeaturesSection() {
               fontFamily: 'var(--font-playfair), Georgia, serif',
               fontSize: 'clamp(28px,4vw,40px)',
               fontWeight: 400,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
             }}
           >
             {messages.features?.sectionHeading ?? 'WineMine이 특별한 이유'}
           </h2>
-          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 0' }} />
+          <div style={{ width: 60, height: 2, background: 'var(--color-gold)', margin: '20px auto 0' }} />
         </motion.div>
 
         {/* 3 Panels */}
@@ -618,8 +618,8 @@ export default function FeaturesSection() {
               onMouseLeave={() => setActivePanel(null)}
               style={{
                 position: 'relative',
-                background: activePanel === i ? 'rgba(196,30,58,0.04)' : 'rgba(255,255,255,0.015)',
-                border: `1px solid ${activePanel === i ? 'rgba(196,30,58,0.2)' : 'rgba(255,255,255,0.05)'}`,
+                background: activePanel === i ? 'rgba(196,30,58,0.04)' : 'var(--overlay-soft)',
+                border: `1px solid ${activePanel === i ? 'rgba(196,30,58,0.2)' : 'var(--color-border-soft)'}`,
                 borderRadius: 16,
                 padding: '40px 32px',
                 transition: 'background 350ms ease, border-color 350ms ease',
@@ -636,7 +636,7 @@ export default function FeaturesSection() {
                   fontFamily: 'Georgia, serif',
                   fontSize: 96,
                   fontWeight: 400,
-                  color: activePanel === i ? 'rgba(196,30,58,0.08)' : 'rgba(255,255,255,0.025)',
+                  color: activePanel === i ? 'rgba(196,30,58,0.08)' : 'var(--overlay-soft)',
                   lineHeight: 1,
                   transition: 'color 350ms ease',
                   userSelect: 'none',
@@ -652,7 +652,7 @@ export default function FeaturesSection() {
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: 22,
                   fontWeight: 400,
-                  color: '#F5F0E8',
+                  color: 'var(--color-text-primary)',
                   marginBottom: 10,
                   position: 'relative',
                 }}
@@ -662,7 +662,7 @@ export default function FeaturesSection() {
               <p
                 style={{
                   fontSize: 13,
-                  color: '#9B8B7A',
+                  color: 'var(--color-text-muted)',
                   lineHeight: 1.7,
                   whiteSpace: 'pre-line',
                   marginBottom: 32,

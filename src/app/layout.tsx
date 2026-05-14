@@ -51,8 +51,9 @@ export default async function RootLayout({
   const messages = await getMessages(locale);
 
   return (
-    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`}>
+    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`} style={{ colorScheme: 'light dark' }}>
       <head>
+        <meta name="color-scheme" content="light dark" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

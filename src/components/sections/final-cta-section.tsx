@@ -14,7 +14,7 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
 
   return (
     <>
-      <section style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), #05020A', padding: 'clamp(80px, 10vw, 120px) 24px' }}>
+      <section style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), var(--color-bg-deepest)', padding: 'clamp(80px, 10vw, 120px) 24px' }}>
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -27,13 +27,13 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
               fontFamily: 'var(--font-playfair), Georgia, serif',
               fontSize: 'clamp(32px, 5vw, 48px)',
               fontWeight: 400,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               lineHeight: 1.2,
             }}
           >
             Make your own Wine Map
           </h2>
-          <p style={{ fontSize: 16, color: '#9B8B7A', marginTop: 16 }}>
+          <p style={{ fontSize: 16, color: 'var(--color-text-muted)', marginTop: 16 }}>
             {t('finalCta.body')}
           </p>
           <div style={{ marginTop: 40 }}>
@@ -51,7 +51,7 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
           justifyContent: 'center',
         }}
       >
-        <p style={{ fontSize: 13, color: '#4A3D56' }}>
+        <p style={{ fontSize: 13, color: 'var(--color-text-disabled)' }}>
           {t('finalCta.copyright')}
         </p>
       </footer>

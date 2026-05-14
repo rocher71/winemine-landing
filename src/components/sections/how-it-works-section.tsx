@@ -19,16 +19,16 @@ type StepIcon = ComponentType<IconProps>;
 const STEP_META: { num: string; Icon: StepIcon; color: string }[] = [
   { num: '01', Icon: CameraIcon,    color: '#C41E3A' },
   { num: '02', Icon: MapIcon,       color: '#8B5CF6' },
-  { num: '03', Icon: HourglassIcon, color: '#C9A84C' },
+  { num: '03', Icon: HourglassIcon, color: 'var(--color-gold)' },
   { num: '04', Icon: SearchIcon,    color: '#E8C97A' },
-  { num: '05', Icon: BoltIcon,      color: '#A02030' },
+  { num: '05', Icon: BoltIcon,      color: 'var(--color-wine-red-hover)' },
   { num: '06', Icon: StarBurstIcon, color: '#D4A574' },
 ];
 
 export default function HowItWorksSection() {
   const { messages } = useLocale();
   return (
-    <section style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), #0A050F', padding: 'clamp(80px,10vw,120px) 24px' }}>
+    <section style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), var(--color-bg-deep)', padding: 'clamp(80px,10vw,120px) 24px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto' }}>
 
         {/* Header */}
@@ -39,17 +39,17 @@ export default function HowItWorksSection() {
           viewport={{ once: true }}
           style={{ textAlign: 'center', marginBottom: 'clamp(48px,7vw,80px)' }}
         >
-          <div style={{ fontSize: 10, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 14 }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.28em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 14 }}>
             {messages.howItWorks.sectionLabel}
           </div>
           <h2 style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(26px,4vw,40px)',
-            fontWeight: 400, color: '#F5F0E8',
+            fontWeight: 400, color: 'var(--color-text-primary)',
           }}>
             {messages.howItWorks.heading}
           </h2>
-          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 0' }} />
+          <div style={{ width: 60, height: 2, background: 'var(--color-gold)', margin: '20px auto 0' }} />
         </motion.div>
 
         {/* Steps — full-width cards, no side number column causing mobile offset */}
@@ -64,7 +64,7 @@ export default function HowItWorksSection() {
               style={{
                 position: 'relative',
                 padding: 'clamp(24px, 4vw, 40px) 0',
-                borderBottom: i < STEP_META.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                borderBottom: i < STEP_META.length - 1 ? '1px solid var(--color-border-soft)' : 'none',
               }}
             >
               {/* Decorative large number — absolute behind content, no space impact */}
@@ -76,7 +76,7 @@ export default function HowItWorksSection() {
                 fontFamily: 'Georgia, serif',
                 fontSize: 'clamp(64px, 10vw, 100px)',
                 fontWeight: 400,
-                color: 'rgba(255,255,255,0.035)',
+                color: 'var(--overlay-soft)',
                 lineHeight: 1,
                 userSelect: 'none',
                 pointerEvents: 'none',
@@ -106,7 +106,7 @@ export default function HowItWorksSection() {
                     fontFamily: 'var(--font-playfair), Georgia, serif',
                     fontSize: 'clamp(18px,2.5vw,26px)',
                     fontWeight: 400,
-                    color: '#F5F0E8',
+                    color: 'var(--color-text-primary)',
                     marginBottom: 10,
                     lineHeight: 1.2,
                   }}>
@@ -114,7 +114,7 @@ export default function HowItWorksSection() {
                   </h3>
                   <p style={{
                     fontSize: 'clamp(13px,1.4vw,15px)',
-                    color: '#9B8B7A',
+                    color: 'var(--color-text-muted)',
                     lineHeight: 1.75,
                     marginBottom: 14,
                   }}>

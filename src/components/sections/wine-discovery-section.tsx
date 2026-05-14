@@ -29,7 +29,7 @@ function StepHeader({ label, title, body }: { label?: string; title: string; bod
         <div style={{
           fontSize: 10,
           letterSpacing: '0.28em',
-          color: '#C9A84C',
+          color: 'var(--color-gold)',
           textTransform: 'uppercase',
           marginBottom: 14,
         }}>
@@ -40,7 +40,7 @@ function StepHeader({ label, title, body }: { label?: string; title: string; bod
         fontFamily: 'var(--font-playfair), Georgia, serif',
         fontSize: 'clamp(26px, 4.5vw, 42px)',
         fontWeight: 400,
-        color: '#F5F0E8',
+        color: 'var(--color-text-primary)',
         lineHeight: 1.2,
         marginBottom: body ? 14 : 0,
         whiteSpace: 'pre-line',
@@ -50,7 +50,7 @@ function StepHeader({ label, title, body }: { label?: string; title: string; bod
       {body && (
         <p style={{
           fontSize: 'clamp(13px, 1.5vw, 15px)',
-          color: '#9B8B7A',
+          color: 'var(--color-text-muted)',
           maxWidth: 520,
           margin: '0 auto',
           lineHeight: 1.7,
@@ -72,9 +72,9 @@ const WINE_TYPE_TO_SHAPE: Record<RecommendedWine['wineType'], BottleShape> = {
 };
 
 const WINE_TYPE_LABEL_BG: Record<RecommendedWine['wineType'], string> = {
-  red:    '#F5F0E8',
-  white:  '#F5F0E8',
-  'rosé': '#F5F0E8',
+  red:    'var(--color-text-primary)',
+  white:  'var(--color-text-primary)',
+  'rosé': 'var(--color-text-primary)',
 };
 
 const WINE_TYPE_LABEL_FG: Record<RecommendedWine['wineType'], string> = {
@@ -103,7 +103,7 @@ function WineBottleSilhouette({
       style="detailed"
       glass={wine.bottleColor}
       liquid={wine.bottleColor}
-      foil={shape === 'bordeaux' ? '#5C0E1C' : '#8B1A2A'}
+      foil={shape === 'bordeaux' ? '#5C0E1C' : 'var(--color-wine-red)'}
       label={WINE_TYPE_LABEL_BG[wine.wineType]}
       labelText={WINE_TYPE_LABEL_FG[wine.wineType]}
       typeName={wine.label}
@@ -157,10 +157,10 @@ const WAVES: Wave[] = [
 // then the camera tour runs from 0.10 onward.
 const WAVE_THRESHOLDS = [0.0, 0.03, 0.06];
 
-const COUNTRY_FILL_ACTIVE = '#8B1A2A';
+const COUNTRY_FILL_ACTIVE = 'var(--color-wine-red)';
 const COUNTRY_FILL_HIGHLIGHT = '#C41E3A';
-const COUNTRY_FILL_INACTIVE = '#1A0A2E';
-const COUNTRY_STROKE = '#2A0C58';
+const COUNTRY_FILL_INACTIVE = 'var(--color-map-inactive)';
+const COUNTRY_STROKE = 'var(--color-map-stroke)';
 
 const LINE_DRAW_DURATION = 0.55; // fast simultaneous draw
 const LINE_DRAW_STAGGER = 0;
@@ -175,7 +175,7 @@ function ConnectionLineDrawing({ line, delay }: { line: ConnectionLine; delay: n
     <Line
       from={line.from}
       to={line.to}
-      stroke="#C9A84C"
+      stroke="var(--color-gold)"
       strokeWidth={1.4}
       fill="none"
       style={{
@@ -498,7 +498,7 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
         position: 'absolute',
         inset: 0,
         zIndex: 1,
-        background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.10) 0%, transparent 65%), #08051A',
+        background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.10) 0%, transparent 65%), var(--color-map-bg)',
         // Map is a passive backdrop — page scroll passes through unimpeded.
         pointerEvents: 'none',
         overflow: 'hidden',
@@ -510,7 +510,7 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
 
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'linear-gradient(180deg, rgba(4,1,10,0.55) 0%, rgba(4,1,10,0.10) 28%, rgba(4,1,10,0.10) 60%, rgba(4,1,10,0.85) 100%)',
+        background: 'linear-gradient(180deg, var(--overlay-strong) 0%, var(--overlay-soft) 28%, var(--overlay-soft) 60%, var(--overlay-strong) 100%)',
       }} />
     </motion.div>
   );
@@ -532,13 +532,13 @@ function Step2ScrollHint({ progress, text }: { progress: MotionValue<number>; te
       }}
     >
       <span style={{
-        fontSize: 11, color: 'rgba(255,255,255,0.55)',
+        fontSize: 11, color: 'var(--overlay-strong)',
         letterSpacing: '0.06em', whiteSpace: 'nowrap',
       }}>
         {text}
       </span>
       <span style={{
-        fontSize: 9, color: 'rgba(255,255,255,0.28)',
+        fontSize: 9, color: 'var(--overlay-strong)',
         letterSpacing: '0.14em', textTransform: 'uppercase' as const,
       }}>
         scroll down
@@ -549,7 +549,7 @@ function Step2ScrollHint({ progress, text }: { progress: MotionValue<number>; te
         style={{ marginTop: 4 }}
       >
         <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-          <path d="M1 1.5L8 8.5L15 1.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M1 1.5L8 8.5L15 1.5" stroke="var(--overlay-strong)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </motion.div>
     </motion.div>
@@ -569,7 +569,7 @@ function StartHintPill({ progress, text }: { progress: MotionValue<number>; text
         transform: 'translateX(-50%)',
         background: 'rgba(212,32,64,0.18)',
         border: '1px solid rgba(212,32,64,0.45)',
-        color: '#F5F0E8',
+        color: 'var(--color-text-primary)',
         padding: '8px 18px',
         borderRadius: 999,
         fontSize: 12,
@@ -665,7 +665,7 @@ function RecommendationCard({
             <div style={{
               fontSize: 10,
               letterSpacing: '0.18em',
-              color: '#C9A84C',
+              color: 'var(--color-gold)',
               textTransform: 'uppercase',
               fontWeight: 600,
               marginBottom: 6,
@@ -675,7 +675,7 @@ function RecommendationCard({
             <div style={{
               fontFamily: 'Georgia, serif',
               fontSize: 18,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               marginBottom: 4,
               lineHeight: 1.2,
             }}>
@@ -683,9 +683,9 @@ function RecommendationCard({
             </div>
             <div style={{
               fontSize: 13,
-              color: '#D4C5B0',
+              color: 'var(--color-text-secondary)',
             }}>
-              {wine.country[locale]} · <span style={{ color: '#C9A84C', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
+              {wine.country[locale]} · <span style={{ color: 'var(--color-gold)', fontWeight: 700 }}>{formatKrw(wine.priceKrw)}</span>
             </div>
           </div>
         </motion.div>
@@ -725,13 +725,13 @@ export default function WineDiscoverySection() {
       style={{
         height: '600vh',
         position: 'relative',
-        background: '#04010A',
+        background: 'var(--color-map-bg)',
       }}
     >
       <div style={{
         position: 'sticky', top: 0,
         height: '100vh', overflow: 'hidden',
-        background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.05) 0%, transparent 60%), #04010A',
+        background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.05) 0%, transparent 60%), var(--color-map-bg)',
       }}>
         <FullScreenMap progress={recProgress} visible={step === 1} />
 
@@ -747,7 +747,7 @@ export default function WineDiscoverySection() {
         >
           <div style={{
             fontSize: 10, letterSpacing: '0.32em',
-            color: '#C9A84C', textTransform: 'uppercase',
+            color: 'var(--color-gold)', textTransform: 'uppercase',
             opacity: 0.85, marginBottom: 8,
           }}>
             {t.sectionLabel}
@@ -756,7 +756,7 @@ export default function WineDiscoverySection() {
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(15px, 2.2vw, 20px)',
             fontWeight: 400,
-            color: '#F5F0E8',
+            color: 'var(--color-text-primary)',
             lineHeight: 1.3,
             margin: 0,
           }}>
@@ -843,7 +843,7 @@ export default function WineDiscoverySection() {
               width: 5,
               height: i === step ? 20 : 5,
               borderRadius: 3,
-              background: i === step ? '#C9A84C' : 'rgba(255,255,255,0.18)',
+              background: i === step ? 'var(--color-gold)' : 'var(--overlay-medium)',
               transition: 'all 320ms cubic-bezier(0.4,0,0.2,1)',
             }} />
           ))}
@@ -867,13 +867,13 @@ export default function WineDiscoverySection() {
               }}
             >
               <span style={{
-                fontSize: 11, color: 'rgba(255,255,255,0.55)',
+                fontSize: 11, color: 'var(--overlay-strong)',
                 letterSpacing: '0.06em', whiteSpace: 'nowrap',
               }}>
                 {t.scrollHint}
               </span>
               <span style={{
-                fontSize: 9, color: 'rgba(255,255,255,0.28)',
+                fontSize: 9, color: 'var(--overlay-strong)',
                 letterSpacing: '0.14em', textTransform: 'uppercase' as const,
               }}>
                 scroll down
@@ -884,7 +884,7 @@ export default function WineDiscoverySection() {
                 style={{ marginTop: 4 }}
               >
                 <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-                  <path d="M1 1.5L8 8.5L15 1.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M1 1.5L8 8.5L15 1.5" stroke="var(--overlay-strong)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </motion.div>
             </motion.div>

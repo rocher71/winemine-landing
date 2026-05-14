@@ -45,8 +45,8 @@ const CATEGORY_ICON: Record<AromaCategoryIconKey, ComponentType<IconProps>> = {
   dna: DnaIcon,
 };
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
 
 interface Props {
   variant: FormVariant;
@@ -82,7 +82,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
         viewBox={`0 0 ${wheelSize} ${wheelSize}`}
         style={{ display: 'block' }}
       >
-        <circle cx={center} cy={center} r={innerR - 2} fill="#1A0A1E" stroke={GOLD} strokeOpacity="0.3" />
+        <circle cx={center} cy={center} r={innerR - 2} fill="var(--color-bg-map)" stroke={GOLD} strokeOpacity="0.3" />
         <text x={center} y={center} textAnchor="middle" dominantBaseline="middle" fill={GOLD} fontSize="11" fontFamily="serif" fontStyle="italic">
           aroma
         </text>
@@ -119,7 +119,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                 // SVG 안에 React SVG 컴포넌트를 transform으로 위치 조정
                 return (
                   <g transform={`translate(${lx - 8}, ${ly - 16})`} style={{ pointerEvents: 'none' }}>
-                    <Icon size={16} color="#F5F0E8" />
+                    <Icon size={16} color="var(--color-text-primary)" />
                   </g>
                 );
               })()}
@@ -127,7 +127,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                 x={lx}
                 y={ly + 8}
                 textAnchor="middle"
-                fill="#F5F0E8"
+                fill="var(--color-text-primary)"
                 fontSize="9"
                 fontWeight="600"
                 style={{ pointerEvents: 'none' }}
@@ -146,7 +146,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                     x={lx + 18}
                     y={ly - 11}
                     textAnchor="middle"
-                    fill="#1A0A1E"
+                    fill="var(--color-bg-map)"
                     fontSize="9"
                     fontWeight="700"
                   >
@@ -195,7 +195,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                       borderRadius: 999,
                       border: `1px solid ${isOn ? WINE_RED : 'rgba(245,240,232,0.16)'}`,
                       background: isOn ? 'rgba(139,26,42,0.22)' : 'transparent',
-                      color: isOn ? '#F5F0E8' : '#D4C5B0',
+                      color: isOn ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                       cursor: 'pointer',
                       fontWeight: isOn ? 600 : 400,
                       fontFamily: 'inherit',
@@ -234,11 +234,11 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                         zIndex: 50,
                         width: 240,
                         padding: 12,
-                        background: '#0A050F',
+                        background: 'var(--color-bg-deep)',
                         border: `1px solid ${GOLD}`,
                         borderRadius: 8,
                         fontSize: 11,
-                        color: '#F5F0E8',
+                        color: 'var(--color-text-primary)',
                         lineHeight: 1.4,
                         boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
                       }}
@@ -246,7 +246,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
                       <div style={{ fontWeight: 700, color: GOLD, marginBottom: 4 }}>
                         {impact.name}
                       </div>
-                      <div style={{ fontSize: 10, color: '#9B8B7A', marginBottom: 4, fontStyle: 'italic' }}>
+                      <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginBottom: 4, fontStyle: 'italic' }}>
                         {impact.chemistry} · {impact.threshold}
                       </div>
                       <div>{impact.note}</div>
@@ -261,7 +261,7 @@ export default function AromaWheel({ variant, selected, onToggle }: Props) {
               marginTop: 12,
               fontSize: 11,
               fontStyle: 'italic',
-              color: '#9B8B7A',
+              color: 'var(--color-text-muted)',
             }}
           >
             {t('tastingNote.playground.aromaHint')}

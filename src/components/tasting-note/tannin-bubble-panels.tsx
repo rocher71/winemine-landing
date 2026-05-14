@@ -22,10 +22,10 @@ import {
   type SparklingDosage,
 } from '@/lib/tasting-note-lexicon';
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const MUTED = '#9B8B7A';
-const BORDER = '#2D1540';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const MUTED = 'var(--color-text-muted)';
+const BORDER = 'var(--color-border)';
 
 const TEXTURE_SOFT: TanninTexture[] = ['silky', 'velvety', 'smooth', 'plush', 'soft', 'round'];
 const TEXTURE_FINE: TanninTexture[] = ['fineGrained', 'polished', 'powdery', 'dusty', 'chalky'];
@@ -63,7 +63,7 @@ export function TanninPanel({
           {t('tastingNote.dimensions.tanninTexture')}
         </div>
         <TextureGroup groupId="soft"   locale={locale} textures={TEXTURE_SOFT}   active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent={GOLD} />
-        <TextureGroup groupId="fine"   locale={locale} textures={TEXTURE_FINE}   active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="#D4C5B0" />
+        <TextureGroup groupId="fine"   locale={locale} textures={TEXTURE_FINE}   active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="var(--color-text-secondary)" />
         <TextureGroup groupId="grippy" locale={locale} textures={TEXTURE_GRIPPY} active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent="#A05A3D" />
         <TextureGroup groupId="harsh"  locale={locale} textures={TEXTURE_HARSH}  active={state.texture} onSelect={tex => onChange({ ...state, texture: tex })} accent={WINE_RED} />
       </div>
@@ -77,7 +77,7 @@ export function TanninPanel({
               flex: 1,
               padding: '8px',
               background: state.ripeness === r ? WINE_RED : 'transparent',
-              color: state.ripeness === r ? '#F5F0E8' : MUTED,
+              color: state.ripeness === r ? 'var(--color-text-primary)' : MUTED,
               border: `1px solid ${state.ripeness === r ? WINE_RED : BORDER}`,
               borderRadius: 6,
               cursor: 'pointer',
@@ -113,7 +113,7 @@ function TextureGroup({
               style={{
                 padding: '4px 8px',
                 background: isOn ? accent : 'transparent',
-                color: isOn ? '#1A0A1E' : '#D4C5B0',
+                color: isOn ? 'var(--color-bg-map)' : 'var(--color-text-secondary)',
                 border: `1px solid ${isOn ? accent : BORDER}`,
                 borderRadius: 12,
                 fontSize: 11,
@@ -195,7 +195,7 @@ export function BubblePanel({
             style={{
               padding: '8px 10px',
               background: dosage === d ? WINE_RED : 'transparent',
-              color: dosage === d ? '#F5F0E8' : '#D4C5B0',
+              color: dosage === d ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
               border: `1px solid ${dosage === d ? WINE_RED : BORDER}`,
               borderRadius: 8,
               cursor: 'pointer',
@@ -242,7 +242,7 @@ function Chip({ active, onClick, children, title }: { active: boolean; onClick: 
       style={{
         padding: '6px 12px',
         background: active ? GOLD : 'transparent',
-        color: active ? '#1A0A1E' : '#D4C5B0',
+        color: active ? 'var(--color-bg-map)' : 'var(--color-text-secondary)',
         border: `1px solid ${active ? GOLD : BORDER}`,
         borderRadius: 16,
         cursor: 'pointer',

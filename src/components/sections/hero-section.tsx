@@ -9,7 +9,7 @@ import { useLocale } from '@/components/providers/locale-provider';
 const WorldMap = dynamic(() => import('@/components/map/world-map'), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0" style={{ background: '#05020A' }} />
+    <div className="absolute inset-0" style={{ background: 'var(--color-bg-deepest)' }} />
   ),
 });
 
@@ -33,7 +33,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(5,2,8,0.05) 0%, rgba(5,2,8,0.35) 50%, rgba(5,2,8,0.75) 100%)',
+            'linear-gradient(to bottom, var(--overlay-soft) 0%, var(--overlay-medium) 50%, var(--overlay-strong) 100%)',
         }}
       />
 
@@ -53,7 +53,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(48px, 8vw, 72px)',
             fontWeight: 700,
-            color: '#F5F0E8',
+            color: 'var(--color-text-primary)',
             letterSpacing: '-0.02em',
             lineHeight: 1.1,
             margin: 0,
@@ -68,7 +68,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           style={{
             width: 80,
             height: 2,
-            background: '#C9A84C',
+            background: 'var(--color-gold)',
             margin: '16px auto',
           }}
         />
@@ -79,7 +79,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           style={{
             fontSize: 18,
             fontWeight: 300,
-            color: '#D4C5B0',
+            color: 'var(--color-text-secondary)',
             margin: 0,
           }}
         >
@@ -91,7 +91,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           transition={{ duration: 0.6, delay: 0.5 }}
           style={{
             fontSize: 14,
-            color: '#9B8B7A',
+            color: 'var(--color-text-muted)',
             marginTop: 8,
             marginBottom: 0,
           }}
@@ -116,7 +116,7 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
           bottom: 32,
           left: '50%',
           transform: 'translateX(-50%)',
-          color: '#9B8B7A',
+          color: 'var(--color-text-muted)',
         }}
       >
         <ChevronDown size={24} />

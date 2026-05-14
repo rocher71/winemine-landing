@@ -29,17 +29,17 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
   return (
     <div
       style={{
-        background: '#0F0718',
+        background: 'var(--color-bg-surface)',
         border: '1px solid rgba(201,168,76,0.45)',
         borderRadius: 8,
         padding: '8px 12px',
         fontSize: 12,
-        color: '#F5F0E8',
+        color: 'var(--color-text-primary)',
         boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
       }}
     >
-      <div style={{ color: '#9B8B7A', fontSize: 10, marginBottom: 2, letterSpacing: '0.08em' }}>{p.payload.m}</div>
-      <div style={{ color: '#C9A84C', fontWeight: 600 }}>₩{(p.value * 1000).toLocaleString()}</div>
+      <div style={{ color: 'var(--color-text-muted)', fontSize: 10, marginBottom: 2, letterSpacing: '0.08em' }}>{p.payload.m}</div>
+      <div style={{ color: 'var(--color-gold)', fontWeight: 600 }}>₩{(p.value * 1000).toLocaleString()}</div>
     </div>
   );
 }
@@ -54,15 +54,15 @@ function RatingPill({ label, value, suffix }: ExternalRatingItem) {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '10px 14px',
-        background: 'rgba(255,255,255,0.025)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--overlay-soft)',
+        border: '1px solid var(--color-border-soft)',
         borderRadius: 10,
       }}
     >
-      <span style={{ fontSize: 12, color: '#9B8B7A' }}>{label}</span>
-      <span style={{ fontSize: 13, color: '#F5F0E8', fontWeight: 600 }}>
+      <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{label}</span>
+      <span style={{ fontSize: 13, color: 'var(--color-text-primary)', fontWeight: 600 }}>
         {value}
-        <span style={{ color: '#C9A84C', marginLeft: 4, fontSize: 11 }}>{suffix}</span>
+        <span style={{ color: 'var(--color-gold)', marginLeft: 4, fontSize: 11 }}>{suffix}</span>
       </span>
     </div>
   );
@@ -82,7 +82,7 @@ export default function PriceIntelligenceSection() {
   return (
     <section
       style={{
-        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 58%), #05020A',
+        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 58%), var(--color-bg-deepest)',
         padding: 'clamp(80px,10vw,112px) 24px',
       }}
     >
@@ -99,7 +99,7 @@ export default function PriceIntelligenceSection() {
             style={{
               fontSize: 10,
               letterSpacing: '0.28em',
-              color: '#C9A84C',
+              color: 'var(--color-gold)',
               textTransform: 'uppercase',
               marginBottom: 14,
             }}
@@ -111,14 +111,14 @@ export default function PriceIntelligenceSection() {
               fontFamily: 'var(--font-playfair), Georgia, serif',
               fontSize: 'clamp(26px,4vw,40px)',
               fontWeight: 400,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               lineHeight: 1.25,
             }}
           >
             {pi?.heading}
           </h2>
-          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '20px auto 18px' }} />
-          <p style={{ fontSize: 15, color: '#9B8B7A', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
+          <div style={{ width: 60, height: 2, background: 'var(--color-gold)', margin: '20px auto 18px' }} />
+          <p style={{ fontSize: 15, color: 'var(--color-text-muted)', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
             {pi?.subheading}
           </p>
         </motion.div>
@@ -139,8 +139,8 @@ export default function PriceIntelligenceSection() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true, margin: '-40px' }}
             style={{
-              background: '#1A0A1E',
-              border: '1px solid rgba(255,255,255,0.05)',
+              background: 'var(--color-bg-map)',
+              border: '1px solid var(--color-border-soft)',
               borderRadius: 16,
               padding: 'clamp(20px, 3vw, 32px)',
               minWidth: 0,
@@ -151,14 +151,14 @@ export default function PriceIntelligenceSection() {
                 style={{
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: 18,
-                  color: '#F5F0E8',
+                  color: 'var(--color-text-primary)',
                   marginBottom: 6,
                 }}
               >
                 {pi?.wineLabel}
               </div>
-              <div style={{ fontSize: 14, color: '#C9A84C', fontWeight: 600 }}>{pi?.priceRange}</div>
-              <div style={{ fontSize: 11, color: '#6A5E4A', marginTop: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 14, color: 'var(--color-gold)', fontWeight: 600 }}>{pi?.priceRange}</div>
+              <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 {pi?.chartLabel}
               </div>
             </div>
@@ -169,15 +169,15 @@ export default function PriceIntelligenceSection() {
                   <CartesianGrid stroke="rgba(201,168,76,0.10)" strokeDasharray="3 3" vertical={false} />
                   <XAxis
                     dataKey="m"
-                    stroke="#6A5E4A"
-                    tick={{ fontSize: 10, fill: '#6A5E4A' }}
-                    axisLine={{ stroke: 'rgba(255,255,255,0.08)' }}
+                    stroke="var(--color-text-muted)"
+                    tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
+                    axisLine={{ stroke: 'var(--overlay-medium)' }}
                     tickLine={false}
                   />
                   <YAxis
-                    stroke="#6A5E4A"
-                    tick={{ fontSize: 10, fill: '#6A5E4A' }}
-                    axisLine={{ stroke: 'rgba(255,255,255,0.08)' }}
+                    stroke="var(--color-text-muted)"
+                    tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
+                    axisLine={{ stroke: 'var(--overlay-medium)' }}
                     tickLine={false}
                     tickFormatter={(v: number) => `${v}k`}
                     width={42}
@@ -186,10 +186,10 @@ export default function PriceIntelligenceSection() {
                   <Line
                     type="monotone"
                     dataKey="price"
-                    stroke="#C9A84C"
+                    stroke="var(--color-gold)"
                     strokeWidth={2.5}
-                    dot={{ r: 3, fill: '#C9A84C', stroke: '#0F0718', strokeWidth: 1.5 }}
-                    activeDot={{ r: 5, fill: '#C9A84C', stroke: '#F5F0E8', strokeWidth: 1.5 }}
+                    dot={{ r: 3, fill: 'var(--color-gold)', stroke: 'var(--color-bg-surface)', strokeWidth: 1.5 }}
+                    activeDot={{ r: 5, fill: 'var(--color-gold)', stroke: 'var(--color-text-primary)', strokeWidth: 1.5 }}
                     isAnimationActive={!shouldReduceMotion}
                     animationDuration={900}
                   />
@@ -207,8 +207,8 @@ export default function PriceIntelligenceSection() {
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true, margin: '-40px' }}
               style={{
-                background: '#1A0A1E',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--color-bg-map)',
+                border: '1px solid var(--color-border-soft)',
                 borderRadius: 16,
                 padding: 20,
               }}
@@ -218,7 +218,7 @@ export default function PriceIntelligenceSection() {
                   fontSize: 11,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#C9A84C',
+                  color: 'var(--color-gold)',
                   fontWeight: 600,
                   marginBottom: 12,
                 }}
@@ -239,8 +239,8 @@ export default function PriceIntelligenceSection() {
               transition={{ duration: 0.6, delay: 0.18 }}
               viewport={{ once: true, margin: '-40px' }}
               style={{
-                background: '#1A0A1E',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--color-bg-map)',
+                border: '1px solid var(--color-border-soft)',
                 borderRadius: 16,
                 padding: 20,
               }}
@@ -250,7 +250,7 @@ export default function PriceIntelligenceSection() {
                   fontSize: 11,
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
-                  color: '#C9A84C',
+                  color: 'var(--color-gold)',
                   fontWeight: 600,
                   marginBottom: 12,
                 }}
@@ -266,18 +266,18 @@ export default function PriceIntelligenceSection() {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       padding: '10px 0',
-                      borderBottom: i < (pi?.storeRows?.length ?? 0) - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                      borderBottom: i < (pi?.storeRows?.length ?? 0) - 1 ? '1px solid var(--color-border-soft)' : 'none',
                     }}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-                      <span style={{ fontSize: 12, color: '#F5F0E8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <span style={{ fontSize: 12, color: 'var(--color-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {row.name}
                       </span>
-                      <span style={{ fontSize: 10, color: '#6A5E4A' }}>
+                      <span style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>
                         {pi?.stores?.updated} · {row.updated}
                       </span>
                     </div>
-                    <span style={{ fontSize: 13, color: '#C9A84C', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 8 }}>
+                    <span style={{ fontSize: 13, color: 'var(--color-gold)', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 8 }}>
                       {row.price}
                     </span>
                   </div>
@@ -302,7 +302,7 @@ export default function PriceIntelligenceSection() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 10,
-            color: '#C9A84C',
+            color: 'var(--color-gold)',
             fontSize: 13,
             fontWeight: 600,
             letterSpacing: '0.02em',
@@ -311,7 +311,7 @@ export default function PriceIntelligenceSection() {
           }}
           className="price-xp-hint"
         >
-          <Coins size={15} color="#C9A84C" strokeWidth={2} aria-hidden />
+          <Coins size={15} color="var(--color-gold)" strokeWidth={2} aria-hidden />
           {pi?.xpHint}
         </motion.div>
       </div>

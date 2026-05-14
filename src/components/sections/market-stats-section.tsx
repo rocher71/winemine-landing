@@ -14,8 +14,8 @@ import {
 
 const STATS = [
   { value: 487558, suffix: '㎘', label: '2025 수입량', sub: '전년比 +5.27%', color: '#E8253E', growth: false },
-  { value: 409,    suffix: 'M$', label: '수입 금액',   sub: '4.09억 달러',   color: '#C9A84C', growth: false },
-  { value: 10,     suffix: '%',  label: '화이트 성장', sub: '유일한 두 자릿수', color: '#C9A84C', growth: true },
+  { value: 409,    suffix: 'M$', label: '수입 금액',   sub: '4.09억 달러',   color: 'var(--color-gold)', growth: false },
+  { value: 10,     suffix: '%',  label: '화이트 성장', sub: '유일한 두 자릿수', color: 'var(--color-gold)', growth: true },
   { value: 22.54,  suffix: '%',  label: '칠레 점유율', sub: '수입량 기준 1위', color: '#E8253E', growth: false },
 ];
 
@@ -73,18 +73,18 @@ export default function MarketStatsSection() {
           viewport={{ once: true }}
           style={{ textAlign: 'center', marginBottom: 'clamp(40px,6vw,72px)' }}
         >
-          <div style={{ fontSize: 10, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 14 }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.28em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 14 }}>
             {messages.marketStats.sectionLabel}
           </div>
           <h2 style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(24px,3.8vw,40px)',
-            fontWeight: 400, color: '#F5F0E8', lineHeight: 1.2,
+            fontWeight: 400, color: 'var(--color-text-primary)', lineHeight: 1.2,
           }}>
             {messages.marketStats.heading}
           </h2>
-          <div style={{ width: 60, height: 2, background: '#C9A84C', margin: '18px auto 0' }} />
-          <p style={{ fontSize: 'clamp(13px,1.4vw,16px)', color: '#9B8B7A', marginTop: 16, maxWidth: 480, margin: '16px auto 0', lineHeight: 1.7 }}>
+          <div style={{ width: 60, height: 2, background: 'var(--color-gold)', margin: '18px auto 0' }} />
+          <p style={{ fontSize: 'clamp(13px,1.4vw,16px)', color: 'var(--color-text-muted)', marginTop: 16, maxWidth: 480, margin: '16px auto 0', lineHeight: 1.7 }}>
             {messages.marketStats.description.split('\n')[0]}<br />
             {messages.marketStats.description.split('\n')[1]}
           </p>
@@ -108,9 +108,9 @@ export default function MarketStatsSection() {
               viewport={{ once: true }}
               style={{
                 padding: 'clamp(18px,3vw,28px) clamp(16px,2vw,24px)',
-                border: '1px solid rgba(255,255,255,0.06)',
+                border: '1px solid var(--color-border-soft)',
                 borderRadius: 14,
-                background: 'rgba(255,255,255,0.025)',
+                background: 'var(--overlay-soft)',
                 textAlign: 'center',
                 transition: 'border-color 300ms, transform 300ms',
               }}
@@ -119,7 +119,7 @@ export default function MarketStatsSection() {
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border-soft)';
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
               }}
             >
@@ -146,10 +146,10 @@ export default function MarketStatsSection() {
                   </span>
                 )}
               </div>
-              <div style={{ fontSize: 'clamp(12px,1.2vw,15px)', fontWeight: 600, color: '#F5F0E8', marginBottom: 4 }}>
+              <div style={{ fontSize: 'clamp(12px,1.2vw,15px)', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 4 }}>
                 {messages.marketStats.stats[i].label}
               </div>
-              <div style={{ fontSize: 'clamp(10px,1vw,12px)', color: '#9B8B7A', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: 'clamp(10px,1vw,12px)', color: 'var(--color-text-muted)', letterSpacing: '0.04em' }}>
                 {messages.marketStats.stats[i].sub}
               </div>
             </motion.div>
@@ -174,20 +174,20 @@ export default function MarketStatsSection() {
                 gap: 14,
                 alignItems: 'flex-start',
                 padding: 'clamp(14px,2vw,20px)',
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--overlay-soft)',
+                border: '1px solid var(--color-border-soft)',
                 borderRadius: 12,
                 transition: 'border-color 300ms',
               }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(201,168,76,0.2)'; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border-soft)'; }}
             >
-              <div style={{ flexShrink: 0, color: '#C9A84C', display: 'inline-flex' }} aria-hidden>
+              <div style={{ flexShrink: 0, color: 'var(--color-gold)', display: 'inline-flex' }} aria-hidden>
                 <t.Icon size={22} />
               </div>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#F5F0E8', marginBottom: 6 }}>{messages.marketStats.trends[i].title}</div>
-                <div style={{ fontSize: 12, color: '#9B8B7A', lineHeight: 1.7 }}>{messages.marketStats.trends[i].desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 6 }}>{messages.marketStats.trends[i].title}</div>
+                <div style={{ fontSize: 12, color: 'var(--color-text-muted)', lineHeight: 1.7 }}>{messages.marketStats.trends[i].desc}</div>
               </div>
             </motion.div>
           ))}
@@ -199,7 +199,7 @@ export default function MarketStatsSection() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           viewport={{ once: true }}
-          style={{ textAlign: 'center', fontSize: 11, color: '#4A3D56', marginTop: 'clamp(24px,3vw,40px)' }}
+          style={{ textAlign: 'center', fontSize: 11, color: 'var(--color-text-disabled)', marginTop: 'clamp(24px,3vw,40px)' }}
         >
           {messages.marketStats.source}
         </motion.p>

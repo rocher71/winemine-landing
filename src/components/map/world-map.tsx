@@ -26,7 +26,7 @@ function MapInstance() {
       projectionConfig={{ scale: 153, rotate: [-40, 0, 0] }}
       width={960}
       height={500}
-      style={{ width: '100%', height: '100%', display: 'block', background: '#0d0810' }}
+      style={{ width: '100%', height: '100%', display: 'block', background: 'var(--color-map-bg)' }}
     >
       <Geographies geography={GEO_URL}>
         {({ geographies }) =>
@@ -35,9 +35,9 @@ function MapInstance() {
             const geoId = String((geo as any).id).padStart(3, '0');
             const wine = WINE_REGIONS[geoId];
 
-            const fill   = wine ? wine.fill    : '#2A1552';
+            const fill   = wine ? wine.fill    : 'var(--color-map-inactive)';
             const fillOp = wine ? wine.opacity : 1;
-            const stroke = wine ? '#5A1A50'    : '#4A2080';
+            const stroke = wine ? 'var(--color-map-stroke)' : 'var(--color-map-stroke)';
 
             return (
               <Geography
@@ -59,7 +59,7 @@ function MapInstance() {
 
 export default function WorldMap() {
   return (
-    <div className="absolute inset-0 overflow-hidden" style={{ background: '#0d0810' }}>
+    <div className="absolute inset-0 overflow-hidden" style={{ background: 'var(--color-map-bg)' }}>
       {/*
         Width = 384vh = 2 × (100vh × 960/500).
         Each 50%-wide child has aspect ratio 960/500 so SVG fills exactly, no cropping.

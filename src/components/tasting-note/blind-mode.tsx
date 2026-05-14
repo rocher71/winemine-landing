@@ -7,10 +7,10 @@ import { useState } from 'react';
 import { useLocale } from '@/components/providers/locale-provider';
 import { TargetIcon, EyeIcon, CheckIcon } from '@/components/icons/wine-icons';
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const MUTED = '#9B8B7A';
-const BORDER = '#2D1540';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const MUTED = 'var(--color-text-muted)';
+const BORDER = 'var(--color-border)';
 
 const ANSWER = {
   grape: 'Cabernet Sauvignon 75% · Merlot 25%',
@@ -39,7 +39,7 @@ export default function BlindMode({ onCTA }: Props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 22, color: '#F5F0E8', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <h3 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 22, color: 'var(--color-text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
         <span aria-hidden style={{ color: WINE_RED, display: 'inline-flex' }}><TargetIcon size={20} /></span>
         {t('tastingNote.blind.title')}
       </h3>
@@ -61,7 +61,7 @@ export default function BlindMode({ onCTA }: Props) {
                 style={{
                   padding: '6px 10px',
                   background: price === p ? WINE_RED : 'transparent',
-                  color: price === p ? '#F5F0E8' : MUTED,
+                  color: price === p ? 'var(--color-text-primary)' : MUTED,
                   border: `1px solid ${price === p ? WINE_RED : BORDER}`,
                   borderRadius: 16,
                   fontSize: 11,
@@ -83,7 +83,7 @@ export default function BlindMode({ onCTA }: Props) {
         style={{
           padding: '12px 24px',
           background: revealed ? BORDER : WINE_RED,
-          color: revealed ? MUTED : '#F5F0E8',
+          color: revealed ? MUTED : 'var(--color-text-primary)',
           border: 'none',
           borderRadius: 28,
           fontSize: 14,
@@ -122,7 +122,7 @@ export default function BlindMode({ onCTA }: Props) {
                 height: 64,
                 borderRadius: 999,
                 background: WINE_RED,
-                color: '#F5F0E8',
+                color: 'var(--color-text-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -134,7 +134,7 @@ export default function BlindMode({ onCTA }: Props) {
               {score.total}
             </div>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#F5F0E8', marginBottom: 4 }}>
+              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 4 }}>
                 {rankLabel(score.total, t)}
               </div>
               <div style={{ fontSize: 12, color: MUTED, fontStyle: 'italic' }}>
@@ -149,7 +149,7 @@ export default function BlindMode({ onCTA }: Props) {
                   marginLeft: 'auto',
                   padding: '8px 16px',
                   background: GOLD,
-                  color: '#1A0A1E',
+                  color: 'var(--color-bg-map)',
                   border: 'none',
                   borderRadius: 20,
                   fontSize: 12,
@@ -188,8 +188,8 @@ function Field({
           width: '100%',
           marginTop: 6,
           padding: '10px 12px',
-          background: '#1A0A1E',
-          color: '#F5F0E8',
+          background: 'var(--color-bg-map)',
+          color: 'var(--color-text-primary)',
           border: `1px solid ${BORDER}`,
           borderRadius: 8,
           fontSize: 13,
@@ -210,7 +210,7 @@ function ScoreRow({ labelKey, guess, answer, pts }: { labelKey: string; guess: s
         gap: 12,
         alignItems: 'center',
         padding: '10px 12px',
-        background: 'rgba(15,7,24,0.5)',
+        background: 'var(--color-bg-surface)',
         border: `1px solid ${BORDER}`,
         borderRadius: 8,
       }}
@@ -222,15 +222,15 @@ function ScoreRow({ labelKey, guess, answer, pts }: { labelKey: string; guess: s
         <span style={{ fontSize: 11, color: MUTED, fontStyle: 'italic' }}>
           {t('tastingNote.mockup.guessRow.guess')} · {guess}
         </span>
-        <span style={{ fontSize: 13, color: '#F5F0E8', fontWeight: 600 }}>
+        <span style={{ fontSize: 13, color: 'var(--color-text-primary)', fontWeight: 600 }}>
           {t('tastingNote.mockup.guessRow.answer')} · {answer}
         </span>
       </div>
       <span
         style={{
           padding: '4px 10px',
-          background: pts >= 25 ? GOLD : pts >= 15 ? '#C9A84C66' : pts >= 8 ? BORDER : '#5C2030',
-          color: pts >= 15 ? '#1A0A1E' : '#F5F0E8',
+          background: pts >= 25 ? GOLD : pts >= 15 ? 'rgba(201,168,76,0.4)' : pts >= 8 ? BORDER : '#5C2030',
+          color: pts >= 15 ? 'var(--color-bg-map)' : 'var(--color-text-primary)',
           borderRadius: 4,
           fontSize: 12,
           fontWeight: 700,

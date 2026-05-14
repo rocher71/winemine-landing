@@ -72,24 +72,24 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   };
 
   const activeTabStyle = {
-    borderColor: '#8B1A2A',
-    color: '#F5F0E8',
+    borderColor: 'var(--color-wine-red)',
+    color: 'var(--color-text-primary)',
     background: 'rgba(139,26,42,0.15)',
   };
   const inactiveTabStyle = {
-    borderColor: '#2D1540',
-    color: '#4A3D56',
+    borderColor: 'var(--color-border)',
+    color: 'var(--color-text-disabled)',
     background: 'transparent',
   };
 
   const inputBaseStyle: React.CSSProperties = {
     width: '100%',
     height: 52,
-    background: '#1A0A1E',
-    border: `1px solid ${errors.contact ? '#EF4444' : '#2D1540'}`,
+    background: 'var(--color-bg-map)',
+    border: `1px solid ${errors.contact ? 'var(--color-error)' : 'var(--color-border)'}`,
     borderRadius: 4,
     padding: '0 16px',
-    color: '#F5F0E8',
+    color: 'var(--color-text-primary)',
     fontSize: 15,
     outline: 'none',
     boxSizing: 'border-box',
@@ -132,8 +132,8 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
             placeholder={t('waitlistForm.emailPlaceholder')}
             aria-invalid={errors.contact ? 'true' : 'false'}
             style={inputBaseStyle}
-            onFocus={(e) => { e.currentTarget.style.borderColor = '#8B1A2A'; }}
-            onBlur={(e) => { e.currentTarget.style.borderColor = errors.contact ? '#EF4444' : '#2D1540'; }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-wine-red)'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = errors.contact ? 'var(--color-error)' : 'var(--color-border)'; }}
           />
         ) : (
           // 전화번호: Controller로 자동 하이픈 포맷 적용
@@ -151,13 +151,13 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
                 onBlur={field.onBlur}
                 aria-invalid={errors.contact ? 'true' : 'false'}
                 style={inputBaseStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = '#8B1A2A'; }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-wine-red)'; }}
               />
             )}
           />
         )}
         {errors.contact && (
-          <p style={{ fontSize: 12, color: '#EF4444', marginTop: 6 }}>
+          <p style={{ fontSize: 12, color: 'var(--color-error)', marginTop: 6 }}>
             {errors.contact.message}
           </p>
         )}
@@ -168,16 +168,16 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         onClick={() => setMarketingAgree(!marketingAgree)}
         style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, cursor: 'pointer', userSelect: 'none' }}
       >
-        <span aria-hidden style={{ flexShrink: 0, display: 'inline-flex', color: marketingAgree ? '#8B1A2A' : '#9B8B7A' }}>
+        <span aria-hidden style={{ flexShrink: 0, display: 'inline-flex', color: marketingAgree ? 'var(--color-wine-red)' : 'var(--color-text-muted)' }}>
           {marketingAgree ? <CheckboxCheckedIcon size={16} /> : <CheckboxEmptyIcon size={16} />}
         </span>
-        <span style={{ fontSize: 12, color: '#6A5E4A', lineHeight: 1.5 }}>
+        <span style={{ fontSize: 12, color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
           {t('waitlistForm.marketingCheckbox')}
         </span>
       </div>
 
       {serverError && (
-        <p style={{ fontSize: 13, color: '#EF4444', marginTop: 12 }}>{serverError}</p>
+        <p style={{ fontSize: 13, color: 'var(--color-error)', marginTop: 12 }}>{serverError}</p>
       )}
 
       <button
@@ -186,8 +186,8 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         style={{
           width: '100%',
           height: 52,
-          background: '#8B1A2A',
-          color: '#F5F0E8',
+          background: 'var(--color-wine-red)',
+          color: 'var(--color-text-primary)',
           border: 'none',
           borderRadius: 4,
           fontSize: 16,
@@ -202,15 +202,15 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
           transition: 'background 200ms ease',
           fontFamily: 'inherit',
         }}
-        onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.background = '#A02030'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = '#8B1A2A'; }}
+        onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.background = 'var(--color-wine-red-hover)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-wine-red)'; }}
       >
         {isSubmitting && <Loader2 size={20} className="animate-spin" />}
         {isSubmitting ? t('waitlistForm.loadingButton') : t('waitlistForm.submitButton')}
       </button>
 
       {/* 개인정보 처리 안내 */}
-      <p style={{ fontSize: 11, color: '#4A3D56', textAlign: 'center', marginTop: 12, lineHeight: 1.6 }}>
+      <p style={{ fontSize: 11, color: 'var(--color-text-disabled)', textAlign: 'center', marginTop: 12, lineHeight: 1.6 }}>
         {t('waitlistForm.privacyNotice').split('\n')[0]}<br />{t('waitlistForm.privacyNotice').split('\n')[1]}
       </p>
     </form>
