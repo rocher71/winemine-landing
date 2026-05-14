@@ -100,7 +100,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
       style={{
         width: '100%',
         height: '100%',
-        background: 'linear-gradient(170deg, var(--color-map-bg) 0%, #120828 40%, var(--color-map-bg) 100%)',
+        background: 'linear-gradient(170deg, #0d0810 0%, #120828 40%, #0d0810 100%)',
         display: 'flex',
         flexDirection: 'column',
         padding: '20px 16px 16px',
@@ -124,18 +124,18 @@ export function StoryCard({ animate }: { animate: boolean }) {
       {/* Top: logo + progress bar (Instagram-style) */}
       <div style={{ marginBottom: 14 }}>
         <div style={{
-          height: 2, background: 'var(--overlay-medium)', borderRadius: 1, marginBottom: 10
+          height: 2, background: 'rgba(255,255,255,0.08)', borderRadius: 1, marginBottom: 10
         }}>
           <div style={{
             height: '100%', width: animate ? '65%' : '0%',
-            background: 'var(--color-text-primary)', borderRadius: 1,
+            background: '#F5F0E8', borderRadius: 1,
             transition: 'width 1.2s ease 0.4s',
           }} />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{
             width: 28, height: 28, borderRadius: '50%',
-            background: 'var(--color-bg-map)',
+            background: '#1A0A1E',
             border: '1px solid rgba(201,168,76,0.35)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             overflow: 'hidden',
@@ -149,8 +149,8 @@ export function StoryCard({ animate }: { animate: boolean }) {
               style={{ objectFit: 'contain' }}
             />
           </div>
-          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-primary)' }}>winemine</span>
-          <span style={{ fontSize: 10, color: 'var(--overlay-strong)', marginLeft: 'auto' }}>{messages.instagramPreview.timestamp}</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#F5F0E8' }}>winemine</span>
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.16)', marginLeft: 'auto' }}>{messages.instagramPreview.timestamp}</span>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
       <div style={{ textAlign: 'center', marginBottom: 10 }}>
         <div style={{
           fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 400,
-          color: 'var(--color-text-primary)', lineHeight: 1.1, letterSpacing: '-0.01em',
+          color: '#F5F0E8', lineHeight: 1.1, letterSpacing: '-0.01em',
         }}>
           My Wine Journey
         </div>
@@ -197,7 +197,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
           display: 'flex', gap: 1, height: 6,
           borderRadius: 3, overflow: 'hidden',
           marginBottom: 6,
-          background: 'var(--overlay-soft)',
+          background: 'rgba(255,255,255,0.04)',
         }}>
           {COLOR_SPLIT.map((c, i) => (
             <div
@@ -221,10 +221,10 @@ export function StoryCard({ animate }: { animate: boolean }) {
                 width: 6, height: 6, borderRadius: '50%',
                 background: c.color, flexShrink: 0,
               }} />
-              <span style={{ color: 'var(--color-text-secondary)' }}>
+              <span style={{ color: '#D4C5B0' }}>
                 {messages.instagramPreview.colorLabels[c.key]}
               </span>
-              <span style={{ color: 'var(--color-text-muted)' }}>{c.pct}%</span>
+              <span style={{ color: '#9B8B7A' }}>{c.pct}%</span>
             </div>
           ))}
         </div>
@@ -238,23 +238,23 @@ export function StoryCard({ animate }: { animate: boolean }) {
         border: '1px solid rgba(201,168,76,0.18)',
         borderRadius: 8,
         fontSize: 9.5,
-        color: 'var(--color-text-secondary)',
+        color: '#D4C5B0',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <span style={{ color: 'var(--color-gold)', fontSize: 11 }}>★</span>
-          <span style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>4.6</span>
-          <span style={{ color: 'var(--color-text-muted)', fontSize: 8.5 }}>{messages.instagramPreview.ratingLabel}</span>
+          <span style={{ fontWeight: 600, color: '#F5F0E8' }}>4.6</span>
+          <span style={{ color: '#9B8B7A', fontSize: 8.5 }}>{messages.instagramPreview.ratingLabel}</span>
         </div>
         <div style={{ width: 1, height: 10, background: 'rgba(201,168,76,0.2)' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <span style={{ color: 'var(--color-gold)', fontSize: 10 }}>◈</span>
-          <span style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>2007–2024</span>
+          <span style={{ fontWeight: 600, color: '#F5F0E8' }}>2007–2024</span>
         </div>
         <div style={{ width: 1, height: 10, background: 'rgba(201,168,76,0.2)' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <span style={{ color: 'var(--color-gold)', fontSize: 10 }}>✦</span>
-          <span style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>12</span>
-          <span style={{ color: 'var(--color-text-muted)', fontSize: 8.5 }}>{messages.instagramPreview.grapesLabel}</span>
+          <span style={{ fontWeight: 600, color: '#F5F0E8' }}>12</span>
+          <span style={{ color: '#9B8B7A', fontSize: 8.5 }}>{messages.instagramPreview.grapesLabel}</span>
         </div>
       </div>
 
@@ -267,14 +267,14 @@ export function StoryCard({ animate }: { animate: boolean }) {
               minWidth: 70,
               fontSize: 9.5,
               fontWeight: 600,
-              color: 'var(--color-text-secondary)',
+              color: '#D4C5B0',
               letterSpacing: '0.02em',
               whiteSpace: 'nowrap',
             }}>
               {c.name}
             </span>
             <div style={{ flex: 1 }}>
-              <div style={{ height: 3, background: 'var(--color-border-soft)', borderRadius: 2, overflow: 'hidden' }}>
+              <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
                 <div style={{
                   height: '100%',
                   width: animate ? `${c.pct}%` : '0%',
@@ -294,7 +294,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
       {/* Footer */}
       <div style={{
         marginTop: 10, paddingTop: 8,
-        borderTop: '1px solid var(--color-border-soft)',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
       }}>
         <Image
@@ -308,7 +308,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
           fontFamily: 'Georgia, serif', fontSize: 11,
           color: 'var(--color-gold)', letterSpacing: '0.08em',
         }}>winemine</span>
-        <span style={{ fontSize: 9, color: 'var(--color-text-disabled)', marginLeft: 4 }}>winemine.app</span>
+        <span style={{ fontSize: 9, color: '#4A3D56', marginLeft: 4 }}>winemine.app</span>
       </div>
     </div>
   );
@@ -320,7 +320,7 @@ export function PhoneMockup({ children, scale = 1 }: { children: React.ReactNode
     <div style={{
       width: 250 * scale,
       height: 520 * scale,
-      background: 'var(--color-map-bg)',
+      background: '#0d0810',
       borderRadius: 40 * scale,
       padding: 8 * scale,
       boxShadow: `0 0 0 ${2 * scale}px #2A2A2A, 0 0 0 ${3 * scale}px #111, 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(196,30,58,0.06)`,
@@ -333,7 +333,7 @@ export function PhoneMockup({ children, scale = 1 }: { children: React.ReactNode
         top: 12 * scale, left: '50%',
         transform: 'translateX(-50%)',
         width: 80 * scale, height: 22 * scale,
-        background: 'var(--color-map-bg)',
+        background: '#0d0810',
         borderRadius: 12 * scale,
         zIndex: 10,
       }} />
