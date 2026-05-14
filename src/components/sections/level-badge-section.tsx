@@ -179,15 +179,16 @@ function BadgeTile({ badge }: { badge: BadgeItem }) {
         filter: badge.owned ? 'none' : 'grayscale(0.6)',
       }}
     >
-      <div style={{ fontSize: 26, lineHeight: 1, marginBottom: 6 }} aria-hidden>
+      <div className="badge-emoji" style={{ lineHeight: 1, marginBottom: 8 }} aria-hidden>
         {badge.emoji}
       </div>
       <div
+        className="badge-name"
         style={{
-          fontSize: 10,
           color: badge.owned ? '#D4C5B0' : '#6A5E4A',
           textAlign: 'center',
           lineHeight: 1.3,
+          fontWeight: 500,
         }}
       >
         {badge.name}
@@ -335,13 +336,7 @@ export default function LevelBadgeSection() {
           >
             Badge Cabinet
           </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 10,
-            }}
-          >
+          <div className="badge-grid">
             {badges.map((b, i) => (
               <motion.div
                 key={i}
@@ -378,6 +373,33 @@ export default function LevelBadgeSection() {
           ))}
         </motion.div>
       </div>
+
+      <style jsx>{`
+        .badge-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+        }
+        .badge-emoji {
+          font-size: 28px;
+        }
+        .badge-name {
+          font-size: 11px;
+        }
+        @media (max-width: 640px) {
+          .badge-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+          }
+          .badge-emoji {
+            font-size: 38px;
+            margin-bottom: 10px;
+          }
+          .badge-name {
+            font-size: 13px;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -533,11 +533,11 @@
     "heading": "오늘 밤, 누가 어떤 와인을 마실까요?",
     "subheading": "혼자 마셔도 함께. winemine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
     "mapLabel": "지금 마시는 사람들",
-    "regions": ["청담", "한남", "판교", "성수"],
+    "regions": ["서울", "강원", "부산", "여수", "제주"],
     "feedItems": [
-      { "name": "민지", "level": "Lv.3", "wine": "Sancerre 2022", "place": "한남동 오피스", "time": "3분 전", "mood": "창문 너머 비, 혼자만의 한 잔" },
-      { "name": "Daniel", "level": "Lv.4", "wine": "Châteauneuf-du-Pape 2017", "place": "청담 와인바", "time": "12분 전", "mood": "오랜만에 만난 친구와" },
-      { "name": "수현", "level": "Lv.2", "wine": "Champagne Brut NV", "place": "판교 자택", "time": "28분 전", "mood": "금요일 밤의 보상" }
+      { "name": "언제나 와린이", "level": "Lv.2", "wine": "Sancerre 2022", "place": "서울", "time": "3분 전", "mood": "창문 너머 비, 혼자만의 한 잔" },
+      { "name": "샴페인만먹어요", "level": "Lv.4", "wine": "Champagne Brut NV", "place": "부산", "time": "12분 전", "mood": "오랜만에 만난 친구와" },
+      { "name": "퇴근후한잔", "level": "Lv.3", "wine": "Châteauneuf-du-Pape 2017", "place": "제주", "time": "28분 전", "mood": "금요일 밤의 보상" }
     ],
     "outro": "혼자 마셔도 함께. winemine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
     "bullets": [

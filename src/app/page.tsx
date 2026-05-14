@@ -9,11 +9,11 @@ import TastingNoteSection from '@/components/sections/tasting-note-section';
 import PriceIntelligenceSection from '@/components/sections/price-intelligence-section';
 import FavoritesAlertSection from '@/components/sections/favorites-alert-section';
 import VineyardStrip from '@/components/sections/vineyard-strip';
-import FeaturesSection from '@/components/sections/features-section';
+// import FeaturesSection from '@/components/sections/features-section'; // 미마운트 (롤백 대비 보존)
 import CommunityTonightSection from '@/components/sections/community-tonight-section';
 import LevelBadgeSection from '@/components/sections/level-badge-section';
 import InstagramPreviewSection from '@/components/sections/instagram-preview-section';
-import HowItWorksSection from '@/components/sections/how-it-works-section';
+// import HowItWorksSection from '@/components/sections/how-it-works-section'; // 미마운트 (롤백 대비 보존)
 import FinalCTASection from '@/components/sections/final-cta-section';
 import WaitlistModal from '@/components/waitlist/waitlist-modal';
 import { FloatingCTA } from '@/components/ui/floating-cta';
@@ -50,8 +50,8 @@ export default function Home() {
       {/* 8. 포도밭 갤러리 — 와인 산지 사진 + 대기 사진 스트립 */}
       <VineyardStrip />
 
-      {/* 9. WineMine 와인 카드 쇼케이스 (단일 패널) */}
-      <FeaturesSection />
+      {/* 9. (미마운트) FeaturesSection — '와인 카드 쇼케이스'. 재마운트 시 위치 복원 */}
+      {/* <FeaturesSection /> */}
 
       {/* 10. Tonight, Together — 오늘 밤 마시는 사람들 커뮤니티 */}
       <CommunityTonightSection />
@@ -62,8 +62,8 @@ export default function Home() {
       {/* 12. Recap 공유 — PhoneMockup + StoryCard */}
       <InstagramPreviewSection />
 
-      {/* 13. 사용 흐름 — 6단계 */}
-      <HowItWorksSection />
+      {/* 13. (미마운트) HowItWorksSection — '사용 흐름 6단계'. 재마운트 시 위치 복원 */}
+      {/* <HowItWorksSection /> */}
 
       {/* 14. 최종 CTA */}
       <FinalCTASection onOpenModal={openModal} />

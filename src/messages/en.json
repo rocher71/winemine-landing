@@ -533,11 +533,11 @@
     "heading": "Tonight — who's opening what?",
     "subheading": "Alone but together. The winemine community gathers around a single glass.",
     "mapLabel": "Drinking right now",
-    "regions": ["Cheongdam", "Hannam", "Pangyo", "Seongsu"],
+    "regions": ["Seoul", "Gangwon", "Busan", "Yeosu", "Jeju"],
     "feedItems": [
-      { "name": "Minji", "level": "Lv.3", "wine": "Sancerre 2022", "place": "Hannam office", "time": "3 min ago", "mood": "Rain on the window, glass for one" },
-      { "name": "Daniel", "level": "Lv.4", "wine": "Châteauneuf-du-Pape 2017", "place": "Cheongdam wine bar", "time": "12 min ago", "mood": "Catching up with an old friend" },
-      { "name": "Suhyun", "level": "Lv.2", "wine": "Champagne Brut NV", "place": "Pangyo home", "time": "28 min ago", "mood": "Friday night reward" }
+      { "name": "AlwaysSippin", "level": "Lv.2", "wine": "Sancerre 2022", "place": "Seoul", "time": "3 min ago", "mood": "Rain on the window, glass for one" },
+      { "name": "OnlyChampagne", "level": "Lv.4", "wine": "Champagne Brut NV", "place": "Busan", "time": "12 min ago", "mood": "Catching up with an old friend" },
+      { "name": "AfterWorkPour", "level": "Lv.3", "wine": "Châteauneuf-du-Pape 2017", "place": "Jeju", "time": "28 min ago", "mood": "Friday night reward" }
     ],
     "outro": "Alone but together. The winemine community gathers around a single glass.",
     "bullets": [

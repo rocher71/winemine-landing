@@ -3,16 +3,20 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLocale } from '@/components/providers/locale-provider';
 
-// 미니 한국 일러스트 (단순화된 SVG path) + 4 dot positions
-const KR_PATH =
-  'M 80 20 Q 110 18 130 24 L 138 36 Q 142 52 134 64 L 142 78 L 154 90 Q 168 106 152 122 L 144 140 Q 134 158 122 158 L 110 170 L 96 176 L 86 168 L 76 172 L 64 168 L 56 152 L 48 134 L 56 116 L 50 96 L 56 76 L 62 56 L 72 36 Z';
+// 단순화된 남한 본토 SVG path (viewBox 0 0 200 280)
+const KR_MAINLAND_PATH =
+  'M 70 50 Q 100 44 130 48 Q 148 52 158 64 Q 168 80 168 100 Q 168 122 160 142 Q 156 162 154 178 Q 150 198 138 212 Q 122 226 102 230 Q 84 230 70 220 Q 56 208 50 192 Q 42 172 46 152 Q 40 132 46 112 Q 50 90 58 72 Q 62 60 70 50 Z';
+// 제주도 ellipse 좌표
+const JEJU = { cx: 78, cy: 258, rx: 14, ry: 7 };
 
-// 좌표는 viewBox 0 0 220 200 기준
-const REGION_DOTS: { x: number; y: number; nameKey: number }[] = [
-  { x: 108, y: 60, nameKey: 0 }, // 청담
-  { x: 92,  y: 78, nameKey: 1 }, // 한남
-  { x: 130, y: 96, nameKey: 2 }, // 판교
-  { x: 118, y: 76, nameKey: 3 }, // 성수
+// 좌표는 viewBox 0 0 200 280 기준 — 도시별 라벨 오프셋 포함
+type RegionDot = { x: number; y: number; key: string; labelX: number; labelY: number; anchor: 'start' | 'end' | 'middle' };
+const REGION_DOTS: RegionDot[] = [
+  { x: 90,  y: 78,  key: 'seoul',   labelX: 78,  labelY: 72,  anchor: 'end'    }, // 서울 (북서)
+  { x: 135, y: 88,  key: 'gangwon', labelX: 148, labelY: 84,  anchor: 'start'  }, // 강원 (북동)
+  { x: 140, y: 188, key: 'busan',   labelX: 153, labelY: 192, anchor: 'start'  }, // 부산 (남동)
+  { x: 92,  y: 208, key: 'yeosu',   labelX: 80,  labelY: 215, anchor: 'end'    }, // 여수 (남서)
+  { x: 78,  y: 258, key: 'jeju',    labelX: 78,  labelY: 274, anchor: 'middle' }, // 제주 (섬)
 ];
 
 type FeedItem = { name: string; level: string; wine: string; place: string; time: string; mood: string };
@@ -180,52 +184,41 @@ export default function CommunityTonightSection() {
             </div>
 
             <div style={{ width: '100%', position: 'relative' }}>
-              <svg viewBox="0 0 220 200" width="100%" style={{ display: 'block', maxHeight: 320 }} aria-hidden>
-                <path d={KR_PATH} fill="#2D1540" stroke="rgba(201,168,76,0.18)" strokeWidth={1.2} />
+              <svg viewBox="0 0 200 290" width="100%" style={{ display: 'block', maxHeight: 380 }} aria-hidden>
+                {/* 본토 */}
+                <path d={KR_MAINLAND_PATH} fill="#2D1540" stroke="rgba(201,168,76,0.22)" strokeWidth={1.4} />
+                {/* 제주도 */}
+                <ellipse cx={JEJU.cx} cy={JEJU.cy} rx={JEJU.rx} ry={JEJU.ry} fill="#2D1540" stroke="rgba(201,168,76,0.22)" strokeWidth={1.2} />
+
                 {REGION_DOTS.map((d, i) => (
-                  <g key={i}>
+                  <g key={d.key}>
                     {/* pulse ring */}
                     <motion.circle
                       cx={d.x}
                       cy={d.y}
-                      r={5}
+                      r={7}
                       fill="#C9A84C"
-                      opacity={0.3}
-                      animate={shouldReduceMotion ? undefined : { r: [5, 12, 5], opacity: [0.45, 0, 0.45] }}
-                      transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.4 }}
+                      opacity={0.35}
+                      animate={shouldReduceMotion ? undefined : { r: [7, 16, 7], opacity: [0.5, 0, 0.5] }}
+                      transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', delay: i * 0.4 }}
                     />
                     {/* center dot */}
-                    <circle cx={d.x} cy={d.y} r={3.4} fill="#C9A84C" stroke="#0F0718" strokeWidth={0.8} />
+                    <circle cx={d.x} cy={d.y} r={5.5} fill="#C9A84C" stroke="#0F0718" strokeWidth={1.2} />
+                    {/* inline label */}
+                    <text
+                      x={d.labelX}
+                      y={d.labelY}
+                      fill="#F5F0E8"
+                      fontSize="13"
+                      fontWeight={600}
+                      textAnchor={d.anchor}
+                      style={{ paintOrder: 'stroke', stroke: '#05020A', strokeWidth: 3, strokeLinejoin: 'round' }}
+                    >
+                      {regions[i] ?? d.key}
+                    </text>
                   </g>
                 ))}
               </svg>
-            </div>
-
-            {/* Region labels */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 8,
-                justifyContent: 'center',
-                marginTop: 16,
-              }}
-            >
-              {regions.map((r, i) => (
-                <span
-                  key={i}
-                  style={{
-                    fontSize: 11,
-                    color: '#D4C5B0',
-                    padding: '4px 10px',
-                    borderRadius: 999,
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                  }}
-                >
-                  · {r}
-                </span>
-              ))}
             </div>
           </motion.div>
 
