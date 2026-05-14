@@ -498,7 +498,7 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
         position: 'absolute',
         inset: 0,
         zIndex: 1,
-        background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.10) 0%, transparent 65%), var(--color-map-bg)',
+        background: 'var(--color-map-bg)',
         // Map is a passive backdrop — page scroll passes through unimpeded.
         pointerEvents: 'none',
         overflow: 'hidden',
@@ -746,7 +746,7 @@ export default function WineDiscoverySection() {
       <div style={{
         position: 'sticky', top: 0,
         height: '100vh', overflow: 'hidden',
-        background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(196,30,58,0.05) 0%, transparent 60%), var(--color-map-bg)',
+        background: 'var(--color-map-bg)',
       }}>
         <FullScreenMap progress={recProgress} visible={step === 1} />
 
