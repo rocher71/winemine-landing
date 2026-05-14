@@ -1119,16 +1119,26 @@ function MobileSheet({ drill, onDrill, colorFilter, onColor, hoveredId, onHover,
       initial={{ y: '110%' }}
       animate={{ y: visible ? 0 : '110%' }}
       transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+      className="burgundy-mobile-sheet"
       style={{
         position: 'absolute', left: 0, right: 0, bottom: 0,
         height: `${sheetH * 100}%`,
-        background: 'linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-deepest) 100%)',
         backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
         borderTopLeftRadius: 28, borderTopRightRadius: 28,
         boxShadow: '0 -8px 30px rgba(0,0,0,0.5)',
         zIndex: 30, display: 'flex', flexDirection: 'column', overflow: 'hidden',
       }}
     >
+      <style jsx>{`
+        .burgundy-mobile-sheet {
+          background: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-deepest) 100%);
+        }
+        @media (prefers-color-scheme: dark) {
+          .burgundy-mobile-sheet {
+            background: #05020A;
+          }
+        }
+      `}</style>
       <div ref={handleRef} style={{ padding: '10px 0 6px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0, touchAction: 'none' }}>
         <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--overlay-strong)' }} />
       </div>
