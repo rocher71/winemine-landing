@@ -84,16 +84,28 @@ export default function WorldMap() {
         </div>
       </div>
 
-      {/* Wine-glow radial gradient overlay */}
+      {/* Wine-glow radial gradient overlay — only in dark mode.
+          On light mode the wine-red haze reads as a muddy brown smudge over the cream
+          base, so we swap to a near-invisible gold warmth that preserves the focal
+          composition without dirtying the background. */}
       <div
+        className="world-map-glow"
         style={{
           position: 'absolute',
           inset: 0,
-          background:
-            'radial-gradient(ellipse 75% 55% at 50% 58%, rgba(220,35,60,0.28) 0%, rgba(140,20,40,0.14) 45%, transparent 72%)',
           pointerEvents: 'none',
         }}
       />
+      <style>{`
+        .world-map-glow {
+          background: radial-gradient(ellipse 75% 55% at 50% 58%, rgba(201,168,76,0.06) 0%, rgba(201,168,76,0.03) 45%, transparent 72%);
+        }
+        @media (prefers-color-scheme: dark) {
+          .world-map-glow {
+            background: radial-gradient(ellipse 75% 55% at 50% 58%, rgba(220,35,60,0.28) 0%, rgba(140,20,40,0.14) 45%, transparent 72%);
+          }
+        }
+      `}</style>
     </div>
   );
 }

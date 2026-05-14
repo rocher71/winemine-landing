@@ -614,6 +614,17 @@ function RecommendationCard({
   const wine = TOUR_STOPS[stopIdx].wine;
 
   return (
+    <>
+    <style>{`
+      .rec-bottle-disc {
+        background: radial-gradient(circle at 30% 25%, rgba(42,31,18,0.04), rgba(42,31,18,0.10));
+      }
+      @media (prefers-color-scheme: dark) {
+        .rec-bottle-disc {
+          background: radial-gradient(circle at 30% 25%, rgba(245,240,232,0.10), rgba(0,0,0,0.55));
+        }
+      }
+    `}</style>
     <motion.div
       style={{
         opacity: cardOpacity,
@@ -625,13 +636,16 @@ function RecommendationCard({
         display: 'flex',
         alignItems: 'center',
         gap: 16,
-        background: 'rgba(12,4,24,0.94)',
+        // Surface token + gold border keeps the card readable in both modes.
+        // Previously hard-coded rgba(12,4,24,0.94) which stayed deep-purple on light
+        // background. The surface token resolves to cream in light, deep purple in dark.
+        background: 'var(--color-bg-surface)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: '1px solid rgba(201,168,76,0.40)',
         borderRadius: 16,
         padding: '16px 24px 16px 18px',
-        boxShadow: '0 14px 50px rgba(0,0,0,0.65), 0 0 30px rgba(201,168,76,0.12)',
+        boxShadow: '0 14px 50px rgba(0,0,0,0.35), 0 0 30px rgba(201,168,76,0.12)',
         pointerEvents: 'none',
         zIndex: 7,
         minWidth: 280,
@@ -647,11 +661,11 @@ function RecommendationCard({
           style={{ display: 'flex', alignItems: 'center', gap: 16 }}
         >
           <div
+            className="rec-bottle-disc"
             style={{
               width: 72,
               height: 72,
               borderRadius: '50%',
-              background: 'radial-gradient(circle at 30% 25%, rgba(245,240,232,0.10), rgba(0,0,0,0.55))',
               border: '1px solid rgba(201,168,76,0.32)',
               display: 'flex',
               alignItems: 'center',
@@ -691,6 +705,7 @@ function RecommendationCard({
         </motion.div>
       </AnimatePresence>
     </motion.div>
+    </>
   );
 }
 

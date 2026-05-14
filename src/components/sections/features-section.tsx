@@ -471,15 +471,18 @@ export function ScanPanel() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-      {/* Wine label card */}
+      {/* Wine label card — mode-invariant cream paper with dark ink, matching the
+          physical wine-label feel in both themes. Previously used --color-text-primary
+          for the gradient base which flipped to dark brown in light mode and read as
+          a muddy panel; the paper token (#F5F0E8) keeps it consistent. */}
       <div style={{
         width: 160, height: 220,
-        background: 'linear-gradient(160deg, var(--color-text-primary) 0%, #E8DDD0 100%)',
+        background: 'linear-gradient(160deg, var(--color-paper) 0%, #E8DDD0 100%)',
         borderRadius: 8,
         padding: '12px 16px',
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
         flexShrink: 0,
       }}>
         {/* Label content */}

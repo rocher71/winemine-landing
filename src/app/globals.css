@@ -36,6 +36,13 @@
   --color-map-inactive: #E0D2B5;
   --color-map-stroke: #C9B894;
 
+  /* Gold accent translucent surfaces — for chips/cards/badges that need a soft gold wash.
+     Light mode uses higher alpha so the gold tint stays visible on cream background. */
+  --color-gold-tint-faint: rgba(201, 168, 76, 0.18);
+  --color-gold-tint-soft:  rgba(201, 168, 76, 0.28);
+  --color-gold-tint-med:   rgba(201, 168, 76, 0.45);
+  --color-gold-tint-strong:rgba(201, 168, 76, 0.65);
+
   /* Mode-invariant paper / ink (wine label, tasting note paper, etc.) */
   --color-paper: #F5F0E8;
   --color-ink: #1A0A1E;
@@ -75,6 +82,12 @@
     --color-map-bg: #0d0810;
     --color-map-inactive: #1A0A2E;
     --color-map-stroke: #2A0C58;
+
+    /* Gold accent translucent surfaces — dark mode reads soft gold-on-dark already at low alpha */
+    --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
+    --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
+    --color-gold-tint-med:   rgba(240, 200, 118, 0.30);
+    --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
 
     /* Paper / ink stay invariant — wine labels and notes feel physical in both modes */
 

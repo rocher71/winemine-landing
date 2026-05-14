@@ -14,7 +14,8 @@ import {
 } from '@/components/icons/wine-icons';
 
 const DEPT_URL = '/france-departments.json';
-const GOLD = '#f0c876';
+// 모드 무관 골드. globals.css `--color-gold` (#C9A84C) — 두 모드에서 동일한 액센트로 사용.
+const GOLD = 'var(--color-gold)';
 const BURGUNDY_DEPTS = new Set(['21', '71', '89', '58', '01', '70', '39']);
 
 type Cru = 'Grand Cru' | '1er Cru' | 'Village' | 'Régional';
@@ -568,7 +569,7 @@ function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
                   const code = geo.properties.code as string;
                   const isBurgundy = BURGUNDY_DEPTS.has(code);
                   const isBeaujolais = code === '69';
-                  const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : '#180830';
+                  const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : 'var(--color-map-inactive)';
                   const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
                   return (
                     <Geography key={geo.rsmKey} geography={geo} style={{
@@ -647,7 +648,7 @@ function CoteCard({ data, onClick, colorFilter }: {
       borderRadius: 12, color: 'var(--color-text-primary)',
       transition: 'all 200ms', fontFamily: 'inherit', display: 'block', width: '100%',
     }}
-    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-border-soft)'; e.currentTarget.style.borderColor = 'rgba(240,200,118,0.3)'; }}
+    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-border-soft)'; e.currentTarget.style.borderColor = 'var(--color-gold-tint-med)'; }}
     onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--overlay-soft)'; e.currentTarget.style.borderColor = 'var(--overlay-medium)'; }}
     >
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
@@ -672,8 +673,8 @@ function CommuneCard({ data, onClick, colorFilter, active }: {
   return (
     <button onClick={onClick} style={{
       padding: '14px 16px', textAlign: 'left' as const, cursor: 'pointer',
-      background: active ? 'rgba(240,200,118,0.10)' : 'var(--overlay-soft)',
-      border: `1px solid ${active ? 'rgba(240,200,118,0.4)' : 'var(--overlay-medium)'}`,
+      background: active ? 'var(--color-gold-tint-faint)' : 'var(--overlay-soft)',
+      border: `1px solid ${active ? 'var(--color-gold-tint-med)' : 'var(--overlay-medium)'}`,
       borderRadius: 12, color: 'var(--color-text-primary)',
       transition: 'all 200ms', fontFamily: 'inherit', display: 'block', width: '100%',
     }}>
@@ -796,8 +797,8 @@ function MobileBreadcrumbChips({ drill, onDrill }: {
             <span key={i} style={{
               flexShrink: 0,
               padding: '6px 12px',
-              background: 'rgba(240,200,118,0.14)',
-              border: '1px solid rgba(240,200,118,0.5)',
+              background: 'var(--color-gold-tint-soft)',
+              border: '1px solid var(--color-gold-tint-strong)',
               borderRadius: 9999,
               color: GOLD,
               fontSize: 12.5, fontWeight: 700,
@@ -819,7 +820,7 @@ function MobileBreadcrumbChips({ drill, onDrill }: {
               background: 'var(--color-border-soft)',
               border: '1px solid var(--overlay-medium)',
               borderRadius: 9999,
-              color: '#E4D8C4',
+              color: 'var(--color-text-secondary)',
               fontSize: 12.5, fontWeight: 500,
               fontFamily: 'inherit',
               cursor: clickable ? 'pointer' : 'default',
@@ -862,7 +863,7 @@ function ColorToggle({ value, onChange, mobile }: {
           <button key={o.v} onClick={() => onChange(o.v)} style={{
             padding: mobile ? '5px 10px' : '4px 8px',
             borderRadius: 9999, border: 'none', cursor: 'pointer',
-            background: active ? 'rgba(240,200,118,0.18)' : 'transparent',
+            background: active ? 'var(--color-gold-tint-soft)' : 'transparent',
             color: active ? GOLD : 'var(--color-text-muted)',
             fontSize: 11, fontWeight: active ? 700 : 500,
             letterSpacing: '0.02em',
@@ -939,8 +940,8 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
             <>
               {cm?.notableNote && (
                 <div style={{
-                  padding: '10px 14px', background: 'rgba(240,200,118,0.08)',
-                  border: '1px solid rgba(240,200,118,0.3)', borderRadius: 12,
+                  padding: '10px 14px', background: 'var(--color-gold-tint-faint)',
+                  border: '1px solid var(--color-gold-tint-med)', borderRadius: 12,
                   fontSize: 11.5, color: GOLD, fontStyle: 'italic' as const,
                   display: 'flex', alignItems: 'center', gap: 6,
                 }}>
@@ -1064,7 +1065,7 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
         position: 'absolute', top: '8%', right: '3vw',
         width: 'clamp(300px,30vw,380px)', maxHeight: '84vh', zIndex: 20,
         background: 'var(--overlay-strong)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(240,200,118,0.18)', borderRadius: 18,
+        border: '1px solid var(--color-gold-tint-soft)', borderRadius: 18,
         overflow: 'hidden', display: 'flex', flexDirection: 'column',
         pointerEvents: visible ? 'auto' : 'none',
       }}
@@ -1121,7 +1122,7 @@ function MobileSheet({ drill, onDrill, colorFilter, onColor, hoveredId, onHover,
       style={{
         position: 'absolute', left: 0, right: 0, bottom: 0,
         height: `${sheetH * 100}%`,
-        background: 'linear-gradient(180deg, rgba(28,18,42,0.98) 0%, rgba(15,8,25,0.99) 100%)',
+        background: 'linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-deepest) 100%)',
         backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
         borderTopLeftRadius: 28, borderTopRightRadius: 28,
         boxShadow: '0 -8px 30px rgba(0,0,0,0.5)',

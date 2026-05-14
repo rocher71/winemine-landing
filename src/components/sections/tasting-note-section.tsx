@@ -558,7 +558,7 @@ function FormTabBar({
             aria-selected={isActive}
             onClick={() => onSelect(v.id)}
             style={{
-              background: isActive ? 'rgba(139,26,42,0.22)' : 'transparent',
+              background: isActive ? 'rgba(201,168,76,0.18)' : 'transparent',
               border: 'none',
               borderBottom: isActive ? `2px solid ${GOLD}` : '2px solid transparent',
               color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
