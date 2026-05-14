@@ -4,6 +4,7 @@ import Script from 'next/script';
 import './globals.css';
 import { getLocale, getMessages } from '@/lib/i18n';
 import { LocaleProvider } from '@/components/providers/locale-provider';
+import { LocaleSwitcher } from '@/components/ui/locale-switcher';
 
 const GA_ID = 'G-7V8ZDT0TYX';
 
@@ -62,6 +63,7 @@ export default async function RootLayout({
       {/* inter.className 제거 — globals.css의 Noto Sans KR 폰트 스택이 적용되도록 */}
       <body suppressHydrationWarning>
         <LocaleProvider locale={locale} messages={messages}>
+          <LocaleSwitcher />
           {children}
         </LocaleProvider>
 
