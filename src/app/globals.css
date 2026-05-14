@@ -56,8 +56,9 @@
   --color-scheme-name: 'light';
 }
 
+/* System dark mode — applied only when user has not explicitly chosen a theme */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-bg-deepest: #05020A;
     --color-bg-deep: #0A050F;
     --color-bg-surface: #0F0718;
@@ -78,24 +79,55 @@
     --overlay-medium: rgba(255, 255, 255, 0.08);
     --overlay-strong: rgba(255, 255, 255, 0.16);
 
-    /* Map-specific tokens (deep map fills) */
     --color-map-bg: #0d0810;
     --color-map-inactive: #1A0A2E;
     --color-map-stroke: #2A0C58;
 
-    /* Gold accent translucent surfaces — dark mode reads soft gold-on-dark already at low alpha */
     --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
     --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
     --color-gold-tint-med:   rgba(240, 200, 118, 0.30);
     --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
 
-    /* Paper / ink stay invariant — wine labels and notes feel physical in both modes */
-
-    /* Modal backdrop — heavy obscure in dark mode */
     --color-modal-backdrop: rgba(5, 2, 8, 0.85);
 
     --color-scheme-name: 'dark';
   }
+}
+
+/* Manual dark override — applied regardless of system preference */
+:root[data-theme="dark"] {
+  --color-bg-deepest: #05020A;
+  --color-bg-deep: #0A050F;
+  --color-bg-surface: #0F0718;
+  --color-bg-map: #1A0A1E;
+  --color-bg-input: rgba(26, 10, 30, 0.6);
+  --color-surface: var(--color-bg-surface);
+
+  --color-text-primary: #F5F0E8;
+  --color-text-secondary: #D4C5B0;
+  --color-text-muted: #9B8B7A;
+  --color-text-disabled: #4A3D56;
+
+  --color-border: #2D1540;
+  --color-border-soft: rgba(255, 255, 255, 0.06);
+  --color-border-active: var(--color-wine-red);
+
+  --overlay-soft: rgba(255, 255, 255, 0.04);
+  --overlay-medium: rgba(255, 255, 255, 0.08);
+  --overlay-strong: rgba(255, 255, 255, 0.16);
+
+  --color-map-bg: #0d0810;
+  --color-map-inactive: #1A0A2E;
+  --color-map-stroke: #2A0C58;
+
+  --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
+  --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
+  --color-gold-tint-med:   rgba(240, 200, 118, 0.30);
+  --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
+
+  --color-modal-backdrop: rgba(5, 2, 8, 0.85);
+
+  --color-scheme-name: 'dark';
 }
 
 html {

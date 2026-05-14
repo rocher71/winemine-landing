@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { StoreButtons } from '@/components/ui/store-buttons';
 import { useLocale } from '@/components/providers/locale-provider';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface FinalCTASectionProps {
   onOpenModal: () => void;
@@ -44,16 +45,20 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
 
       <footer
         style={{
-          background: '#030106',
-          height: 80,
+          background: 'var(--color-bg-deepest)',
+          padding: '20px 24px',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: 12,
+          borderTop: '1px solid var(--color-border-soft)',
         }}
       >
         <p style={{ fontSize: 13, color: 'var(--color-text-disabled)' }}>
           {t('finalCta.copyright')}
         </p>
+        <ThemeToggle />
       </footer>
     </>
   );
