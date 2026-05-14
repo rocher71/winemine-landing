@@ -30,19 +30,20 @@
 | 타겟 | 와인을 즐기며 기록·탐험·공유하고 싶은 사람 |
 | 핵심 감성 | 프리미엄 와인 라벨의 무게감. 어두운 밤, 와인 한 잔. |
 
-### 랜딩 페이지 섹션 구성
+### 랜딩 페이지 섹션 구성 (현재 8 섹션)
 
 ```
 Hero               — 인터랙티브 세계 지도 배경 + CTA
-France Wine        — 스크롤 기반 프랑스 산지 드릴다운 데모
-France Wine Detail — 와인 카드 컬렉션 + 정렬/필터
-Vineyard Strip     — 세계 와인 산지 사진 스트립
-Features           — 핵심 기능 3-패널 소개
-Market Stats       — 2025 한국 와인 시장 통계
+Wine Discovery     — 초보자 친화 스크롤 (ScanPanel + 추천 지도 + outro)
+Burgundy           — 부르고뉴 위계 드릴다운 (꼬뜨→마을→등급→와인) + 색 토글 + 지도 dot 클릭
+Tasting Note       — 테이스팅 노트 데모 (입문자/전문가 모드 전환)
+Features           — 와인 카드 쇼케이스 (단일 패널)
+Instagram Preview  — Recap 공유 기능 미리보기 (PhoneMockup + 풀-블리드 세계지도)
 How It Works       — 4단계 사용 흐름
-Instagram Preview  — Recap 공유 기능 미리보기
 Final CTA          — 사전 신청 폼 재유도
 ```
+
+> France Wine / France Wine Detail / Vineyard Strip / Market Stats 섹션은 코드는 보존되어 있지만 현재 마운트되지 않습니다 (롤백 대비).
 
 ---
 
@@ -78,29 +79,49 @@ src/
 │   │   └── world-map.tsx               # react-simple-maps ('use client', SSR 불가)
 │   ├── providers/
 │   │   └── locale-provider.tsx         # i18n Context 공급자
-│   ├── sections/
+│   ├── sections/                       # 마운트 순서대로 정렬
 │   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
-│   │   ├── france-wine-section.tsx     # 스크롤 기반 프랑스 드릴다운
-│   │   ├── france-wine-detail-section.tsx
-│   │   ├── vineyard-strip.tsx
-│   │   ├── features-section.tsx
-│   │   ├── market-stats-section.tsx
-│   │   ├── how-it-works-section.tsx
-│   │   ├── instagram-preview-section.tsx
-│   │   └── final-cta-section.tsx
+│   │   ├── wine-discovery-section.tsx  # ScanPanel + RecommendationMap (초보자 흐름)
+│   │   ├── burgundy-section.tsx        # 꼬뜨→마을→등급→와인 드릴다운 + 지도 dot 클릭
+│   │   ├── tasting-note-section.tsx    # 테이스팅 노트 데모 (입문자/전문가 모드)
+│   │   ├── features-section.tsx        # 와인 카드 쇼케이스 + ScanPanel named export
+│   │   ├── instagram-preview-section.tsx # Recap 공유 미리보기
+│   │   ├── how-it-works-section.tsx    # 4단계 사용 흐름
+│   │   ├── final-cta-section.tsx       # 최종 CTA
+│   │   ├── france-wine-section.tsx     # 미마운트 (롤백 대비 보존)
+│   │   ├── france-wine-detail-section.tsx # 미마운트
+│   │   ├── vineyard-strip.tsx          # 미마운트
+│   │   └── market-stats-section.tsx    # 미마운트
+│   ├── tasting-note/                   # tasting-note-section 전용 인터랙티브 컴포넌트
+│   │   ├── aroma-wheel.tsx             # UC Davis 12-카테고리 부케 휠
+│   │   ├── wset-slider.tsx             # WSET 5단계 슬라이더
+│   │   ├── caudalie-meter.tsx          # 피니시 측정기
+│   │   ├── fault-checklist.tsx         # 11종 결함 체크
+│   │   ├── opening-timeline.tsx        # 디캔팅 타임라인
+│   │   ├── blind-mode.tsx              # 블라인드 추정 + 점수
+│   │   ├── beginner-note.tsx           # 5분 입문 모드
+│   │   ├── auto-description.tsx        # 자동 시음 노트
+│   │   └── tannin-bubble-panels.tsx
+│   ├── wine-bottles/
+│   │   └── wine-bottle.tsx             # 재사용 SVG 와인병 컴포넌트
+│   ├── icons/
+│   │   └── wine-icons.tsx              # 전용 SVG 아이콘
 │   ├── ui/
-│   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA
-│   │   └── store-buttons.tsx           # App Store / Google Play 버튼
+│   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA (GA 클릭 트래킹)
+│   │   └── store-buttons.tsx           # App Store / Google Play 버튼 (GA 클릭 트래킹)
 │   └── waitlist/
 │       ├── waitlist-modal.tsx
 │       ├── waitlist-form.tsx           # react-hook-form + zod, 마케팅 동의 체크박스
 │       └── waitlist-success.tsx
 ├── lib/
 │   ├── i18n.ts                         # getLocale(), getMessages() — 쿠키 기반
-│   ├── supabase-server.ts             # service role 클라이언트 (서버 전용)
-│   ├── validations.ts                 # Zod 스키마 (클라이언트 재사용)
-│   ├── analytics.ts                   # trackEvent() — window.gtag 래퍼
-│   └── utils.ts                       # cn() 헬퍼
+│   ├── supabase-server.ts              # service role 클라이언트 (서버 전용)
+│   ├── slack.ts                        # waitlist 등록 Slack 알림 (서버 전용)
+│   ├── validations.ts                  # Zod 스키마 (클라이언트 재사용)
+│   ├── analytics.ts                    # trackEvent() — window.gtag 래퍼
+│   ├── recommended-wines.ts            # Wine Discovery 추천 와인 mock + STARTING_WINE
+│   ├── tasting-note-lexicon.ts         # 아로마 휠 / WSET / 결함 어휘 데이터
+│   └── utils.ts                        # cn() 헬퍼
 ├── messages/
 │   ├── ko.json                         # 한국어 (기본)
 │   └── en.json                         # 영어
@@ -142,6 +163,7 @@ npm run build
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 ```
 
 | 변수 | 필수 | 설명 |
@@ -149,6 +171,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase 프로젝트 URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | 서버 전용 키 — **클라이언트 번들에 절대 포함 금지** |
 | `NEXT_PUBLIC_SITE_URL` | 선택 | OG 태그용 배포 URL (기본값: `https://winemine.vercel.app`) |
+| `SLACK_WEBHOOK_URL` | 선택 | 서버 전용. waitlist 신규/중복 등록 시 Slack 채널 알림 (미설정 시 silent skip) |
 
 > `SUPABASE_SERVICE_ROLE_KEY`는 `NEXT_PUBLIC_` 접두사를 붙이면 절대 안 됩니다. Server Action(`actions.ts`)에서만 사용됩니다.
 
