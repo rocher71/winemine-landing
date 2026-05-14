@@ -174,30 +174,52 @@ src/
 │   ├── providers/locale-provider.tsx   # LocaleProvider + useLocale() 훅
 │   ├── sections/
 │   │   ├── hero-section.tsx            # WorldMap dynamic import, StoreButtons
-│   │   ├── wine-discovery-section.tsx  # 초보자 친화 3단계 + outro 스크롤 스토리텔링, RecommendationMap 포함 — 상세 사양은 _workspace/wine-discovery-section-spec.md
-│   │   ├── burgundy-section.tsx        # 부르고뉴 위계 드릴다운 (꼬뜨→마을→등급→와인) + 색 토글(Red/White/Rosé) — 상세 사양은 _workspace/burgundy-section-spec.md
-│   │   ├── vineyard-strip.tsx          # 와인 산지 사진 스트립
+│   │   ├── wine-discovery-section.tsx  # 초보자 친화 스크롤 스토리텔링 (ScanPanel부터 시작), RecommendationMap 포함 — 상세 사양은 _workspace/wine-discovery-section-spec.md
+│   │   ├── burgundy-section.tsx        # 부르고뉴 위계 드릴다운 (꼬뜨→마을→등급→와인) + 색 토글(Red/White/Rosé) + 지도 dot 클릭 드릴인 + dept 행정구역명 라벨 — 상세 사양은 _workspace/burgundy-section-spec.md
+│   │   ├── tasting-note-section.tsx    # 테이스팅 노트 데모 (입문자/전문가 모드, 부케 휠·WSET 슬라이더·카우달리·결함·오프닝 타임라인) — 상세 사양은 _workspace/tasting-note-section-spec.md
+│   │   ├── cellar-section.tsx          # 셀러 관리 — 보유 와인 카드 + 음용 적기 타임라인 + DrinkWindowBadge + 알림 토글
+│   │   ├── price-intelligence-section.tsx # 가격 추이 (recharts LineChart) + 매장별 비교 + 외부 평점(Vivino/WS/CT)
+│   │   ├── favorites-alert-section.tsx # 즐겨찾기 → 가격 등록 → 푸시 알림 → 차트 4스텝 플로우 + PushBanner 데모
+│   │   ├── community-tonight-section.tsx # "오늘 밤 마시는 사람들" 미니 한국 지도 + 실시간 활동 피드 카드
+│   │   ├── level-badge-section.tsx     # 레벨/뱃지 게이미피케이션 — LevelProgressBar + 5단계 레벨 카탈로그 + 뱃지 진열장
 │   │   ├── features-section.tsx        # 와인 카드 쇼케이스 (단일 GlassCardStack 패널) + ScanPanel named export (wine-discovery에서 사용)
-│   │   ├── how-it-works-section.tsx    # 사용 흐름 4단계
+│   │   ├── how-it-works-section.tsx    # 사용 흐름 6단계 (촬영 → AI 분석 → 셀러 등록 → 취향 파고들기 → 즐겨찾기 알림 → Recap)
 │   │   ├── final-cta-section.tsx       # 최종 CTA
-│   │   ├── instagram-preview-section.tsx # Features 직후 마운트 — Recap 공유. PhoneMockup·StoryCard·StoryWorldMap 정의처
+│   │   ├── instagram-preview-section.tsx # Features 직후 마운트 — Recap 공유. PhoneMockup·StoryCard·StoryWorldMap 정의처. winemine 로고 + 풀-블리드 세계지도 적용
+│   │   ├── vineyard-strip.tsx          # 미마운트 (롤백 대비 보존)
 │   │   ├── france-wine-section.tsx     # 미마운트 (롤백 대비 보존)
 │   │   ├── market-stats-section.tsx    # 미마운트 (롤백 대비 보존)
 │   │   └── france-wine-detail-section.tsx # 미마운트 (이전부터)
+│   ├── tasting-note/                   # tasting-note-section.tsx에서 사용하는 인터랙티브 컴포넌트들
+│   │   ├── aroma-wheel.tsx             # UC Davis 12-카테고리 부케 휠
+│   │   ├── wset-slider.tsx             # WSET 5단계 슬라이더 (당도·산도·바디·타닌 등)
+│   │   ├── caudalie-meter.tsx          # 피니시 측정기 (1초 = 1 카우달리)
+│   │   ├── fault-checklist.tsx         # 11종 결함 체크리스트
+│   │   ├── opening-timeline.tsx        # 디캔팅 타임라인 + 권장 비교
+│   │   ├── blind-mode.tsx              # 블라인드 모드 (품종·지역·빈티지·가격 추정 → 점수)
+│   │   ├── beginner-note.tsx           # 5분 입문자 모드
+│   │   ├── auto-description.tsx        # 슬라이더 값으로 자동 시음 노트 생성
+│   │   └── tannin-bubble-panels.tsx    # 타닌·기포 보조 패널
+│   ├── wine-bottles/
+│   │   └── wine-bottle.tsx             # 재사용 SVG 와인병 컴포넌트 (burgundy·wine-discovery 공용)
+│   ├── icons/
+│   │   └── wine-icons.tsx              # 전용 SVG 아이콘 (lucide-react 보완)
 │   ├── ui/
-│   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA 버튼
-│   │   └── store-buttons.tsx           # App Store / Google Play 버튼
+│   │   ├── floating-cta.tsx            # 스크롤 감지 고정 CTA 버튼 (GA 클릭 트래킹)
+│   │   └── store-buttons.tsx           # App Store / Google Play 버튼 (GA 클릭 트래킹)
 │   └── waitlist/
 │       ├── waitlist-modal.tsx          # 모달 컨테이너
 │       ├── waitlist-form.tsx           # react-hook-form + zod + marketing_agree
 │       └── waitlist-success.tsx        # 제출 완료 화면
 ├── lib/
 │   ├── i18n.ts                         # getLocale(), getMessages(), Locale/Messages 타입
-│   ├── supabase-server.ts             # service role 클라이언트 (서버 전용)
-│   ├── validations.ts                 # Zod 스키마 (클라이언트 재사용)
-│   ├── utils.ts                       # cn() 헬퍼
-│   ├── analytics.ts                   # trackEvent() — window.gtag 래퍼
-│   └── recommended-wines.ts           # Wine Discovery Step 2 입문용 추천 와인 mock + STARTING_WINE
+│   ├── supabase-server.ts              # service role 클라이언트 (서버 전용)
+│   ├── slack.ts                        # SLACK_WEBHOOK_URL로 waitlist 등록 알림 (서버 전용)
+│   ├── validations.ts                  # Zod 스키마 (클라이언트 재사용)
+│   ├── utils.ts                        # cn() 헬퍼
+│   ├── analytics.ts                    # trackEvent() — window.gtag 래퍼 (CTA 클릭 추적용)
+│   ├── recommended-wines.ts            # Wine Discovery Step 2 입문용 추천 와인 mock + STARTING_WINE
+│   └── tasting-note-lexicon.ts         # UC Davis 아로마 휠 · WSET 디스크립터 · 결함 카탈로그 어휘 데이터
 ├── messages/
 │   ├── ko.json                         # 기준 번역 파일 (타입 소스)
 │   └── en.json                         # 영어 번역 (ko.json과 키 구조 동기화)
@@ -215,20 +237,32 @@ public/
 2. `StoreButtons` / `FloatingCTA` / `FinalCTASection` → `onOpenModal()` 호출
 3. `WaitlistModal` → `WaitlistForm` → `submitWaitlist()` Server Action → Supabase insert
 
-### 페이지 마운트 순서 (현재 8 섹션)
+### 페이지 마운트 순서 (현재 14 섹션)
 1. `HeroSection` — 세계 지도 슬라이딩 배경
-2. `WineDiscoverySection` — 초보자 친화 3단계 스크롤 (도입 → 스캔 → 추천 지도) + outro
+2. `WineDiscoverySection` — 초보자 친화 스크롤 (ScanPanel부터 시작) + 추천 지도 + outro
 3. `BurgundySection` — 부르고뉴 위계 드릴다운 (꼬뜨→마을→등급→와인) + 색 토글 (전문가)
-4. `VineyardStrip` — 포도밭 갤러리 + 시장 통계
-5. `FeaturesSection` — 와인 카드 쇼케이스 (단일 패널)
-6. `InstagramPreviewSection` — Recap 공유 (PhoneMockup + StoryCard)
-7. `HowItWorksSection` — 사용 흐름 4단계
-8. `FinalCTASection` — 최종 CTA
+4. `CellarSection` — 셀러 관리 (보유 와인 + 음용 적기 타임라인 + 알림 토글) ✨신규
+5. `TastingNoteSection` — 테이스팅 노트 데모 (입문자/전문가 모드 전환)
+6. `PriceIntelligenceSection` — 가격 추이 그래프 + 매장별 + 외부 평점 ✨신규
+7. `FavoritesAlertSection` — 즐겨찾기 → 가격 알림 4스텝 플로우 ✨신규
+8. `VineyardStrip` — 와인 산지 데이터 카드 (재마운트)
+9. `FeaturesSection` — 와인 카드 쇼케이스 (단일 패널)
+10. `CommunityTonightSection` — "오늘 밤 마시는 사람들" 실시간 커뮤니티 ✨신규
+11. `LevelBadgeSection` — 레벨·뱃지 게이미피케이션 ✨신규
+12. `InstagramPreviewSection` — Recap 공유 (PhoneMockup + StoryCard)
+13. `HowItWorksSection` — 사용 흐름 6단계 (셀러·알림 단계 포함)
+14. `FinalCTASection` — 최종 CTA
 
-### 초보자/전문가 페어링 카피 (v9008a15)
-- Wine Discovery 헤더: `wineDiscovery.topQuestion` = "와인을 가볍게 즐기고 싶으신가요?"
-- Burgundy 헤더: `burgundy.heading` = "와인을 깊게 파고드시나요?"
-- 동일 의문문 형식으로 두 섹션이 짝을 이룸 (가볍게 ↔ 깊게)
+### 섹션 헤더 카피 (현재)
+- Hero 태그라인: `hero.tagline` = "와인으로 물들이는 나만의 세계지도"
+- Wine Discovery: `wineDiscovery.topQuestion` = "나만의 와인지도, 어떻게 시작할까요?"
+- Burgundy: `burgundy.heading` = "부르고뉴 한 병의 디테일까지."
+- Cellar: `cellar.heading` = "와인을 보관하고, 음용 적기를 추적하세요"
+- Tasting Note: `tastingNote.heading` = "어떻게 기억에 남기시겠어요?"
+- Price Intelligence: `priceIntelligence.heading` = "가격까지, 한눈에"
+- Favorites Alert: `favoritesAlert.heading` = "관심 와인의 가격, 가장 먼저"
+- Community Tonight: `communityTonight.heading` = "오늘 밤, 누가 어떤 와인을 마실까요?"
+- Level/Badge: `levelBadge.heading` = "마실수록 성장하는 와인 라이프"
 
 ---
 
@@ -246,6 +280,15 @@ Wine Discovery 섹션(초보자 5단계 스크롤 스토리텔링·재사용 컴
 부르고뉴 분류 체계의 근거가 되는 와인 덕후 관점 리서치 + 한글-프랑스어 용어집:
 → **`_workspace/burgundy-classification-research.md`** 참조
 
+테이스팅 노트 섹션(입문자/전문가 모드·부케 휠·WSET 슬라이더·카우달리·결함·오프닝 타임라인) 인수인계용 단일 문서:
+→ **`_workspace/tasting-note-section-spec.md`** 참조
+
+서비스 전반의 디자인 시스템(무드·색상·타이포·인터랙션 원칙) 단일 참조:
+→ **`design.md`** 참조
+
+서비스의 비전·타겟·로드맵·기능 요건 등 제품 기획 문서:
+→ **`PRODUCT_PLAN.md`** 참조
+
 ---
 
 ## 하네스: winemine-landing
@@ -259,7 +302,9 @@ Wine Discovery 섹션(초보자 5단계 스크롤 스토리텔링·재사용 컴
 |------|----------|------|------|
 | 2026-05-05 | 초기 구성 | 전체 | winemine 랜딩 페이지 개발 시작 |
 | 2026-05-06 | commit-push 스킬 추가 | .claude/skills/commit-push | GitHub 연동 워크플로우 |
-| 2026-05-08 | Wine Discovery 섹션 + 페이지 슬림화 | feat/wine-discovery-section 브랜치 | 초보자/전문가 페어링, France·MarketStats·InstagramPreview 마운트 제거 (main 미반영) |
+| 2026-05-08 | Wine Discovery 섹션 + 페이지 슬림화 | sections | 초보자/전문가 페어링, France·MarketStats·VineyardStrip 마운트 제거 (main 반영 완료) |
+| 2026-05-11 | TastingNoteSection 마운트, Bottle 컴포넌트 통합, 부르고뉴 dot 클릭 드릴인, CTA GA 트래킹 | sections·components·analytics | 페이지 8 섹션 구조 재정렬, 와인병 SVG 재사용화, 분석 보강 |
+| 2026-05-14 | MVP 핵심 기능 5개 섹션 추가 + How It Works 6단계 확장 | Cellar/PriceIntelligence/FavoritesAlert/CommunityTonight/LevelBadge 신규, HowItWorks 확장, recharts 도입 | 본격 대중 홍보 전 셀러·가격·즐겨찾기 알림·커뮤니티·게이미피케이션 가치 노출 |
 
 ---
 

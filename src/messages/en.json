@@ -453,13 +453,141 @@
     "source": "Source: Korea Customs Service trade statistics · Media reports (2025)"
   },
 
+  "cellar": {
+    "sectionLabel": "My Cellar",
+    "heading": "Store your bottles, track every drink window",
+    "subheading": "winemine follows each wine to its peak — and beyond",
+    "badges": {
+      "ready": "Ready to drink",
+      "hold": "Keep aging",
+      "peak": "At its peak",
+      "past": "Past prime"
+    },
+    "peakLabel": "{years} to peak",
+    "peakNow": "At peak now",
+    "alertToggle": "Notify me when it peaks",
+    "timelineFrom": "From",
+    "timelineTo": "To",
+    "bullets": [
+      { "title": "Auto-classified", "desc": "AI sorts vintage, appellation and classification for you" },
+      { "title": "Drink-window tracking", "desc": "See each wine's from→peak→to at a glance" },
+      { "title": "Notes per glass", "desc": "Storage spot, acquired date, purchase price, one-liner" }
+    ],
+    "wines": [
+      { "name": "Château Margaux", "producer": "Margaux", "vintage": "2018", "place": "Cellar A-3", "acquired": "2024.06", "price": "$680", "type": "red", "status": "hold", "peakLabel": "3 yrs" },
+      { "name": "Meursault Perrières", "producer": "Coche-Dury", "vintage": "2019", "place": "Cellar B-1", "acquired": "2025.02", "price": "$470", "type": "white", "status": "ready", "peakLabel": "Now" },
+      { "name": "Dom Pérignon", "producer": "Moët", "vintage": "2012", "place": "Fridge", "acquired": "2023.12", "price": "$260", "type": "sparkling", "status": "peak", "peakLabel": "Now" }
+    ]
+  },
+
+  "priceIntelligence": {
+    "sectionLabel": "Price Intelligence",
+    "heading": "Prices, at a glance",
+    "subheading": "What people actually paid — and where it's cheapest right now",
+    "wineLabel": "Château Margaux 2018",
+    "priceRange": "$680 → $950 (+39%)",
+    "chartLabel": "Price trend · last 12 months",
+    "externalRatings": {
+      "title": "External Ratings",
+      "vivino": "Vivino",
+      "wineSearcher": "Wine Searcher",
+      "cellarTracker": "CellarTracker"
+    },
+    "stores": {
+      "title": "By Store",
+      "updated": "Updated"
+    },
+    "xpHint": "Log your purchase for +5 XP",
+    "storeRows": [
+      { "name": "Shinsegae Gangnam", "price": "$950", "updated": "2 days ago" },
+      { "name": "Wine&More Hannam", "price": "$905", "updated": "5 days ago" },
+      { "name": "Galleria Prestige", "price": "$1,000", "updated": "1 week ago" }
+    ]
+  },
+
+  "favoritesAlert": {
+    "sectionLabel": "Smart Alerts",
+    "heading": "Wines you watch, prices you'll know first",
+    "subheading": "Save a wine to favorites — we'll ping you the moment someone buys it",
+    "steps": [
+      { "title": "Add to favorites", "body": "Worth buying or not…" },
+      { "title": "Someone logs a price", "body": "Bought in Hannam at $95" },
+      { "title": "Push notification", "body": "winemine tells you instantly" },
+      { "title": "Check the trend", "body": "Buy at the dip" }
+    ],
+    "pushBanner": {
+      "title": "Château Lafite 2017",
+      "body": "Logged in Hannam at $1,650 · 3 min ago"
+    },
+    "alertToggleLabel": "Alert me on price entries",
+    "alertHint": "Save the wines you care about. The moment a price gets logged, we're the first to tell you.",
+    "bullets": [
+      { "title": "Price tracking", "desc": "Logged purchases auto-average into running min/avg prices" },
+      { "title": "Store comparison", "desc": "Wine shops, department stores and online — side by side" },
+      { "title": "Real-time push", "desc": "Instant alert when a watched wine gets logged" }
+    ]
+  },
+
+  "communityTonight": {
+    "sectionLabel": "Tonight, Together",
+    "heading": "Tonight — who's opening what?",
+    "subheading": "Alone but together. The winemine community gathers around a single glass.",
+    "mapLabel": "Drinking right now",
+    "regions": ["Seoul", "Gangwon", "Busan", "Yeosu", "Jeju"],
+    "feedItems": [
+      { "name": "AlwaysSippin", "level": "Lv.2", "wine": "Sancerre 2022", "place": "Seoul", "time": "3 min ago", "mood": "Rain on the window, glass for one" },
+      { "name": "OnlyChampagne", "level": "Lv.4", "wine": "Champagne Brut NV", "place": "Busan", "time": "12 min ago", "mood": "Catching up with an old friend" },
+      { "name": "AfterWorkPour", "level": "Lv.3", "wine": "Châteauneuf-du-Pape 2017", "place": "Jeju", "time": "28 min ago", "mood": "Friday night reward" }
+    ],
+    "outro": "Alone but together. The winemine community gathers around a single glass.",
+    "bullets": [
+      { "title": "Live feed", "desc": "Who's drinking what, where — right now" },
+      { "title": "Taste matching", "desc": "Discover people who love the same regions and grapes" },
+      { "title": "Wine neighborhoods", "desc": "The wine bars your wine friends keep going back to" }
+    ]
+  },
+
+  "levelBadge": {
+    "sectionLabel": "Grow Your Cellar",
+    "heading": "A wine life that grows as you drink",
+    "subheading": "Each glass logged becomes a chapter in your wine journey",
+    "current": {
+      "level": "Lv.3 Sommelier Apprentice",
+      "xp": "1,240 / 2,000 XP",
+      "toNext": "760 XP to next level"
+    },
+    "catalog": [
+      { "tier": "Lv.1", "name": "Curious", "color": "#B08D57", "req": "First wine logged" },
+      { "tier": "Lv.2", "name": "Explorer", "color": "#C0C0C0", "req": "10 bottles" },
+      { "tier": "Lv.3", "name": "Apprentice", "color": "#C9A84C", "req": "50 bottles" },
+      { "tier": "Lv.4", "name": "Connoisseur", "color": "#E5E4E2", "req": "200 bottles" },
+      { "tier": "Lv.5", "name": "Master", "color": "#B9F2FF", "req": "500+ bottles" }
+    ],
+    "currentTier": "Lv.3",
+    "badges": [
+      { "name": "First Pour", "owned": true },
+      { "name": "Globe Trotter", "owned": true },
+      { "name": "Note Master", "owned": true },
+      { "name": "Bordeaux Hunter", "owned": false },
+      { "name": "Burgundy Devotee", "owned": false },
+      { "name": "Vintage Whisperer", "owned": false }
+    ],
+    "bullets": [
+      { "title": "Earn XP", "desc": "Auto-credited for notes, cellar entries and label scans" },
+      { "title": "5 levels", "desc": "From Bronze to Diamond — the chapters of a wine life" },
+      { "title": "30+ badges", "desc": "Collect them across regions, grapes and logging challenges" }
+    ]
+  },
+
   "howItWorks": {
     "sectionLabel": "How It Works",
     "heading": "Here's how it works",
     "steps": [
       { "title": "Shoot the label", "body": "At a restaurant, wine bar, or home. Snap the label wherever you are drinking.", "detail": "Recognized in 2 seconds" },
-      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map. The more you drink, the deeper the color.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "AI maps your bottle", "body": "The origin is identified automatically and pinned on your world map.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "Stash it in your cellar", "body": "Add purchased bottles to your cellar — AI calculates the optimal drinking window for each.", "detail": "Drink Window · Peak Year · Alerts" },
       { "title": "Dig into your taste", "body": "Tap a country to zoom into sub-regions. See every appellation and Grand Cru classification you've explored.", "detail": "AOC · Appellation · Classification" },
+      { "title": "Favorites + price alerts", "body": "Save wines to favorites and we'll ping you the moment someone else logs a purchase.", "detail": "Favorite · Price Alert · Store prices" },
       { "title": "Capture it all", "body": "Save your wine journey as a shareable image. One tap to share with the world.", "detail": "Recap image generation" }
     ]
   },

@@ -453,13 +453,141 @@
     "source": "출처: 관세청 무역통계 · 매체 보도 종합 (2025)"
   },
 
+  "cellar": {
+    "sectionLabel": "내 셀러",
+    "heading": "와인을 보관하고, 음용 적기를 추적하세요",
+    "subheading": "한 병 한 병의 최적 음용 시기까지 winemine이 함께합니다",
+    "badges": {
+      "ready": "지금이 적기",
+      "hold": "더 보관",
+      "peak": "피크 도달",
+      "past": "음용 권장 지남"
+    },
+    "peakLabel": "피크까지 {years}",
+    "peakNow": "지금이 피크",
+    "alertToggle": "피크 도달 시 알림 받기",
+    "timelineFrom": "From",
+    "timelineTo": "To",
+    "bullets": [
+      { "title": "자동 분류", "desc": "AI가 빈티지·아펠라시옹·등급까지 자동 정리" },
+      { "title": "음용 적기 추적", "desc": "각 와인의 from→peak→to를 한눈에" },
+      { "title": "한 잔의 메모", "desc": "보관 장소·취득일·구매가·한 줄 메모" }
+    ],
+    "wines": [
+      { "name": "Château Margaux", "producer": "Margaux", "vintage": "2018", "place": "셀러 A-3", "acquired": "2024.06", "price": "₩890,000", "type": "red", "status": "hold", "peakLabel": "3년" },
+      { "name": "Meursault Perrières", "producer": "Coche-Dury", "vintage": "2019", "place": "셀러 B-1", "acquired": "2025.02", "price": "₩620,000", "type": "white", "status": "ready", "peakLabel": "지금" },
+      { "name": "Dom Pérignon", "producer": "Moët", "vintage": "2012", "place": "냉장고", "acquired": "2023.12", "price": "₩340,000", "type": "sparkling", "status": "peak", "peakLabel": "지금" }
+    ]
+  },
+
+  "priceIntelligence": {
+    "sectionLabel": "Price Intelligence",
+    "heading": "가격까지, 한눈에",
+    "subheading": "사람들이 실제로 얼마에 샀는지, 어디서 가장 싸게 파는지",
+    "wineLabel": "Château Margaux 2018",
+    "priceRange": "₩890,000 → ₩1,240,000 (+39%)",
+    "chartLabel": "최근 12개월 가격 추이",
+    "externalRatings": {
+      "title": "외부 평점",
+      "vivino": "Vivino",
+      "wineSearcher": "Wine Searcher",
+      "cellarTracker": "CellarTracker"
+    },
+    "stores": {
+      "title": "매장별 가격",
+      "updated": "업데이트"
+    },
+    "xpHint": "내 구매 정보 등록하면 +5 XP",
+    "storeRows": [
+      { "name": "신세계 강남", "price": "₩1,240,000", "updated": "2일 전" },
+      { "name": "Wine&More 한남", "price": "₩1,180,000", "updated": "5일 전" },
+      { "name": "갤러리아 명품관", "price": "₩1,310,000", "updated": "1주일 전" }
+    ]
+  },
+
+  "favoritesAlert": {
+    "sectionLabel": "Smart Alerts",
+    "heading": "관심 와인의 가격, 가장 먼저",
+    "subheading": "즐겨찾기에 담아두면 누군가 그 와인을 살 때 알려드립니다",
+    "steps": [
+      { "title": "즐겨찾기 등록", "body": "이 와인, 살까 말까…" },
+      { "title": "누군가 가격 등록", "body": "한남에서 ₩125,000에 구매됨" },
+      { "title": "푸시 알림 도착", "body": "winemine이 즉시 알려드려요" },
+      { "title": "가격 추이 확인", "body": "최저가 시점에 구매하세요" }
+    ],
+    "pushBanner": {
+      "title": "Château Lafite 2017",
+      "body": "한남동에서 ₩2,150,000에 구매됨 · 3분 전"
+    },
+    "alertToggleLabel": "구매 시 알림 받기",
+    "alertHint": "관심 와인은 즐겨찾기에 담아두세요. 가격이 등록되는 순간 가장 먼저 알려드립니다.",
+    "bullets": [
+      { "title": "가격 변동 추적", "desc": "구매 등록이 누적되며 평균가·최저가가 자동 계산" },
+      { "title": "매장별 시세", "desc": "전국 와인숍·백화점·온라인 가격을 한눈에" },
+      { "title": "실시간 푸시", "desc": "관심 와인이 등록되는 순간 즉시 알림" }
+    ]
+  },
+
+  "communityTonight": {
+    "sectionLabel": "Tonight, Together",
+    "heading": "오늘 밤, 누가 어떤 와인을 마실까요?",
+    "subheading": "혼자 마셔도 함께. winemine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
+    "mapLabel": "지금 마시는 사람들",
+    "regions": ["서울", "강원", "부산", "여수", "제주"],
+    "feedItems": [
+      { "name": "언제나 와린이", "level": "Lv.2", "wine": "Sancerre 2022", "place": "서울", "time": "3분 전", "mood": "창문 너머 비, 혼자만의 한 잔" },
+      { "name": "샴페인만먹어요", "level": "Lv.4", "wine": "Champagne Brut NV", "place": "부산", "time": "12분 전", "mood": "오랜만에 만난 친구와" },
+      { "name": "퇴근후한잔", "level": "Lv.3", "wine": "Châteauneuf-du-Pape 2017", "place": "제주", "time": "28분 전", "mood": "금요일 밤의 보상" }
+    ],
+    "outro": "혼자 마셔도 함께. winemine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
+    "bullets": [
+      { "title": "실시간 피드", "desc": "지금 누가 어디서 무엇을 마시는지" },
+      { "title": "취향 매칭", "desc": "비슷한 산지·품종을 좋아하는 사람 발견" },
+      { "title": "와인 동네 발견", "desc": "내 근처 와인 친구들의 단골 와인바" }
+    ]
+  },
+
+  "levelBadge": {
+    "sectionLabel": "Grow Your Cellar",
+    "heading": "마실수록 성장하는 와인 라이프",
+    "subheading": "한 잔의 기록이 쌓여 당신만의 와인 여정이 됩니다",
+    "current": {
+      "level": "Lv.3 Sommelier Apprentice",
+      "xp": "1,240 / 2,000 XP",
+      "toNext": "다음 레벨까지 760 XP"
+    },
+    "catalog": [
+      { "tier": "Lv.1", "name": "Curious", "color": "#B08D57", "req": "첫 와인 등록" },
+      { "tier": "Lv.2", "name": "Explorer", "color": "#C0C0C0", "req": "10병 기록" },
+      { "tier": "Lv.3", "name": "Apprentice", "color": "#C9A84C", "req": "50병 기록" },
+      { "tier": "Lv.4", "name": "Connoisseur", "color": "#E5E4E2", "req": "200병 기록" },
+      { "tier": "Lv.5", "name": "Master", "color": "#B9F2FF", "req": "500+병 기록" }
+    ],
+    "currentTier": "Lv.3",
+    "badges": [
+      { "name": "First Pour", "owned": true },
+      { "name": "Globe Trotter", "owned": true },
+      { "name": "Note Master", "owned": true },
+      { "name": "Bordeaux Hunter", "owned": false },
+      { "name": "Burgundy Devotee", "owned": false },
+      { "name": "Vintage Whisperer", "owned": false }
+    ],
+    "bullets": [
+      { "title": "XP 적립", "desc": "노트 작성·셀러 등록·라벨 스캔으로 자동 적립" },
+      { "title": "5단계 레벨", "desc": "Bronze부터 Diamond까지, 와인 인생의 시간" },
+      { "title": "30+ 뱃지", "desc": "산지·품종·기록 챌린지로 컬렉션 완성" }
+    ]
+  },
+
   "howItWorks": {
     "sectionLabel": "How It Works",
     "heading": "이렇게 사용해요",
     "steps": [
       { "title": "라벨 촬영하기", "body": "레스토랑, 와인 바, 집. 언제 어디서든 마시는 와인 라벨을 카메라로 촬영해주세요.", "detail": "2초 내로 인식" },
-      { "title": "AI 분석으로 지도 물들이기", "body": "원산지가 자동으로 파악되어 세계 지도 위에 기록된다. 마실수록 지도가 물든다.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "AI 분석으로 지도 물들이기", "body": "원산지가 자동으로 파악되어 세계 지도 위에 기록됩니다.", "detail": "Bordeaux · Pomerol · Premier Grand Cru" },
+      { "title": "셀러에 등록 + 음용 적기 추적", "body": "구매한 와인은 셀러에 등록하고, AI가 최적 음용 시기를 자동 계산합니다.", "detail": "Drink Window · Peak Year · 알림" },
       { "title": "내 취향 파고들기", "body": "국가를 탭하면 세부 지역으로 확대됩니다. 내가 탐험한 아펠라시옹과 그랑 크뤼까지 한눈에.", "detail": "AOC · Appellation · Classification" },
+      { "title": "즐겨찾기 + 가격 알림", "body": "관심 와인을 즐겨찾기에 담아두면, 누군가 그 와인을 구매할 때 즉시 알려드립니다.", "detail": "Favorite · Price Alert · 매장별 시세" },
       { "title": "한 컷에 담기", "body": "내 와인 여정을 한 눈에 볼 수 있는 이미지로 저장합니다. 클릭 한 번으로 공유해보세요!", "detail": "Recap 이미지 생성" }
     ]
   },
