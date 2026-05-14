@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { Heart, ShoppingBag, Bell, TrendingUp, type LucideIcon } from 'lucide-react';
 import { useLocale } from '@/components/providers/locale-provider';
+
+const STEP_ICONS: LucideIcon[] = [Heart, ShoppingBag, Bell, TrendingUp];
 
 // Mini sparkline (간단 SVG path) — recharts 없이 가볍게 그림
 function Sparkline() {
@@ -64,11 +67,10 @@ function PushBanner({ title, body }: { title: string; body: string }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 14,
           flexShrink: 0,
         }}
       >
-        🍷
+        <Bell size={16} color="#F5F0E8" strokeWidth={2} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div
@@ -114,7 +116,7 @@ function AlertToggleRow({ label }: { label: string }) {
         borderRadius: 12,
       }}
     >
-      <div style={{ fontSize: 18, flexShrink: 0 }} aria-hidden>🔔</div>
+      <Bell size={18} color="#C9A84C" strokeWidth={2} aria-hidden style={{ flexShrink: 0 }} />
       <div style={{ flex: 1, fontSize: 13, color: '#D4C5B0' }}>{label}</div>
       <button
         type="button"
@@ -149,10 +151,11 @@ function AlertToggleRow({ label }: { label: string }) {
   );
 }
 
-type FavStep = { emoji: string; title: string; body: string };
+type FavStep = { title: string; body: string };
 
 function FlowStep({ step, index }: { step: FavStep; index: number }) {
   const isPush = index === 2;
+  const Icon = STEP_ICONS[index] ?? Heart;
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -174,7 +177,6 @@ function FlowStep({ step, index }: { step: FavStep; index: number }) {
     >
       <div
         style={{
-          fontSize: 26,
           width: 48,
           height: 48,
           borderRadius: 12,
@@ -186,7 +188,7 @@ function FlowStep({ step, index }: { step: FavStep; index: number }) {
         }}
         aria-hidden
       >
-        {step.emoji}
+        <Icon size={22} color="#C9A84C" strokeWidth={1.8} />
       </div>
       <div
         style={{

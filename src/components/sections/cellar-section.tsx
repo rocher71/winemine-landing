@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { Bell } from 'lucide-react';
 import { useLocale } from '@/components/providers/locale-provider';
 
 type WineStatus = 'ready' | 'hold' | 'peak' | 'past';
@@ -163,7 +164,6 @@ function AlertToggleCard({ label }: { label: string }) {
       <div
         aria-hidden
         style={{
-          fontSize: 18,
           width: 36,
           height: 36,
           borderRadius: 10,
@@ -174,7 +174,7 @@ function AlertToggleCard({ label }: { label: string }) {
           flexShrink: 0,
         }}
       >
-        🔔
+        <Bell size={18} color="#C9A84C" strokeWidth={2} />
       </div>
       <div style={{ flex: 1, fontSize: 13, color: '#D4C5B0' }}>{label}</div>
       <button

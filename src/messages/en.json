@@ -510,10 +510,10 @@
     "heading": "Wines you watch, prices you'll know first",
     "subheading": "Save a wine to favorites — we'll ping you the moment someone buys it",
     "steps": [
-      { "emoji": "💖", "title": "Add to favorites", "body": "Worth buying or not…" },
-      { "emoji": "🛒", "title": "Someone logs a price", "body": "Bought in Hannam at $95" },
-      { "emoji": "🔔", "title": "Push notification", "body": "winemine tells you instantly" },
-      { "emoji": "📈", "title": "Check the trend", "body": "Buy at the dip" }
+      { "title": "Add to favorites", "body": "Worth buying or not…" },
+      { "title": "Someone logs a price", "body": "Bought in Hannam at $95" },
+      { "title": "Push notification", "body": "winemine tells you instantly" },
+      { "title": "Check the trend", "body": "Buy at the dip" }
     ],
     "pushBanner": {
       "title": "Château Lafite 2017",
@@ -565,12 +565,12 @@
     ],
     "currentTier": "Lv.3",
     "badges": [
-      { "emoji": "🍷", "name": "First Pour", "owned": true },
-      { "emoji": "🗺️", "name": "Globe Trotter", "owned": true },
-      { "emoji": "📝", "name": "Note Master", "owned": true },
-      { "emoji": "🏆", "name": "Bordeaux Hunter", "owned": false },
-      { "emoji": "✨", "name": "Burgundy Devotee", "owned": false },
-      { "emoji": "💎", "name": "Vintage Whisperer", "owned": false }
+      { "name": "First Pour", "owned": true },
+      { "name": "Globe Trotter", "owned": true },
+      { "name": "Note Master", "owned": true },
+      { "name": "Bordeaux Hunter", "owned": false },
+      { "name": "Burgundy Devotee", "owned": false },
+      { "name": "Vintage Whisperer", "owned": false }
     ],
     "bullets": [
       { "title": "Earn XP", "desc": "Auto-credited for notes, cellar entries and label scans" },

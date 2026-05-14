@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Coins } from 'lucide-react';
 import { useLocale } from '@/components/providers/locale-provider';
 
 // Mock 12개월 가격 추이
@@ -310,7 +311,7 @@ export default function PriceIntelligenceSection() {
           }}
           className="price-xp-hint"
         >
-          <span aria-hidden style={{ fontSize: 16 }}>✨</span>
+          <Coins size={15} color="#C9A84C" strokeWidth={2} aria-hidden />
           {pi?.xpHint}
         </motion.div>
       </div>

@@ -1,10 +1,13 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
+import { Wine, Globe2, FileText, Trophy, Sparkles, Gem, Lock, type LucideIcon } from 'lucide-react';
 import { useLocale } from '@/components/providers/locale-provider';
 
 type LevelTier = { tier: string; name: string; color: string; req: string };
-type BadgeItem = { emoji: string; name: string; owned: boolean };
+type BadgeItem = { name: string; owned: boolean };
+
+const BADGE_ICONS: LucideIcon[] = [Wine, Globe2, FileText, Trophy, Sparkles, Gem];
 
 function LevelProgressBar({ level, xp, toNext, progress }: { level: string; xp: string; toNext: string; progress: number }) {
   return (
@@ -161,7 +164,9 @@ function LevelCard({ tier, isCurrent }: { tier: LevelTier; isCurrent: boolean })
   );
 }
 
-function BadgeTile({ badge }: { badge: BadgeItem }) {
+function BadgeTile({ badge, index }: { badge: BadgeItem; index: number }) {
+  const Icon = BADGE_ICONS[index] ?? Wine;
+  const iconColor = badge.owned ? '#C9A84C' : '#6A5E4A';
   return (
     <div
       style={{
@@ -175,12 +180,11 @@ function BadgeTile({ badge }: { badge: BadgeItem }) {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 8,
-        opacity: badge.owned ? 1 : 0.45,
-        filter: badge.owned ? 'none' : 'grayscale(0.6)',
+        opacity: badge.owned ? 1 : 0.55,
       }}
     >
-      <div className="badge-emoji" style={{ lineHeight: 1, marginBottom: 8 }} aria-hidden>
-        {badge.emoji}
+      <div className="badge-icon" style={{ marginBottom: 8, display: 'flex' }} aria-hidden>
+        <Icon className="badge-icon-svg" color={iconColor} strokeWidth={1.6} />
       </div>
       <div
         className="badge-name"
@@ -201,11 +205,10 @@ function BadgeTile({ badge }: { badge: BadgeItem }) {
             position: 'absolute',
             top: 6,
             right: 6,
-            fontSize: 10,
-            color: '#6A5E4A',
+            display: 'flex',
           }}
         >
-          🔒
+          <Lock size={11} color="#6A5E4A" strokeWidth={2} />
         </div>
       )}
     </div>
@@ -345,7 +348,7 @@ export default function LevelBadgeSection() {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
                 viewport={{ once: true }}
               >
-                <BadgeTile badge={b} />
+                <BadgeTile badge={b} index={i} />
               </motion.div>
             ))}
           </div>
@@ -380,8 +383,9 @@ export default function LevelBadgeSection() {
           grid-template-columns: repeat(3, 1fr);
           gap: 12px;
         }
-        .badge-emoji {
-          font-size: 28px;
+        .badge-icon :global(.badge-icon-svg) {
+          width: 28px;
+          height: 28px;
         }
         .badge-name {
           font-size: 11px;
@@ -391,9 +395,12 @@ export default function LevelBadgeSection() {
             grid-template-columns: repeat(2, 1fr);
             gap: 14px;
           }
-          .badge-emoji {
-            font-size: 38px;
-            margin-bottom: 10px;
+          .badge-icon :global(.badge-icon-svg) {
+            width: 36px;
+            height: 36px;
+          }
+          .badge-icon {
+            margin-bottom: 10px !important;
           }
           .badge-name {
             font-size: 13px;
