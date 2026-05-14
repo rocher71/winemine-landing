@@ -291,12 +291,8 @@ export default function LevelBadgeSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            gap: 12,
-            marginBottom: 56,
-          }}
+          className="level-catalog"
+          style={{ marginBottom: 56 }}
         >
           {catalog.map((tier, i) => (
             <motion.div
@@ -305,6 +301,7 @@ export default function LevelBadgeSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
               viewport={{ once: true, margin: '-40px' }}
+              className={i === catalog.length - 1 ? 'level-card-wrap level-card-top' : 'level-card-wrap'}
             >
               <LevelCard tier={tier} isCurrent={tier.tier === currentTier} />
             </motion.div>
@@ -378,6 +375,23 @@ export default function LevelBadgeSection() {
       </div>
 
       <style jsx>{`
+        /* Level catalog grid — PC: auto-fit 5열, 모바일: 2열 + 마지막 카드 가로 폭 강조 */
+        .level-catalog {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 12px;
+        }
+        @media (max-width: 640px) {
+          .level-catalog {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+          .level-card-top {
+            grid-column: 1 / -1;
+          }
+        }
+
+        /* Badge grid */
         .badge-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
