@@ -139,8 +139,8 @@ export default function PriceIntelligenceSection() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true, margin: '-40px' }}
             style={{
-              background: 'var(--color-bg-map)',
-              border: '1px solid var(--color-border-soft)',
+              background: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
               borderRadius: 16,
               padding: 'clamp(20px, 3vw, 32px)',
               minWidth: 0,
@@ -207,8 +207,8 @@ export default function PriceIntelligenceSection() {
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true, margin: '-40px' }}
               style={{
-                background: 'var(--color-bg-map)',
-                border: '1px solid var(--color-border-soft)',
+                background: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-border)',
                 borderRadius: 16,
                 padding: 20,
               }}
@@ -239,8 +239,8 @@ export default function PriceIntelligenceSection() {
               transition={{ duration: 0.6, delay: 0.18 }}
               viewport={{ once: true, margin: '-40px' }}
               style={{
-                background: 'var(--color-bg-map)',
-                border: '1px solid var(--color-border-soft)',
+                background: 'var(--color-bg-surface)',
+                border: '1px solid var(--color-border)',
                 borderRadius: 16,
                 padding: 20,
               }}

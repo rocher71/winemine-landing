@@ -125,8 +125,9 @@ export default function VineyardStrip() {
                 fontFamily: 'var(--font-playfair), Georgia, serif',
                 fontSize: 'clamp(13px,1.8vw,20px)',
                 fontWeight: 400,
-                color: 'var(--color-text-primary)',
+                color: '#F5F0E8',
                 marginBottom: 4,
+                textShadow: '0 1px 6px rgba(0,0,0,0.5)',
               }}>
                 {messages.vineyardStrip.countries[countryKeys[i]].name}
               </div>
@@ -169,7 +170,8 @@ export default function VineyardStrip() {
           <div style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(18px,3.5vw,36px)',
-            fontWeight: 400, color: 'var(--color-text-primary)', textAlign: 'center',
+            fontWeight: 400, color: '#F5F0E8', textAlign: 'center',
+            textShadow: '0 2px 12px rgba(0,0,0,0.6)',
           }}>
             {messages.vineyardStrip.body.split('\n').map((line, i) => (
               <span key={i}>{line}{i === 0 ? <br /> : null}</span>

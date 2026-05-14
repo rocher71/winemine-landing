@@ -223,7 +223,7 @@ export default function FavoritesAlertSection() {
   return (
     <section
       style={{
-        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.06) 0%, transparent 58%), var(--color-bg-deep)',
+        background: 'var(--color-bg-deep)',
         padding: 'clamp(80px,10vw,112px) 24px',
       }}
     >

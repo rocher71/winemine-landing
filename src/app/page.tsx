@@ -8,7 +8,7 @@ import CellarSection from '@/components/sections/cellar-section';
 import TastingNoteSection from '@/components/sections/tasting-note-section';
 import PriceIntelligenceSection from '@/components/sections/price-intelligence-section';
 import FavoritesAlertSection from '@/components/sections/favorites-alert-section';
-import VineyardStrip from '@/components/sections/vineyard-strip';
+// import VineyardStrip from '@/components/sections/vineyard-strip'; // 미마운트 (롤백 대비 보존)
 // import FeaturesSection from '@/components/sections/features-section'; // 미마운트 (롤백 대비 보존)
 import CommunityTonightSection from '@/components/sections/community-tonight-section';
 import LevelBadgeSection from '@/components/sections/level-badge-section';
@@ -47,8 +47,8 @@ export default function Home() {
       {/* 7. 즐겨찾기 + 가격 알림 — 4스텝 플로우 */}
       <FavoritesAlertSection />
 
-      {/* 8. 포도밭 갤러리 — 와인 산지 사진 + 대기 사진 스트립 */}
-      <VineyardStrip />
+      {/* 8. (미마운트) VineyardStrip — '당신이 마신 와인이 태어난 땅' 포도밭 갤러리. 재마운트 시 위치 복원 */}
+      {/* <VineyardStrip /> */}
 
       {/* 9. (미마운트) FeaturesSection — '와인 카드 쇼케이스'. 재마운트 시 위치 복원 */}
       {/* <FeaturesSection /> */}

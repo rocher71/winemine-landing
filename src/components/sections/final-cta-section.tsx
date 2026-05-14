@@ -15,7 +15,7 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
 
   return (
     <>
-      <section style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(196,30,58,0.08) 0%, transparent 58%), var(--color-bg-deepest)', padding: 'clamp(80px, 10vw, 120px) 24px' }}>
+      <section style={{ background: 'var(--color-bg-deepest)', padding: 'clamp(80px, 10vw, 120px) 24px' }}>
         <motion.div
           initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

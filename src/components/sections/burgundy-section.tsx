@@ -403,8 +403,8 @@ function BottleSilhouette({ wine, width = 44, height = 105 }: { wine: Wine; widt
       style="detailed"
       glass={wine.color}
       liquid={wine.color}
-      foil={wine.wineType === 'white' ? 'var(--color-text-primary)' : wine.wineType === 'rosé' ? 'var(--color-text-primary)' : 'var(--color-wine-red)'}
-      label="var(--color-text-primary)"
+      foil={wine.wineType === 'white' ? '#C9A84C' : wine.wineType === 'rosé' ? '#F5F0E8' : '#5b1424'}
+      label="#F5F0E8"
       labelText={BURGUNDY_LABEL_FG[wine.wineType]}
       typeName={wine.label}
       region={region}
@@ -417,7 +417,7 @@ function BottleSilhouette({ wine, width = 44, height = 105 }: { wine: Wine; widt
 
 function WineRow({ wine }: { wine: Wine }) {
   return (
-    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'var(--overlay-soft)', borderRadius: 16, border: '1px solid var(--color-border-soft)' }}>
+    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'var(--color-bg-surface)', borderRadius: 16, border: '1px solid var(--color-border)' }}>
       <div style={{ width: 56, height: 110, borderRadius: 8, flexShrink: 0, background: 'radial-gradient(ellipse at top, transparent 60%, rgba(0,0,0,0.4) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <BottleSilhouette wine={wine} width={44} height={105} />
       </div>
@@ -643,13 +643,13 @@ function CoteCard({ data, onClick, colorFilter }: {
   return (
     <button onClick={onClick} style={{
       padding: '14px 16px', textAlign: 'left' as const, cursor: 'pointer',
-      background: 'var(--overlay-soft)',
-      border: '1px solid var(--overlay-medium)',
+      background: 'var(--color-bg-surface)',
+      border: '1px solid var(--color-border)',
       borderRadius: 12, color: 'var(--color-text-primary)',
       transition: 'all 200ms', fontFamily: 'inherit', display: 'block', width: '100%',
     }}
-    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-border-soft)'; e.currentTarget.style.borderColor = 'var(--color-gold-tint-med)'; }}
-    onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--overlay-soft)'; e.currentTarget.style.borderColor = 'var(--overlay-medium)'; }}
+    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-bg-deep)'; e.currentTarget.style.borderColor = 'var(--color-gold-tint-med)'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-bg-surface)'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
     >
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 18, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: 'var(--color-text-primary)' }}>{data.nameKo}</span>
@@ -673,8 +673,8 @@ function CommuneCard({ data, onClick, colorFilter, active }: {
   return (
     <button onClick={onClick} style={{
       padding: '14px 16px', textAlign: 'left' as const, cursor: 'pointer',
-      background: active ? 'var(--color-gold-tint-faint)' : 'var(--overlay-soft)',
-      border: `1px solid ${active ? 'var(--color-gold-tint-med)' : 'var(--overlay-medium)'}`,
+      background: active ? 'var(--color-gold-tint-faint)' : 'var(--color-bg-surface)',
+      border: `1px solid ${active ? 'var(--color-gold-tint-med)' : 'var(--color-border)'}`,
       borderRadius: 12, color: 'var(--color-text-primary)',
       transition: 'all 200ms', fontFamily: 'inherit', display: 'block', width: '100%',
     }}>
@@ -851,8 +851,8 @@ function ColorToggle({ value, onChange, mobile }: {
   return (
     <div style={{
       display: 'flex', gap: 3,
-      padding: 3, background: 'var(--overlay-strong)',
-      border: '1px solid var(--overlay-medium)',
+      padding: 3, background: 'var(--overlay-soft)',
+      border: '1px solid var(--color-border-soft)',
       borderRadius: 9999,
       width: '100%',
       justifyContent: 'space-between',
@@ -863,7 +863,7 @@ function ColorToggle({ value, onChange, mobile }: {
           <button key={o.v} onClick={() => onChange(o.v)} style={{
             padding: mobile ? '5px 10px' : '4px 8px',
             borderRadius: 9999, border: 'none', cursor: 'pointer',
-            background: active ? 'var(--color-gold-tint-soft)' : 'transparent',
+            background: active ? 'var(--color-bg-surface)' : 'transparent',
             color: active ? GOLD : 'var(--color-text-muted)',
             fontSize: 11, fontWeight: active ? 700 : 500,
             letterSpacing: '0.02em',
@@ -961,7 +961,7 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
                       onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
                       style={{
                         padding: '12px 14px', textAlign: 'left' as const, cursor: 'pointer',
-                        background: 'var(--overlay-soft)',
+                        background: 'var(--color-bg-surface)',
                         border: `1px solid ${CRU_META[cru].border}`,
                         borderRadius: 12, color: 'var(--color-text-primary)',
                         transition: 'all 200ms', fontFamily: 'inherit',
@@ -1010,6 +1010,7 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -24 }}
       transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      className="burgundy-side-rail"
       style={{
         position: 'absolute', top: 'clamp(96px, 14vh, 160px)', left: 'clamp(16px, 3vw, 36px)',
         width: 'clamp(260px, 20vw, 300px)', zIndex: 25,
@@ -1017,27 +1018,53 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <div style={{
-        padding: '12px 14px', background: 'var(--overlay-strong)',
-        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid var(--color-border-soft)', borderRadius: 12,
-      }}>
+      <style jsx>{`
+        .burgundy-side-rail :global(.burgundy-side-card) {
+          padding: 14px 18px;
+          background: #FFFFFF;
+          border: 1px solid var(--color-gold-tint-strong);
+          border-radius: 18px;
+          box-shadow: 0 18px 48px rgba(42, 31, 18, 0.14);
+        }
+        .burgundy-side-rail :global(.burgundy-side-count) {
+          padding: 10px 16px;
+          font-size: 11px;
+          color: var(--color-text-secondary);
+          letter-spacing: 0.04em;
+          line-height: 1.5;
+          background: #FFFFFF;
+          border: 1px solid var(--color-gold-tint-strong);
+          border-radius: 14px;
+          box-shadow: 0 14px 36px rgba(42, 31, 18, 0.12);
+        }
+        :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-card),
+        :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-count) {
+          background: #0F0718;
+          border-color: rgba(45, 21, 64, 0.9);
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+        }
+        @media (prefers-color-scheme: dark) {
+          :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-card),
+          :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-count) {
+            background: #0F0718;
+            border-color: rgba(45, 21, 64, 0.9);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+          }
+        }
+      `}</style>
+      <div className="burgundy-side-card">
         <div style={{ fontSize: 9, letterSpacing: '0.32em', color: 'var(--color-text-muted)', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
           현재 위치 / Drill
         </div>
         <Breadcrumb drill={drill} onDrill={onDrill} />
       </div>
-      <div style={{
-        padding: '12px 14px', background: 'var(--overlay-strong)',
-        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid var(--color-border-soft)', borderRadius: 12,
-      }}>
+      <div className="burgundy-side-card">
         <div style={{ fontSize: 9, letterSpacing: '0.32em', color: 'var(--color-text-muted)', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
           색 필터 / Color
         </div>
         <ColorToggle value={colorFilter} onChange={onColor} />
       </div>
-      <div style={{ padding: '4px 12px', fontSize: 10, color: 'var(--color-text-muted)', letterSpacing: '0.04em', lineHeight: 1.5 }}>
+      <div className="burgundy-side-count">
         내가 마신 부르고뉴 <span style={{ color: GOLD, fontWeight: 700 }}>{WINES.length}병</span>
       </div>
     </motion.div>
@@ -1061,16 +1088,44 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : 24 }}
       transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      className="burgundy-desktop-panel"
       style={{
         position: 'absolute', top: '8%', right: '3vw',
         width: 'clamp(300px,30vw,380px)', maxHeight: '84vh', zIndex: 20,
-        background: 'var(--overlay-strong)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid var(--color-gold-tint-soft)', borderRadius: 18,
+        borderRadius: 18,
         overflow: 'hidden', display: 'flex', flexDirection: 'column',
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <div style={{ padding: '14px 18px 10px', flexShrink: 0, borderBottom: '1px solid var(--color-border-soft)' }}>
+      <style jsx>{`
+        .burgundy-desktop-panel {
+          background: #FFFFFF;
+          border: 1px solid var(--color-gold-tint-strong);
+          box-shadow: 0 18px 48px rgba(42, 31, 18, 0.14);
+        }
+        .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
+          border-bottom: 1px solid var(--color-border);
+        }
+        :root[data-theme="dark"] .burgundy-desktop-panel {
+          background: #0F0718;
+          border-color: var(--color-gold-tint-soft);
+          box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+        }
+        :root[data-theme="dark"] .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
+          border-bottom-color: rgba(45, 21, 64, 0.9);
+        }
+        @media (prefers-color-scheme: dark) {
+          :root:not([data-theme="light"]) .burgundy-desktop-panel {
+            background: #0F0718;
+            border-color: var(--color-gold-tint-soft);
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+          }
+          :root:not([data-theme="light"]) .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
+            border-bottom-color: rgba(45, 21, 64, 0.9);
+          }
+        }
+      `}</style>
+      <div className="burgundy-desktop-panel__header" style={{ padding: '14px 18px 10px', flexShrink: 0 }}>
         <div style={{ fontSize: 10, color: 'var(--color-text-muted)', letterSpacing: '0.06em' }}>{groupLabel}</div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px 20px' }}>

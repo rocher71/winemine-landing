@@ -53,6 +53,12 @@
   /* Modal backdrop — heavy obscure in both modes */
   --color-modal-backdrop: rgba(42, 31, 18, 0.55);
 
+  /* Store buttons — dark pill on light background for contrast */
+  --btn-store-bg: #000000;
+  --btn-store-bg-hover: #1a1a1a;
+  --btn-store-border: #000000;
+  --btn-store-color: #F5F0E8;
+
   --color-scheme-name: 'light';
 }
 
@@ -90,6 +96,12 @@
 
     --color-modal-backdrop: rgba(5, 2, 8, 0.85);
 
+    /* Store buttons — glass overlay on dark background */
+    --btn-store-bg: rgba(255, 255, 255, 0.10);
+    --btn-store-bg-hover: rgba(255, 255, 255, 0.16);
+    --btn-store-border: rgba(255, 255, 255, 0.15);
+    --btn-store-color: #F5F0E8;
+
     --color-scheme-name: 'dark';
   }
 }
@@ -126,6 +138,12 @@
   --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
 
   --color-modal-backdrop: rgba(5, 2, 8, 0.85);
+
+  /* Store buttons — glass overlay on dark background */
+  --btn-store-bg: rgba(255, 255, 255, 0.10);
+  --btn-store-bg-hover: rgba(255, 255, 255, 0.16);
+  --btn-store-border: rgba(255, 255, 255, 0.15);
+  --btn-store-color: #F5F0E8;
 
   --color-scheme-name: 'dark';
 }
