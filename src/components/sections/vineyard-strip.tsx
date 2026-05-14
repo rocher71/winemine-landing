@@ -116,13 +116,6 @@ export default function VineyardStrip() {
               }}
             />
 
-            {/* Overlay gradient */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to top, var(--overlay-strong) 0%, var(--overlay-soft) 55%, transparent 100%)',
-              pointerEvents: 'none',
-            }} />
-
             {/* Content */}
             <div style={{
               position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -167,7 +160,6 @@ export default function VineyardStrip() {
         />
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to right, var(--overlay-strong) 0%, transparent 35%, transparent 65%, var(--overlay-strong) 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexDirection: 'column', gap: 8,
         }}>

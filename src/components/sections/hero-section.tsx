@@ -30,14 +30,6 @@ export default function HeroSection({ onOpenModal }: HeroSectionProps) {
       <WorldMap />
 
       <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(to bottom, var(--overlay-soft) 0%, var(--overlay-medium) 50%, var(--overlay-strong) 100%)',
-        }}
-      />
-
-      <div
         className="absolute left-1/2 text-center"
         style={{
           top: '38%',

@@ -507,11 +507,6 @@ function FullScreenMap({ progress, visible }: { progress: MotionValue<number>; v
       <div ref={ref} style={{ width: '100%', height: '100%' }}>
         <MapContent {...mapProps} />
       </div>
-
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'linear-gradient(180deg, var(--overlay-strong) 0%, var(--overlay-soft) 28%, var(--overlay-soft) 60%, var(--overlay-strong) 100%)',
-      }} />
     </motion.div>
   );
 }
