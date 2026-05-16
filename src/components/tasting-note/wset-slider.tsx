@@ -8,8 +8,8 @@ import type { WSETScale } from '@/lib/tasting-note-lexicon';
 
 const SCALE_ORDER: WSETScale[] = ['low', 'mediumMinus', 'medium', 'mediumPlus', 'high'];
 
-const GOLD = '#C9A84C';
-const BORDER = '#2D1540';
+const GOLD = 'var(--color-gold)';
+const BORDER = 'var(--color-border)';
 
 interface Props {
   labelKey: string;
@@ -38,11 +38,11 @@ export default function WSETSlider({ labelKey, value, onChange, labels, hint }: 
           marginBottom: 6,
         }}
       >
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#F5F0E8' }}>{t(labelKey)}</span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)' }}>{t(labelKey)}</span>
         <span style={{ fontSize: 12, color: GOLD }}>{labels[value][locale]}</span>
       </div>
       {hint && (
-        <div style={{ fontSize: 11, color: '#9B8B7A', marginBottom: 8, fontStyle: 'italic' }}>
+        <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginBottom: 8, fontStyle: 'italic' }}>
           {hint}
         </div>
       )}
@@ -100,7 +100,7 @@ export default function WSETSlider({ labelKey, value, onChange, labels, hint }: 
                   width: 14,
                   height: 14,
                   borderRadius: 999,
-                  background: active ? GOLD : '#1A0A1E',
+                  background: active ? GOLD : 'var(--color-bg-map)',
                   border: `1px solid ${active ? GOLD : BORDER}`,
                   cursor: 'pointer',
                   padding: 0,

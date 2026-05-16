@@ -5,6 +5,9 @@ import './globals.css';
 import { getLocale, getMessages } from '@/lib/i18n';
 import { LocaleProvider } from '@/components/providers/locale-provider';
 import { LocaleSwitcher } from '@/components/ui/locale-switcher';
+import { ThemeProvider } from '@/components/providers/theme-provider';
+
+const THEME_FLICKER_SCRIPT = `(function(){try{var s=localStorage.getItem('winemine.theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s);}}catch(e){}})();`;
 
 const GA_ID = 'G-7V8ZDT0TYX';
 
@@ -51,8 +54,10 @@ export default async function RootLayout({
   const messages = await getMessages(locale);
 
   return (
-    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`}>
+    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`} style={{ colorScheme: 'light dark' }}>
       <head>
+        <meta name="color-scheme" content="light dark" />
+        <script dangerouslySetInnerHTML={{ __html: THEME_FLICKER_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -62,10 +67,12 @@ export default async function RootLayout({
       </head>
       {/* inter.className 제거 — globals.css의 Noto Sans KR 폰트 스택이 적용되도록 */}
       <body suppressHydrationWarning>
-        <LocaleProvider locale={locale} messages={messages}>
-          <LocaleSwitcher />
-          {children}
-        </LocaleProvider>
+        <ThemeProvider>
+          <LocaleProvider locale={locale} messages={messages}>
+            <LocaleSwitcher />
+            {children}
+          </LocaleProvider>
+        </ThemeProvider>
 
         {/* Google Analytics */}
         <Script

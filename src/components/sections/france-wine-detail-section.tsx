@@ -77,7 +77,7 @@ function sortWines(wines: Wine[], by: 'recent' | 'rating' | 'vintage'): Wine[] {
 }
 
 // ── SVG Components ─────────────────────────────────────────────────────────
-function WineGlassIcon({ filled, size = 11, color = GOLD, dim = 'rgba(255,255,255,0.18)' }: {
+function WineGlassIcon({ filled, size = 11, color = GOLD, dim = 'var(--overlay-medium)' }: {
   filled: boolean; size?: number; color?: string; dim?: string;
 }) {
   const c = filled ? color : dim;
@@ -130,17 +130,17 @@ function WineRowA({ wine }: { wine: Wine }) {
   const allWines = [...messages.wines.bordeaux, ...messages.wines.meursault, ...messages.wines.champagne];
   const wineT = allWines.find(w => w.id === wine.id);
   return (
-    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'var(--overlay-soft)', borderRadius: 16, border: '1px solid var(--color-border-soft)' }}>
       <div style={{ width: 56, height: 110, borderRadius: 8, flexShrink: 0, background: 'radial-gradient(ellipse at top, transparent 60%, rgba(0,0,0,0.4) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <BottleSilhouette wine={wine} width={44} height={105} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 17, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.2px' }}>{wine.name}</div>
+        <div style={{ fontSize: 17, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.15, letterSpacing: '-0.2px' }}>{wine.name}</div>
         <div style={{ fontSize: 10, color: GOLD, letterSpacing: '0.5px', textTransform: 'uppercase' as const, fontWeight: 500 }}>{wine.appellation} · {wine.vintage > 0 ? wine.vintage : 'NV'}</div>
-        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wineT?.note ?? wine.note}</div>
+        <div style={{ fontSize: 11.5, color: 'var(--overlay-strong)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wineT?.note ?? wine.note}</div>
         <div style={{ marginTop: 'auto', paddingTop: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <WineGlassRating value={wine.rating} size={9} color={GOLD} gap={2} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{wine.drankAt}</span>
+          <span style={{ fontSize: 11, color: 'var(--overlay-strong)' }}>{wine.drankAt}</span>
         </div>
       </div>
     </div>
@@ -152,9 +152,9 @@ function InteractiveRegionLabel({ korName, count, featured, selected, onClick }:
   korName: string; count: number; featured?: boolean; selected: boolean; onClick: () => void;
 }) {
   const { messages } = useLocale();
-  const border = selected ? GOLD : 'rgba(255,255,255,0.20)';
+  const border = selected ? GOLD : 'var(--overlay-medium)';
   const sw = selected ? 1.8 : 0.8;
-  const bg = selected ? 'rgba(4,1,10,0.95)' : 'rgba(4,1,10,0.80)';
+  const bg = selected ? 'var(--overlay-strong)' : 'var(--overlay-strong)';
   const w = featured ? 92 : 76;
   const h = featured ? 44 : 38;
   const x = -w / 2;
@@ -192,13 +192,13 @@ function InteractiveRegionLabel({ korName, count, featured, selected, onClick }:
 
       {/* Region name */}
       <text textAnchor="middle" y={featured ? -5 : -4}
-        style={{ fill: selected ? GOLD : '#F5F0E8', fontSize: featured ? 12 : 10, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
+        style={{ fill: selected ? GOLD : 'var(--color-text-primary)', fontSize: featured ? 12 : 10, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
         {featured ? `* ${korName}` : korName}
       </text>
 
       {/* Count */}
       <text textAnchor="middle" y={featured ? 12 : 11}
-        style={{ fill: selected ? GOLD : '#C9A84C', fontSize: featured ? 14 : 12, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
+        style={{ fill: selected ? GOLD : 'var(--color-gold)', fontSize: featured ? 14 : 12, fontFamily: 'Inter,sans-serif', fontWeight: 700 } as React.CSSProperties}>
         {count}{messages.franceWineDetail.bottleUnit}
       </text>
     </motion.g>
@@ -238,11 +238,11 @@ function StaticFranceMap({ selectedRegion, onRegionClick }: {
             const regionKey = CLICKABLE_DEPTS[code];
             const fill = STATIC_FILL[code];
             const isSelected = code === selectedRegion;
-            const fillColor = fill ? '#D42040' : '#1C0838';
+            const fillColor = fill ? '#D42040' : 'var(--color-map-inactive)';
             const fillOpacity = fill ? fill.opacity : 1;
             const stroke = fill
               ? (isSelected ? GOLD : '#5A1028')
-              : '#3A1068';
+              : 'var(--color-map-stroke)';
             const strokeWidth = isSelected ? 1.5 : 0.8;
 
             return (
@@ -305,13 +305,13 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
 
   return (
     <>
-      <div style={{ padding: '14px 20px 12px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ padding: '14px 20px 12px', flexShrink: 0, borderBottom: '1px solid var(--color-border-soft)' }}>
         <AnimatePresence mode="wait">
           <motion.div key={selectedRegion}
             initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 10 }}>
-              <span style={{ fontSize: 24, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#fff', letterSpacing: '-0.3px' }}>
+              <span style={{ fontSize: 24, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: 'var(--color-text-primary)', letterSpacing: '-0.3px' }}>
                 {korName}
               </span>
               {meta && <span style={{ fontSize: 13, fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: 'italic', color: 'rgba(255,200,150,0.55)' }}>{meta.en}</span>}
@@ -325,12 +325,12 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
                   null,
                   { label: messages.franceWineDetail.metaLabels.top, value: meta.top, serif: true },
                 ].map((item, i) => {
-                  if (!item) return <div key={i} style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.08)' }} />;
+                  if (!item) return <div key={i} style={{ width: 1, height: 24, background: 'var(--overlay-medium)' }} />;
                   return (
                     <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.6px', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.4)' }}>{item.label}</span>
+                      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.6px', textTransform: 'uppercase' as const, color: 'var(--overlay-strong)' }}>{item.label}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <span style={{ fontSize: 13, fontWeight: item.serif ? 400 : 600, color: '#fff', fontFamily: item.serif ? "'Cormorant Garamond',Georgia,serif" : undefined, fontStyle: item.serif ? 'italic' : undefined }}>{item.value}</span>
+                        <span style={{ fontSize: 13, fontWeight: item.serif ? 400 : 600, color: 'var(--color-text-primary)', fontFamily: item.serif ? "'Cormorant Garamond',Georgia,serif" : undefined, fontStyle: item.serif ? 'italic' : undefined }}>{item.value}</span>
                         {item.glass && <WineGlassIcon filled size={10} color={GOLD} />}
                       </div>
                     </div>
@@ -342,7 +342,7 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
         </AnimatePresence>
       </div>
 
-      <div style={{ padding: '8px 20px 8px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+      <div style={{ padding: '8px 20px 8px', borderBottom: '1px solid var(--overlay-soft)', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
         {(['recent', 'rating', 'vintage'] as const).map(tab => {
           const labels = { recent: messages.franceWineDetail.sortLabels.recent, rating: messages.franceWineDetail.sortLabels.rating, vintage: messages.franceWineDetail.sortLabels.vintage };
           const active = sortBy === tab;
@@ -350,14 +350,14 @@ function WineListContent({ selectedRegion, sortBy, setSortBy }: {
             <button key={tab} onClick={() => setSortBy(tab)} style={{
               padding: '5px 14px', borderRadius: 9999, border: 'none', cursor: 'pointer',
               background: active ? GOLD : 'transparent',
-              color: active ? '#1a0d24' : 'rgba(255,255,255,0.55)',
+              color: active ? '#1a0d24' : 'var(--overlay-strong)',
               fontSize: 12, fontWeight: 500, fontFamily: 'inherit', transition: 'all 150ms',
             }}>
               {labels[tab]}
             </button>
           );
         })}
-        <span style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{wines.length}</span>
+        <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--overlay-strong)' }}>{wines.length}</span>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '10px 16px 24px' }}>
@@ -385,9 +385,9 @@ function RegionTab({ regionKey, selectedRegion, onSelect }: {
   return (
     <button onClick={() => onSelect(regionKey)} style={{
       padding: '6px 14px', borderRadius: 9999, cursor: 'pointer',
-      background: active ? 'rgba(240,200,118,0.12)' : 'rgba(255,255,255,0.04)',
-      border: `1px solid ${active ? 'rgba(240,200,118,0.45)' : 'rgba(255,255,255,0.08)'}`,
-      color: active ? GOLD : '#9B8B7A',
+      background: active ? 'rgba(240,200,118,0.12)' : 'var(--overlay-soft)',
+      border: `1px solid ${active ? 'rgba(240,200,118,0.45)' : 'var(--overlay-medium)'}`,
+      color: active ? GOLD : 'var(--color-text-muted)',
       fontSize: 13, fontWeight: 600, fontFamily: 'inherit', transition: 'all 200ms', whiteSpace: 'nowrap' as const,
     }}>
       {tabName} <span style={{ fontSize: 11, opacity: 0.7 }}>{meta.count}</span>
@@ -458,7 +458,7 @@ function MobileAlwaysSheet({ selectedRegion, onSelectRegion, visible }: {
         padding: '12px 0 8px', cursor: 'grab', display: 'flex',
         justifyContent: 'center', flexShrink: 0, touchAction: 'none',
       }}>
-        <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.30)' }} />
+        <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--overlay-strong)' }} />
       </div>
 
       {/* Region tabs */}
@@ -486,13 +486,13 @@ function DesktopWinePanel({ selectedRegion, onSelectRegion, visible }: {
       style={{
         position: 'absolute', top: '10%', right: '3vw',
         width: 'clamp(220px,28vw,320px)', maxHeight: '80vh', zIndex: 20,
-        background: 'rgba(5,2,14,0.92)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+        background: 'var(--overlay-strong)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
         border: `1px solid rgba(240,200,118,0.22)`, borderRadius: 16,
         overflow: 'hidden', display: 'flex', flexDirection: 'column',
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <div style={{ padding: '14px 16px 10px', display: 'flex', gap: 6, flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)', flexWrap: 'wrap' }}>
+      <div style={{ padding: '14px 16px 10px', display: 'flex', gap: 6, flexShrink: 0, borderBottom: '1px solid var(--color-border-soft)', flexWrap: 'wrap' }}>
         {['33', '21', '51'].map(key => (
           <RegionTab key={key} regionKey={key} selectedRegion={selectedRegion} onSelect={onSelectRegion} />
         ))}
@@ -529,14 +529,14 @@ export default function FranceWineDetailSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: '#04010A' }}>
+    <section ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: 'var(--color-map-bg)' }}>
       {/* Title */}
       <div style={{
         position: 'absolute', top: 'clamp(14px,2.5vh,28px)', left: '50%', transform: 'translateX(-50%)',
         textAlign: 'center', zIndex: 10, pointerEvents: 'none', whiteSpace: 'nowrap',
       }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 6 }}>{messages.franceWineDetail.sectionLabel}</div>
-        <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: '#F5F0E8' }}>{messages.franceWineDetail.heading}</h2>
+        <div style={{ fontSize: 9, letterSpacing: '0.28em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 6 }}>{messages.franceWineDetail.sectionLabel}</div>
+        <h2 style={{ fontFamily: 'var(--font-playfair),Georgia,serif', fontSize: 'clamp(18px,3vw,32px)', fontWeight: 400, color: 'var(--color-text-primary)' }}>{messages.franceWineDetail.heading}</h2>
       </div>
 
       {/* Map */}
@@ -548,7 +548,7 @@ export default function FranceWineDetailSection() {
       </div>
 
       {/* Vignette */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, rgba(4,1,10,0.88) 100%)' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, var(--overlay-strong) 100%)' }} />
 
       {isMobile && <MobileAlwaysSheet selectedRegion={selectedRegion} onSelectRegion={setSelectedRegion} visible={panelVisible} />}
       {!isMobile && <DesktopWinePanel selectedRegion={selectedRegion} onSelectRegion={setSelectedRegion} visible={panelVisible} />}

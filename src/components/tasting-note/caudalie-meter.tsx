@@ -12,10 +12,10 @@ import {
   type FinishLength,
 } from '@/lib/tasting-note-lexicon';
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const MUTED = '#9B8B7A';
-const DIM = '#4A3D56';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const MUTED = 'var(--color-text-muted)';
+const DIM = 'var(--color-text-disabled)';
 
 const RING_SIZE = 220;
 const RING_R = 96;
@@ -91,7 +91,7 @@ export default function CaudalieMeter({ caudalies, onChange }: Props) {
             cy={RING_SIZE / 2}
             r={RING_R}
             fill="none"
-            stroke="#2D1540"
+            stroke="var(--color-border)"
             strokeWidth="8"
           />
           <circle
@@ -117,7 +117,7 @@ export default function CaudalieMeter({ caudalies, onChange }: Props) {
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            color: '#F5F0E8',
+            color: 'var(--color-text-primary)',
             pointerEvents: 'none',
           }}
         >
@@ -143,7 +143,7 @@ export default function CaudalieMeter({ caudalies, onChange }: Props) {
             style={{
               padding: '10px 20px',
               background: WINE_RED,
-              color: '#F5F0E8',
+              color: 'var(--color-text-primary)',
               border: 'none',
               borderRadius: 24,
               fontSize: 13,
@@ -161,7 +161,7 @@ export default function CaudalieMeter({ caudalies, onChange }: Props) {
             style={{
               padding: '10px 20px',
               background: GOLD,
-              color: '#1A0A1E',
+              color: 'var(--color-bg-map)',
               border: 'none',
               borderRadius: 24,
               fontSize: 13,

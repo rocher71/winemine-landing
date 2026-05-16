@@ -1,30 +1,162 @@
 @import "tailwindcss";
 
 :root {
+  /* ── Brand (mode-invariant) ── */
   --color-wine-red: #8B1A2A;
   --color-wine-red-hover: #A02030;
   --color-gold: #C9A84C;
+  --color-gold-soft: #B08D57;
+  --color-gold-bright: #E8C97A;
   --color-cream: #F5F0E8;
+  --color-error: #EF4444;
+
+  /* ── Light mode (default) — White-wine concept ── */
+  --color-bg-deepest: #FBF7F0;          /* primary background */
+  --color-bg-deep: #F5EFE3;             /* alternating section background */
+  --color-bg-surface: #FFFBF2;          /* modal / card surface */
+  --color-bg-map: #EAE0CC;              /* map base / input background */
+  --color-bg-input: rgba(245, 239, 227, 0.6);
+  --color-surface: var(--color-bg-surface);
+
+  --color-text-primary: #2A1F12;        /* titles & body */
+  --color-text-secondary: #5A4830;
+  --color-text-muted: #8B7A60;
+  --color-text-disabled: #B8A88E;
+
+  --color-border: rgba(201, 168, 76, 0.30);
+  --color-border-soft: rgba(42, 31, 18, 0.10);
+  --color-border-active: var(--color-gold);
+
+  --overlay-soft: rgba(42, 31, 18, 0.04);
+  --overlay-medium: rgba(42, 31, 18, 0.08);
+  --overlay-strong: rgba(42, 31, 18, 0.16);
+
+  /* Map-specific tokens (deep map fills) */
+  --color-map-bg: #F0E7D2;
+  --color-map-inactive: #E0D2B5;
+  --color-map-stroke: #C9B894;
+
+  /* Gold accent translucent surfaces — for chips/cards/badges that need a soft gold wash.
+     Light mode uses higher alpha so the gold tint stays visible on cream background. */
+  --color-gold-tint-faint: rgba(201, 168, 76, 0.18);
+  --color-gold-tint-soft:  rgba(201, 168, 76, 0.28);
+  --color-gold-tint-med:   rgba(201, 168, 76, 0.45);
+  --color-gold-tint-strong:rgba(201, 168, 76, 0.65);
+
+  /* Mode-invariant paper / ink (wine label, tasting note paper, etc.) */
+  --color-paper: #F5F0E8;
+  --color-ink: #1A0A1E;
+  --color-ink-dim: rgba(26, 10, 30, 0.42);
+  --color-ink-very-dim: rgba(26, 10, 30, 0.18);
+  --color-ink-line: rgba(26, 10, 30, 0.10);
+
+  /* Modal backdrop — heavy obscure in both modes */
+  --color-modal-backdrop: rgba(42, 31, 18, 0.55);
+
+  /* Store buttons — dark pill on light background for contrast */
+  --btn-store-bg: #000000;
+  --btn-store-bg-hover: #1a1a1a;
+  --btn-store-border: #000000;
+  --btn-store-color: #F5F0E8;
+
+  --color-scheme-name: 'light';
+}
+
+/* System dark mode — applied only when user has not explicitly chosen a theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg-deepest: #05020A;
+    --color-bg-deep: #0A050F;
+    --color-bg-surface: #0F0718;
+    --color-bg-map: #1A0A1E;
+    --color-bg-input: rgba(26, 10, 30, 0.6);
+    --color-surface: var(--color-bg-surface);
+
+    --color-text-primary: #F5F0E8;
+    --color-text-secondary: #D4C5B0;
+    --color-text-muted: #9B8B7A;
+    --color-text-disabled: #4A3D56;
+
+    --color-border: #2D1540;
+    --color-border-soft: rgba(255, 255, 255, 0.06);
+    --color-border-active: var(--color-wine-red);
+
+    --overlay-soft: rgba(255, 255, 255, 0.04);
+    --overlay-medium: rgba(255, 255, 255, 0.08);
+    --overlay-strong: rgba(255, 255, 255, 0.16);
+
+    --color-map-bg: #0d0810;
+    --color-map-inactive: #1A0A2E;
+    --color-map-stroke: #2A0C58;
+
+    --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
+    --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
+    --color-gold-tint-med:   rgba(240, 200, 118, 0.30);
+    --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
+
+    --color-modal-backdrop: rgba(5, 2, 8, 0.85);
+
+    /* Store buttons — glass overlay on dark background */
+    --btn-store-bg: rgba(255, 255, 255, 0.10);
+    --btn-store-bg-hover: rgba(255, 255, 255, 0.16);
+    --btn-store-border: rgba(255, 255, 255, 0.15);
+    --btn-store-color: #F5F0E8;
+
+    --color-scheme-name: 'dark';
+  }
+}
+
+/* Manual dark override — applied regardless of system preference */
+:root[data-theme="dark"] {
   --color-bg-deepest: #05020A;
   --color-bg-deep: #0A050F;
+  --color-bg-surface: #0F0718;
   --color-bg-map: #1A0A1E;
-  --color-surface: #0F0718;
-  --color-border: #2D1540;
+  --color-bg-input: rgba(26, 10, 30, 0.6);
+  --color-surface: var(--color-bg-surface);
+
   --color-text-primary: #F5F0E8;
   --color-text-secondary: #D4C5B0;
   --color-text-muted: #9B8B7A;
   --color-text-disabled: #4A3D56;
-  --color-error: #EF4444;
+
+  --color-border: #2D1540;
+  --color-border-soft: rgba(255, 255, 255, 0.06);
+  --color-border-active: var(--color-wine-red);
+
+  --overlay-soft: rgba(255, 255, 255, 0.04);
+  --overlay-medium: rgba(255, 255, 255, 0.08);
+  --overlay-strong: rgba(255, 255, 255, 0.16);
+
+  --color-map-bg: #0d0810;
+  --color-map-inactive: #1A0A2E;
+  --color-map-stroke: #2A0C58;
+
+  --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
+  --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
+  --color-gold-tint-med:   rgba(240, 200, 118, 0.30);
+  --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
+
+  --color-modal-backdrop: rgba(5, 2, 8, 0.85);
+
+  /* Store buttons — glass overlay on dark background */
+  --btn-store-bg: rgba(255, 255, 255, 0.10);
+  --btn-store-bg-hover: rgba(255, 255, 255, 0.16);
+  --btn-store-border: rgba(255, 255, 255, 0.15);
+  --btn-store-color: #F5F0E8;
+
+  --color-scheme-name: 'dark';
+}
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {

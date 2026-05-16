@@ -8,9 +8,9 @@ import { useLocale } from '@/components/providers/locale-provider';
 import { WarningTriangleIcon, CheckIcon, ArrowUpIcon, ArrowDownIcon } from '@/components/icons/wine-icons';
 import { FAULTS, type Fault } from '@/lib/tasting-note-lexicon';
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const MUTED = '#9B8B7A';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const MUTED = 'var(--color-text-muted)';
 
 interface Props {
   selected: Fault[];
@@ -21,7 +21,7 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ background: 'rgba(15,7,24,0.45)', border: '1px solid rgba(201,168,76,0.16)', borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: 'var(--color-bg-surface)', border: '1px solid rgba(201,168,76,0.16)', borderRadius: 12, overflow: 'hidden' }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
@@ -30,7 +30,7 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
           padding: '14px 18px',
           background: 'transparent',
           border: 'none',
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -75,10 +75,10 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
                   style={{
                     textAlign: 'left',
                     padding: 12,
-                    background: isOn ? 'rgba(139,26,42,0.18)' : 'rgba(15,7,24,0.6)',
+                    background: isOn ? 'rgba(139,26,42,0.18)' : 'var(--color-bg-surface)',
                     border: `1px solid ${isOn ? GOLD : 'rgba(245,240,232,0.08)'}`,
                     borderRadius: 8,
-                    color: '#F5F0E8',
+                    color: 'var(--color-text-primary)',
                     cursor: 'pointer',
                     fontFamily: 'inherit',
                     transition: 'background 200ms ease, border-color 200ms ease',
@@ -95,7 +95,7 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: '#1A0A1E',
+                        color: 'var(--color-bg-map)',
                       }}
                       aria-hidden
                     >
@@ -104,8 +104,8 @@ export default function FaultChecklist({ selected, onToggle }: Props) {
                     <span style={{ fontSize: 13, fontWeight: 600 }}>{f.ko}</span>
                   </div>
                   <div style={{ fontSize: 10, color: MUTED, marginLeft: 24, lineHeight: 1.4 }}>
-                    <div><strong style={{ color: '#D4C5B0' }}>Cause:</strong> {f.cause}</div>
-                    <div><strong style={{ color: '#D4C5B0' }}>Threshold:</strong> {f.threshold}</div>
+                    <div><strong style={{ color: 'var(--color-text-secondary)' }}>Cause:</strong> {f.cause}</div>
+                    <div><strong style={{ color: 'var(--color-text-secondary)' }}>Threshold:</strong> {f.threshold}</div>
                     <div style={{ marginTop: 4 }}>{f.aroma}</div>
                   </div>
                 </button>

@@ -32,12 +32,12 @@ import {
 
 type IconComponent = ComponentType<IconProps>;
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const CREAM = '#F5F0E8';
-const MUTED = '#9B8B7A';
-const BORDER = '#2D1540';
-const SURFACE = 'rgba(15,7,24,0.6)';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const CREAM = 'var(--color-text-primary)';
+const MUTED = 'var(--color-text-muted)';
+const BORDER = 'var(--color-border)';
+const SURFACE = 'var(--color-bg-surface)';
 
 type Level = 'low' | 'mid' | 'high';
 type Impression = 'love' | 'ok' | 'meh';
@@ -261,10 +261,10 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   transition: 'background 200ms ease, border-color 200ms ease',
                 }}
               >
-                <span aria-hidden style={{ display: 'inline-flex', color: active ? WINE_RED : '#9B8B7A' }}>
+                <span aria-hidden style={{ display: 'inline-flex', color: active ? WINE_RED : 'var(--color-text-muted)' }}>
                   <c.Icon size={28} />
                 </span>
-                <span style={{ fontSize: 13, fontWeight: 600, color: active ? CREAM : '#D4C5B0' }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: active ? CREAM : 'var(--color-text-secondary)' }}>
                   {t(`tastingNote.beginner.aromaCard.${c.id}`)}
                 </span>
               </button>
@@ -302,7 +302,7 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                     : opt === 'medium' ? <ClockIcon size={20} />
                     : <WineGlassRedIcon size={20} />}
                 </span>
-                <span style={{ fontSize: 12, fontWeight: 600, color: active ? CREAM : '#D4C5B0' }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: active ? CREAM : 'var(--color-text-secondary)' }}>
                   {t(`tastingNote.beginner.finishOption.${opt}`)}
                 </span>
               </button>
@@ -364,7 +364,7 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
             width: '100%',
             marginTop: 12,
             padding: 12,
-            background: '#1A0A1E',
+            background: 'var(--color-bg-map)',
             color: CREAM,
             border: `1px solid ${BORDER}`,
             borderRadius: 10,
@@ -436,7 +436,7 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
               borderRadius: 12,
               fontSize: 12,
               lineHeight: 1.6,
-              color: '#D4C5B0',
+              color: 'var(--color-text-secondary)',
             }}
           >
             <TipRow titleKey="tastingNote.beginner.tasteLabel.sweetness" bodyKey="tastingNote.beginner.tip.sweetness" />
@@ -462,7 +462,7 @@ function Card({ children }: { children: React.ReactNode }) {
     <div
       style={{
         padding: 22,
-        background: 'rgba(15,7,24,0.45)',
+        background: 'var(--color-bg-surface)',
         border: `1px solid ${BORDER}`,
         borderRadius: 16,
         boxShadow: '0 4px 16px rgba(0,0,0,0.32)',
@@ -514,7 +514,7 @@ function ThreeWay<T extends string>({
               style={{
                 padding: '12px 10px',
                 background: active ? GOLD : 'transparent',
-                color: active ? '#1A0A1E' : '#D4C5B0',
+                color: active ? 'var(--color-bg-map)' : 'var(--color-text-secondary)',
                 border: `1.5px solid ${active ? GOLD : BORDER}`,
                 borderRadius: 10,
                 cursor: 'pointer',
@@ -646,10 +646,10 @@ function SummaryCard({
           style={{
             margin: 0,
             padding: '12px 14px',
-            background: 'rgba(15,7,24,0.6)',
+            background: 'var(--color-bg-surface)',
             borderRadius: 10,
             fontSize: 13,
-            color: '#D4C5B0',
+            color: 'var(--color-text-secondary)',
             fontStyle: 'italic',
             lineHeight: 1.5,
           }}
@@ -666,7 +666,7 @@ function Tag({ children, accent = false }: { children: React.ReactNode; accent?:
     <span
       style={{
         padding: '4px 10px',
-        background: accent ? 'rgba(139,26,42,0.18)' : 'rgba(15,7,24,0.6)',
+        background: accent ? 'rgba(139,26,42,0.18)' : 'var(--color-bg-surface)',
         border: `1px solid ${accent ? WINE_RED : BORDER}`,
         borderRadius: 999,
         fontSize: 11,

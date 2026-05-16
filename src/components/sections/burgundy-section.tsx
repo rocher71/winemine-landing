@@ -14,7 +14,8 @@ import {
 } from '@/components/icons/wine-icons';
 
 const DEPT_URL = '/france-departments.json';
-const GOLD = '#f0c876';
+// 모드 무관 골드. globals.css `--color-gold` (#C9A84C) — 두 모드에서 동일한 액센트로 사용.
+const GOLD = 'var(--color-gold)';
 const BURGUNDY_DEPTS = new Set(['21', '71', '89', '58', '01', '70', '39']);
 
 type Cru = 'Grand Cru' | '1er Cru' | 'Village' | 'Régional';
@@ -311,7 +312,7 @@ function CountBadge({ n, x, y }: { n: number; x: number; y: number }) {
   if (n <= 0) return null;
   return (
     <g transform={`translate(${x},${y})`} style={{ pointerEvents: 'none' }}>
-      <circle cx={0} cy={0} r={3.6} fill="#D42040" stroke="#04010A" strokeWidth={0.7} />
+      <circle cx={0} cy={0} r={3.6} fill="#D42040" stroke="var(--color-map-bg)" strokeWidth={0.7} />
       <text textAnchor="middle" y={1.3}
         style={{ fill: '#fff', fontSize: 4.2, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
         {n}
@@ -355,7 +356,7 @@ function MapPin({ id, color, hovered, ring, count, onHover, onClick }: {
       )}
       <circle cx={0} cy={0} r={3.2}
         fill={color} fillOpacity={hovered ? 1 : 0.7}
-        stroke="#04010A" strokeWidth={0.6}
+        stroke="var(--color-map-bg)" strokeWidth={0.6}
       />
       {count !== undefined && count > 0 && (
         <CountBadge n={count} x={4.2} y={-4.2} />
@@ -366,7 +367,7 @@ function MapPin({ id, color, hovered, ring, count, onHover, onClick }: {
 
 // ── Right-panel item cards ──────────────────────────────────────────────────
 
-function WineGlassIcon({ filled, size = 9, color = GOLD, dim = 'rgba(255,255,255,0.18)' }: {
+function WineGlassIcon({ filled, size = 9, color = GOLD, dim = 'var(--overlay-medium)' }: {
   filled: boolean; size?: number; color?: string; dim?: string;
 }) {
   const c = filled ? color : dim;
@@ -402,7 +403,7 @@ function BottleSilhouette({ wine, width = 44, height = 105 }: { wine: Wine; widt
       style="detailed"
       glass={wine.color}
       liquid={wine.color}
-      foil={wine.wineType === 'white' ? '#F5F0E8' : wine.wineType === 'rosé' ? '#F5F0E8' : '#8B1A2A'}
+      foil={wine.wineType === 'white' ? '#C9A84C' : wine.wineType === 'rosé' ? '#F5F0E8' : '#5b1424'}
       label="#F5F0E8"
       labelText={BURGUNDY_LABEL_FG[wine.wineType]}
       typeName={wine.label}
@@ -416,21 +417,21 @@ function BottleSilhouette({ wine, width = 44, height = 105 }: { wine: Wine; widt
 
 function WineRow({ wine }: { wine: Wine }) {
   return (
-    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+    <div style={{ display: 'flex', gap: 12, padding: 12, background: 'var(--color-bg-surface)', borderRadius: 16, border: '1px solid var(--color-border)' }}>
       <div style={{ width: 56, height: 110, borderRadius: 8, flexShrink: 0, background: 'radial-gradient(ellipse at top, transparent 60%, rgba(0,0,0,0.4) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <BottleSilhouette wine={wine} width={44} height={105} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <CruChip cru={wine.cru} size="xs" />
-          <span style={{ fontSize: 16, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.2px' }}>{wine.nameKo}</span>
+          <span style={{ fontSize: 16, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: 'var(--color-text-primary)', lineHeight: 1.15, letterSpacing: '-0.2px' }}>{wine.nameKo}</span>
         </div>
-        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', fontFamily: 'Georgia,serif', fontStyle: 'italic' as const, lineHeight: 1.2 }}>{wine.name}</div>
+        <div style={{ fontSize: 10, color: 'var(--overlay-strong)', fontFamily: 'Georgia,serif', fontStyle: 'italic' as const, lineHeight: 1.2 }}>{wine.name}</div>
         <div style={{ fontSize: 9.5, color: GOLD, letterSpacing: '0.5px', textTransform: 'uppercase' as const, fontWeight: 500, marginTop: 1 }}>{wine.villageKo} · {wine.vintage > 0 ? wine.vintage : 'NV'}</div>
-        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wine.note}</div>
+        <div style={{ fontSize: 11, color: 'var(--overlay-strong)', lineHeight: 1.45, marginTop: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties}>{wine.note}</div>
         <div style={{ marginTop: 'auto', paddingTop: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6 }}>
           <WineGlassRating value={wine.rating} size={8} color={GOLD} gap={2} />
-          <span style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.4)' }}>{wine.date}</span>
+          <span style={{ fontSize: 10.5, color: 'var(--overlay-strong)' }}>{wine.date}</span>
         </div>
       </div>
     </div>
@@ -568,13 +569,13 @@ function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
                   const code = geo.properties.code as string;
                   const isBurgundy = BURGUNDY_DEPTS.has(code);
                   const isBeaujolais = code === '69';
-                  const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : '#180830';
+                  const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : 'var(--color-map-inactive)';
                   const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
                   return (
                     <Geography key={geo.rsmKey} geography={geo} style={{
-                      default: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#5A1028' : '#28085A', strokeWidth: (isBurgundy ? 0.8 : 0.4) * cs, outline: 'none', transition: 'fill-opacity 300ms' },
-                      hover:   { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#8B1A2A' : '#28085A', strokeWidth: (isBurgundy ? 1.0 : 0.4) * cs, outline: 'none' },
-                      pressed: { fill: fillColor, fillOpacity, stroke: '#28085A',                          strokeWidth: 0.4 * cs,                       outline: 'none' },
+                      default: { fill: fillColor, fillOpacity, stroke: isBurgundy ? '#5A1028' : 'var(--color-map-stroke)', strokeWidth: (isBurgundy ? 0.8 : 0.4) * cs, outline: 'none', transition: 'fill-opacity 300ms' },
+                      hover:   { fill: fillColor, fillOpacity, stroke: isBurgundy ? 'var(--color-wine-red)' : 'var(--color-map-stroke)', strokeWidth: (isBurgundy ? 1.0 : 0.4) * cs, outline: 'none' },
+                      pressed: { fill: fillColor, fillOpacity, stroke: 'var(--color-map-stroke)',                          strokeWidth: 0.4 * cs,                       outline: 'none' },
                     }} />
                   );
                 })}
@@ -590,7 +591,7 @@ function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
                       <g transform={`scale(${cs})`} style={{ pointerEvents: 'none' }}>
                         <text textAnchor="middle" dominantBaseline="middle"
                           style={{
-                            fill: '#FFFFFF', fillOpacity: 0.45,
+                            fill: 'var(--color-text-primary)', fillOpacity: 0.45,
                             fontSize: 4.5, fontFamily: 'Georgia, serif',
                             fontWeight: 500, letterSpacing: '0.08em',
                           } as React.CSSProperties}>
@@ -642,23 +643,23 @@ function CoteCard({ data, onClick, colorFilter }: {
   return (
     <button onClick={onClick} style={{
       padding: '14px 16px', textAlign: 'left' as const, cursor: 'pointer',
-      background: 'rgba(255,255,255,0.03)',
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 12, color: '#F5F0E8',
+      background: 'var(--color-bg-surface)',
+      border: '1px solid var(--color-border)',
+      borderRadius: 12, color: 'var(--color-text-primary)',
       transition: 'all 200ms', fontFamily: 'inherit', display: 'block', width: '100%',
     }}
-    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(240,200,118,0.3)'; }}
-    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-bg-deep)'; e.currentTarget.style.borderColor = 'var(--color-gold-tint-med)'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-bg-surface)'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
     >
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 18, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#F5F0E8' }}>{data.nameKo}</span>
-        <span style={{ fontSize: 11, color: '#7A6E5A', fontStyle: 'italic' as const }}>{data.id}</span>
+        <span style={{ fontSize: 18, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: 'var(--color-text-primary)' }}>{data.nameKo}</span>
+        <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontStyle: 'italic' as const }}>{data.id}</span>
         <span style={{ marginLeft: 'auto', fontSize: 10.5, color: GOLD, fontWeight: 700 }}>
           {wines.length}병 · 마을 {communes.length}개
         </span>
       </div>
-      <div style={{ fontSize: 11.5, color: '#9B8B7A', lineHeight: 1.5 }}>{data.character}</div>
-      <div style={{ marginTop: 8, fontSize: 10, color: '#6A5E4A' }}>› 마을 보기</div>
+      <div style={{ fontSize: 11.5, color: 'var(--color-text-muted)', lineHeight: 1.5 }}>{data.character}</div>
+      <div style={{ marginTop: 8, fontSize: 10, color: 'var(--color-text-muted)' }}>› 마을 보기</div>
     </button>
   );
 }
@@ -672,18 +673,18 @@ function CommuneCard({ data, onClick, colorFilter, active }: {
   return (
     <button onClick={onClick} style={{
       padding: '14px 16px', textAlign: 'left' as const, cursor: 'pointer',
-      background: active ? 'rgba(240,200,118,0.10)' : 'rgba(255,255,255,0.03)',
-      border: `1px solid ${active ? 'rgba(240,200,118,0.4)' : 'rgba(255,255,255,0.08)'}`,
-      borderRadius: 12, color: '#F5F0E8',
+      background: active ? 'var(--color-gold-tint-faint)' : 'var(--color-bg-surface)',
+      border: `1px solid ${active ? 'var(--color-gold-tint-med)' : 'var(--color-border)'}`,
+      borderRadius: 12, color: 'var(--color-text-primary)',
       transition: 'all 200ms', fontFamily: 'inherit', display: 'block', width: '100%',
     }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 16, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: '#F5F0E8' }}>{data.nameKo}</span>
+        <span style={{ fontSize: 16, fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 600, color: 'var(--color-text-primary)' }}>{data.nameKo}</span>
         {data.hasGrandCru && <span style={{ fontSize: 9, padding: '1px 5px', borderRadius: 9999, fontWeight: 800, background: CRU_META['Grand Cru'].bg, border: `1px solid ${CRU_META['Grand Cru'].border}`, color: CRU_META['Grand Cru'].color }}>GC</span>}
-        <span style={{ fontSize: 10.5, color: '#7A6E5A', fontStyle: 'italic' as const }}>{data.name}</span>
+        <span style={{ fontSize: 10.5, color: 'var(--color-text-muted)', fontStyle: 'italic' as const }}>{data.name}</span>
         <span style={{ marginLeft: 'auto', fontSize: 10.5, color: GOLD, fontWeight: 700 }}>{wines.length}병</span>
       </div>
-      <div style={{ fontSize: 11, color: '#9B8B7A', lineHeight: 1.45, marginBottom: 6 }}>{data.character}</div>
+      <div style={{ fontSize: 11, color: 'var(--color-text-muted)', lineHeight: 1.45, marginBottom: 6 }}>{data.character}</div>
       {data.notableNote && (
         <div style={{ fontSize: 10.5, color: GOLD, fontStyle: 'italic' as const, marginBottom: 6, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
           <span aria-hidden style={{ display: 'inline-flex' }}>
@@ -750,22 +751,22 @@ function Breadcrumb({ drill, onDrill }: {
         const last = i === crumbs.length - 1;
         return (
           <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            {i > 0 && <span style={{ color: '#4A3D56', fontSize: 11 }}>›</span>}
+            {i > 0 && <span style={{ color: 'var(--color-text-disabled)', fontSize: 11 }}>›</span>}
             {c.click && !last ? (
               <button
                 onClick={c.click}
                 style={{
                   background: 'transparent', border: 'none', cursor: 'pointer',
-                  color: '#D4C5B0', fontSize: 'inherit', fontFamily: 'inherit',
+                  color: 'var(--color-text-secondary)', fontSize: 'inherit', fontFamily: 'inherit',
                   padding: 0, fontWeight: 500,
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = GOLD)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#D4C5B0')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
               >
                 {c.label}
               </button>
             ) : (
-              <span style={{ color: last ? GOLD : '#D4C5B0', fontWeight: last ? 700 : 500 }}>{c.label}</span>
+              <span style={{ color: last ? GOLD : 'var(--color-text-secondary)', fontWeight: last ? 700 : 500 }}>{c.label}</span>
             )}
           </span>
         );
@@ -796,8 +797,8 @@ function MobileBreadcrumbChips({ drill, onDrill }: {
             <span key={i} style={{
               flexShrink: 0,
               padding: '6px 12px',
-              background: 'rgba(240,200,118,0.14)',
-              border: '1px solid rgba(240,200,118,0.5)',
+              background: 'var(--color-gold-tint-soft)',
+              border: '1px solid var(--color-gold-tint-strong)',
               borderRadius: 9999,
               color: GOLD,
               fontSize: 12.5, fontWeight: 700,
@@ -816,10 +817,10 @@ function MobileBreadcrumbChips({ drill, onDrill }: {
             style={{
               flexShrink: 0,
               padding: '6px 11px 6px 8px',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.16)',
+              background: 'var(--color-border-soft)',
+              border: '1px solid var(--overlay-medium)',
               borderRadius: 9999,
-              color: '#E4D8C4',
+              color: 'var(--color-text-secondary)',
               fontSize: 12.5, fontWeight: 500,
               fontFamily: 'inherit',
               cursor: clickable ? 'pointer' : 'default',
@@ -850,8 +851,8 @@ function ColorToggle({ value, onChange, mobile }: {
   return (
     <div style={{
       display: 'flex', gap: 3,
-      padding: 3, background: 'rgba(5,2,14,0.7)',
-      border: '1px solid rgba(255,255,255,0.08)',
+      padding: 3, background: 'var(--overlay-soft)',
+      border: '1px solid var(--color-border-soft)',
       borderRadius: 9999,
       width: '100%',
       justifyContent: 'space-between',
@@ -862,8 +863,8 @@ function ColorToggle({ value, onChange, mobile }: {
           <button key={o.v} onClick={() => onChange(o.v)} style={{
             padding: mobile ? '5px 10px' : '4px 8px',
             borderRadius: 9999, border: 'none', cursor: 'pointer',
-            background: active ? 'rgba(240,200,118,0.18)' : 'transparent',
-            color: active ? GOLD : '#9B8B7A',
+            background: active ? 'var(--color-bg-surface)' : 'transparent',
+            color: active ? GOLD : 'var(--color-text-muted)',
             fontSize: 11, fontWeight: active ? 700 : 500,
             letterSpacing: '0.02em',
             fontFamily: 'inherit',
@@ -930,7 +931,7 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
           const cm = COMMUNES.find(c => c.id === drill.communeId);
           if (allWines.length === 0) {
             return (
-              <div style={{ padding: 20, textAlign: 'center' as const, color: '#7A6E5A', fontSize: 12 }}>
+              <div style={{ padding: 20, textAlign: 'center' as const, color: 'var(--color-text-muted)', fontSize: 12 }}>
                 이 마을에서 마신 와인이 없습니다 (현재 색 필터 기준).
               </div>
             );
@@ -939,8 +940,8 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
             <>
               {cm?.notableNote && (
                 <div style={{
-                  padding: '10px 14px', background: 'rgba(240,200,118,0.08)',
-                  border: '1px solid rgba(240,200,118,0.3)', borderRadius: 12,
+                  padding: '10px 14px', background: 'var(--color-gold-tint-faint)',
+                  border: '1px solid var(--color-gold-tint-med)', borderRadius: 12,
                   fontSize: 11.5, color: GOLD, fontStyle: 'italic' as const,
                   display: 'flex', alignItems: 'center', gap: 6,
                 }}>
@@ -960,15 +961,15 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
                       onClick={() => onDrill({ kind: 'cru', coteId: drill.coteId, communeId: drill.communeId, cru })}
                       style={{
                         padding: '12px 14px', textAlign: 'left' as const, cursor: 'pointer',
-                        background: 'rgba(255,255,255,0.03)',
+                        background: 'var(--color-bg-surface)',
                         border: `1px solid ${CRU_META[cru].border}`,
-                        borderRadius: 12, color: '#F5F0E8',
+                        borderRadius: 12, color: 'var(--color-text-primary)',
                         transition: 'all 200ms', fontFamily: 'inherit',
                         display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                       }}
                     >
                       <CruChip cru={cru} />
-                      <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: '#F5F0E8', fontWeight: 600 }}>{CRU_META[cru].ko}</span>
+                      <span style={{ fontSize: 14, fontFamily: 'Georgia, serif', color: 'var(--color-text-primary)', fontWeight: 600 }}>{CRU_META[cru].ko}</span>
                       <span style={{ marginLeft: 'auto', fontSize: 11, color: CRU_META[cru].color, fontWeight: 700 }}>{n}병 ›</span>
                     </button>
                   </GuideGlow>
@@ -981,7 +982,7 @@ function PanelContent({ drill, colorFilter, onDrill, hoveredId, onHover }: {
         {drill.kind === 'cru' && (() => {
           const wines = applyColor((winesByCommune[drill.communeId] ?? []).filter(w => w.cru === drill.cru), colorFilter);
           if (wines.length === 0) {
-            return <div style={{ padding: 20, textAlign: 'center' as const, color: '#7A6E5A', fontSize: 12 }}>이 등급에서 마신 와인이 없습니다.</div>;
+            return <div style={{ padding: 20, textAlign: 'center' as const, color: 'var(--color-text-muted)', fontSize: 12 }}>이 등급에서 마신 와인이 없습니다.</div>;
           }
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1009,6 +1010,7 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -24 }}
       transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      className="burgundy-side-rail"
       style={{
         position: 'absolute', top: 'clamp(96px, 14vh, 160px)', left: 'clamp(16px, 3vw, 36px)',
         width: 'clamp(260px, 20vw, 300px)', zIndex: 25,
@@ -1016,27 +1018,53 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <div style={{
-        padding: '12px 14px', background: 'rgba(5,2,14,0.72)',
-        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12,
-      }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.32em', color: '#9B8B7A', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
+      <style jsx>{`
+        .burgundy-side-rail :global(.burgundy-side-card) {
+          padding: 14px 18px;
+          background: #FFFFFF;
+          border: 1px solid var(--color-gold-tint-strong);
+          border-radius: 18px;
+          box-shadow: 0 18px 48px rgba(42, 31, 18, 0.14);
+        }
+        .burgundy-side-rail :global(.burgundy-side-count) {
+          padding: 10px 16px;
+          font-size: 11px;
+          color: var(--color-text-secondary);
+          letter-spacing: 0.04em;
+          line-height: 1.5;
+          background: #FFFFFF;
+          border: 1px solid var(--color-gold-tint-strong);
+          border-radius: 14px;
+          box-shadow: 0 14px 36px rgba(42, 31, 18, 0.12);
+        }
+        :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-card),
+        :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-count) {
+          background: #0F0718;
+          border-color: rgba(45, 21, 64, 0.9);
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+        }
+        @media (prefers-color-scheme: dark) {
+          :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-card),
+          :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-count) {
+            background: #0F0718;
+            border-color: rgba(45, 21, 64, 0.9);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+          }
+        }
+      `}</style>
+      <div className="burgundy-side-card">
+        <div style={{ fontSize: 9, letterSpacing: '0.32em', color: 'var(--color-text-muted)', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
           현재 위치 / Drill
         </div>
         <Breadcrumb drill={drill} onDrill={onDrill} />
       </div>
-      <div style={{
-        padding: '12px 14px', background: 'rgba(5,2,14,0.72)',
-        backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12,
-      }}>
-        <div style={{ fontSize: 9, letterSpacing: '0.32em', color: '#9B8B7A', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
+      <div className="burgundy-side-card">
+        <div style={{ fontSize: 9, letterSpacing: '0.32em', color: 'var(--color-text-muted)', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
           색 필터 / Color
         </div>
         <ColorToggle value={colorFilter} onChange={onColor} />
       </div>
-      <div style={{ padding: '4px 12px', fontSize: 10, color: '#7A6E5A', letterSpacing: '0.04em', lineHeight: 1.5 }}>
+      <div className="burgundy-side-count">
         내가 마신 부르고뉴 <span style={{ color: GOLD, fontWeight: 700 }}>{WINES.length}병</span>
       </div>
     </motion.div>
@@ -1060,17 +1088,45 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : 24 }}
       transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+      className="burgundy-desktop-panel"
       style={{
         position: 'absolute', top: '8%', right: '3vw',
         width: 'clamp(300px,30vw,380px)', maxHeight: '84vh', zIndex: 20,
-        background: 'rgba(5,2,14,0.94)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(240,200,118,0.18)', borderRadius: 18,
+        borderRadius: 18,
         overflow: 'hidden', display: 'flex', flexDirection: 'column',
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <div style={{ padding: '14px 18px 10px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ fontSize: 10, color: '#9B8B7A', letterSpacing: '0.06em' }}>{groupLabel}</div>
+      <style jsx>{`
+        .burgundy-desktop-panel {
+          background: #FFFFFF;
+          border: 1px solid var(--color-gold-tint-strong);
+          box-shadow: 0 18px 48px rgba(42, 31, 18, 0.14);
+        }
+        .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
+          border-bottom: 1px solid var(--color-border);
+        }
+        :root[data-theme="dark"] .burgundy-desktop-panel {
+          background: #0F0718;
+          border-color: var(--color-gold-tint-soft);
+          box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+        }
+        :root[data-theme="dark"] .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
+          border-bottom-color: rgba(45, 21, 64, 0.9);
+        }
+        @media (prefers-color-scheme: dark) {
+          :root:not([data-theme="light"]) .burgundy-desktop-panel {
+            background: #0F0718;
+            border-color: var(--color-gold-tint-soft);
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+          }
+          :root:not([data-theme="light"]) .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
+            border-bottom-color: rgba(45, 21, 64, 0.9);
+          }
+        }
+      `}</style>
+      <div className="burgundy-desktop-panel__header" style={{ padding: '14px 18px 10px', flexShrink: 0 }}>
+        <div style={{ fontSize: 10, color: 'var(--color-text-muted)', letterSpacing: '0.06em' }}>{groupLabel}</div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px 20px' }}>
         <PanelContent drill={drill} colorFilter={colorFilter}
@@ -1118,25 +1174,35 @@ function MobileSheet({ drill, onDrill, colorFilter, onColor, hoveredId, onHover,
       initial={{ y: '110%' }}
       animate={{ y: visible ? 0 : '110%' }}
       transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+      className="burgundy-mobile-sheet"
       style={{
         position: 'absolute', left: 0, right: 0, bottom: 0,
         height: `${sheetH * 100}%`,
-        background: 'linear-gradient(180deg, rgba(28,18,42,0.98) 0%, rgba(15,8,25,0.99) 100%)',
         backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
         borderTopLeftRadius: 28, borderTopRightRadius: 28,
         boxShadow: '0 -8px 30px rgba(0,0,0,0.5)',
         zIndex: 30, display: 'flex', flexDirection: 'column', overflow: 'hidden',
       }}
     >
+      <style jsx>{`
+        .burgundy-mobile-sheet {
+          background: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-deepest) 100%);
+        }
+        @media (prefers-color-scheme: dark) {
+          .burgundy-mobile-sheet {
+            background: #05020A;
+          }
+        }
+      `}</style>
       <div ref={handleRef} style={{ padding: '10px 0 6px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0, touchAction: 'none' }}>
-        <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.28)' }} />
+        <div style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--overlay-strong)' }} />
       </div>
       {/* Chip 형태 breadcrumb + 색 토글 (시트 최상단 sticky) */}
       <div style={{
         flexShrink: 0,
         padding: '4px 12px 10px',
         display: 'flex', flexDirection: 'column', gap: 8,
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        borderBottom: '1px solid var(--color-border-soft)',
       }}>
         <MobileBreadcrumbChips drill={drill} onDrill={onDrill} />
         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -1181,7 +1247,7 @@ export default function BurgundySection() {
   const heading = t('burgundy.heading') || '꼬뜨에서 마을, 마을에서 등급으로 파고들기';
 
   return (
-    <section id="burgundy" ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: '#04010A' }}>
+    <section id="burgundy" ref={sectionRef} style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: 'var(--color-map-bg)' }}>
       {/* Map */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: isMobile ? '40%' : '100%' }}>
         <motion.div
@@ -1196,7 +1262,7 @@ export default function BurgundySection() {
       </div>
 
       {/* Vignette */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, rgba(4,1,10,0.9) 100%)' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 85% 80% at 50% 52%, transparent 50%, var(--overlay-strong) 100%)' }} />
 
       {/* Header */}
       <div style={{
@@ -1210,7 +1276,7 @@ export default function BurgundySection() {
         <div style={{
           fontSize: isMobile ? 8 : 9,
           letterSpacing: '0.28em',
-          color: '#C9A84C',
+          color: 'var(--color-gold)',
           textTransform: 'uppercase',
           marginBottom: isMobile ? 3 : 6,
         }}>{sectionLabel}</div>
@@ -1218,7 +1284,7 @@ export default function BurgundySection() {
           fontFamily: 'var(--font-playfair),Georgia,serif',
           fontSize: isMobile ? 18 : 'clamp(18px,3vw,32px)',
           fontWeight: 400,
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           lineHeight: 1.15,
         }}>{heading}</h2>
       </div>

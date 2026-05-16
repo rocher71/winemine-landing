@@ -48,7 +48,7 @@ export default function VineyardStrip() {
   const countryKeys = ['france', 'chile', 'italy', 'newZealand'] as const;
 
   return (
-    <section style={{ background: '#05020A', padding: 'clamp(48px,7vw,80px) 0' }}>
+    <section style={{ background: 'var(--color-bg-deepest)', padding: 'clamp(48px,7vw,80px) 0' }}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -57,14 +57,14 @@ export default function VineyardStrip() {
         viewport={{ once: true }}
         style={{ textAlign: 'center', marginBottom: 'clamp(28px,4vw,48px)', padding: '0 24px' }}
       >
-        <div style={{ fontSize: 10, letterSpacing: '0.28em', color: '#C9A84C', textTransform: 'uppercase', marginBottom: 12 }}>
+        <div style={{ fontSize: 10, letterSpacing: '0.28em', color: 'var(--color-gold)', textTransform: 'uppercase', marginBottom: 12 }}>
           {messages.vineyardStrip.label1}
         </div>
         <h2 style={{
           fontFamily: 'var(--font-playfair), Georgia, serif',
           fontSize: 'clamp(24px,3.5vw,38px)',
           fontWeight: 400,
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           lineHeight: 1.2,
         }}>
           {messages.vineyardStrip.heading}
@@ -116,13 +116,6 @@ export default function VineyardStrip() {
               }}
             />
 
-            {/* Overlay gradient */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to top, rgba(4,1,10,0.88) 0%, rgba(4,1,10,0.1) 55%, transparent 100%)',
-              pointerEvents: 'none',
-            }} />
-
             {/* Content */}
             <div style={{
               position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -134,10 +127,11 @@ export default function VineyardStrip() {
                 fontWeight: 400,
                 color: '#F5F0E8',
                 marginBottom: 4,
+                textShadow: '0 1px 6px rgba(0,0,0,0.5)',
               }}>
                 {messages.vineyardStrip.countries[countryKeys[i]].name}
               </div>
-              <div style={{ fontSize: 'clamp(9px,1vw,12px)', color: '#C9A84C', letterSpacing: '0.06em', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <div style={{ fontSize: 'clamp(9px,1vw,12px)', color: 'var(--color-gold)', letterSpacing: '0.06em', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                 {messages.vineyardStrip.countries[countryKeys[i]].stat}
                 {v.hasGrowthArrow && <ArrowUpIcon size={10} aria-hidden />}
               </div>
@@ -167,17 +161,17 @@ export default function VineyardStrip() {
         />
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to right, rgba(4,1,10,0.75) 0%, transparent 35%, transparent 65%, rgba(4,1,10,0.75) 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexDirection: 'column', gap: 8,
         }}>
-          <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.3em', color: '#C9A84C', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.3em', color: 'var(--color-gold)', textTransform: 'uppercase' }}>
             {messages.vineyardStrip.label2}
           </div>
           <div style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
             fontSize: 'clamp(18px,3.5vw,36px)',
             fontWeight: 400, color: '#F5F0E8', textAlign: 'center',
+            textShadow: '0 2px 12px rgba(0,0,0,0.6)',
           }}>
             {messages.vineyardStrip.body.split('\n').map((line, i) => (
               <span key={i}>{line}{i === 0 ? <br /> : null}</span>

@@ -56,7 +56,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             onClick={onClose}
             style={{
               position: 'fixed', inset: 0,
-              background: 'rgba(5,2,8,0.85)',
+              background: 'var(--color-modal-backdrop)',
               backdropFilter: 'blur(4px)',
               zIndex: 50,
             }}
@@ -73,8 +73,8 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               /* Mobile: bottom sheet */
               position: 'fixed',
               bottom: 0, left: 0, right: 0,
-              background: '#0F0718',
-              borderTop: '1px solid #2D1540',
+              background: 'var(--color-bg-surface)',
+              borderTop: '1px solid var(--color-border)',
               borderRadius: '20px 20px 0 0',
               padding: '28px 24px 36px',
               boxShadow: '0 -20px 60px rgba(0,0,0,0.7)',
@@ -86,8 +86,8 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               position: 'fixed',
               top: '50%', left: '50%',
               width: 'min(480px, calc(100vw - 32px))',
-              background: '#0F0718',
-              border: '1px solid #2D1540',
+              background: 'var(--color-bg-surface)',
+              border: '1px solid var(--color-border)',
               borderRadius: 8,
               padding: 'clamp(32px, 5vw, 48px) clamp(24px, 5vw, 40px)',
               boxShadow: '0 25px 80px rgba(0,0,0,0.8)',
@@ -103,7 +103,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             {isMobile && (
               <div style={{
                 width: 40, height: 4, borderRadius: 2,
-                background: '#2D1540',
+                background: 'var(--color-border)',
                 margin: '-8px auto 20px',
               }} />
             )}
@@ -119,14 +119,14 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               style={{
                 position: 'absolute', top: 16, right: 16,
                 background: 'transparent', border: 'none',
-                color: '#4A3D56', cursor: 'pointer',
+                color: 'var(--color-text-disabled)', cursor: 'pointer',
                 padding: 6,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'color 150ms ease',
                 minWidth: 44, minHeight: 44,
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#F5F0E8'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '#4A3D56'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-text-primary)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-disabled)'; }}
               aria-label={t('waitlistModal.closeAriaLabel')}
             >
               <X size={20} />
@@ -137,14 +137,14 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 <h2 id="modal-title" style={{
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   fontSize: isMobile ? 28 : 32,
-                  fontWeight: 400, color: '#F5F0E8',
+                  fontWeight: 400, color: 'var(--color-text-primary)',
                 }}>
                   {t('waitlistModal.title')}
                 </h2>
-                <p style={{ fontSize: 14, color: '#9B8B7A', marginTop: 12, lineHeight: 1.6 }}>
+                <p style={{ fontSize: 14, color: 'var(--color-text-muted)', marginTop: 12, lineHeight: 1.6 }}>
                   {t('waitlistModal.description').split('\n')[0]}<br />{t('waitlistModal.description').split('\n')[1]}
                 </p>
-                <div style={{ width: 40, height: 2, background: '#C9A84C', margin: '16px 0 32px' }} />
+                <div style={{ width: 40, height: 2, background: 'var(--color-gold)', margin: '16px 0 32px' }} />
               </>
             )}
 

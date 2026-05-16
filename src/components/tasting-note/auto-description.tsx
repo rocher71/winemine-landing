@@ -17,7 +17,7 @@ import {
   type EvolutionPoint,
 } from '@/lib/tasting-note-lexicon';
 
-const GOLD = '#C9A84C';
+const GOLD = 'var(--color-gold)';
 
 interface Meta {
   vintage: number | null;
@@ -87,7 +87,7 @@ export default function AutoDescription({ variant, meta, aroma, palate, finish, 
           fontSize: 17,
           fontStyle: 'italic',
           lineHeight: 1.7,
-          color: '#F5F0E8',
+          color: 'var(--color-text-primary)',
           margin: 0,
           minHeight: 80,
         }}

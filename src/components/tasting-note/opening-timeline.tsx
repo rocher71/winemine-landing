@@ -19,10 +19,10 @@ import {
   type Delta,
 } from '@/lib/tasting-note-lexicon';
 
-const GOLD = '#C9A84C';
-const WINE_RED = '#8B1A2A';
-const MUTED = '#9B8B7A';
-const BORDER = '#2D1540';
+const GOLD = 'var(--color-gold)';
+const WINE_RED = 'var(--color-wine-red)';
+const MUTED = 'var(--color-text-muted)';
+const BORDER = 'var(--color-border)';
 
 interface Props {
   variant: FormVariant;
@@ -165,13 +165,13 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
                     width: 18,
                     height: 18,
                     borderRadius: 999,
-                    background: isPeak ? WINE_RED : filled ? GOLD : '#1A0A1E',
-                    border: `2px solid ${isActive ? GOLD : isPeak ? WINE_RED : filled ? GOLD : '#4A3D56'}`,
+                    background: isPeak ? WINE_RED : filled ? GOLD : 'var(--color-bg-map)',
+                    border: `2px solid ${isActive ? GOLD : isPeak ? WINE_RED : filled ? GOLD : 'var(--color-text-disabled)'}`,
                     boxShadow: isActive ? `0 0 0 4px rgba(201,168,76,0.18)` : 'none',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isPeak ? '#F5F0E8' : '#1A0A1E',
+                    color: isPeak ? 'var(--color-text-primary)' : 'var(--color-bg-map)',
                   }}
                   aria-hidden
                 >
@@ -190,12 +190,12 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
       <div
         style={{
           padding: 20,
-          background: 'rgba(15,7,24,0.55)',
+          background: 'var(--color-bg-surface)',
           border: `1px solid ${BORDER}`,
           borderRadius: 12,
         }}
       >
-        <div style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 22, color: '#F5F0E8', marginBottom: 12, fontWeight: 700 }}>
+        <div style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 22, color: 'var(--color-text-primary)', marginBottom: 12, fontWeight: 700 }}>
           T+{TIMEPOINT_PRESETS.find(p => p.minutes === activeMin)?.label}
         </div>
 
@@ -225,7 +225,7 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
             onChange={e => patchActive({ reductionPresent: e.target.checked })}
             style={{ accentColor: WINE_RED }}
           />
-          <span style={{ fontSize: 13, color: '#F5F0E8' }}>
+          <span style={{ fontSize: 13, color: 'var(--color-text-primary)' }}>
             {t('tastingNote.evolution.reductionLabel')}
           </span>
           <span title={t('tastingNote.evolution.reductionTooltip')} style={{ color: GOLD, cursor: 'help', fontSize: 11 }}>ⓘ</span>
@@ -244,7 +244,7 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
                 height: 28,
                 borderRadius: 999,
                 background: (activeTp?.overallScore ?? 0) >= n ? GOLD : 'transparent',
-                color: (activeTp?.overallScore ?? 0) >= n ? '#1A0A1E' : MUTED,
+                color: (activeTp?.overallScore ?? 0) >= n ? 'var(--color-bg-map)' : MUTED,
                 border: `1px solid ${(activeTp?.overallScore ?? 0) >= n ? GOLD : BORDER}`,
                 cursor: 'pointer',
                 fontFamily: 'inherit',
@@ -266,7 +266,7 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
               marginLeft: 'auto',
               padding: '6px 14px',
               background: state.peakIndex != null && state.timepoints[state.peakIndex]?.minutesAfterOpen === activeMin ? WINE_RED : 'transparent',
-              color: state.peakIndex != null && state.timepoints[state.peakIndex]?.minutesAfterOpen === activeMin ? '#F5F0E8' : GOLD,
+              color: state.peakIndex != null && state.timepoints[state.peakIndex]?.minutesAfterOpen === activeMin ? 'var(--color-text-primary)' : GOLD,
               border: `1px solid ${WINE_RED}`,
               borderRadius: 16,
               cursor: activeTp ? 'pointer' : 'not-allowed',
@@ -291,7 +291,7 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
             <span aria-hidden style={{ display: 'inline-flex' }}><StarBurstIcon size={12} /></span>
             {t('tastingNote.evolution.recommendationTitle')}
           </div>
-          <div style={{ fontSize: 14, color: '#F5F0E8', fontWeight: 600, marginBottom: 4 }}>
+          <div style={{ fontSize: 14, color: 'var(--color-text-primary)', fontWeight: 600, marginBottom: 4 }}>
             {locale === 'ko' ? guide.ko : guide.en}
           </div>
           <div style={{ fontSize: 11, color: MUTED, fontStyle: 'italic', marginBottom: 8 }}>
@@ -300,11 +300,11 @@ export default function OpeningTimeline({ variant, meta, state, onOpenedAt, onDe
               .replace('{peak}', String(guide.recommendedMinutes.peak))
               .replace('{max}', String(guide.recommendedMinutes.max))}
           </div>
-          <div style={{ fontSize: 12, color: '#D4C5B0', lineHeight: 1.5 }}>
+          <div style={{ fontSize: 12, color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
             {guide.rationale}
           </div>
           {state.peakIndex != null && (
-            <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(139,26,42,0.18)', borderRadius: 6, fontSize: 12, color: '#F5F0E8' }}>
+            <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(139,26,42,0.18)', borderRadius: 6, fontSize: 12, color: 'var(--color-text-primary)' }}>
               {peakComparison(state.timepoints[state.peakIndex]?.minutesAfterOpen ?? 0, guide.recommendedMinutes.peak, t)}
             </div>
           )}
@@ -321,7 +321,7 @@ function pillBtn(active: boolean): React.CSSProperties {
   return {
     padding: '6px 12px',
     background: active ? GOLD : 'transparent',
-    color: active ? '#1A0A1E' : '#D4C5B0',
+    color: active ? 'var(--color-bg-map)' : 'var(--color-text-secondary)',
     border: `1px solid ${active ? GOLD : BORDER}`,
     borderRadius: 999,
     fontSize: 12,
@@ -363,7 +363,7 @@ function DeltaSlider({
   const opts: Delta[] = [-2, -1, 0, 1, 2];
   return (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ fontSize: 12, color: '#D4C5B0', marginBottom: 6 }}>
+      <div style={{ fontSize: 12, color: 'var(--color-text-secondary)', marginBottom: 6 }}>
         {t(labelKey)}
       </div>
       <div style={{ display: 'flex', gap: 6 }}>
@@ -384,7 +384,7 @@ function DeltaSlider({
                 flex: 1,
                 padding: '6px 8px',
                 background: active ? color : 'transparent',
-                color: active ? '#F5F0E8' : MUTED,
+                color: active ? 'var(--color-text-primary)' : MUTED,
                 border: `1px solid ${active ? color : BORDER}`,
                 borderRadius: 6,
                 cursor: 'pointer',
@@ -413,16 +413,16 @@ function EvolutionChart({ timepoints, peakIndex }: { timepoints: EvolutionPoint[
   const yOf = (s: number) => H - PAD - ((s - 1) / 4) * (H - 2 * PAD);
   const points = sorted.map(s => `${xOf(s.minutesAfterOpen)},${yOf(s.overallScore)}`).join(' ');
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: 'rgba(15,7,24,0.55)', borderRadius: 8, border: `1px solid ${BORDER}` }}>
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ background: 'var(--color-bg-surface)', borderRadius: 8, border: `1px solid ${BORDER}` }}>
       {[1, 2, 3, 4, 5].map(s => (
-        <line key={s} x1={PAD} y1={yOf(s)} x2={W - PAD} y2={yOf(s)} stroke="#2D1540" strokeWidth="0.5" strokeDasharray={s === 1 || s === 5 ? undefined : '2 4'} />
+        <line key={s} x1={PAD} y1={yOf(s)} x2={W - PAD} y2={yOf(s)} stroke="var(--color-border)" strokeWidth="0.5" strokeDasharray={s === 1 || s === 5 ? undefined : '2 4'} />
       ))}
       <polyline points={points} fill="none" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       {sorted.map((s, i) => {
         const peak = peakIndex != null && timepoints[peakIndex]?.minutesAfterOpen === s.minutesAfterOpen;
         return (
           <g key={s.minutesAfterOpen}>
-            <circle cx={xOf(s.minutesAfterOpen)} cy={yOf(s.overallScore)} r={peak ? 6 : 4} fill={s.reductionPresent ? '#9B8B7A' : peak ? WINE_RED : GOLD} />
+            <circle cx={xOf(s.minutesAfterOpen)} cy={yOf(s.overallScore)} r={peak ? 6 : 4} fill={s.reductionPresent ? 'var(--color-text-muted)' : peak ? WINE_RED : GOLD} />
             {peak && (
               <g transform={`translate(${xOf(s.minutesAfterOpen) - 6}, ${yOf(s.overallScore) - 18})`}>
                 <path
