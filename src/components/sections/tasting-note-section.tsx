@@ -484,7 +484,7 @@ function ModeToggle({
                   ? 'linear-gradient(135deg, rgba(201,168,76,0.22) 0%, rgba(201,168,76,0.10) 100%)'
                   : 'linear-gradient(135deg, rgba(139,26,42,0.28) 0%, rgba(139,26,42,0.10) 100%)'
                 : 'var(--color-bg-surface)',
-              border: `1.5px solid ${isActive ? (m === 'beginner' ? GOLD : 'var(--color-wine-red-hover)') : 'rgba(245,240,232,0.10)'}`,
+              border: `1.5px solid ${isActive ? (m === 'beginner' ? GOLD : 'var(--color-wine-red-hover)') : 'var(--color-border)'}`,
               borderRadius: 12,
               cursor: 'pointer',
               fontFamily: 'var(--font-inter, system-ui, sans-serif)',
@@ -823,9 +823,15 @@ function PaperHeader({
               color: PAPER_INK_DIM,
               letterSpacing: '0.04em',
               marginTop: 4,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
             }}
           >
-            {t(`tastingNote.mockup.subtitle.${subtitleKey}`)}
+            <span aria-hidden style={{ color: 'var(--color-wine-red-hover)', display: 'inline-flex' }}>
+              <GraduationCapIcon size={11} />
+            </span>
+            {t('tastingNote.playground.mode.expert')} · {t(`tastingNote.mockup.subtitle.${subtitleKey}`)}
           </div>
         </div>
         <div
@@ -1140,9 +1146,9 @@ function PalateRow({
                   width: 10,
                   height: 10,
                   borderRadius: 999,
-                  background: active ? 'var(--color-accent)' : 'transparent',
-                  border: `1px solid ${active ? 'var(--color-accent)' : PAPER_INK_VERY_DIM}`,
-                  boxShadow: active ? `0 0 0 3px var(--color-accent-shadow-soft)` : 'none',
+                  background: active ? WINE_RED : 'transparent',
+                  border: `1px solid ${active ? WINE_RED : PAPER_INK_VERY_DIM}`,
+                  boxShadow: active ? `0 0 0 3px rgba(139, 26, 42, 0.18)` : 'none',
                 }}
               />
             );
@@ -1218,13 +1224,14 @@ function StarsRow({ value }: { value: number }) {
   );
 }
 
-function WineGlassMark({ filled }: { filled: boolean }) {
+function WineGlassMark({ filled, color = WINE_RED }: { filled: boolean; color?: string }) {
+  // color prop으로 mode별 액센트 주입. Expert 기본=wine-red, Beginner는 GOLD 전달.
   return (
     <svg width="14" height="18" viewBox="0 0 12 16" style={{ flexShrink: 0 }}>
       <path
         d="M2.5 1 Q2.5 6 6 7 Q9.5 6 9.5 1 Z"
-        fill={filled ? WINE_RED : 'transparent'}
-        stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM}
+        fill={filled ? color : 'transparent'}
+        stroke={filled ? color : PAPER_INK_VERY_DIM}
         strokeWidth="0.8"
         strokeLinejoin="round"
       />
@@ -1233,7 +1240,7 @@ function WineGlassMark({ filled }: { filled: boolean }) {
         y1="7"
         x2="6"
         y2="13"
-        stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM}
+        stroke={filled ? color : PAPER_INK_VERY_DIM}
         strokeWidth="0.8"
       />
       <line
@@ -1241,7 +1248,7 @@ function WineGlassMark({ filled }: { filled: boolean }) {
         y1="13.5"
         x2="8.5"
         y2="13.5"
-        stroke={filled ? WINE_RED : PAPER_INK_VERY_DIM}
+        stroke={filled ? color : PAPER_INK_VERY_DIM}
         strokeWidth="0.8"
         strokeLinecap="round"
       />
@@ -1906,12 +1913,12 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
                 alignItems: 'center',
                 gap: 6,
                 padding: '8px 10px',
-                background: 'rgba(139,26,42,0.10)',
-                border: `1px solid ${WINE_RED}`,
+                background: 'rgba(201, 168, 76, 0.12)',
+                border: `1px solid ${GOLD}`,
                 borderRadius: 10,
               }}
             >
-              <span aria-hidden style={{ display: 'inline-flex', color: WINE_RED }}>
+              <span aria-hidden style={{ display: 'inline-flex', color: GOLD }}>
                 {(() => {
                   const Icon = AROMA_ICON[id];
                   return Icon ? <Icon size={18} /> : null;
@@ -1940,7 +1947,7 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
           {t('tastingNote.beginner.step.finish')}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span aria-hidden style={{ display: 'inline-flex', color: WINE_RED }}>
+          <span aria-hidden style={{ display: 'inline-flex', color: GOLD }}>
             {data.finish === 'short' ? <StopwatchIcon size={22} />
               : data.finish === 'medium' ? <ClockIcon size={22} />
               : <WineGlassRedIcon size={22} />}
@@ -1967,7 +1974,7 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 12 }}>
           {[1, 2, 3, 4, 5].map(i => (
-            <WineGlassMark key={i} filled={i <= data.rating} />
+            <WineGlassMark key={i} filled={i <= data.rating} color={GOLD} />
           ))}
           <span style={{ fontSize: 11, color: PAPER_INK_DIM, marginLeft: 8 }}>
             {data.rating}/5
@@ -2014,7 +2021,7 @@ function ThreeWayRow({
         }}
       >
         <span style={{ fontSize: 11, fontWeight: 700, color: PAPER_INK }}>{label}</span>
-        <span style={{ fontSize: 11, color: 'var(--color-accent)', fontStyle: 'italic', fontWeight: 600 }}>
+        <span style={{ fontSize: 11, color: GOLD, fontStyle: 'italic', fontWeight: 600 }}>
           {t(`tastingNote.beginner.scale.${options[idx]}`)}
         </span>
       </div>
@@ -2027,9 +2034,9 @@ function ThreeWayRow({
               style={{
                 padding: '4px 6px',
                 textAlign: 'center',
-                background: active ? 'var(--color-accent)' : 'transparent',
-                color: active ? 'var(--color-text-primary)' : PAPER_INK_DIM,
-                border: `1px solid ${active ? 'var(--color-accent)' : PAPER_LINE}`,
+                background: active ? GOLD : 'transparent',
+                color: active ? PAPER_INK : PAPER_INK_DIM,
+                border: `1px solid ${active ? GOLD : PAPER_LINE}`,
                 borderRadius: 6,
                 fontSize: 10,
                 fontWeight: active ? 700 : 400,

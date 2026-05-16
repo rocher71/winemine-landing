@@ -34,6 +34,7 @@
   --color-accent-hover: #B08D57;
   --color-accent-shadow-soft: rgba(201, 168, 76, 0.45);
   --color-accent-shadow-strong: rgba(201, 168, 76, 0.60);
+  --color-accent-tint: rgba(201, 168, 76, 0.12);
   --color-map-wine-fill: #C9A84C;
 
   --overlay-soft: rgba(42, 31, 18, 0.04);
@@ -98,6 +99,7 @@
     --color-accent-hover: var(--color-wine-red-hover);
     --color-accent-shadow-soft: rgba(139, 26, 42, 0.45);
     --color-accent-shadow-strong: rgba(139, 26, 42, 0.60);
+    --color-accent-tint: rgba(139, 26, 42, 0.12);
     --color-map-wine-fill: #C41E3A;
 
     --overlay-soft: rgba(255, 255, 255, 0.04);
@@ -151,6 +153,7 @@
   --color-accent-hover: var(--color-wine-red-hover);
   --color-accent-shadow-soft: rgba(139, 26, 42, 0.45);
   --color-accent-shadow-strong: rgba(139, 26, 42, 0.60);
+  --color-accent-tint: rgba(139, 26, 42, 0.12);
   --color-map-wine-fill: #C41E3A;
 
   --overlay-soft: rgba(255, 255, 255, 0.04);
