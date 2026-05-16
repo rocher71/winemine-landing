@@ -4,19 +4,22 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
 const GEO_URL = '/world-110m.json';
 
+// Wine country fills — mode-invariant HEX (wine-red tone).
+// Wine-red is visible against both dark purple (#0d0810) and cream (#F0E7D2) backgrounds,
+// so we keep these as fixed HEX rather than theme tokens.
 const WINE_REGIONS: Record<string, { opacity: number; fill: string }> = {
-  '250': { opacity: 1.00, fill: '#E8C97A' }, // France — gold bright
-  '380': { opacity: 0.90, fill: '#D8B85A' }, // Italy — gold medium-bright
-  '724': { opacity: 0.75, fill: '#C9A84C' }, // Spain — gold main
-  '840': { opacity: 0.82, fill: '#D4B85C' }, // USA — gold medium
-  '276': { opacity: 0.60, fill: '#C9A84C' }, // Germany
-  '032': { opacity: 0.75, fill: '#C9A84C' }, // Argentina
-  '152': { opacity: 0.68, fill: '#C9A84C' }, // Chile
-  '620': { opacity: 0.80, fill: '#D4B85C' }, // Portugal
-  '040': { opacity: 0.52, fill: '#B89438' }, // Austria — gold deep
-  '554': { opacity: 0.60, fill: '#C9A84C' }, // New Zealand
-  '036': { opacity: 0.64, fill: '#C9A84C' }, // Australia
-  '710': { opacity: 0.50, fill: '#B89438' }, // South Africa — gold deep
+  '250': { opacity: 1.00, fill: '#E8253E' }, // France
+  '380': { opacity: 0.90, fill: '#D82038' }, // Italy
+  '724': { opacity: 0.75, fill: '#CC1C34' }, // Spain
+  '840': { opacity: 0.82, fill: '#D42040' }, // USA
+  '276': { opacity: 0.60, fill: '#C41E3A' }, // Germany
+  '032': { opacity: 0.75, fill: '#CC1C34' }, // Argentina
+  '152': { opacity: 0.68, fill: '#C41E3A' }, // Chile
+  '620': { opacity: 0.80, fill: '#D42040' }, // Portugal
+  '040': { opacity: 0.52, fill: '#C41E3A' }, // Austria
+  '554': { opacity: 0.60, fill: '#C41E3A' }, // New Zealand
+  '036': { opacity: 0.64, fill: '#CC1C34' }, // Australia
+  '710': { opacity: 0.50, fill: '#C41E3A' }, // South Africa
 };
 
 function MapInstance() {

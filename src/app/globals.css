@@ -85,9 +85,11 @@
     --overlay-medium: rgba(255, 255, 255, 0.08);
     --overlay-strong: rgba(255, 255, 255, 0.16);
 
+    /* Map-specific tokens — values matched to pre-theme refactor (commit b54d037^).
+       inactive(#2A1552) / stroke(#4A2080) keep land masses visible against bg(#0d0810). */
     --color-map-bg: #0d0810;
-    --color-map-inactive: #1A0A2E;
-    --color-map-stroke: #2A0C58;
+    --color-map-inactive: #2A1552;
+    --color-map-stroke: #4A2080;
 
     --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
     --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
@@ -128,9 +130,10 @@
   --overlay-medium: rgba(255, 255, 255, 0.08);
   --overlay-strong: rgba(255, 255, 255, 0.16);
 
+  /* Map-specific tokens — values matched to pre-theme refactor (commit b54d037^). */
   --color-map-bg: #0d0810;
-  --color-map-inactive: #1A0A2E;
-  --color-map-stroke: #2A0C58;
+  --color-map-inactive: #2A1552;
+  --color-map-stroke: #4A2080;
 
   --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
   --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);

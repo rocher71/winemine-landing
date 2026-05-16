@@ -63,6 +63,27 @@ Border Active:     #8B1A2A
 Error:             #EF4444
 ```
 
+### 다크/라이트 모드 색상 규칙 (CRITICAL)
+
+테마 색상은 `src/app/globals.css`에 세 블록으로 정의된다:
+
+1. **`:root`** — 라이트 모드 기본값 (mode-invariant brand 색상 포함)
+2. **`@media (prefers-color-scheme: dark)`** 안의 `:root:not([data-theme="light"])` — 시스템 다크 모드
+3. **`:root[data-theme="dark"]`** — 수동 다크 토글
+
+**필수 규칙:**
+
+- 색상 변경 시 **항상 light/dark 블록을 각각 별도로 수정**한다. 한쪽만 바꾸면 회귀가 발생한다.
+- `--color-text-primary` 같은 의미적 토큰을 쓰고, 다크 모드 전용 하드코딩 HEX(예: `#F5F0E8`, `rgba(255,255,255,0.X)`)는 컴포넌트에서 절대 직접 쓰지 않는다.
+- 다크 모드 전용 패치를 만들 땐 `@media (prefers-color-scheme: dark)`와 `:root[data-theme="dark"]` 블록 **양쪽에 똑같이 값을 넣는다** (한쪽만 빠지면 토글이 비정상 동작).
+- 지도 색상은 `--color-map-bg` / `--color-map-inactive` / `--color-map-stroke` 세 토큰을 사용한다. 변경 시 두 모드의 contrast(국가 fill vs 배경)가 모두 보이는지 검증.
+- 와인 국가 fill처럼 두 모드에서 동일하게 칠하고 싶은 색은 컴포넌트 내부에 HEX로 고정(예: `world-map.tsx`의 `WINE_REGIONS`)하되, 두 배경(다크 `#0d0810` + 라이트 `#F0E7D2`) 양쪽에서 가독성 확인.
+
+**금지 사항:**
+
+- `rgba(255,255,255,0.X)` / `rgba(0,0,0,0.X)` 같은 흰/검 직접 사용 금지 → `var(--overlay-soft/medium/strong)` 사용
+- 컴포넌트 안에 모드 분기(`useTheme()`로 색상 분기) 금지 → CSS 변수로만 처리
+
 ### 타이포그래피
 - **Playfair Display** (serif) — 로고, 섹션 제목, 모달 제목
 - **Inter** (sans-serif) — 본문, 버튼, 입력 필드, 캡션
