@@ -63,7 +63,7 @@ function PushBanner({ title, body }: { title: string; body: string }) {
           width: 32,
           height: 32,
           borderRadius: 8,
-          background: 'linear-gradient(135deg, var(--color-wine-red) 0%, #C41E3A 100%)',
+          background: 'linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

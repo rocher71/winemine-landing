@@ -312,7 +312,7 @@ function CountBadge({ n, x, y }: { n: number; x: number; y: number }) {
   if (n <= 0) return null;
   return (
     <g transform={`translate(${x},${y})`} style={{ pointerEvents: 'none' }}>
-      <circle cx={0} cy={0} r={3.6} fill="#D42040" stroke="var(--color-map-bg)" strokeWidth={0.7} />
+      <circle cx={0} cy={0} r={3.6} fill="var(--color-map-wine-fill)" stroke="var(--color-map-bg)" strokeWidth={0.7} />
       <text textAnchor="middle" y={1.3}
         style={{ fill: '#fff', fontSize: 4.2, fontFamily: 'Inter,sans-serif', fontWeight: 800 } as React.CSSProperties}>
         {n}
@@ -569,7 +569,7 @@ function BurgundyMap({ drill, colorFilter, hoveredId, onHover, onDrill }: {
                   const code = geo.properties.code as string;
                   const isBurgundy = BURGUNDY_DEPTS.has(code);
                   const isBeaujolais = code === '69';
-                  const fillColor = isBurgundy ? '#D42040' : isBeaujolais ? '#9B3060' : 'var(--color-map-inactive)';
+                  const fillColor = isBurgundy ? 'var(--color-map-wine-fill)' : isBeaujolais ? '#9B3060' : 'var(--color-map-inactive)';
                   const fillOpacity = isBurgundy ? (code === '21' ? 0.80 : 0.45) : isBeaujolais ? 0.30 : 1;
                   return (
                     <Geography key={geo.rsmKey} geography={geo} style={{

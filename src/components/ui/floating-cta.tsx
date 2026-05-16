@@ -106,15 +106,15 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            background: hovered ? 'var(--color-wine-red-hover)' : 'var(--color-wine-red)',
+            background: hovered ? 'var(--color-accent-hover)' : 'var(--color-accent)',
             border: 'none',
             borderRadius: 28,
             padding: '12px 18px 12px 14px',
             cursor: 'pointer',
             color: 'var(--color-text-primary)',
             boxShadow: hovered
-              ? '0 8px 32px rgba(139,26,42,0.6), 0 2px 8px rgba(0,0,0,0.3)'
-              : '0 4px 24px rgba(139,26,42,0.45), 0 2px 8px rgba(0,0,0,0.3)',
+              ? '0 8px 32px var(--color-accent-shadow-strong), 0 2px 8px rgba(0,0,0,0.3)'
+              : '0 4px 24px var(--color-accent-shadow-soft), 0 2px 8px rgba(0,0,0,0.3)',
             transition: 'background 200ms ease, box-shadow 200ms ease',
             transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
             fontFamily: 'inherit',

@@ -27,6 +27,15 @@
   --color-border-soft: rgba(42, 31, 18, 0.10);
   --color-border-active: var(--color-gold);
 
+  /* ── Mode-aware accent (CTA fill, active button bg, map wine-country fill) ──
+     Light: gold (cream/white-wine 미감과 매치)
+     Dark: wine-red (와인 라벨 무게감) */
+  --color-accent: var(--color-gold);
+  --color-accent-hover: #B08D57;
+  --color-accent-shadow-soft: rgba(201, 168, 76, 0.45);
+  --color-accent-shadow-strong: rgba(201, 168, 76, 0.60);
+  --color-map-wine-fill: #C9A84C;
+
   --overlay-soft: rgba(42, 31, 18, 0.04);
   --overlay-medium: rgba(42, 31, 18, 0.08);
   --overlay-strong: rgba(42, 31, 18, 0.16);
@@ -84,6 +93,13 @@
     --color-border-soft: rgba(255, 255, 255, 0.06);
     --color-border-active: var(--color-wine-red);
 
+    /* Mode-aware accent (dark): wine-red 톤 */
+    --color-accent: var(--color-wine-red);
+    --color-accent-hover: var(--color-wine-red-hover);
+    --color-accent-shadow-soft: rgba(139, 26, 42, 0.45);
+    --color-accent-shadow-strong: rgba(139, 26, 42, 0.60);
+    --color-map-wine-fill: #C41E3A;
+
     --overlay-soft: rgba(255, 255, 255, 0.04);
     --overlay-medium: rgba(255, 255, 255, 0.08);
     --overlay-strong: rgba(255, 255, 255, 0.16);
@@ -129,6 +145,13 @@
   --color-border: #2D1540;
   --color-border-soft: rgba(255, 255, 255, 0.06);
   --color-border-active: var(--color-wine-red);
+
+  /* Mode-aware accent (dark, 수동 토글 동일값) */
+  --color-accent: var(--color-wine-red);
+  --color-accent-hover: var(--color-wine-red-hover);
+  --color-accent-shadow-soft: rgba(139, 26, 42, 0.45);
+  --color-accent-shadow-strong: rgba(139, 26, 42, 0.60);
+  --color-map-wine-fill: #C41E3A;
 
   --overlay-soft: rgba(255, 255, 255, 0.04);
   --overlay-medium: rgba(255, 255, 255, 0.08);

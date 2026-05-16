@@ -157,8 +157,9 @@ const WAVES: Wave[] = [
 // then the camera tour runs from 0.10 onward.
 const WAVE_THRESHOLDS = [0.0, 0.03, 0.06];
 
-const COUNTRY_FILL_ACTIVE = 'var(--color-wine-red)';
-const COUNTRY_FILL_HIGHLIGHT = '#C41E3A';
+// 와인 산지 지도 fill — 라이트=골드 / 다크=와인-레드 모드-aware
+const COUNTRY_FILL_ACTIVE = 'var(--color-map-wine-fill)';
+const COUNTRY_FILL_HIGHLIGHT = 'var(--color-accent-hover)';
 const COUNTRY_FILL_INACTIVE = 'var(--color-map-inactive)';
 const COUNTRY_STROKE = 'var(--color-map-stroke)';
 

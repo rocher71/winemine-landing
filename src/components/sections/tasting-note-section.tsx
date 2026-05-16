@@ -1140,9 +1140,9 @@ function PalateRow({
                   width: 10,
                   height: 10,
                   borderRadius: 999,
-                  background: active ? WINE_RED : 'transparent',
-                  border: `1px solid ${active ? WINE_RED : PAPER_INK_VERY_DIM}`,
-                  boxShadow: active ? `0 0 0 3px rgba(139,26,42,0.18)` : 'none',
+                  background: active ? 'var(--color-accent)' : 'transparent',
+                  border: `1px solid ${active ? 'var(--color-accent)' : PAPER_INK_VERY_DIM}`,
+                  boxShadow: active ? `0 0 0 3px var(--color-accent-shadow-soft)` : 'none',
                 }}
               />
             );
@@ -2014,7 +2014,7 @@ function ThreeWayRow({
         }}
       >
         <span style={{ fontSize: 11, fontWeight: 700, color: PAPER_INK }}>{label}</span>
-        <span style={{ fontSize: 11, color: WINE_RED, fontStyle: 'italic', fontWeight: 600 }}>
+        <span style={{ fontSize: 11, color: 'var(--color-accent)', fontStyle: 'italic', fontWeight: 600 }}>
           {t(`tastingNote.beginner.scale.${options[idx]}`)}
         </span>
       </div>
@@ -2027,9 +2027,9 @@ function ThreeWayRow({
               style={{
                 padding: '4px 6px',
                 textAlign: 'center',
-                background: active ? WINE_RED : 'transparent',
+                background: active ? 'var(--color-accent)' : 'transparent',
                 color: active ? 'var(--color-text-primary)' : PAPER_INK_DIM,
-                border: `1px solid ${active ? WINE_RED : PAPER_LINE}`,
+                border: `1px solid ${active ? 'var(--color-accent)' : PAPER_LINE}`,
                 borderRadius: 6,
                 fontSize: 10,
                 fontWeight: active ? 700 : 400,

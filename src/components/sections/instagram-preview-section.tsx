@@ -73,14 +73,14 @@ export function StoryWorldMap() {
                   geography={geo}
                   style={{
                     default: {
-                      fill: opacity ? '#D42040' : 'var(--color-map-inactive)',
+                      fill: opacity ? 'var(--color-map-wine-fill)' : 'var(--color-map-inactive)',
                       fillOpacity: opacity ?? 1,
                       stroke: 'var(--color-map-stroke)',
                       strokeWidth: 0.3,
                       outline: 'none',
                     },
-                    hover:   { outline: 'none', fill: opacity ? '#D42040' : 'var(--color-map-inactive)', fillOpacity: opacity ?? 1, stroke: 'var(--color-map-stroke)', strokeWidth: 0.3 },
-                    pressed: { outline: 'none', fill: opacity ? '#D42040' : 'var(--color-map-inactive)', fillOpacity: opacity ?? 1, stroke: 'var(--color-map-stroke)', strokeWidth: 0.3 },
+                    hover:   { outline: 'none', fill: opacity ? 'var(--color-map-wine-fill)' : 'var(--color-map-inactive)', fillOpacity: opacity ?? 1, stroke: 'var(--color-map-stroke)', strokeWidth: 0.3 },
+                    pressed: { outline: 'none', fill: opacity ? 'var(--color-map-wine-fill)' : 'var(--color-map-inactive)', fillOpacity: opacity ?? 1, stroke: 'var(--color-map-stroke)', strokeWidth: 0.3 },
                   }}
                 />
               );
