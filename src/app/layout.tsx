@@ -6,6 +6,7 @@ import { getLocale, getMessages } from '@/lib/i18n';
 import { LocaleProvider } from '@/components/providers/locale-provider';
 import { LocaleSwitcher } from '@/components/ui/locale-switcher';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { AmplitudeProvider } from '@/components/providers/amplitude-provider';
 
 const THEME_FLICKER_SCRIPT = `(function(){try{var s=localStorage.getItem('winemine.theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s);}}catch(e){}})();`;
 
@@ -68,12 +69,14 @@ export default async function RootLayout({
       </head>
       {/* inter.className 제거 — globals.css의 Noto Sans KR 폰트 스택이 적용되도록 */}
       <body suppressHydrationWarning>
-        <ThemeProvider>
-          <LocaleProvider locale={locale} messages={messages}>
-            <LocaleSwitcher />
-            {children}
-          </LocaleProvider>
-        </ThemeProvider>
+        <AmplitudeProvider>
+          <ThemeProvider>
+            <LocaleProvider locale={locale} messages={messages}>
+              <LocaleSwitcher />
+              {children}
+            </LocaleProvider>
+          </ThemeProvider>
+        </AmplitudeProvider>
 
         {/* Google Analytics */}
         <Script
