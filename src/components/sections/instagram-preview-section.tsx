@@ -14,8 +14,10 @@ const STORY_COUNTRIES: { name: string; wines: number; pct: number }[] = [
   { name: 'Spain',       wines: 11, pct: 34 },
 ];
 
+// 와인 타입별 시그니처 색 — 와인 자체 색을 떠올리게.
+// red=와인-레드, white=라이트 옐로우-크림, sparkling=골드 브라이트, rose=코랄.
 const COLOR_SPLIT = [
-  { key: 'red',       pct: 76, color: 'var(--color-gold)' },
+  { key: 'red',       pct: 76, color: 'var(--color-wine-red)' },
   { key: 'white',     pct: 14, color: '#E8D89A' },
   { key: 'sparkling', pct:  6, color: 'var(--color-gold-bright)' },
   { key: 'rose',      pct:  4, color: '#D4756B' },
@@ -435,10 +437,12 @@ export default function InstagramPreviewSection({ id }: { id?: string }) {
                 <div key={item.num} style={{ display: 'flex', gap: 20 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: '50%',
-                    background: 'var(--color-gold-tint-soft)',
-                    border: '1px solid var(--color-gold-tint-med)',
+                    background: 'var(--color-accent-tint)',
+                    border: '1px solid var(--color-accent)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 13, fontWeight: 700, color: 'var(--color-gold)',
+                    // 텍스트는 accent 대비 가독 확보 위해 mode-aware text-primary 사용
+                    // (라이트=다크 브라운 on 골드 tint, 다크=크림 on 와인-레드 tint, 양쪽 WCAG AA 이상)
+                    fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)',
                     flexShrink: 0, marginTop: 2,
                   }}>
                     {item.num}
