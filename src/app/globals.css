@@ -65,10 +65,13 @@
 /* System dark mode — applied only when user has not explicitly chosen a theme */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg-deepest: #05020A;
-    --color-bg-deep: #0A050F;
-    --color-bg-surface: #0F0718;
-    --color-bg-map: #1A0A1E;
+    /* Lifted from pitch-dark (#05020A / #0A050F / #0F0718) to deep wine-purple
+       so sections like Price Intelligence read as "dark elegant" rather than "pure black".
+       Card vs section contrast (surface vs deepest) is preserved. */
+    --color-bg-deepest: #100A1F;
+    --color-bg-deep: #170D2C;
+    --color-bg-surface: #20153A;
+    --color-bg-map: #2A1844;
     --color-bg-input: rgba(26, 10, 30, 0.6);
     --color-surface: var(--color-bg-surface);
 
@@ -110,10 +113,11 @@
 
 /* Manual dark override — applied regardless of system preference */
 :root[data-theme="dark"] {
-  --color-bg-deepest: #05020A;
-  --color-bg-deep: #0A050F;
-  --color-bg-surface: #0F0718;
-  --color-bg-map: #1A0A1E;
+  /* Same lifted wine-purple tones as the system-preference dark block above. */
+  --color-bg-deepest: #100A1F;
+  --color-bg-deep: #170D2C;
+  --color-bg-surface: #20153A;
+  --color-bg-map: #2A1844;
   --color-bg-input: rgba(26, 10, 30, 0.6);
   --color-surface: var(--color-bg-surface);
 

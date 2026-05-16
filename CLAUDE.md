@@ -46,21 +46,50 @@ npm run lint     # ESLint
 ## 디자인 시스템
 
 ### 색상 팔레트
+
+`globals.css`가 단일 진실 소스(single source of truth). 아래 표는 빠른 참조용이며, 변경 시 `globals.css` 라이트/다크 양쪽 블록을 반드시 동기 수정.
+
+**Brand (mode-invariant):**
 ```
 Wine Red (CTA):    #8B1A2A   — 버튼, 와인 국가 fill
 Wine Red Hover:    #A02030
 Gold (Accent):     #C9A84C   — 장식선, 아이콘, 성공 상태
-Cream (Text):      #F5F0E8   — 제목, 주요 텍스트
-Secondary Text:    #D4C5B0
-Muted Text:        #9B8B7A   — 설명, 부제
-Disabled:          #4A3D56   — placeholder, footer
-Deepest Dark:      #05020A   — 주 배경
-Deep Dark:         #0A050F   — 교차 섹션 배경
-Map Dark:          #1A0A1E   — 지도 기본 국가, input bg
-Surface:           #0F0718   — 모달 배경
-Border:            #2D1540
-Border Active:     #8B1A2A
+Cream (Text):      #F5F0E8   — 다크 모드 제목/본문, paper 색
 Error:             #EF4444
+```
+
+**Dark mode (시스템 + 수동 토글 양쪽 동일):**
+```
+--color-bg-deepest:  #100A1F   — 주 배경 (body, 섹션 베이스)
+--color-bg-deep:     #170D2C   — 교차 섹션 배경
+--color-bg-surface:  #20153A   — 카드 / 모달 / 패널 배경
+--color-bg-map:      #2A1844   — input bg, map-themed UI 컨테이너
+--color-map-bg:      #0d0810   — 지도 SVG 오션 베이스 (의도적으로 더 어두움)
+--color-map-inactive:#2A1552   — 비활성(non-wine) 국가 fill
+--color-map-stroke:  #4A2080   — 국가 경계선
+--color-text-primary:    #F5F0E8
+--color-text-secondary:  #D4C5B0
+--color-text-muted:      #9B8B7A   — 설명, 부제
+--color-text-disabled:   #4A3D56   — placeholder, footer
+--color-border:          #2D1540
+--color-border-active:   var(--color-wine-red)
+```
+
+**Light mode (white-wine concept):**
+```
+--color-bg-deepest:  #FBF7F0   — 크림 베이스
+--color-bg-deep:     #F5EFE3
+--color-bg-surface:  #FFFBF2
+--color-bg-map:      #EAE0CC
+--color-map-bg:      #F0E7D2
+--color-map-inactive:#E0D2B5
+--color-map-stroke:  #C9B894
+--color-text-primary:    #2A1F12   — 짙은 갈색
+--color-text-secondary:  #5A4830
+--color-text-muted:      #8B7A60
+--color-text-disabled:   #B8A88E
+--color-border:          rgba(201, 168, 76, 0.30)
+--color-border-active:   var(--color-gold)
 ```
 
 ### 다크/라이트 모드 색상 규칙 (CRITICAL)

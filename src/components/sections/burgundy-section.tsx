@@ -1039,14 +1039,14 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
         }
         :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-card),
         :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-count) {
-          background: #0F0718;
+          background: var(--color-bg-surface);
           border-color: rgba(45, 21, 64, 0.9);
           box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
         }
         @media (prefers-color-scheme: dark) {
           :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-card),
           :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-count) {
-            background: #0F0718;
+            background: var(--color-bg-surface);
             border-color: rgba(45, 21, 64, 0.9);
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
           }
@@ -1107,7 +1107,7 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
           border-bottom: 1px solid var(--color-border);
         }
         :root[data-theme="dark"] .burgundy-desktop-panel {
-          background: #0F0718;
+          background: var(--color-bg-surface);
           border-color: var(--color-gold-tint-soft);
           box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
         }
@@ -1116,7 +1116,7 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
         }
         @media (prefers-color-scheme: dark) {
           :root:not([data-theme="light"]) .burgundy-desktop-panel {
-            background: #0F0718;
+            background: var(--color-bg-surface);
             border-color: var(--color-gold-tint-soft);
             box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
           }
@@ -1185,13 +1185,10 @@ function MobileSheet({ drill, onDrill, colorFilter, onColor, hoveredId, onHover,
       }}
     >
       <style jsx>{`
+        /* 그라데이션은 surface(상단) → deepest(하단)로 elevation을 만든다.
+           라이트/다크 양쪽 모드에서 동일한 패턴을 쓰기 위해 시스템 다크 오버라이드는 제거. */
         .burgundy-mobile-sheet {
           background: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-deepest) 100%);
-        }
-        @media (prefers-color-scheme: dark) {
-          .burgundy-mobile-sheet {
-            background: #05020A;
-          }
         }
       `}</style>
       <div ref={handleRef} style={{ padding: '10px 0 6px', cursor: 'grab', display: 'flex', justifyContent: 'center', flexShrink: 0, touchAction: 'none' }}>
