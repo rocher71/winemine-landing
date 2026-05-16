@@ -1054,13 +1054,13 @@ function AromaSection({
                       padding: '3px 8px',
                       fontSize: 11,
                       borderRadius: 999,
-                      border: `1px solid ${isOn ? WINE_RED : PAPER_LINE}`,
-                      background: isOn ? 'rgba(139,26,42,0.10)' : 'transparent',
-                      color: isOn ? WINE_RED : PAPER_INK_DIM,
+                      border: `1px solid ${isOn ? 'var(--color-accent)' : PAPER_LINE}`,
+                      background: isOn ? 'var(--color-accent-tint)' : 'transparent',
+                      color: isOn ? 'var(--color-accent)' : PAPER_INK_DIM,
                       fontWeight: isOn ? 600 : 400,
                     }}
                   >
-                    {isOn && <CheckMark color={WINE_RED} />}
+                    {isOn && <CheckMark color="var(--color-accent)" />}
                     {locale === 'ko' ? lex.ko : lex.en}
                   </span>
                 );
@@ -1146,9 +1146,9 @@ function PalateRow({
                   width: 10,
                   height: 10,
                   borderRadius: 999,
-                  background: active ? WINE_RED : 'transparent',
-                  border: `1px solid ${active ? WINE_RED : PAPER_INK_VERY_DIM}`,
-                  boxShadow: active ? `0 0 0 3px rgba(139, 26, 42, 0.18)` : 'none',
+                  background: active ? 'var(--color-accent)' : 'transparent',
+                  border: `1px solid ${active ? 'var(--color-accent)' : PAPER_INK_VERY_DIM}`,
+                  boxShadow: active ? `0 0 0 3px var(--color-accent-shadow-soft)` : 'none',
                 }}
               />
             );
@@ -1181,7 +1181,7 @@ function CaudalieDisplay({ caudalies }: { caudalies: number }) {
             fontFamily: 'var(--font-playfair, Georgia, serif)',
             fontSize: 32,
             fontWeight: 700,
-            color: WINE_RED,
+            color: 'var(--color-accent)',
             lineHeight: 1,
           }}
         >
@@ -1224,14 +1224,15 @@ function StarsRow({ value }: { value: number }) {
   );
 }
 
-function WineGlassMark({ filled, color = WINE_RED }: { filled: boolean; color?: string }) {
-  // color prop으로 mode별 액센트 주입. Expert 기본=wine-red, Beginner는 GOLD 전달.
+function WineGlassMark({ filled }: { filled: boolean }) {
+  // 액센트는 mode-aware var(--color-accent). 라이트=골드, 다크=와인-레드.
+  const accent = 'var(--color-accent)';
   return (
     <svg width="14" height="18" viewBox="0 0 12 16" style={{ flexShrink: 0 }}>
       <path
         d="M2.5 1 Q2.5 6 6 7 Q9.5 6 9.5 1 Z"
-        fill={filled ? color : 'transparent'}
-        stroke={filled ? color : PAPER_INK_VERY_DIM}
+        fill={filled ? accent : 'transparent'}
+        stroke={filled ? accent : PAPER_INK_VERY_DIM}
         strokeWidth="0.8"
         strokeLinejoin="round"
       />
@@ -1240,7 +1241,7 @@ function WineGlassMark({ filled, color = WINE_RED }: { filled: boolean; color?: 
         y1="7"
         x2="6"
         y2="13"
-        stroke={filled ? color : PAPER_INK_VERY_DIM}
+        stroke={filled ? accent : PAPER_INK_VERY_DIM}
         strokeWidth="0.8"
       />
       <line
@@ -1248,7 +1249,7 @@ function WineGlassMark({ filled, color = WINE_RED }: { filled: boolean; color?: 
         y1="13.5"
         x2="8.5"
         y2="13.5"
-        stroke={filled ? color : PAPER_INK_VERY_DIM}
+        stroke={filled ? accent : PAPER_INK_VERY_DIM}
         strokeWidth="0.8"
         strokeLinecap="round"
       />
@@ -1404,7 +1405,7 @@ function SparklingMockup({ wine }: { wine: MockWine }) {
               style={{
                 padding: '3px 10px',
                 borderRadius: 4,
-                background: WINE_RED,
+                background: 'var(--color-accent)',
                 color: 'var(--color-text-primary)',
                 fontSize: 11,
                 fontWeight: 600,
@@ -1518,7 +1519,7 @@ function BlindMockup({ wine }: { wine: MockWine }) {
               width: 56,
               height: 56,
               borderRadius: 999,
-              background: WINE_RED,
+              background: 'var(--color-accent)',
               color: 'var(--color-text-primary)',
               display: 'flex',
               alignItems: 'center',
@@ -1913,12 +1914,12 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
                 alignItems: 'center',
                 gap: 6,
                 padding: '8px 10px',
-                background: 'rgba(201, 168, 76, 0.12)',
-                border: `1px solid ${GOLD}`,
+                background: 'var(--color-accent-tint)',
+                border: '1px solid var(--color-accent)',
                 borderRadius: 10,
               }}
             >
-              <span aria-hidden style={{ display: 'inline-flex', color: GOLD }}>
+              <span aria-hidden style={{ display: 'inline-flex', color: 'var(--color-accent)' }}>
                 {(() => {
                   const Icon = AROMA_ICON[id];
                   return Icon ? <Icon size={18} /> : null;
@@ -1947,7 +1948,7 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
           {t('tastingNote.beginner.step.finish')}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span aria-hidden style={{ display: 'inline-flex', color: GOLD }}>
+          <span aria-hidden style={{ display: 'inline-flex', color: 'var(--color-accent)' }}>
             {data.finish === 'short' ? <StopwatchIcon size={22} />
               : data.finish === 'medium' ? <ClockIcon size={22} />
               : <WineGlassRedIcon size={22} />}
@@ -1974,7 +1975,7 @@ function BeginnerMockup({ wine, data }: { wine: MockWine; data: BeginnerData }) 
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginBottom: 12 }}>
           {[1, 2, 3, 4, 5].map(i => (
-            <WineGlassMark key={i} filled={i <= data.rating} color={GOLD} />
+            <WineGlassMark key={i} filled={i <= data.rating} />
           ))}
           <span style={{ fontSize: 11, color: PAPER_INK_DIM, marginLeft: 8 }}>
             {data.rating}/5
@@ -2021,7 +2022,7 @@ function ThreeWayRow({
         }}
       >
         <span style={{ fontSize: 11, fontWeight: 700, color: PAPER_INK }}>{label}</span>
-        <span style={{ fontSize: 11, color: GOLD, fontStyle: 'italic', fontWeight: 600 }}>
+        <span style={{ fontSize: 11, color: 'var(--color-accent)', fontStyle: 'italic', fontWeight: 600 }}>
           {t(`tastingNote.beginner.scale.${options[idx]}`)}
         </span>
       </div>
@@ -2034,9 +2035,9 @@ function ThreeWayRow({
               style={{
                 padding: '4px 6px',
                 textAlign: 'center',
-                background: active ? GOLD : 'transparent',
+                background: active ? 'var(--color-accent)' : 'transparent',
                 color: active ? PAPER_INK : PAPER_INK_DIM,
-                border: `1px solid ${active ? GOLD : PAPER_LINE}`,
+                border: `1px solid ${active ? 'var(--color-accent)' : PAPER_LINE}`,
                 borderRadius: 6,
                 fontSize: 10,
                 fontWeight: active ? 700 : 400,

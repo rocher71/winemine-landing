@@ -249,8 +249,8 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                 onClick={() => toggleAroma(c.id)}
                 style={{
                   padding: '16px 10px',
-                  background: active ? 'rgba(139,26,42,0.20)' : SURFACE,
-                  border: `2px solid ${active ? WINE_RED : BORDER}`,
+                  background: active ? 'var(--color-accent-tint)' : SURFACE,
+                  border: `2px solid ${active ? 'var(--color-accent)' : BORDER}`,
                   borderRadius: 14,
                   cursor: 'pointer',
                   fontFamily: 'inherit',
@@ -261,7 +261,7 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   transition: 'background 200ms ease, border-color 200ms ease',
                 }}
               >
-                <span aria-hidden style={{ display: 'inline-flex', color: active ? WINE_RED : 'var(--color-text-muted)' }}>
+                <span aria-hidden style={{ display: 'inline-flex', color: active ? 'var(--color-accent)' : 'var(--color-text-muted)' }}>
                   <c.Icon size={28} />
                 </span>
                 <span style={{ fontSize: 13, fontWeight: 600, color: active ? CREAM : 'var(--color-text-secondary)' }}>
@@ -286,8 +286,8 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                 onClick={() => setFinish(active ? null : opt)}
                 style={{
                   padding: '14px 10px',
-                  background: active ? 'rgba(201,168,76,0.18)' : SURFACE,
-                  border: `2px solid ${active ? GOLD : BORDER}`,
+                  background: active ? 'var(--color-accent-tint)' : SURFACE,
+                  border: `2px solid ${active ? 'var(--color-accent)' : BORDER}`,
                   borderRadius: 12,
                   cursor: 'pointer',
                   fontFamily: 'inherit',
@@ -297,7 +297,7 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   gap: 4,
                 }}
               >
-                <span aria-hidden style={{ display: 'inline-flex', color: active ? GOLD : MUTED }}>
+                <span aria-hidden style={{ display: 'inline-flex', color: active ? 'var(--color-accent)' : MUTED }}>
                   {opt === 'short' ? <StopwatchIcon size={20} />
                     : opt === 'medium' ? <ClockIcon size={20} />
                     : <WineGlassRedIcon size={20} />}
@@ -332,8 +332,8 @@ export default function BeginnerNote({ variant, wineName, producer }: Props) {
                   width: 44,
                   height: 44,
                   borderRadius: 999,
-                  background: filled ? WINE_RED : 'transparent',
-                  border: `2px solid ${filled ? WINE_RED : BORDER}`,
+                  background: filled ? 'var(--color-accent)' : 'transparent',
+                  border: `2px solid ${filled ? 'var(--color-accent)' : BORDER}`,
                   cursor: 'pointer',
                   color: filled ? CREAM : MUTED,
                   fontFamily: 'inherit',
@@ -635,7 +635,7 @@ function SummaryCard({
       {rating > 0 && (
         <div style={{ marginBottom: memo ? 12 : 0, display: 'flex', gap: 2 }}>
           {[1, 2, 3, 4, 5].map(i => (
-            <span key={i} aria-hidden style={{ display: 'inline-flex', color: i <= rating ? WINE_RED : BORDER }}>
+            <span key={i} aria-hidden style={{ display: 'inline-flex', color: i <= rating ? 'var(--color-accent)' : BORDER }}>
               <StarFilledIcon size={18} filled={i <= rating} />
             </span>
           ))}
@@ -666,8 +666,8 @@ function Tag({ children, accent = false }: { children: React.ReactNode; accent?:
     <span
       style={{
         padding: '4px 10px',
-        background: accent ? 'rgba(139,26,42,0.18)' : 'var(--color-bg-surface)',
-        border: `1px solid ${accent ? WINE_RED : BORDER}`,
+        background: accent ? 'var(--color-accent-tint)' : 'var(--color-bg-surface)',
+        border: `1px solid ${accent ? 'var(--color-accent)' : BORDER}`,
         borderRadius: 999,
         fontSize: 11,
         color: CREAM,
