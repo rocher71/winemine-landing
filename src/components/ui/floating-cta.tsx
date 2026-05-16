@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { trackEvent } from '@/lib/analytics';
+import { track } from '@/lib/amplitude';
 import { useLocale } from '@/components/providers/locale-provider';
 
 function AppleIconSmall() {
@@ -81,6 +82,7 @@ export function FloatingCTA({ onOpenModal, isModalOpen = false }: FloatingCTAPro
       location: 'floating',
       button_id: 'app_download_floating',
     });
+    track('cta_click', { location: 'floating' });
     onOpenModal();
   };
 

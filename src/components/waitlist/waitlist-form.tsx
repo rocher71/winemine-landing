@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { CheckboxEmptyIcon, CheckboxCheckedIcon } from '@/components/icons/wine-icons';
 import { submitWaitlist } from '@/app/actions';
 import { trackEvent } from '@/lib/analytics';
+import { track } from '@/lib/amplitude';
 import {
   emailContactSchema,
   phoneContactSchema,
@@ -31,6 +32,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [marketingAgree, setMarketingAgree] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const formStartedRef = useRef(false);
 
   const schema = contactType === 'email' ? emailContactSchema : phoneContactSchema;
 
@@ -51,9 +53,16 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
     reset({ contactType: type, contact: '' } as ContactFormData);
   };
 
+  const handleInputFocus = () => {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    track('form_start');
+  };
+
   const onSubmit = async (data: ContactFormData) => {
     setServerError(null);
     trackEvent('waitlist_submit', { contact_type: contactType, marketing_agree: marketingAgree });
+    track('waitlist_submit', { contact_type: contactType });
     try {
       const result = await submitWaitlist({
         contact: data.contact,
@@ -62,6 +71,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       });
       if (result.success) {
         trackEvent('waitlist_success', { contact_type: contactType });
+        track('waitlist_success', { contact_type: contactType });
         onSuccess();
       } else {
         setServerError(t('waitlistForm.serverError'));
@@ -132,7 +142,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
             placeholder={t('waitlistForm.emailPlaceholder')}
             aria-invalid={errors.contact ? 'true' : 'false'}
             style={inputBaseStyle}
-            onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-wine-red)'; }}
+            onFocus={(e) => { handleInputFocus(); e.currentTarget.style.borderColor = 'var(--color-wine-red)'; }}
             onBlur={(e) => { e.currentTarget.style.borderColor = errors.contact ? 'var(--color-error)' : 'var(--color-border)'; }}
           />
         ) : (
@@ -151,7 +161,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
                 onBlur={field.onBlur}
                 aria-invalid={errors.contact ? 'true' : 'false'}
                 style={inputBaseStyle}
-                onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-wine-red)'; }}
+                onFocus={(e) => { handleInputFocus(); e.currentTarget.style.borderColor = 'var(--color-wine-red)'; }}
               />
             )}
           />

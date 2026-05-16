@@ -9,7 +9,9 @@ export function AmplitudeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (initialized) return;
     initialized = true;
-    amplitude.initAll('9825dc40dbb389f7770795e6cd3f409', {
+    const apiKey = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY;
+    if (!apiKey) return;
+    amplitude.initAll(apiKey, {
       analytics: { autocapture: true },
       sessionReplay: { sampleRate: 1 },
     });

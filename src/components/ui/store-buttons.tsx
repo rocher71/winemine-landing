@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { trackEvent } from '@/lib/analytics';
+import { track } from '@/lib/amplitude';
 import { useLocale } from '@/components/providers/locale-provider';
 
 // ── Apple logo (Material Icons style, 24x24 grid) ─────────────────────────
@@ -62,6 +63,7 @@ export function StoreButtons({ onOpenModal, location = 'unknown', size = 'defaul
       location,
       button_id: `app_download_${store}_${location}`,
     });
+    track('cta_click', { store, location });
     onOpenModal();
   };
 
