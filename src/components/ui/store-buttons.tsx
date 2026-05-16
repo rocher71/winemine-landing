@@ -53,7 +53,7 @@ export function StoreButtons({ onOpenModal, location = 'unknown', size = 'defaul
     transition: 'all 200ms ease',
     minWidth: isCompact ? 130 : 155,
     transform: hovered ? 'translateY(-1px)' : 'none',
-    boxShadow: hovered ? '0 4px 16px rgba(0,0,0,0.3)' : 'none',
+    boxShadow: hovered ? 'var(--btn-store-shadow-hover)' : 'var(--btn-store-shadow)',
     fontFamily: 'inherit',
   });
 
