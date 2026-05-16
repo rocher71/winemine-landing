@@ -63,10 +63,10 @@
   /* Modal backdrop — heavy obscure in both modes */
   --color-modal-backdrop: rgba(42, 31, 18, 0.55);
 
-  /* Store buttons — dark pill on light background for contrast */
-  --btn-store-bg: #000000;
-  --btn-store-bg-hover: #1a1a1a;
-  --btn-store-border: #000000;
+  /* Store buttons — gold pill on light background (matches light-mode accent) */
+  --btn-store-bg: var(--color-gold);
+  --btn-store-bg-hover: var(--color-accent-hover);
+  --btn-store-border: var(--color-gold);
   --btn-store-color: #F5F0E8;
 
   --color-scheme-name: 'light';
