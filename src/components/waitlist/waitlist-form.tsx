@@ -72,13 +72,41 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
       if (result.success) {
         trackEvent('waitlist_success', { contact_type: contactType });
         track('waitlist_success', { contact_type: contactType });
+        if (typeof window !== 'undefined' && window.fbq) {
+          window.fbq('track', 'Lead', {
+            content_name: 'waitlist',
+            content_category: contactType,
+          });
+        }
         onSuccess();
       } else {
+        trackEvent('waitlist_error', {
+          contact_type: contactType,
+          error_code: result.error ?? 'unknown',
+          error_type: 'server_response',
+        });
         setServerError(t('waitlistForm.serverError'));
       }
-    } catch {
+    } catch (e) {
+      trackEvent('waitlist_error', {
+        contact_type: contactType,
+        error_code: 'network',
+        error_type: 'fetch_failed',
+        message: e instanceof Error ? e.message.slice(0, 100) : 'unknown',
+      });
       setServerError(t('waitlistForm.serverError'));
     }
+  };
+
+  const onInvalid = (formErrors: typeof errors) => {
+    const failedField = Object.keys(formErrors)[0] ?? 'unknown';
+    const failedReason =
+      (formErrors as Record<string, { type?: string } | undefined>)[failedField]?.type ?? 'invalid';
+    trackEvent('waitlist_validation_error', {
+      field: failedField,
+      reason: failedReason,
+      contact_type: contactType,
+    });
   };
 
   const activeTabStyle = {
@@ -107,7 +135,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       {/* 이메일 / 전화번호 탭 */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
         {(['email', 'phone'] as const).map((type) => (
