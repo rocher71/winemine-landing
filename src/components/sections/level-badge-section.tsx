@@ -375,20 +375,18 @@ export default function LevelBadgeSection() {
       </div>
 
       <style jsx>{`
-        /* Level catalog grid — PC: auto-fit 5열, 모바일: 2열 + 마지막 카드 가로 폭 강조 */
-        .level-catalog {
+        /* Level catalog grid — 2열 (1·2 / 3·4), 마지막 5번째 카드는 가로 전체(2칸) 차지
+           framer-motion 의 motion.div 에는 styled-jsx jsx-HASH 가 주입되지 않으므로 :global() 필수 */
+        :global(.level-catalog) {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          grid-template-columns: repeat(2, 1fr);
           gap: 12px;
+          max-width: 720px;
+          margin-left: auto;
+          margin-right: auto;
         }
-        @media (max-width: 640px) {
-          .level-catalog {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-          }
-          .level-card-top {
-            grid-column: 1 / -1;
-          }
+        :global(.level-card-top) {
+          grid-column: 1 / -1;
         }
 
         /* Badge grid */
