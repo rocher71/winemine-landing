@@ -274,4 +274,77 @@ body {
 
 /* ── Wine list horizontal scroll — hide scrollbar ── */
 ::-webkit-scrollbar { display: none; }
+
+/* ── Burgundy section: side rail + desktop panel ──
+   styled-jsx 스코프가 motion.div와 충돌해 light 모드에서 카드/패널 배경이
+   미적용되는 회귀가 발생. globals에 글로벌 클래스로 옮겨 안정화. */
+.burgundy-side-card {
+  padding: 14px 18px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-gold-tint-strong);
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(42, 31, 18, 0.22);
+}
+.burgundy-side-count {
+  padding: 10px 16px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  background: #FFFFFF;
+  border: 1px solid var(--color-gold-tint-strong);
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(42, 31, 18, 0.20);
+}
+.burgundy-desktop-panel {
+  background: #FFFFFF;
+  border: 1px solid var(--color-gold-tint-strong);
+  box-shadow: 0 18px 48px rgba(42, 31, 18, 0.22);
+}
+.burgundy-desktop-panel__header {
+  border-bottom: 1px solid var(--color-border);
+}
+.burgundy-desktop-panel__title {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .burgundy-side-card,
+  :root:not([data-theme="light"]) .burgundy-side-count {
+    background: var(--color-bg-surface);
+    border-color: rgba(45, 21, 64, 0.9);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+  }
+  :root:not([data-theme="light"]) .burgundy-desktop-panel {
+    background: var(--color-bg-surface);
+    border-color: var(--color-gold-tint-soft);
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+  }
+  :root:not([data-theme="light"]) .burgundy-desktop-panel__header {
+    border-bottom-color: rgba(45, 21, 64, 0.9);
+  }
+  :root:not([data-theme="light"]) .burgundy-desktop-panel__title {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+}
+:root[data-theme="dark"] .burgundy-side-card,
+:root[data-theme="dark"] .burgundy-side-count {
+  background: var(--color-bg-surface);
+  border-color: rgba(45, 21, 64, 0.9);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+}
+:root[data-theme="dark"] .burgundy-desktop-panel {
+  background: var(--color-bg-surface);
+  border-color: var(--color-gold-tint-soft);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+}
+:root[data-theme="dark"] .burgundy-desktop-panel__header {
+  border-bottom-color: rgba(45, 21, 64, 0.9);
+}
+:root[data-theme="dark"] .burgundy-desktop-panel__title {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
 * { scrollbar-width: none; }

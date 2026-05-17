@@ -193,6 +193,10 @@ const PRODUCERS: ProducerData[] = [
   { id: 'devillaine',name: 'A. & P. de Villaine',        nameKo: 'A. & P. 드 빌렌',             initials: 'DV',  coords: [4.738, 46.882], village: 'Bouzeron',           blurb: 'DRC 공동 디렉터 오베르 드 빌렌의 도멘. 알리고테 부즈롱 표준.', type: 'Domaine' },
   { id: 'ferret',   name: 'Domaine J.A. Ferret',         nameKo: '도멘 J.A. 페레',              initials: 'JF',  coords: [4.732, 46.286], village: 'Pouilly-Fuissé',     blurb: '푸이-퓌세 명문, 4대째 가족 운영. 레 페리에르 1er Cru.', type: 'Domaine' },
   { id: 'merlin',   name: 'Domaine Olivier Merlin',      nameKo: '도멘 올리비에 메를랭',        initials: 'OM',  coords: [4.730, 46.290], village: 'Saint-Véran',        blurb: '마코네 자연주의 선두. 비에이 비뉴(올드 바인) 정통파.', type: 'Domaine' },
+  // ── Côte de Nuits 화이트 도멘 (희귀, 5% 미만 생산) ──
+  { id: 'vogue',    name: 'Domaine Comte Georges de Vogüé', nameKo: '도멘 콩트 조르주 드 보귀에', initials: 'CV', coords: [4.972, 47.202], village: 'Chambolle-Musigny',  blurb: '뮈지니의 절대 강자. 0.66ha의 유일한 Musigny Blanc 생산.', type: 'Domaine' },
+  { id: 'vougeraie',name: 'Domaine de la Vougeraie',     nameKo: '도멘 드 라 부주레',           initials: 'DV2', coords: [4.970, 47.196], village: 'Vougeot',            blurb: '클로 블랑 드 부조 모노폴 1.85ha 보유. 비오디나믹.',     type: 'Domaine' },
+  { id: 'ponsot',   name: 'Domaine Ponsot',              nameKo: '도멘 퐁소',                   initials: 'PS',  coords: [4.983, 47.211], village: 'Morey-Saint-Denis',  blurb: '클로 데 몽 뤼장 모노폴. 100% 알리고테로 만드는 1er Cru 화이트.', type: 'Domaine' },
 ];
 
 const VINEYARDS: VineyardData[] = [
@@ -222,6 +226,11 @@ const VINEYARDS: VineyardData[] = [
   { id: 'en-remilly',        name: 'Saint-Aubin En Remilly',  nameKo: '생-토뱅 앙 르미이',      coords: [4.724, 46.928], classification: '1er Cru',   subregion: 'Saint-Aubin',       area: '13.75 ha', isGrandCruLevel1er: true },
   { id: 'clos-chapitre',     name: 'Fixin Clos du Chapitre',  nameKo: '픽생 클로 뒤 샤피트르',  coords: [4.987, 47.265], classification: '1er Cru',   subregion: 'Fixin',             area: '4.79 ha',  isMonopole: true },
   { id: 'clos-myglands',     name: 'Mercurey Clos des Myglands', nameKo: '메르퀴레 클로 데 미글랑', coords: [4.720, 46.829], classification: '1er Cru', subregion: 'Mercurey',         area: '7.31 ha',  isMonopole: true },
+  // ── Côte de Nuits 화이트 떼루아 (그랑 크뤼 1개 + 1er Cru 모노폴 다수) ──
+  { id: 'musigny-blanc',     name: 'Musigny Blanc',          nameKo: '뮈지니 블랑',           coords: [4.972, 47.203], classification: 'Grand Cru', subregion: 'Chambolle-Musigny', area: '0.66 ha' },
+  { id: 'clos-blanc-vougeot',name: 'Clos Blanc de Vougeot',  nameKo: '클로 블랑 드 부조',      coords: [4.968, 47.197], classification: '1er Cru',   subregion: 'Vougeot',           area: '1.85 ha',  isMonopole: true, isGrandCruLevel1er: true },
+  { id: 'monts-luisants',    name: 'Clos des Monts Luisants',nameKo: '클로 데 몽 뤼장',        coords: [4.985, 47.214], classification: '1er Cru',   subregion: 'Morey-Saint-Denis', area: '2.20 ha' },
+  { id: 'nsg-la-perriere',   name: 'NSG La Perrière',        nameKo: '뉘-생-조르주 라 페리에르', coords: [4.961, 47.114], classification: '1er Cru',   subregion: 'Nuits-Saint-Georges', area: '3.97 ha' },
 ];
 
 // ── 내가 마신 와인 (AI 자동 분류) ────────────────────────────────────────────
@@ -274,6 +283,12 @@ const WINES: Wine[] = [
   { id: 'w32', name: 'Pouilly-Fuissé Les Perrières 1er Cru', nameKo: '푸이-퓌세 레 페리에르 1er Cru', vintage: 2020, producerId: 'ferret',                          subregionId: 'maconnais',     village: 'Pouilly-Fuissé',     villageKo: '푸이-퓌세',        cru: '1er Cru',   wineType: 'white', date: '2025.06.30', occasion: '여름 디너',   note: '2020년 마코네 최초 승격 1er Cru. 풍성한 백복숭아, 견과류, 따뜻한 미네랄.', coords: [4.737, 46.286], color: '#9a781e', label: 'PF',  rating: 4, appellation: 'Pouilly'   },
   // Mâconnais — Saint-Véran (가성비)
   { id: 'w33', name: 'Saint-Véran Vieilles Vignes', nameKo: '생-베랑 비에이 비뉴',       vintage: 2021, producerId: 'merlin',                                       subregionId: 'maconnais',     village: 'Saint-Véran',        villageKo: '생-베랑',          cru: 'Village',   wineType: 'white', date: '2025.04.05', occasion: '데일리',     note: '올드 바인의 농축. 시트러스, 부드러운 산미, 가성비 정점.', coords: [4.732, 46.275], color: '#b8941e', label: 'SV',  rating: 4, appellation: 'St-Véran'  },
+  // ── Côte de Nuits 화이트 (전체 생산의 5% 미만, 매우 희귀) ──
+  { id: 'w34', name: 'Musigny Blanc',               nameKo: '뮈지니 블랑',                vintage: 2014, producerId: 'vogue',     vineyardId: 'musigny-blanc',     subregionId: 'cote-nuits',  village: 'Chambolle-Musigny',  villageKo: '샹볼-뮈지니',       cru: 'Grand Cru', wineType: 'white', date: '2025.12.31', occasion: '특별한 디너', note: '꼬뜨 드 뉘 유일 GC 화이트. 0.66ha 단일 생산. 백악·아카시아·미네랄.', coords: [4.972, 47.203], color: '#8e6c14', label: 'MB',  rating: 5, appellation: 'Musigny'   },
+  { id: 'w35', name: 'Clos Blanc de Vougeot 1er Cru', nameKo: '클로 블랑 드 부조 1er Cru', vintage: 2019, producerId: 'vougeraie', vineyardId: 'clos-blanc-vougeot', subregionId: 'cote-nuits',  village: 'Vougeot',            villageKo: '부조',             cru: '1er Cru',   wineType: 'white', date: '2025.09.05',                          note: '부주레 모노폴 1.85ha. 풍성한 백복숭아, 헤이즐넛, 견고한 미네랄.', coords: [4.968, 47.197], color: '#8a6a12', label: 'CBV', rating: 4, appellation: 'Vougeot'   },
+  { id: 'w36', name: 'Morey-Saint-Denis Clos des Monts Luisants 1er Cru', nameKo: '클로 데 몽 뤼장 1er Cru', vintage: 2018, producerId: 'ponsot', vineyardId: 'monts-luisants', subregionId: 'cote-nuits', village: 'Morey-Saint-Denis', villageKo: '모레-생-드니',     cru: '1er Cru',   wineType: 'white', date: '2025.06.18',                          note: '100% 알리고테로 만드는 1er Cru — 부르고뉴 전체에서도 희귀. 짭짤한 광물성.', coords: [4.985, 47.214], color: '#9a781c', label: 'ML',  rating: 4, appellation: 'Morey'     },
+  { id: 'w37', name: 'NSG La Perrière Blanc 1er Cru', nameKo: '뉘-생-조르주 라 페리에르 블랑 1er Cru', vintage: 2019, producerId: 'gouges', vineyardId: 'nsg-la-perriere', subregionId: 'cote-nuits', village: 'Nuits-Saint-Georges', villageKo: '뉘-생-조르주', cru: '1er Cru',   wineType: 'white', date: '2025.08.12',                          note: '구즈가 발견한 피노 누아 흰 변종으로 양조. 광물성과 견고한 산미.', coords: [4.961, 47.114], color: '#7a5e10', label: 'PB',  rating: 4, appellation: 'NSG'       },
+  { id: 'w38', name: 'Marsannay Blanc',             nameKo: '막사네 블랑',                vintage: 2021, producerId: 'bart',                                          subregionId: 'cote-nuits',  village: 'Marsannay',          villageKo: '막사네',           cru: 'Village',   wineType: 'white', date: '2025.03.12', occasion: '봄 점심',     note: '꼬뜨 드 뉘 최북단의 가성비 화이트. 청사과·라임·가벼운 미네랄.', coords: [4.972, 47.310], color: '#b8941e', label: 'MB2', rating: 4, appellation: 'Marsannay' },
 ];
 
 // 그룹별 마신 와인 카운트/리스트 헬퍼 (드릴다운에서 사용)
@@ -1018,40 +1033,6 @@ function DesktopSideRail({ drill, onDrill, colorFilter, onColor, visible }: {
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <style jsx>{`
-        .burgundy-side-rail :global(.burgundy-side-card) {
-          padding: 14px 18px;
-          background: #FFFFFF;
-          border: 1px solid var(--color-gold-tint-strong);
-          border-radius: 18px;
-          box-shadow: 0 18px 48px rgba(42, 31, 18, 0.14);
-        }
-        .burgundy-side-rail :global(.burgundy-side-count) {
-          padding: 10px 16px;
-          font-size: 11px;
-          color: var(--color-text-secondary);
-          letter-spacing: 0.04em;
-          line-height: 1.5;
-          background: #FFFFFF;
-          border: 1px solid var(--color-gold-tint-strong);
-          border-radius: 14px;
-          box-shadow: 0 14px 36px rgba(42, 31, 18, 0.12);
-        }
-        :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-card),
-        :root[data-theme="dark"] .burgundy-side-rail :global(.burgundy-side-count) {
-          background: var(--color-bg-surface);
-          border-color: rgba(45, 21, 64, 0.9);
-          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
-        }
-        @media (prefers-color-scheme: dark) {
-          :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-card),
-          :root:not([data-theme="light"]) .burgundy-side-rail :global(.burgundy-side-count) {
-            background: var(--color-bg-surface);
-            border-color: rgba(45, 21, 64, 0.9);
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
-          }
-        }
-      `}</style>
       <div className="burgundy-side-card">
         <div style={{ fontSize: 9, letterSpacing: '0.32em', color: 'var(--color-text-muted)', textTransform: 'uppercase' as const, fontWeight: 700, marginBottom: 8 }}>
           현재 위치 / Drill
@@ -1097,36 +1078,8 @@ function DesktopPanel({ drill, onDrill, colorFilter, hoveredId, onHover, visible
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
-      <style jsx>{`
-        .burgundy-desktop-panel {
-          background: #FFFFFF;
-          border: 1px solid var(--color-gold-tint-strong);
-          box-shadow: 0 18px 48px rgba(42, 31, 18, 0.14);
-        }
-        .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
-          border-bottom: 1px solid var(--color-border);
-        }
-        :root[data-theme="dark"] .burgundy-desktop-panel {
-          background: var(--color-bg-surface);
-          border-color: var(--color-gold-tint-soft);
-          box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
-        }
-        :root[data-theme="dark"] .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
-          border-bottom-color: rgba(45, 21, 64, 0.9);
-        }
-        @media (prefers-color-scheme: dark) {
-          :root:not([data-theme="light"]) .burgundy-desktop-panel {
-            background: var(--color-bg-surface);
-            border-color: var(--color-gold-tint-soft);
-            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
-          }
-          :root:not([data-theme="light"]) .burgundy-desktop-panel :global(.burgundy-desktop-panel__header) {
-            border-bottom-color: rgba(45, 21, 64, 0.9);
-          }
-        }
-      `}</style>
       <div className="burgundy-desktop-panel__header" style={{ padding: '14px 18px 10px', flexShrink: 0 }}>
-        <div style={{ fontSize: 10, color: 'var(--color-text-muted)', letterSpacing: '0.06em' }}>{groupLabel}</div>
+        <div className="burgundy-desktop-panel__title" style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase' }}>{groupLabel}</div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px 20px' }}>
         <PanelContent drill={drill} colorFilter={colorFilter}

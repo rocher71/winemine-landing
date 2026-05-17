@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { StoreButtons } from '@/components/ui/store-buttons';
 import { useLocale } from '@/components/providers/locale-provider';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { LocaleSwitcher } from '@/components/ui/locale-switcher';
 
 interface FinalCTASectionProps {
   onOpenModal: () => void;
@@ -58,7 +59,10 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
         <p style={{ fontSize: 13, color: 'var(--color-text-disabled)' }}>
           {t('finalCta.copyright')}
         </p>
-        <ThemeToggle />
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <ThemeToggle />
+          <LocaleSwitcher />
+        </div>
       </footer>
     </>
   );

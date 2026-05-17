@@ -27,24 +27,24 @@ export function LocaleSwitcher() {
       role="group"
       aria-label="Language"
       style={{
-        position: 'fixed',
-        top: 16,
-        right: 16,
-        zIndex: 100,
         display: 'inline-flex',
         alignItems: 'center',
-        padding: 3,
-        gap: 2,
+        padding: 2,
+        gap: 1,
         borderRadius: 999,
-        background: 'var(--color-bg-surface)',
-        border: '1px solid rgba(201,168,76,0.35)',
-        boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        border: '1px solid var(--color-border-soft)',
+        background: 'transparent',
         fontFamily: 'var(--font-inter), system-ui, sans-serif',
-        fontSize: 11,
-        letterSpacing: '0.08em',
-        fontWeight: 600,
+        opacity: 0.75,
+        transition: 'opacity 160ms ease, border-color 160ms ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.opacity = '1';
+        e.currentTarget.style.borderColor = 'var(--color-gold-tint-soft)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.opacity = '0.75';
+        e.currentTarget.style.borderColor = 'var(--color-border-soft)';
       }}
     >
       {(['ko', 'en'] as Locale[]).map((l) => {
@@ -58,16 +58,18 @@ export function LocaleSwitcher() {
             aria-label={l === 'ko' ? '한국어로 보기' : 'View in English'}
             style={{
               minWidth: 30,
-              padding: '5px 9px',
+              padding: '4px 9px',
               borderRadius: 999,
               border: 'none',
               cursor: active ? 'default' : 'pointer',
-              background: active ? 'var(--color-gold)' : 'transparent',
-              color: active ? 'var(--color-bg-deepest)' : 'var(--color-text-secondary)',
+              background: active ? 'var(--color-gold-tint-soft)' : 'transparent',
+              color: active ? 'var(--color-text-primary)' : 'var(--color-text-disabled)',
               transition: 'background 160ms ease, color 160ms ease',
-              letterSpacing: '0.08em',
-              fontSize: 11,
-              fontWeight: 700,
+              letterSpacing: '0.12em',
+              fontSize: 10,
+              fontWeight: active ? 700 : 600,
+              textTransform: 'uppercase',
+              fontFamily: 'inherit',
             }}
           >
             {LOCALE_LABELS[l]}
