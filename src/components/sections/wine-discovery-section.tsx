@@ -615,10 +615,8 @@ function RecommendationCard({
       .rec-bottle-disc {
         background: radial-gradient(circle at 30% 25%, rgba(42,31,18,0.04), rgba(42,31,18,0.10));
       }
-      @media (prefers-color-scheme: dark) {
-        .rec-bottle-disc {
-          background: radial-gradient(circle at 30% 25%, rgba(245,240,232,0.10), rgba(0,0,0,0.55));
-        }
+      :root[data-theme="dark"] .rec-bottle-disc {
+        background: radial-gradient(circle at 30% 25%, rgba(245,240,232,0.10), rgba(0,0,0,0.55));
       }
     `}</style>
     <motion.div

@@ -76,66 +76,9 @@
   --color-scheme-name: 'light';
 }
 
-/* System dark mode — applied only when user has not explicitly chosen a theme */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    /* Lifted from pitch-dark (#05020A / #0A050F / #0F0718) to deep wine-purple
-       so sections like Price Intelligence read as "dark elegant" rather than "pure black".
-       surface는 deepest 대비 ΔL ≈ 13으로 elevation 또렷 (Cellar 카드 등). */
-    --color-bg-deepest: #100A1F;
-    --color-bg-deep: #170D2C;
-    --color-bg-surface: #2D1A4A;
-    --color-bg-map: #2A1844;
-    --color-bg-input: rgba(26, 10, 30, 0.6);
-    --color-surface: var(--color-bg-surface);
-
-    --color-text-primary: #F5F0E8;
-    --color-text-secondary: #D4C5B0;
-    --color-text-muted: #9B8B7A;
-    --color-text-disabled: #4A3D56;
-
-    --color-border: #2D1540;
-    --color-border-soft: rgba(255, 255, 255, 0.06);
-    --color-border-active: var(--color-wine-red);
-
-    /* Mode-aware accent (dark): wine-red 톤 */
-    --color-accent: var(--color-wine-red);
-    --color-accent-hover: var(--color-wine-red-hover);
-    --color-accent-shadow-soft: rgba(139, 26, 42, 0.45);
-    --color-accent-shadow-strong: rgba(139, 26, 42, 0.60);
-    --color-accent-tint: rgba(139, 26, 42, 0.12);
-    --color-map-wine-fill: #C41E3A;
-
-    --overlay-soft: rgba(255, 255, 255, 0.04);
-    --overlay-medium: rgba(255, 255, 255, 0.08);
-    --overlay-strong: rgba(255, 255, 255, 0.16);
-
-    /* Map-specific tokens — values matched to pre-theme refactor (commit b54d037^).
-       inactive(#2A1552) / stroke(#4A2080) keep land masses visible against bg(#0d0810). */
-    --color-map-bg: #0d0810;
-    --color-map-inactive: #2A1552;
-    --color-map-stroke: #4A2080;
-
-    --color-gold-tint-faint: rgba(240, 200, 118, 0.10);
-    --color-gold-tint-soft:  rgba(240, 200, 118, 0.18);
-    --color-gold-tint-med:   rgba(240, 200, 118, 0.30);
-    --color-gold-tint-strong:rgba(240, 200, 118, 0.55);
-
-    --color-modal-backdrop: rgba(5, 2, 8, 0.85);
-
-    /* Store buttons — glass overlay on dark background */
-    --btn-store-bg: rgba(255, 255, 255, 0.10);
-    --btn-store-bg-hover: rgba(255, 255, 255, 0.16);
-    --btn-store-border: rgba(255, 255, 255, 0.15);
-    --btn-store-color: #F5F0E8;
-    --btn-store-shadow: none;
-    --btn-store-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.35);
-
-    --color-scheme-name: 'dark';
-  }
-}
-
-/* Manual dark override — applied regardless of system preference */
+/* Dark mode — applied only when user explicitly toggles via the footer ThemeToggle.
+   System `prefers-color-scheme: dark` is intentionally ignored: the landing
+   defaults to light, and users opt in to dark mode through the footer toggle. */
 :root[data-theme="dark"] {
   /* Same lifted wine-purple tones as the system-preference dark block above. */
   --color-bg-deepest: #100A1F;
@@ -190,8 +133,11 @@
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: light;
   scroll-behavior: smooth;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 * {
@@ -309,26 +255,6 @@ body {
   font-weight: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .burgundy-side-card,
-  :root:not([data-theme="light"]) .burgundy-side-count {
-    background: var(--color-bg-surface);
-    border-color: rgba(45, 21, 64, 0.9);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
-  }
-  :root:not([data-theme="light"]) .burgundy-desktop-panel {
-    background: var(--color-bg-surface);
-    border-color: var(--color-gold-tint-soft);
-    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
-  }
-  :root:not([data-theme="light"]) .burgundy-desktop-panel__header {
-    border-bottom-color: rgba(45, 21, 64, 0.9);
-  }
-  :root:not([data-theme="light"]) .burgundy-desktop-panel__title {
-    color: var(--color-text-muted);
-    font-weight: 400;
-  }
-}
 :root[data-theme="dark"] .burgundy-side-card,
 :root[data-theme="dark"] .burgundy-side-count {
   background: var(--color-bg-surface);

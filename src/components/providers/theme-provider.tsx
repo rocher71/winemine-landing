@@ -23,11 +23,11 @@ function readInitial(): Theme {
   if (typeof window === 'undefined') return 'light';
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === 'light' || saved === 'dark') return saved;
+    if (saved === 'dark') return 'dark';
   } catch {
     /* localStorage may be blocked */
   }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'light';
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

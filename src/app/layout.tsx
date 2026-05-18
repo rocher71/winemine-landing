@@ -55,9 +55,9 @@ export default async function RootLayout({
   const messages = await getMessages(locale);
 
   return (
-    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`} style={{ colorScheme: 'light dark' }}>
+    <html lang={locale} className={`${playfairDisplay.variable} ${inter.variable}`} style={{ colorScheme: 'light' }}>
       <head>
-        <meta name="color-scheme" content="light dark" />
+        <meta name="color-scheme" content="light" />
         <script dangerouslySetInnerHTML={{ __html: THEME_FLICKER_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
