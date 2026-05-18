@@ -1,21 +1,12 @@
 'use server';
 
 import { createClient } from '@supabase/supabase-js';
-import { z } from 'zod';
 import { headers } from 'next/headers';
 import { notifyNewSignup } from '@/lib/slack';
+import { contactSchema } from '@/lib/validations';
 
-const emailSchema = z.object({
-  contactType: z.literal('email'),
-  contact: z.string().email().max(255),
-});
-
-const phoneSchema = z.object({
-  contactType: z.literal('phone'),
-  contact: z.string().regex(/^010[-\s]?\d{4}[-\s]?\d{4}$/).max(20),
-});
-
-const schema = z.discriminatedUnion('contactType', [emailSchema, phoneSchema]);
+// 서버측 재검증 — 클라이언트 Zod와 동일한 룰로 NULL byte / 제어 문자 / 형식 차단.
+const schema = contactSchema;
 
 export async function submitWaitlist(data: {
   contact: string;
