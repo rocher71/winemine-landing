@@ -1,16 +1,19 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
+import { MessageSquarePlus } from 'lucide-react';
 import { StoreButtons } from '@/components/ui/store-buttons';
 import { useLocale } from '@/components/providers/locale-provider';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { LocaleSwitcher } from '@/components/ui/locale-switcher';
+import { trackEvent } from '@/lib/analytics';
 
 interface FinalCTASectionProps {
   onOpenModal: () => void;
+  onOpenFeedback: () => void;
 }
 
-export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
+export default function FinalCTASection({ onOpenModal, onOpenFeedback }: FinalCTASectionProps) {
   const shouldReduceMotion = useReducedMotion();
   const { t } = useLocale();
 
@@ -60,6 +63,39 @@ export default function FinalCTASection({ onOpenModal }: FinalCTASectionProps) {
           {t('finalCta.copyright')}
         </p>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button
+            type="button"
+            onClick={() => {
+              trackEvent('feedback_open', { location: 'footer' });
+              onOpenFeedback();
+            }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '6px 12px',
+              background: 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: 999,
+              color: 'var(--color-text-muted)',
+              fontSize: 12,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              transition: 'all 150ms ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-gold)';
+              e.currentTarget.style.color = 'var(--color-text-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border)';
+              e.currentTarget.style.color = 'var(--color-text-muted)';
+            }}
+            aria-label={t('feedbackTrigger.label')}
+          >
+            <MessageSquarePlus size={14} />
+            {t('feedbackTrigger.label')}
+          </button>
           <ThemeToggle />
           <LocaleSwitcher />
         </div>

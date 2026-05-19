@@ -16,13 +16,17 @@ import InstagramPreviewSection from '@/components/sections/instagram-preview-sec
 // import HowItWorksSection from '@/components/sections/how-it-works-section'; // 미마운트 (롤백 대비 보존)
 import FinalCTASection from '@/components/sections/final-cta-section';
 import WaitlistModal from '@/components/waitlist/waitlist-modal';
+import FeedbackModal from '@/components/feedback/feedback-modal';
 import { FloatingCTA } from '@/components/ui/floating-cta';
 
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const openModal  = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
+  const openFeedback  = () => setFeedbackOpen(true);
+  const closeFeedback = () => setFeedbackOpen(false);
 
   return (
     <main>
@@ -66,9 +70,10 @@ export default function Home() {
       {/* <HowItWorksSection /> */}
 
       {/* 14. 최종 CTA */}
-      <FinalCTASection onOpenModal={openModal} />
+      <FinalCTASection onOpenModal={openModal} onOpenFeedback={openFeedback} />
 
       <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
+      <FeedbackModal isOpen={feedbackOpen} onClose={closeFeedback} />
       <FloatingCTA onOpenModal={openModal} isModalOpen={modalOpen} />
     </main>
   );

@@ -30,6 +30,51 @@ function sanitizeForSlack(s: string): string {
   return s.replace(SLACK_META, '').slice(0, 256);
 }
 
+type FeedbackPayload = {
+  message: string;
+  email: string | null;
+  category: 'feature';
+};
+
+// 본문은 길이가 길 수 있어 슬랙 입력 제한(약 3000자) 안쪽으로 자르고 메타 문자만 제거.
+// eslint-disable-next-line no-control-regex
+const SLACK_BODY_META = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F<>]/g;
+function sanitizeBodyForSlack(s: string): string {
+  return s.replace(SLACK_BODY_META, '').slice(0, 2000);
+}
+
+export async function notifyNewFeedback(p: FeedbackPayload): Promise<void> {
+  // 피드백 전용 채널(예: #winemine-feedback)로 분리 발송.
+  // 미설정 시 silent skip — waitlist 채널로 새지 않도록 fallback 없음.
+  const url = process.env.SLACK_FEEDBACK_WEBHOOK_URL;
+  if (!url) return;
+
+  const categoryKo = p.category === 'feature' ? '의견 · 제안' : p.category;
+  const time = formatKstNow();
+  const safeMessage = sanitizeBodyForSlack(p.message);
+  const safeEmail = p.email ? sanitizeForSlack(p.email) : null;
+
+  const lines = [
+    '[FEEDBACK] 새 피드백',
+    `카테고리: ${categoryKo}`,
+    safeEmail ? `회신 이메일: ${safeEmail}` : '회신 이메일: (미제공)',
+    `접수 시간: ${time}`,
+    '---',
+    safeMessage,
+  ];
+  const text = lines.join('\n');
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+  } catch (err) {
+    console.error('[slack] notifyNewFeedback failed:', err);
+  }
+}
+
 export async function notifyNewSignup(p: Payload): Promise<void> {
   const url = process.env.SLACK_WEBHOOK_URL;
   if (!url) return;
