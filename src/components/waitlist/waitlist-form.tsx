@@ -17,6 +17,7 @@ import { useLocale } from '@/components/providers/locale-provider';
 
 interface WaitlistFormProps {
   onSuccess: () => void;
+  referredBy?: string;
 }
 
 // 전화번호 자동 포맷: 숫자만 입력받아 010-XXXX-XXXX 형식으로 변환
@@ -27,7 +28,7 @@ function formatPhone(raw: string): string {
   return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
 }
 
-export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
+export default function WaitlistForm({ onSuccess, referredBy }: WaitlistFormProps) {
   const { t } = useLocale();
   const [contactType, setContactType] = useState<'email' | 'phone'>('email');
   const [marketingAgree, setMarketingAgree] = useState(false);
@@ -68,6 +69,7 @@ export default function WaitlistForm({ onSuccess }: WaitlistFormProps) {
         contact: data.contact,
         contactType,
         marketingAgree,
+        referredBy,
       });
       if (result.success) {
         trackEvent('waitlist_success', { contact_type: contactType });
