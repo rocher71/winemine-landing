@@ -18,7 +18,7 @@ RESEND_TEMPLATE_ID_SURVEY=...     # 설문 이메일 템플릿 ID
 
 1. [resend.com](https://resend.com) → **Templates** → **Create Template**
 2. 이름 지정 (예: `referral`, `survey`)
-3. `src/emails/referral.html` 또는 `src/emails/survey.html` 내용 붙여넣기
+3. `src/emails/referral.html` 또는 `src/emails/feature-survey.html` 내용 붙여넣기
 4. **From**, **Reply-To**, **Subject**, **Preview** 설정 (아래 표 참고)
 5. Save → 템플릿 상세 페이지 URL에서 ID 복사 → `.env.local`에 추가
 
@@ -28,7 +28,7 @@ RESEND_TEMPLATE_ID_SURVEY=...     # 설문 이메일 템플릿 ID
 |--|--|--|
 | From | `WineMine <wine@winemine.site>` | `WineMine <wine@winemine.site>` |
 | Reply-To | `wine@winemine.site` | `wine@winemine.site` |
-| Subject | `함께 와인을 좋아하는 친구가 있으신가요?` | `WineMine 출시 전, 당신의 의견을 듣고 싶어요` |
+| Subject | `함께 와인을 좋아하는 친구가 있으신가요?` | `WineMine, 어떤 모습이 되면 좋을까요? (2분 설문)` |
 | Preview | `와인 친구들에게 공유하면, 6개월 무료 구독 쿠폰을 드립니다!` | `짧은 설문 한 잔 — 보내주신 의견이 WineMine에 반영됩니다!` |
 
 ### 템플릿 변수
