@@ -3,6 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { notifyNewSignup, notifyNewFeedback } from '@/lib/slack';
+import { addContact, sendCouponActivatedEmail } from '@/lib/resend';
+import { generateReferralCode, isValidReferralCode } from '@/lib/referral';
 import { contactSchema, feedbackSchema } from '@/lib/validations';
 
 // 서버측 재검증 — 클라이언트 Zod와 동일한 룰로 NULL byte / 제어 문자 / 형식 차단.
@@ -12,6 +14,7 @@ export async function submitWaitlist(data: {
   contact: string;
   contactType: 'email' | 'phone';
   marketingAgree?: boolean;
+  referredBy?: string;
 }): Promise<{ success: boolean; error?: string }> {
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { success: false, error: 'validation' };
@@ -24,12 +27,18 @@ export async function submitWaitlist(data: {
   const headersList = await headers();
   const ip = headersList.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null;
 
+  const referredBy = data.referredBy && isValidReferralCode(data.referredBy)
+    ? data.referredBy
+    : null;
+
   const { error } = await supabase.from('waitlist').insert({
     contact: parsed.data.contact.trim(),
     contact_type: parsed.data.contactType,
     ip_address: ip,
     user_agent: headersList.get('user-agent'),
     marketing_agree: data.marketingAgree ?? false,
+    referral_code: generateReferralCode(),
+    referred_by: referredBy,
   });
 
   if (error && error.code !== '23505') {
@@ -48,6 +57,32 @@ export async function submitWaitlist(data: {
     isDuplicate: error?.code === '23505',
     totalCount,
   });
+
+  // 신규 가입자 후처리 (중복 제외)
+  if (!error) {
+    if (parsed.data.contactType === 'email') {
+      await addContact(parsed.data.contact.trim());
+    }
+    if (referredBy) {
+      // atomic: 카운트 +1 + (첫 추천이면) coupon 활성화
+      const { data: refResult } = await supabase
+        .rpc('process_referral', { p_referral_code: referredBy })
+        .maybeSingle<{
+          referrer_id: string;
+          referrer_contact: string;
+          coupon_code: string;
+          is_first_referral: boolean;
+        }>();
+
+      if (refResult?.is_first_referral && refResult.referrer_contact) {
+        await sendCouponActivatedEmail({
+          to: refResult.referrer_contact,
+          couponCode: refResult.coupon_code,
+        });
+      }
+    }
+  }
+
   return { success: true };
 }
 

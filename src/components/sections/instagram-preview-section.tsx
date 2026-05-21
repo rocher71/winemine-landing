@@ -145,13 +145,13 @@ export function StoryCard({ animate }: { animate: boolean }) {
           }}>
             <Image
               src="/winemine-glass-mark.png"
-              alt="winemine"
+              alt="WineMine"
               width={20}
               height={20}
               style={{ objectFit: 'contain' }}
             />
           </div>
-          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-primary)' }}>winemine</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--color-text-primary)' }}>WineMine</span>
           <span style={{ fontSize: 10, color: 'var(--overlay-strong)', marginLeft: 'auto' }}>{messages.instagramPreview.timestamp}</span>
         </div>
       </div>
@@ -309,7 +309,7 @@ export function StoryCard({ animate }: { animate: boolean }) {
         <span style={{
           fontFamily: 'Georgia, serif', fontSize: 11,
           color: 'var(--color-gold)', letterSpacing: '0.08em',
-        }}>winemine</span>
+        }}>WineMine</span>
         <span style={{ fontSize: 9, color: 'var(--color-text-disabled)', marginLeft: 4 }}>winemine.app</span>
       </div>
     </div>

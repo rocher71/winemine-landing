@@ -456,7 +456,7 @@
   "cellar": {
     "sectionLabel": "My Cellar",
     "heading": "Store your bottles, track every drink window",
-    "subheading": "winemine follows each wine to its peak — and beyond",
+    "subheading": "WineMine follows each wine to its peak — and beyond",
     "badges": {
       "ready": "Ready to drink",
       "hold": "Keep aging",
@@ -512,7 +512,7 @@
     "steps": [
       { "title": "Add to favorites", "body": "Worth buying or not…" },
       { "title": "Someone logs a price", "body": "Bought in Hannam at $95" },
-      { "title": "Push notification", "body": "winemine tells you instantly" },
+      { "title": "Push notification", "body": "WineMine tells you instantly" },
       { "title": "Check the trend", "body": "Buy at the dip" }
     ],
     "pushBanner": {
@@ -531,7 +531,7 @@
   "communityTonight": {
     "sectionLabel": "Tonight, Together",
     "heading": "Tonight — who's opening what?",
-    "subheading": "Alone but together. The winemine community gathers around a single glass.",
+    "subheading": "Alone but together. The WineMine community gathers around a single glass.",
     "mapLabel": "Drinking right now",
     "regions": ["Seoul", "Gangwon", "Busan", "Yeosu", "Jeju"],
     "feedItems": [
@@ -539,7 +539,7 @@
       { "name": "OnlyChampagne", "level": "Lv.4", "wine": "Champagne Brut NV", "place": "Busan", "time": "12 min ago", "mood": "Catching up with an old friend" },
       { "name": "AfterWorkPour", "level": "Lv.3", "wine": "Châteauneuf-du-Pape 2017", "place": "Jeju", "time": "28 min ago", "mood": "Friday night reward" }
     ],
-    "outro": "Alone but together. The winemine community gathers around a single glass.",
+    "outro": "Alone but together. The WineMine community gathers around a single glass.",
     "bullets": [
       { "title": "Live feed", "desc": "Who's drinking what, where — right now" },
       { "title": "Taste matching", "desc": "Discover people who love the same regions and grapes" },
@@ -613,7 +613,7 @@
   "finalCta": {
     "heading": "Make your own Wine Map",
     "body": "Join the waitlist and be the first to know when we launch.",
-    "copyright": "© 2026 winemine. All rights reserved."
+    "copyright": "© 2026 WineMine. All rights reserved."
   },
 
   "floatingCta": {
@@ -653,7 +653,7 @@
   },
 
   "feedbackModal": {
-    "title": "Tell winemine anything",
+    "title": "Tell WineMine anything",
     "description": "Feature ideas, feedback, partnership inquiries — share anything.\nOur team reads every note.",
     "closeAriaLabel": "Close modal"
   },
@@ -666,13 +666,13 @@
     "emailPlaceholder": "winemine@gmail.com",
     "submitButton": "Send",
     "loadingButton": "Sending...",
-    "privacyNotice": "Your input is used solely to improve winemine and to follow up with you.",
+    "privacyNotice": "Your input is used solely to improve WineMine and to follow up with you.",
     "serverError": "A temporary error occurred. Please try again shortly."
   },
 
   "feedbackSuccess": {
     "heading": "Thanks for sharing!",
-    "message": "We read every note and consider every idea.\nSee you soon with an even better winemine.",
+    "message": "We read every note and consider every idea.\nSee you soon with an even better WineMine.",
     "closeButton": "Close"
   },
 

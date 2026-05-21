@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import HeroSection from '@/components/sections/hero-section';
 import WineDiscoverySection from '@/components/sections/wine-discovery-section';
 import BurgundySection from '@/components/sections/burgundy-section';
@@ -19,9 +20,19 @@ import WaitlistModal from '@/components/waitlist/waitlist-modal';
 import FeedbackModal from '@/components/feedback/feedback-modal';
 import { FloatingCTA } from '@/components/ui/floating-cta';
 
+function RefCapture({ onRef }: { onRef: (ref: string) => void }) {
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) onRef(ref);
+  }, [searchParams, onRef]);
+  return null;
+}
+
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [referredBy, setReferredBy] = useState<string | undefined>();
 
   const openModal  = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -30,6 +41,9 @@ export default function Home() {
 
   return (
     <main>
+      <Suspense fallback={null}>
+        <RefCapture onRef={setReferredBy} />
+      </Suspense>
       {/* 1. Hero — 전 세계 지도 슬라이딩 배경 */}
       <HeroSection onOpenModal={openModal} />
 
@@ -72,7 +86,7 @@ export default function Home() {
       {/* 14. 최종 CTA */}
       <FinalCTASection onOpenModal={openModal} onOpenFeedback={openFeedback} />
 
-      <WaitlistModal isOpen={modalOpen} onClose={closeModal} />
+      <WaitlistModal isOpen={modalOpen} onClose={closeModal} referredBy={referredBy} />
       <FeedbackModal isOpen={feedbackOpen} onClose={closeFeedback} />
       <FloatingCTA onOpenModal={openModal} isModalOpen={modalOpen} />
     </main>

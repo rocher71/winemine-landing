@@ -1,0 +1,151 @@
+/**
+ * 추천인 이메일 일괄 발송 스크립트
+ *
+ * 실행 방법:
+ *   npx tsx --env-file .env.local scripts/send-referral-emails.ts              # dry run
+ *   npx tsx --env-file .env.local scripts/send-referral-emails.ts --test me@gmail.com
+ *   npx tsx --env-file .env.local scripts/send-referral-emails.ts --send       # 실제 발송
+ *
+ * 템플릿: src/emails/referral.html
+ * 치환 변수: {{REFERRAL_URL}}, {{COUPON_CODE}}
+ */
+
+import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { generateReferralCode } from '../src/lib/referral';
+import ws from 'ws';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  { realtime: { transport: ws } }
+);
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const FROM       = 'WineMine <wine@winemine.site>';
+const REPLY_TO   = 'wine@winemine.site';
+const SUBJECT    = '함께 와인을 좋아하는 친구가 있으신가요?';
+const BASE_URL   = 'https://www.winemine.site';
+const DRY_RUN    = !process.argv.includes('--send') && !process.argv.includes('--test');
+const TEST_IDX   = process.argv.indexOf('--test');
+const TEST_EMAIL = TEST_IDX !== -1 ? process.argv[TEST_IDX + 1] : null;
+
+function buildHtml(template: string, referralCode: string): string {
+  const url = `${BASE_URL}?ref=${referralCode}`;
+  return template
+    .replaceAll('{{REFERRAL_URL}}', url)
+    .replaceAll('{{COUPON_CODE}}', referralCode);
+}
+
+async function sendTest(email: string) {
+  const template = readFileSync(join(process.cwd(), 'src/emails/referral.html'), 'utf-8');
+  const { data, error } = await resend.emails.send({
+    from: FROM,
+    reply_to: REPLY_TO,
+    to: email,
+    subject: `[테스트] ${SUBJECT}`,
+    html: buildHtml(template, 'WMTEST1'),
+  });
+  if (error) {
+    console.error('테스트 발송 실패:', error);
+  } else {
+    console.log(`테스트 메일 발송 완료 → ${email} (id: ${data?.id})`);
+  }
+}
+
+async function main() {
+  if (TEST_EMAIL) {
+    console.log(`[TEST] ${TEST_EMAIL} 으로 테스트 메일 발송 중...`);
+    await sendTest(TEST_EMAIL);
+    return;
+  }
+
+  // 1. 이메일 waitlist 전원 조회
+  const { data: contacts, error: fetchError } = await supabase
+    .from('waitlist')
+    .select('id, contact, referral_code')
+    .eq('contact_type', 'email')
+    .order('created_at');
+
+  if (fetchError || !contacts) {
+    console.error('Supabase 조회 실패:', fetchError);
+    process.exit(1);
+  }
+
+  console.log(`총 ${contacts.length}명 조회`);
+
+  // 2. referral_code 없는 사람에게 코드 생성 + DB 업데이트
+  const existingCodes = new Set(contacts.map(c => c.referral_code).filter(Boolean));
+
+  for (const contact of contacts) {
+    if (contact.referral_code) continue;
+
+    let code: string;
+    do { code = generateReferralCode(); } while (existingCodes.has(code));
+    existingCodes.add(code);
+
+    const { error } = await supabase
+      .from('waitlist')
+      .update({ referral_code: code })
+      .eq('id', contact.id);
+
+    if (error) {
+      console.error(`코드 저장 실패 (${contact.contact}):`, error.message);
+    } else {
+      contact.referral_code = code;
+      console.log(`코드 생성: ${contact.contact} → ${code}`);
+    }
+  }
+
+  // 3. HTML 템플릿 로드
+  const template = readFileSync(join(process.cwd(), 'src/emails/referral.html'), 'utf-8');
+  const ready = contacts.filter(c => c.referral_code);
+
+  if (DRY_RUN) {
+    console.log('\n[DRY RUN] 실제 발송 없이 미리보기만 출력합니다.');
+    console.log('실제 발송: npx tsx --env-file .env.local scripts/send-referral-emails.ts --send\n');
+    ready.slice(0, 3).forEach(c => {
+      console.log(`  → ${c.contact}  |  코드: ${c.referral_code}  |  링크: ${BASE_URL}?ref=${c.referral_code}`);
+    });
+    if (ready.length > 3) console.log(`  ... 외 ${ready.length - 3}명`);
+    console.log(`\n총 ${ready.length}건 발송 예정`);
+    return;
+  }
+
+  // 4. Resend Batch API로 발송 (100건씩)
+  console.log(`\n발송 시작: ${ready.length}명`);
+
+  const BATCH = 100;
+  for (let i = 0; i < ready.length; i += BATCH) {
+    const chunk = ready.slice(i, i + BATCH);
+
+    const emails = chunk.map(c => ({
+      from: FROM,
+      reply_to: REPLY_TO,
+      to: c.contact,
+      subject: SUBJECT,
+      html: buildHtml(template, c.referral_code!),
+    }));
+
+    const { error: batchError } = await resend.batch.send(emails);
+
+    if (batchError) {
+      console.error(`배치 ${Math.floor(i / BATCH) + 1} 실패:`, batchError);
+    } else {
+      console.log(`배치 ${Math.floor(i / BATCH) + 1} 완료 — ${chunk.length}건 발송`);
+    }
+
+    if (i + BATCH < ready.length) {
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+
+  console.log('\n완료!');
+}
+
+main().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

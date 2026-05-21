@@ -11,9 +11,10 @@ import { trackEvent } from '@/lib/analytics';
 interface WaitlistModalProps {
   isOpen: boolean;
   onClose: () => void;
+  referredBy?: string;
 }
 
-export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
+export default function WaitlistModal({ isOpen, onClose, referredBy }: WaitlistModalProps) {
   const { t } = useLocale();
   const [showSuccess, setShowSuccess] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -150,7 +151,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
 
             {showSuccess
               ? <WaitlistSuccess onClose={onClose} />
-              : <WaitlistForm onSuccess={() => setShowSuccess(true)} />
+              : <WaitlistForm onSuccess={() => setShowSuccess(true)} referredBy={referredBy} />
             }
           </motion.div>
         </>
