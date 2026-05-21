@@ -152,9 +152,15 @@ SUPABASE_SERVICE_ROLE_KEY        # 서버 전용 (절대 NEXT_PUBLIC_ 접두사 
 NEXT_PUBLIC_SITE_URL             # 배포 URL (OG 태그용, optional)
 SLACK_WEBHOOK_URL                # 서버 전용. waitlist 신규/중복 등록 시 Slack 채널 알림 (optional, 미설정 시 silent skip)
 SLACK_FEEDBACK_WEBHOOK_URL       # 서버 전용. feedback 등록 시 별도 채널(예: #winemine-feedback) 알림 (optional, 미설정 시 silent skip — waitlist 채널로 fallback 안 함)
+RESEND_API_KEY                   # 서버 전용. waitlist 메일 발송 (Resend)
+RESEND_TEMPLATE_ID_REFERRAL      # 추천 메일 템플릿 ID
+RESEND_TEMPLATE_ID_SURVEY        # 설문 메일 템플릿 ID
+RESEND_TEMPLATE_ID_COUPON_ACTIVATED  # 추천인 첫 가입 발생 시 자동 발송 템플릿 ID
 ```
 
-**CRITICAL:** `SUPABASE_SERVICE_ROLE_KEY`, `SLACK_WEBHOOK_URL`, `SLACK_FEEDBACK_WEBHOOK_URL`은 Server Action에서만 사용. 클라이언트 번들에 절대 포함 금지.
+**CRITICAL:** `SUPABASE_SERVICE_ROLE_KEY`, `SLACK_WEBHOOK_URL`, `SLACK_FEEDBACK_WEBHOOK_URL`, `RESEND_API_KEY`, `RESEND_TEMPLATE_ID_*`은 Server Action/스크립트에서만 사용. 클라이언트 번들에 절대 포함 금지.
+
+**Resend 발송 가이드:** 트랜잭셔널/브로드캐스트 라인 분리, 100/일 한도, 템플릿 사용 패턴, suppression list, 발송 전 프리플라이트 체크 등 운영 매뉴얼은 `docs/resend.md` 참조. 실제 사용자 주소로 메일이 나가는 명령(`--send`, `--to <실사용자>`, broadcast 등)은 사용자가 "보내달라"고 명시했더라도 한 번 더 확인 질문 후 실행할 것.
 
 ---
 
@@ -336,6 +342,9 @@ Wine Discovery 섹션(초보자 5단계 스크롤 스토리텔링·재사용 컴
 
 서비스 전반의 디자인 시스템(무드·색상·타이포·인터랙션 원칙) 단일 참조:
 → **`design.md`** 참조
+
+Resend 메일 발송(트랜잭셔널/브로드캐스트 분리·100/일 한도·템플릿 사용 패턴·suppression list·프리플라이트 체크리스트) 운영 매뉴얼:
+→ **`docs/resend.md`** 참조 — 메일 발송 작업 전 반드시 읽을 것
 
 서비스의 비전·타겟·로드맵·기능 요건 등 제품 기획 문서:
 → **`PRODUCT_PLAN.md`** 참조
