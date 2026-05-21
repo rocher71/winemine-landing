@@ -83,7 +83,7 @@ function PushBanner({ title, body }: { title: string; body: string }) {
             textOverflow: 'ellipsis',
           }}
         >
-          winemine · {title}
+          WineMine · {title}
         </div>
         <div
           style={{

@@ -20,7 +20,7 @@ npm run lint     # ESLint
 
 **winemine**은 와인 라벨을 촬영하면 AI가 와인을 인식하고, 마신 와인을 세계 지도 위에 지역별로 시각화해 기록하는 앱이다.
 
-- 서비스명: **winemine** (소문자, 붙여쓰기 고정)
+- 서비스명: **WineMine** (카멜케이스, 붙여쓰기 고정)
 - 핵심 감성: 프리미엄 와인 라벨의 무게감. 어두운 밤, 와인 한 잔.
 - 현재 단계: **Phase 1 — 랜딩 페이지 + Waiting List** (이 레포 전용)
 - Phase 2 이후 iOS/Android 앱은 별도 레포로 생성 예정
@@ -119,7 +119,7 @@ Error:             #EF4444
 - **Noto Sans KR** — 한국어 본문 fallback (globals.css 폰트 스택)
 
 ### 로고 규칙
-- 항상 **소문자 `winemine`** 으로 표기 (대문자/분리 금지)
+- 항상 **카멜케이스 `WineMine`** 으로 표기 (전부 소문자/전부 대문자/공백·하이픈 분리 금지)
 - Playfair Display 폰트, letter-spacing: -0.02em
 
 ---

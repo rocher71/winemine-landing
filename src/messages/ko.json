@@ -456,7 +456,7 @@
   "cellar": {
     "sectionLabel": "내 셀러",
     "heading": "와인을 보관하고, 음용 적기를 추적하세요",
-    "subheading": "한 병 한 병의 최적 음용 시기까지 winemine이 함께합니다",
+    "subheading": "한 병 한 병의 최적 음용 시기까지 WineMine이 함께합니다",
     "badges": {
       "ready": "지금이 적기",
       "hold": "더 보관",
@@ -512,7 +512,7 @@
     "steps": [
       { "title": "즐겨찾기 등록", "body": "이 와인, 살까 말까…" },
       { "title": "누군가 가격 등록", "body": "한남에서 ₩125,000에 구매됨" },
-      { "title": "푸시 알림 도착", "body": "winemine이 즉시 알려드려요" },
+      { "title": "푸시 알림 도착", "body": "WineMine이 즉시 알려드려요" },
       { "title": "가격 추이 확인", "body": "최저가 시점에 구매하세요" }
     ],
     "pushBanner": {
@@ -531,7 +531,7 @@
   "communityTonight": {
     "sectionLabel": "Tonight, Together",
     "heading": "오늘 밤, 누가 어떤 와인을 마실까요?",
-    "subheading": "혼자 마셔도 함께. winemine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
+    "subheading": "혼자 마셔도 함께. WineMine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
     "mapLabel": "지금 마시는 사람들",
     "regions": ["서울", "강원", "부산", "여수", "제주"],
     "feedItems": [
@@ -539,7 +539,7 @@
       { "name": "샴페인만먹어요", "level": "Lv.4", "wine": "Champagne Brut NV", "place": "부산", "time": "12분 전", "mood": "오랜만에 만난 친구와" },
       { "name": "퇴근후한잔", "level": "Lv.3", "wine": "Châteauneuf-du-Pape 2017", "place": "제주", "time": "28분 전", "mood": "금요일 밤의 보상" }
     ],
-    "outro": "혼자 마셔도 함께. winemine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
+    "outro": "혼자 마셔도 함께. WineMine 커뮤니티는 와인 한 잔의 순간을 나누는 사람들이 모이는 곳",
     "bullets": [
       { "title": "실시간 피드", "desc": "지금 누가 어디서 무엇을 마시는지" },
       { "title": "취향 매칭", "desc": "비슷한 산지·품종을 좋아하는 사람 발견" },
@@ -613,7 +613,7 @@
   "finalCta": {
     "heading": "Make your own Wine Map",
     "body": "사전 신청하시면 출시 즉시 알려드립니다.",
-    "copyright": "© 2026 winemine. All rights reserved."
+    "copyright": "© 2026 WineMine. All rights reserved."
   },
 
   "floatingCta": {
@@ -653,7 +653,7 @@
   },
 
   "feedbackModal": {
-    "title": "winemine에 한 마디",
+    "title": "WineMine에 한 마디",
     "description": "기능 제안, 피드백, 협업 문의 — 어떤 의견이든 자유롭게.\n팀이 직접 읽고 한 줄씩 검토합니다.",
     "closeAriaLabel": "모달 닫기"
   },
@@ -666,13 +666,13 @@
     "emailPlaceholder": "winemine@gmail.com",
     "submitButton": "보내기",
     "loadingButton": "전송 중...",
-    "privacyNotice": "남겨주신 의견은 winemine 제품 개선 및 회신 용도로만 사용됩니다.",
+    "privacyNotice": "남겨주신 의견은 WineMine 제품 개선 및 회신 용도로만 사용됩니다.",
     "serverError": "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
   },
 
   "feedbackSuccess": {
     "heading": "의견 감사합니다!",
-    "message": "팀이 한 줄 한 줄 읽고 검토하겠습니다.\n더 좋은 winemine으로 곧 만나요.",
+    "message": "팀이 한 줄 한 줄 읽고 검토하겠습니다.\n더 좋은 WineMine으로 곧 만나요.",
     "closeButton": "닫기"
   },
 

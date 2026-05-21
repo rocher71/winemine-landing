@@ -283,7 +283,7 @@ export function Bottle({
             opacity={0.6}
             style={{ letterSpacing: '1px' }}
           >
-            winemine
+            WineMine
           </text>
         </g>
       )}
